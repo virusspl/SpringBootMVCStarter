@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script"></div>
+
+	<div layout:fragment="content">
+		<!-- CONTENT -->
+
+		<div class="row">
+			<div class="col s12">
+				<h2 th:text="#{contact.title}" class="orange-text text-darken-3">Hello
+					on a page</h2>
+				<span th:text="#{contact.message}" class="flow-text">tell
+					what you can do here</span>
+			</div>
+			<div class="row"></div>
+		</div>
+		<form id="contactform" th:action="@{/contact/send}" method="post"
+			th:object="${contactForm}">
+			<div class="row">
+				<div class="col s12 m9 l7" style="border: 1px solid #DDDDDD">
+					<div class="row">
+						<div class="input-field col s12">
+							<input th:field="${contactForm.name}" id="name" name="name"
+								type="text" th:errorclass="invalid"
+								th:placeholder="#{contact.enter.name}" /> <label for="name"
+								th:text="#{contact.name}">name</label>
+							<div th:errors="*{name}" class="red-text">error</div>
+						</div>
+						<div class="input-field col s12">
+							<input th:field="${contactForm.email}" id="email" name="email"
+								type="text" th:errorclass="invalid"
+								th:placeholder="#{contact.enter.email}" /> <label for="email"
+								th:text="#{contact.email}">email</label>
+							<div th:errors="*{email}" class="red-text">error</div>
+						</div>
+						<div class="input-field col s12">
+							<textarea th:field="${contactForm.content}" id="content"
+								name="content" class="materialize-textarea"
+								style="min-height: 300px;"
+								th:placeholder="#{contact.enter.content}"></textarea>
+							<div th:errors="*{content}" class="red-text">error</div>
+							<label for="content" th:text="#{contact.content}">content</label>
+
+						</div>
+					</div>
+				</div>
+				</div>
+				<div class="row">
+				<div class="col s12 m9 l7">
+					<div class="row">
+				
+				
+				<div class="col s6 grey-text text-darken-1" >
+						<span th:text="#{contact.your.ip}">Your IP is</span><span
+							th:text="${clientAddr}">192.168.1.1</span>
+				</div>
+				<div class="col s6">
+					<button class="btn waves-effect waves-light orange darken-3 right"
+						type="submit" name="send">
+						<span th:text="#{contact.send}"></span>
+					</button>
+				</div>
+				</div>
+				
+				
+				
+				
+				
+				
+				
+				</div>
+				
+				
+
+
+			</div>
+		</form>
+
+
+
+
+
+
+		<!-- /CONTENT -->
+	</div>
+</body>
+</html>

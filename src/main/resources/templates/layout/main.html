@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport"
+	content="width=device-width, initialscale=1, maximum-scale=1.0, user-scalable=no" />
+<link th:href="@{/webjars/materializecss/css/materialize.css}"
+	type="text/css" rel="stylesheet" media="screen,projection" />
+	<link th:href="@{/css/cookies.css}" type="text/css" rel="stylesheet" media="screen,projection" />
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet" />
+<link th:href="@{/css/readmore.css}"
+	type="text/css" rel="stylesheet" media="screen,projection" />
+<title>Hello Spring</title>
+</head>
+<body>
+	<!--=================================== NAVI =================================-->
+	<div class="navbar-fixed">
+		<!-- Dropdown Structure -->
+		<ul id="dropdown-lang" class="dropdown-content">
+			<li><a href="?lang=pl" class="waves-effect waves-light"><span
+					th:text="#{lang.polish}" class="light-blue-text text-darken-2">Polish</span></a></li>
+			<li><a href="?lang=en" class="waves-effect waves-light"><span
+					th:text="#{lang.english}" class="light-blue-text text-darken-2">English</span></a></li>
+		</ul>
+
+		<!-- Dropdown Structure if is not authenticated -->
+		<ul id="dropdown-profile" class="dropdown-content"
+			sec:authorize="isAuthenticated()">
+			<li><a th:href="@{/profile/show}"
+				class="waves-effect waves-light"><span
+					th:text="|#{profile.show}  ${#authentication.name}|"
+					class="light-blue-text text-darken-2">Show</span></a></li>
+			<li><a href="javascript: document.logoutForm.submit()"
+				class="waves-effect waves-light"><span
+					th:text="#{profile.logout}" class="light-blue-text text-darken-2">Log
+						out</span></a></li>
+		</ul>
+		<ul id="dropdown-profile" class="dropdown-content"
+			sec:authorize="isAnonymous()">
+			<li><a th:href="@{/login}" class="waves-effect waves-light"><span
+					th:text="#{profile.login}" class="light-blue-text text-darken-2">Log
+						in</span></a></li>
+			<li><a th:href="@{/profile/create}"
+				class="waves-effect waves-light"><span
+					th:text="#{profile.create}" class="light-blue-text text-darken-2">Create</span></a></li>
+		</ul>
+
+		<nav>
+			<div class="nav-wrapper">
+				<div class="row light-blue darken-1">
+					<div class="col s1">
+						<ul class="left">
+							<li><a th:href="@{/}" class="waves-effect waves-light"><i
+									class="mdi-action-home left"></i></a></li>
+						</ul>
+					</div>
+					<div class="col s11 right">
+
+						<!-- <ul class="right hide-on-med-and-down"> -->
+						<ul class="right">
+							<li><a th:href="@{/blog/read/1}"
+								class="waves-effect waves-light"><span
+									th:text="#{navi.blog}">Blog</span><i
+									class="mdi-action-track-changes right"></i></a></li>
+							<li><a th:href="@{/chat}" class="waves-effect waves-light"><span
+									th:text="#{navi.chat}">Chat</span><i
+									class="mdi-communication-message right"></i></a></li>
+							<!-- Dropdown Trigger -->
+							<li style="min-width: 125px;"><a class="dropdown-button" data-beloworigin="true"
+								data-constrainwidth="false" href="#!"
+								data-activates="dropdown-profile" data-hover="true"> <span
+									th:text="#{navi.profile}">Profile</span><i
+									class="mdi-action-account-box right"></i>
+							</a></li>
+							<!-- Dropdown Trigger -->
+							<li style="min-width: 150px;"><a class="dropdown-button" data-beloworigin="true"
+								href="#!" data-activates="dropdown-lang" data-hover="true">
+									<span th:text="#{lang}">Language</span><i
+									class="mdi-action-language right"></i>
+							</a></li>
+						</ul>
+					</div>
+					<!-- /col -->
+				</div>
+				<!-- /row -->
+			</div>
+		</nav>
+	</div>
+	<!--=================================== /NAVI =================================-->
+	<!--=================================== COOKIES ===============================-->
+		<div id="cookie-warn">
+		<p>
+			<b><span th:text="#{cookies.warning}">WARNING!</span></b>
+			<span th:text="#{cookies.message}">Warning message</span>
+			<a href="javascript:void(0);" 
+				id="close-cookie-warn"
+				th:text="#{cookies.warning.close}">Close warning</a>
+		</p>
+	</div>
+	<!--=================================== /COOKIES ==============================-->
+	<!--=================================== CONTENT ===============================-->
+
+	<div class="container">
+		<div class="row">
+
+			<div class="col s12">
+				<section layout:fragment="content">
+					<p>page content</p>
+				</section>
+			</div>
+		</div>
+	</div>
+	<!--=================================== /CONTENT ==============================-->
+	<!--=================================== FOOTER ================================-->
+	<footer class="page-footer light-blue darken-1">
+		<div class="container">
+			<div class="row">
+				<div class="col l6 s12">
+					<h5 class="white-text" th:text="#{footer.title}">Spring Boot</h5>
+					<p class="grey-text text-lighten-4" th:text="#{footer.message}"></p>
+				</div>
+				<div class="col l4 offset-l2 s12">
+					<h5 class="white-text" th:text="#{footer.links}">Links</h5>
+					<ul>
+						<li><a class="grey-text text-lighten-3"
+							href="https://spring.io/" target="_blank">Spring</a></li>
+						<li><a class="grey-text text-lighten-3"
+							href="http://heroku.com/" target="_blank">Heroku</a></li>
+						<li><a class="grey-text text-lighten-3"
+							href="http://github.com/" target="_blank">GitHub</a></li>
+
+					</ul>
+					<h5 class="white-text" th:text="#{footer.contact}">Contact</h5>
+					<ul>
+						<li><a class="grey-text text-lighten-3" th:href="@{/contact}"
+							th:text="#{footer.contact.form}">Spring</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="footer-copyright">
+			<div class="container">© 2017 Krzysztof Michalak</div>
+		</div>
+	</footer>
+	<!--=================================== /FOOTER ===============================-->
+	<!--=================================== SCRIPTS ===============================-->
+	<!-- JQUERY -->
+	<script th:src="@{/webjars/jquery/jquery.js}"></script>
+	<!-- MATERIALIZE JS -->
+	<script th:src="@{/webjars/materializecss/js/materialize.js}"></script>
+	<!-- COOKIES -->
+	<script th:src="@{/js/cookies.js}"></script>
+	<!-- ALL SPECIFIC SCRIPTS FROM CHILD VIEWS -->
+	<script type="text/javascript" layout:fragment="script">
+		</script>
+	<!-- LOGOUT HIDDEN FORM -->
+	<!-- do href post logout -->
+	<form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+		<input type="submit" value="Sign Out" />
+	</form>
+	<!--=================================== /SCRIPTS ==============================-->
+</body>
+</html>

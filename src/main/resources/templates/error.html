@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+	<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/main_err">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="content">
+		<!-- available: $timestamp, $status, $error, $message  -->
+			<div th:if="${status}!=null" class="orange-text text-darken-3">
+			<h2 th:text="|${status} - ${error}|">404 - Not Found</h2>			
+			<br/>
+			</div>
+			<div th:if="${status}==null" class="orange-text text-darken-3">
+				<h2 th:text="#{error.something}">Something went wrong</h2>			
+			<br/>
+			</div>
+			<!-- <div th:if="${url}">
+				<span th:text="${url}">www.onet.pl</span><br/>
+			</div> -->
+			<div th:if="${exception}">
+				<span th:text="${exception}">java.lang.NullPointerException</span><br/>
+			</div>
+			<div th:if="${message}">
+				<span th:text="${message}">There has been an internal error</span><br/>
+			</div>
+			<br/>
+			<img th:src="@{/images/sad.png}"></img>
+	</div>
+</body>
+</html>

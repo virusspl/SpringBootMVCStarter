@@ -1,0 +1,26 @@
+@CHARSET "UTF-8";
+/* Cookie warning */
+#cookie-warn{
+    position: fixed;
+    bottom: 0;
+    background: #EEE;
+    margin: 0;
+    padding: 15px;
+    width: 100%;
+    display: none;
+    z-index: 99;
+    /*opacity: 0.95;*/
+    /*filter: alpha(opacity=95);*/
+}
+ 
+#cookie-warn a{
+    color: #df5020;
+    text-transform: uppercase;
+    float: right;
+    padding-right: 20px;
+}
+ 
+#cookie-warn p{
+    font-size: 12px;
+    color: #333;
+}

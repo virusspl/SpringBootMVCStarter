@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+	<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col s12 orange-text text-darken-3">
+				<h2 th:text="#{welcome.title}">Hello on a page</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col s10">
+				<span th:text="#{welcome.message}" class="flow-text ">Welcome
+					message</span>
+			</div>
+			<div class="col s2 right">
+				<img class="responsive-img" th:src="@{/images/java.png}" alt="Java"></img>
+			</div>
+			<div class="col s5">
+				
+			</div>
+
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,11 @@
+@CHARSET "UTF-8";
+
+.text {
+    overflow:hidden;
+}
+.height {
+    max-height:105px;
+}
+.heightAuto {
+    max-height:20000px;
+}
