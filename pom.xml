@@ -127,11 +127,13 @@
 			<artifactId>materializecss</artifactId>
 			<version>0.96.0</version>
 		</dependency>
+		<!-- 
 		<dependency>
     		<groupId>org.webjars</groupId>
     		<artifactId>bootstrap</artifactId>
     		<version>3.3.5</version>
 		</dependency>
+		 -->
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>jquery</artifactId>

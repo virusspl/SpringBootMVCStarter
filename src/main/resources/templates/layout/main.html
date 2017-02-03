@@ -7,156 +7,89 @@
 <meta name="viewport"
 	content="width=device-width, initialscale=1, maximum-scale=1.0, user-scalable=no" />
 <link rel="shortcut_icon" th:href="@{/favicon.ico}" />
-<link th:href="@{/webjars/materializecss/css/materialize.css}"
-	type="text/css" rel="stylesheet" media="screen,projection" />
 	<link th:href="@{/css/cookies.css}" type="text/css" rel="stylesheet" media="screen,projection" />
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 	rel="stylesheet" />
-<link th:href="@{/css/readmore.css}"
-	type="text/css" rel="stylesheet" media="screen,projection" />
-<title>Hello Spring</title>
+	<link th:href="@{/bootstrap/css/bootstrap.min.css}" type="text/css" rel="stylesheet" media="screen,projection" />	
+	<link th:href="@{/css/readmore.css}" type="text/css" rel="stylesheet" media="screen,projection" />
+	<link th:href="@{/css/fixed-nav.css}" type="text/css" rel="stylesheet" media="screen,projection" />
+	<title>ADR Polska S.A.</title>
 </head>
 <body>
 	<!--=================================== NAVI =================================-->
-	<div class="navbar-fixed">
-		<!-- Dropdown Structure -->
-		<ul id="dropdown-lang" class="dropdown-content">
-			<li><a href="?lang=pl" class="waves-effect waves-light"><span
-					th:text="#{lang.polish}" class="light-blue-text text-darken-2">Polish</span></a></li>
-			<li><a href="?lang=en" class="waves-effect waves-light"><span
-					th:text="#{lang.english}" class="light-blue-text text-darken-2">English</span></a></li>
-		</ul>
-
-		<!-- Dropdown Structure if is not authenticated -->
-		<ul id="dropdown-profile" class="dropdown-content"
-			sec:authorize="isAuthenticated()">
-			<li><a th:href="@{/profile/show}"
-				class="waves-effect waves-light"><span
-					th:text="|#{profile.show}  ${#authentication.name}|"
-					class="light-blue-text text-darken-2">Show</span></a></li>
-			<li><a href="javascript: document.logoutForm.submit()"
-				class="waves-effect waves-light"><span
-					th:text="#{profile.logout}" class="light-blue-text text-darken-2">Log
-						out</span></a></li>
-		</ul>
-		<ul id="dropdown-profile" class="dropdown-content"
-			sec:authorize="isAnonymous()">
-			<li><a th:href="@{/login}" class="waves-effect waves-light"><span
-					th:text="#{profile.login}" class="light-blue-text text-darken-2">Log
-						in</span></a></li>
-			<li><a th:href="@{/profile/create}"
-				class="waves-effect waves-light"><span
-					th:text="#{profile.create}" class="light-blue-text text-darken-2">Create</span></a></li>
-		</ul>
-
-		<nav>
-			<div class="nav-wrapper">
-				<div class="row light-blue darken-1">
-					<div class="col s1">
-						<ul class="left">
-							<li><a th:href="@{/}" class="waves-effect waves-light"><i
-									class="mdi-action-home left"></i></a></li>
-						</ul>
-					</div>
-					<div class="col s11 right">
-
-						<!-- <ul class="right hide-on-med-and-down"> -->
-						<ul class="right">
-							<li><a th:href="@{/blog/read/1}"
-								class="waves-effect waves-light"><span
-									th:text="#{navi.blog}">Blog</span><i
-									class="mdi-action-track-changes right"></i></a></li>
-							<li><a th:href="@{/chat}" class="waves-effect waves-light"><span
-									th:text="#{navi.chat}">Chat</span><i
-									class="mdi-communication-message right"></i></a></li>
-							<!-- Dropdown Trigger -->
-							<li style="min-width: 125px;"><a class="dropdown-button" data-beloworigin="true"
-								data-constrainwidth="false" href="#!"
-								data-activates="dropdown-profile" data-hover="true"> <span
-									th:text="#{navi.profile}">Profile</span><i
-									class="mdi-action-account-box right"></i>
-							</a></li>
-							<!-- Dropdown Trigger -->
-							<li style="min-width: 150px;"><a class="dropdown-button" data-beloworigin="true"
-								href="#!" data-activates="dropdown-lang" data-hover="true">
-									<span th:text="#{lang}">Language</span><i
-									class="mdi-action-language right"></i>
-							</a></li>
-						</ul>
-					</div>
-					<!-- /col -->
-				</div>
-				<!-- /row -->
-			</div>
-		</nav>
-	</div>
+	 <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+       <img class="logo pull-left" th:src="@{/images/TinyADR.png}" alt="ADR Polska S.A. logo"/>
+          <a class="navbar-brand right" href="#">
+          ADR Polska S.A.</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a th:href="@{/}" th:text="#{navi.home}">Home Page</a></li>
+            <li><a class="grey-text text-lighten-3" th:href="@{/contact}"
+							th:text="#{navi.help}">Help</a></li>
+            <li class="dropdown">
+              <a href="#"  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span th:text="#{navi.profile}">Profile</span> <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+               <!-- authenticated -->
+               <li sec:authorize="isAuthenticated()"><a href="#">
+				<span th:text="|#{profile.show}  ${#authentication.name}|">Show</span></a>
+               </li>
+               <li sec:authorize="isAuthenticated()">
+               	<a href="javascript: document.logoutForm.submit()">
+               <span th:text="#{action.logout}">Log out</span></a>
+               </li>
+              	<!-- anonymous --> 
+                <li sec:authorize="isAnonymous()">
+               <a th:href="@{/login}">
+               <span th:text="#{action.login}">Log in</span></a>
+               </li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="#"  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span th:text="#{navi.lang}">Profile</span> <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="?lang=pl" ><span th:text="#{lang.polish}"></span><img th:src="@{/images/i18n/polish_flag.gif}" style="position: absolute; right: 5px;"></img></a></li>
+                <li><a href="?lang=en" ><span th:text="#{lang.english}"></span><img th:src="@{/images/i18n/english_flag.gif}"  style="position: absolute; right: 5px;"></img></a></li>
+                <li><a href="?lang=it" ><span th:text="#{lang.italian}"></span><img th:src="@{/images/i18n/italian_flag.png}" style="position: absolute; right: 5px;"></img></a></li>
+                </ul>
+            </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
 	<!--=================================== /NAVI =================================-->
-	<!--=================================== COOKIES ===============================-->
-		<div id="cookie-warn">
-		<p>
-			<b><span th:text="#{cookies.warning}">WARNING!</span></b>
-			<span th:text="#{cookies.message}">Warning message</span>
-			<a href="javascript:void(0);" 
-				id="close-cookie-warn"
-				th:text="#{cookies.warning.close}">Close warning</a>
-		</p>
-	</div>
-	<!--=================================== /COOKIES ==============================-->
 	<!--=================================== CONTENT ===============================-->
 
 	<div class="container">
-		<div class="row">
-
-			<div class="col s12">
 				<section layout:fragment="content">
 					<p>page content</p>
 				</section>
-			</div>
-		</div>
 	</div>
+	   <footer class="footer">
+      <div class="container">
+        <p class="text-muted">Krzysztof Michalak 2017 &copy; <span th:text="#{name.department}">IT Department</span>, <span th:text="#{name.company}">ADR Polska S.A.</span></p>
+      </div>
+    </footer>
 	<!--=================================== /CONTENT ==============================-->
-	<!--=================================== FOOTER ================================-->
-	<footer class="page-footer light-blue darken-1">
-		<div class="container">
-			<div class="row">
-				<div class="col l6 s12">
-					<h5 class="white-text" th:text="#{footer.title}">Spring Boot</h5>
-					<p class="grey-text text-lighten-4" th:text="#{footer.message}"></p>
-				</div>
-				<div class="col l4 offset-l2 s12">
-					<h5 class="white-text" th:text="#{footer.links}">Links</h5>
-					<ul>
-						<li><a class="grey-text text-lighten-3"
-							href="https://spring.io/" target="_blank">Spring</a></li>
-						<li><a class="grey-text text-lighten-3"
-							href="http://heroku.com/" target="_blank">Heroku</a></li>
-						<li><a class="grey-text text-lighten-3"
-							href="http://github.com/" target="_blank">GitHub</a></li>
-
-					</ul>
-					<h5 class="white-text" th:text="#{footer.contact}">Contact</h5>
-					<ul>
-						<li><a class="grey-text text-lighten-3" th:href="@{/contact}"
-							th:text="#{footer.contact.form}">Spring</a></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<div class="footer-copyright">
-			<div class="container">© 2017 Krzysztof Michalak</div>
-		</div>
-	</footer>
-	<!--=================================== /FOOTER ===============================-->
 	<!--=================================== SCRIPTS ===============================-->
 	<!-- JQUERY -->
-	<script th:src="@{/webjars/jquery/jquery.js}"></script>
-	<!-- MATERIALIZE JS -->
-	<script th:src="@{/webjars/materializecss/js/materialize.js}"></script>
-	<!-- COOKIES -->
-	<script th:src="@{/js/cookies.js}"></script>
+		<script th:src="@{/js/jquery-3.1.1.min.js}"></script>
+	<!-- BOOTSTRAP JS -->
+	<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script th:src="@{/bootstrap/js/ie10-viewport-bug-workaround.js}"></script>
 	<!-- ALL SPECIFIC SCRIPTS FROM CHILD VIEWS -->
 	<script type="text/javascript" layout:fragment="script">
-		</script>
+	</script>
 	<!-- LOGOUT HIDDEN FORM -->
 	<!-- do href post logout -->
 	<form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">

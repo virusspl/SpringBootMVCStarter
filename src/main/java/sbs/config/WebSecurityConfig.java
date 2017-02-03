@@ -37,7 +37,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.and().authorizeRequests()
 		.antMatchers("/", 
 				"/error", 
-				"/webjars/**", 
+				"/webjars/**",
+				"/bootstrap/**",
 				"/login",
 				"/contact/**"
 				)
