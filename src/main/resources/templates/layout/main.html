@@ -11,8 +11,9 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 	rel="stylesheet" />
 	<link th:href="@{/bootstrap/css/bootstrap.min.css}" type="text/css" rel="stylesheet" media="screen,projection" />	
+	<link th:href="@{/css/normalize.css}" type="text/css" rel="stylesheet" media="screen,projection" />
 	<link th:href="@{/css/readmore.css}" type="text/css" rel="stylesheet" media="screen,projection" />
-	<link th:href="@{/css/fixed-nav.css}" type="text/css" rel="stylesheet" media="screen,projection" />
+	<link th:href="@{/css/default.css}" type="text/css" rel="stylesheet" media="screen,projection" />
 	<title>ADR Polska S.A.</title>
 </head>
 <body>
@@ -40,8 +41,12 @@
               <a href="#"  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span th:text="#{navi.profile}">Profile</span> <span class="caret"></span></a>
               <ul class="dropdown-menu">
                <!-- authenticated -->
-               <li sec:authorize="isAuthenticated()"><a href="#">
-				<span th:text="|#{profile.show}  ${#authentication.name}|">Show</span></a>
+               <li sec:authorize="isAuthenticated()"><a th:href="@{/underconstruction}">
+				<span th:text="${#authentication.name}">Profile name</span>
+				<img class="nav-img" th:src="@{images/icons/profile.png}" alt="anonymous profile picture"/>
+				</a>
+               </li>
+               <li sec:authorize="isAuthenticated()" role="separator" class="divider">
                </li>
                <li sec:authorize="isAuthenticated()">
                	<a href="javascript: document.logoutForm.submit()">
@@ -57,9 +62,9 @@
             <li class="dropdown">
               <a href="#"  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span th:text="#{navi.lang}">Profile</span> <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="?lang=pl" ><span th:text="#{lang.polish}"></span><img th:src="@{/images/i18n/polish_flag.gif}" style="position: absolute; right: 5px;"></img></a></li>
-                <li><a href="?lang=en" ><span th:text="#{lang.english}"></span><img th:src="@{/images/i18n/english_flag.gif}"  style="position: absolute; right: 5px;"></img></a></li>
-                <li><a href="?lang=it" ><span th:text="#{lang.italian}"></span><img th:src="@{/images/i18n/italian_flag.png}" style="position: absolute; right: 5px;"></img></a></li>
+                <li><a href="?lang=pl" ><span th:text="#{lang.polish}"></span><img class="nav-img" th:src="@{/images/i18n/polish_flag.jpg}" ></img></a></li>
+                <li><a href="?lang=en" ><span th:text="#{lang.english}"></span><img class="nav-img" th:src="@{/images/i18n/english_flag.gif}"  style="position: absolute; right: 5px;"></img></a></li>
+                <li><a href="?lang=it" ><span th:text="#{lang.italian}"></span><img class="nav-img" th:src="@{/images/i18n/italian_flag.png}" style="position: absolute; right: 5px;"></img></a></li>
                 </ul>
             </li>
           </ul>
@@ -68,18 +73,19 @@
     </nav>
 	<!--=================================== /NAVI =================================-->
 	<!--=================================== CONTENT ===============================-->
-
 	<div class="container">
 				<section layout:fragment="content">
 					<p>page content</p>
 				</section>
 	</div>
+	<!--=================================== /CONTENT ==============================-->
+	<!--=================================== FOOTER  ===============================-->
 	   <footer class="footer">
       <div class="container">
         <p class="text-muted">Krzysztof Michalak 2017 &copy; <span th:text="#{name.department}">IT Department</span>, <span th:text="#{name.company}">ADR Polska S.A.</span></p>
       </div>
     </footer>
-	<!--=================================== /CONTENT ==============================-->
+    <!--=================================== /FOOTER  ==============================-->
 	<!--=================================== SCRIPTS ===============================-->
 	<!-- JQUERY -->
 		<script th:src="@{/js/jquery-3.1.1.min.js}"></script>
