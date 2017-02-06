@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
@@ -15,9 +16,30 @@ public class MailConfig {
 
     @Value("${email.port}")
     private Integer port;
-*/
+*/	
+	
+	
+	@Bean
+	public JavaMailSender javaMailSender() {
+		JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
+		
+		javaMailSender.setHost("mail.atwsystem.pl");
+		javaMailSender.setPort(25);
+		javaMailSender.setJavaMailProperties(getMailProperties());
+		return javaMailSender;
+	}
+	
+	private Properties getMailProperties() {
+		Properties properties = new Properties();
+		properties.setProperty("mail.transport.protocol", "smtp");
+		properties.setProperty("mail.smtp.auth", "false");
+		properties.setProperty("mail.smtp.debug", "true");
+		
+		return properties;
+	}
     @Bean
-    public JavaMailSender javaMailSender() {
+    @Profile("gmail")
+    public JavaMailSender GjavaMailSender() {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
         		
         javaMailSender.setHost("smtp.gmail.com");
@@ -28,7 +50,8 @@ public class MailConfig {
         return javaMailSender;
     }
 
-    private Properties getMailProperties() {
+    @Profile("gmail")
+    private Properties GgetMailProperties() {
         Properties properties = new Properties();
         properties.setProperty("mail.transport.protocol", "smtp");
         properties.setProperty("mail.smtp.auth", "true");

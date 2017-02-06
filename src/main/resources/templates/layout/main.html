@@ -14,7 +14,7 @@
 	<link th:href="@{/css/normalize.css}" type="text/css" rel="stylesheet" media="screen,projection" />
 	<link th:href="@{/css/readmore.css}" type="text/css" rel="stylesheet" media="screen,projection" />
 	<link th:href="@{/css/default.css}" type="text/css" rel="stylesheet" media="screen,projection" />
-	<title>ADR Polska S.A.</title>
+	<title th:text="#{name.company}">ADR Polska S.A.</title>
 </head>
 <body>
 	<!--=================================== NAVI =================================-->
@@ -30,7 +30,7 @@
           </button>
        <img class="logo pull-left" th:src="@{/images/TinyADR.png}" alt="ADR Polska S.A. logo"/>
           <a class="navbar-brand right" href="#">
-          ADR Polska S.A.</a>
+         <span th:text="#{name.company}"></span></a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -55,7 +55,11 @@
               	<!-- anonymous --> 
                 <li sec:authorize="isAnonymous()">
                <a th:href="@{/login}">
-               <span th:text="#{action.login}">Log in</span></a>
+               <span th:text="#{action.login}">Log in</span>
+               
+               
+               </a>
+               
                </li>
               </ul>
             </li>
@@ -82,7 +86,7 @@
 	<!--=================================== FOOTER  ===============================-->
 	   <footer class="footer">
       <div class="container">
-        <p class="text-muted">Krzysztof Michalak 2017 &copy; <span th:text="#{name.department}">IT Department</span>, <span th:text="#{name.company}">ADR Polska S.A.</span></p>
+        <p class="text-muted small-text"><small>Krzysztof Michalak 2017 &copy; <span th:text="#{name.department}">IT Department</span>, <span th:text="#{name.company}">ADR Polska S.A.</span></small></p>
       </div>
     </footer>
     <!--=================================== /FOOTER  ==============================-->

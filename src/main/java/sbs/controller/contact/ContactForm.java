@@ -13,6 +13,7 @@ public class ContactForm {
 	private String name; 
 	@Size(min = 20, max=500)
 	private String content;
+	private String ip;
 	
 	public ContactForm(String email, String name, String content) {
 		super();
@@ -64,6 +65,20 @@ public class ContactForm {
 	 */
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	/**
+	 * @return the ip
+	 */
+	public String getIp() {
+		return ip;
+	}
+
+	/**
+	 * @param ip the ip to set
+	 */
+	public void setIp(String ip) {
+		this.ip = ip;
 	}
 	
 	

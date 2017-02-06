@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	
+	<div layout:fragment="script">
+	<script>
+	$(document).ready(function() {
+    window.setInterval(function() {
+    	
+    var timeLeft    = $("#timeLeft").html();                                
+        if(eval(timeLeft) == 0){
+                window.location= ("/");                 
+        }else{              
+            $("#timeLeft").html(eval(timeLeft)- eval(1));
+        }
+    }, 1000); 
+}); 
+	</script>
+	
+	
+	</div>
+
+	<div layout:fragment="content">
+		<!-- CONTENT -->
+
+		<div class="row">
+			<div class="col s12">
+				<h2 th:text="${title}" class="orange-text text-darken-3">Hello
+					on a page</h2>
+				<span th:text="${message}" class="flow-text">tell
+					what you can do here</span>
+			</div>
+		</div>
+		<div class="row">
+				<div class="col s6 grey-text text-darken-1">
+				[<span th:text="#{redirect.in}">redirect in: </span><span id="timeLeft">5</span>]
+				</div>
+			</div>
+		<!-- /CONTENT -->
+	</div>
+</body>
+</html>

@@ -2,6 +2,7 @@ package sbs.controller.contact;
 
 import java.util.Locale;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -9,28 +10,44 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+
+import sbs.model.User;
 import sbs.service.MailService;
+import sbs.service.UserService;
 
 
 
 @Controller
 public class ContactController {
-	@SuppressWarnings("unused")
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	MessageSource messageSource;
 	@Autowired
 	MailService mailService;
+	@Autowired
+	UserService userService;
 	
 	@RequestMapping("/contact")
 	public String showBlog(Model model, HttpServletRequest request) {
-		model.addAttribute("clientAddr", request.getRemoteAddr());
-		model.addAttribute("contactForm", new ContactForm());
+		User user;
+		ContactForm contactForm = new ContactForm();
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (!(auth instanceof AnonymousAuthenticationToken)) {
+			user = userService.findByUsername(auth.getName());
+			contactForm.setName(user.getName());
+			contactForm.setEmail(user.getEmail());
+		}
+		contactForm.setIp(request.getRemoteAddr());
+		model.addAttribute("contactForm", contactForm);
 		return "contact";
 	}
 	
@@ -38,14 +55,19 @@ public class ContactController {
 	public String sendEmail(@Valid ContactForm contactForm, BindingResult bindingResult, Model model, HttpServletRequest request, Locale locale) {
 		model.addAttribute("clientAddr", request.getRemoteAddr());
 			if (bindingResult.hasErrors()) {
+				model.addAttribute("mailerror", "");
 				return "contact";
 			}
-			 
-			mailService.sendEmail(
-					"no-reply@sjava.herokuapp.com", 
-					"viruss.snk@gmail.com", 
-					"Spring-Java contact form E-Mail", 
-					contactForm.getName()+ ": " +contactForm.getContent()+ " (" + contactForm.getEmail()+")");
+			String content = "<html><b>" + contactForm.getName()+ "</b>: " +contactForm.getContent()+ " (" + contactForm.getEmail()+")</html>";
+			try {
+				mailService.sendEmail(
+						contactForm.getEmail(), 
+						"michalak.k@atwsystem.pl", 
+						"SpringBootStarter Contact Form", 
+						content);
+			} catch (MessagingException e) {
+				log.debug("e-mail send error", e);
+			}
 		model.addAttribute("title",messageSource.getMessage("contact.sent", null, locale));
 		model.addAttribute("message",messageSource.getMessage("contact.thank.you", null, locale));
 		return "message";
