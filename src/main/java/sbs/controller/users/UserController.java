@@ -1,4 +1,4 @@
-package sbs.controller.profile;
+package sbs.controller.users;
 
 import javax.validation.Valid;
 
@@ -21,8 +21,8 @@ import sbs.service.RoleService;
 import sbs.service.UserService;
 
 @Controller
-@RequestMapping("/profile")
-public class ProfileController {
+@RequestMapping("/users")
+public class UserController {
 
 	@Autowired
 	UserService userService;
@@ -47,10 +47,21 @@ public class ProfileController {
 	 * @param model
 	 * @return
 	 */
+	@RequestMapping("/list")
+	public String showUsersList(Model model) {
+		model.addAttribute("users", userService.findAll());
+		return "profile";
+	}
+	
+	/**
+	 * show existing profile
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping("/show")
 	public String showProfile(Model model) {
 		model.addAttribute("user", getAuthenticatedUser());
-		return "profile";
+		return "edit";
 	}
 	
 	@RequestMapping(value = "/create")

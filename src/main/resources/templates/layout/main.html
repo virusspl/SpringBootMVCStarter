@@ -8,8 +8,6 @@
 	content="width=device-width, initialscale=1, maximum-scale=1.0, user-scalable=no" />
 <link rel="shortcut_icon" th:href="@{/favicon.ico}" />
 	<link th:href="@{/css/cookies.css}" type="text/css" rel="stylesheet" media="screen,projection" />
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-	rel="stylesheet" />
 	<link th:href="@{/bootstrap/css/bootstrap.min.css}" type="text/css" rel="stylesheet" media="screen,projection" />	
 	<link th:href="@{/css/normalize.css}" type="text/css" rel="stylesheet" media="screen,projection" />
 	<link th:href="@{/css/readmore.css}" type="text/css" rel="stylesheet" media="screen,projection" />
@@ -18,6 +16,7 @@
 </head>
 <body>
 	<!--=================================== NAVI =================================-->
+	
 	 <!-- Fixed navbar -->
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
@@ -56,10 +55,7 @@
                 <li sec:authorize="isAnonymous()">
                <a th:href="@{/login}">
                <span th:text="#{action.login}">Log in</span>
-               
-               
                </a>
-               
                </li>
               </ul>
             </li>

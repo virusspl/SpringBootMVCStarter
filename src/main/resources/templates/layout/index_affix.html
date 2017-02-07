@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<title>Bootstrap Example</title>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport"
+	content="width=device-width, initialscale=1, maximum-scale=1.0, user-scalable=no" />
+<link rel="shortcut_icon" th:href="@{/favicon.ico}" />
+<link th:href="@{/bootstrap/css/bootstrap.min.css}" type="text/css"
+	rel="stylesheet" media="screen,projection" />
+<link th:href="@{/css/normalize.css}" type="text/css" rel="stylesheet"
+	media="screen,projection" />
+<link th:href="@{/css/default.css}" type="text/css" rel="stylesheet"
+	media="screen,projection" />
+<title th:text="#{name.company}">ADR Polska S.A.</title>
+</head>
+<body>
+<!--=================================== NAVI =================================-->
+	<div class="container-fluid"
+		style="background-color: #F44336; color: #fff; height: 250px;">
+		<h1>Bootstrap Affix Example</h1>
+		<h3>Fixed (sticky) navbar on scroll</h3>
+		<p>Scroll this page to see how the navbar behaves with
+			data-spy="affix".</p>
+		<p>The navbar is attached to the top of the page after you have
+			scrolled a specified amount of pixels.</p>
+	</div>
+
+	<nav class="navbar navbar-default" data-spy="affix" data-offset-top="247">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<img class="logo pull-left" th:src="@{/images/TinyADR.png}"
+					alt="ADR Polska S.A. logo" /> <a class="navbar-brand right"
+					href="#"> <span th:text="#{name.company}"></span></a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a th:href="@{/}" th:text="#{navi.home}">Home Page</a></li>
+					<li><a class="grey-text text-lighten-3" th:href="@{/contact}"
+						th:text="#{navi.help}">Help</a></li>
+					<li class="dropdown"><a href="#" class="dropdown-toggle"
+						data-toggle="dropdown" role="button" aria-haspopup="true"
+						aria-expanded="false"><span th:text="#{navi.profile}">Profile</span>
+							<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<!-- authenticated -->
+							<li sec:authorize="isAuthenticated()"><a
+								th:href="@{/underconstruction}"> <span
+									th:text="${#authentication.name}">Profile name</span> <img
+									class="nav-img" th:src="@{images/icons/profile.png}"
+									alt="anonymous profile picture" />
+							</a></li>
+							<li sec:authorize="isAuthenticated()" role="separator"
+								class="divider"></li>
+							<li sec:authorize="isAuthenticated()"><a
+								href="javascript: document.logoutForm.submit()"> <span
+									th:text="#{action.logout}">Log out</span></a></li>
+							<!-- anonymous -->
+							<li sec:authorize="isAnonymous()"><a th:href="@{/login}">
+									<span th:text="#{action.login}">Log in</span>
+
+
+							</a></li>
+						</ul></li>
+					<li class="dropdown"><a href="#" class="dropdown-toggle"
+						data-toggle="dropdown" role="button" aria-haspopup="true"
+						aria-expanded="false"><span th:text="#{navi.lang}">Profile</span>
+							<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="?lang=pl"><span th:text="#{lang.polish}"></span><img
+									class="nav-img" th:src="@{/images/i18n/polish_flag.jpg}"></img></a></li>
+							<li><a href="?lang=en"><span th:text="#{lang.english}"></span><img
+									class="nav-img" th:src="@{/images/i18n/english_flag.gif}"
+									style="position: absolute; right: 5px;"></img></a></li>
+							<li><a href="?lang=it"><span th:text="#{lang.italian}"></span><img
+									class="nav-img" th:src="@{/images/i18n/italian_flag.png}"
+									style="position: absolute; right: 5px;"></img></a></li>
+						</ul></li>
+				</ul>
+			</div>
+			<!--/.nav-collapse -->
+		</div>
+	</nav>
+<!--=================================== /NAVI =================================-->
+	<!--=================================== CONTENT ===============================-->
+	
+	<div class="container">
+				<section layout:fragment="content">
+					<p>page content</p>
+				</section>
+	</div>
+<!--=================================== /CONTENT ==============================-->
+	<!--=================================== FOOTER  ===============================-->
+   <footer class="footer">
+      <div class="container">
+        <p class="text-muted small-text"><small>Krzysztof Michalak 2017 &copy; <span th:text="#{department.it}">IT Department</span>, <span th:text="#{name.company}">ADR Polska S.A.</span></small></p>
+      </div>
+    </footer>
+    <!--=================================== /FOOTER  ==============================-->
+	<!--=================================== SCRIPTS ===============================-->
+	<!-- JQUERY -->
+		<script th:src="@{/js/jquery-3.1.1.min.js}"></script>
+	<!-- BOOTSTRAP JS -->
+	<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script th:src="@{/bootstrap/js/ie10-viewport-bug-workaround.js}"></script>
+	<!-- ALL SPECIFIC SCRIPTS FROM CHILD VIEWS -->
+	<script type="text/javascript" layout:fragment="script">
+	</script>
+	<!-- LOGOUT HIDDEN FORM -->
+	<!-- do href post logout -->
+	<form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+		<input type="submit" value="Sign Out" />
+	</form>
+	<!--=================================== /SCRIPTS ==============================-->
+</body>
+</html>

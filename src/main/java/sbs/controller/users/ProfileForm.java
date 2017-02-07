@@ -1,4 +1,4 @@
-package sbs.controller.profile;
+package sbs.controller.users;
 
 import javax.validation.constraints.Size;
 
