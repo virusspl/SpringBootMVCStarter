@@ -32,3 +32,43 @@ public class ExceptionHandlers {
 		return mav;
 	}
 }
+
+
+
+/*
+@ControllerAdvice
+public class ErrorController {
+
+    private static Logger logger = LoggerFactory.getLogger(ErrorController.class);
+
+    @ExceptionHandler(Throwable.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String exception(final Throwable throwable, final Model model) {
+        logger.error("Exception during execution of SpringSecurity application", throwable);
+        String errorMessage = (throwable != null ? throwable.getMessage() : "Unknown error");
+        model.addAttribute("errorMessage", errorMessage);
+        return "error";
+    }
+
+}
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Error page</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="css/main.css" th:href="@{/css/main.css}" />
+    </head>
+    <body th:with="httpStatus=${T(org.springframework.http.HttpStatus).valueOf(#response.status)}">
+        <h1 th:text="|${httpStatus} - ${httpStatus.reasonPhrase}|">404</h1>
+        <p th:utext="${errorMessage}">Error java.lang.NullPointerException</p>
+        <a href="index.html" th:href="@{/index.html}">Back to Home Page</a>
+    </body>
+</html>
+
+
+
+
+
+*/

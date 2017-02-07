@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
 	layout:decorator="layout/main">
 <head lang="pl">
 </head>
@@ -8,20 +9,55 @@
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-xs-12 col-xs-offset-0">
-				<h2 th:text="#{welcome.title}">Hello on a page</h2>
+				<h2 th:text="#{welcome.title}" class="text-primary">Hello on a
+					page</h2>
 			</div>
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-20">
 				<span th:text="#{welcome.message}" class="flow-text ">
 					Welcome message </span>
 			</div>
-			<div class="col-xs-12 col-xs-offset-0 margin-top-20">
-				<pre>
-public static void main(String args[]){
-   System.out.pringln("Hello World!");
-}
-</pre>
+		</div>
+		<!-- MODULES -->
+		<!-- ADMIN -->
+		<div class="row margin-top-20"
+			sec:authorize="hasAnyRole('ROLE_OWNER', 'ROLE_ADMIN')">
+			<div class="col-xs-6 col-xs-offset-3">
+				<div class="panel panel-primary">
+					<div class="panel-heading text-center">
+						<h3 class="panel-title" th:text="#{department.it}">Panel
+							With title</h3>
+					</div>
+					<div class="panel-body">
+					
+					<div class="bg-info" style="width: 120px; height: 110px; display: inline;" >
+					</div>
+					<div class="bg-info" style="width: 120px; height: 110px; display: inline;" >
+					</div>
+					<div class="bg-info" style="width: 120px; height: 110px; display: inline;" >
+					</div>
+					
+						
+					</div>
+				</div>
 			</div>
 		</div>
+		<div class="row"
+			sec:authorize="hasAnyRole('ROLE_OWNER', 'ROLE_ADMIN')">
+			<div class="col-xs-6 col-xs-offset-3">
+				<div class="panel panel-primary">
+					<div class="panel-heading text-center bg-primary" >
+						<h3 class="panel-title" th:text="#{department.quality.control}">Panel
+							With title</h3>
+					</div>
+					<div class="panel-body">Panel content</div>
+				</div>
+			</div>
+		</div>
+		<!-- QUALITY CONTROL -->
+		
+		
+		
+		
 	</div>
 </body>
 </html>

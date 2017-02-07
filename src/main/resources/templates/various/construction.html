@@ -7,7 +7,7 @@
 <body>
 	<div layout:fragment="content">
 		<!-- available: $timestamp, $status, $error, $message  -->
-			<h2 th:text="#{construction.title}" class="orange-text text-darken-3" >Under construction</h2>			
+			<h2 th:text="#{construction.title}" class="text-primary" >Under construction</h2>			
 			<span th:text="#{construction.message}">You don't have permission</span>
 			<br/>
 			<img th:src="@{/images/under-construction.png}"></img>
