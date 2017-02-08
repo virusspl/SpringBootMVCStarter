@@ -12,7 +12,7 @@
 				<h2 th:text="#{welcome.title}" class="text-primary">Hello on a
 					page</h2>
 			</div>
-			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-20">
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
 				<span th:text="#{welcome.message}" class="flow-text ">
 					Welcome message </span>
 			</div>
@@ -20,7 +20,6 @@
 		<!-- MODULES -->
 		<!-- ADMIN -->
 		<div class="row margin-top-20 text-center">
-
 			<div class="col-xs-12"
 				sec:authorize="hasAnyRole('ROLE_OWNER', 'ROLE_ADMIN')">
 				<div class="panel panel-primary">
@@ -28,7 +27,7 @@
 						<h3 class="panel-title" th:text="#{department.it}">Panel With title</h3>
 					</div>
 					<div class="panel-body">					
-						<a href="#" class="btn btn-primary btn-md"> <span
+						<a th:href="@{/users/list/active}" class="btn btn-primary btn-md"> <span
 							class="glyphicon glyphicon-user"></span> Users management
 						</a>
 					</div>
@@ -42,7 +41,7 @@
 					</div>
 					
 					<div class="panel-body">
-						<a href="#" class="btn btn-primary btn-md"> <span
+						<a href="" class="btn btn-primary btn-md"> <span
 							class="glyphicon glyphicon-link"></span> Survey
 						</a>
 					</div>

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -30,6 +31,8 @@ public class UserController {
 	RoleService roleService;
 	@Autowired
 	MessageSource messageSource;
+	@Autowired
+	UsersCriteriaHolder criteriaHolder;
 	
 	private User getAuthenticatedUser(){
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -47,10 +50,39 @@ public class UserController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("/list")
-	public String showUsersList(Model model) {
-		model.addAttribute("users", userService.findAll());
-		return "profile";
+	@RequestMapping("/list/{crit}")
+	public String showUsersList(@PathVariable("crit") String crit, Model model) {
+		
+		if(criteriaHolder.getFindRange()==null){
+			criteriaHolder.setFindRange(UserService.ACTIVE_USERS);
+		}
+		if (criteriaHolder.getSortOrder()==null){
+			criteriaHolder.setSortOrder(UserService.SORT_ORDER_USERNAME);
+		}
+		
+		switch (crit){
+			case UserService.ACTIVE_USERS:
+				criteriaHolder.setFindRange(UserService.ACTIVE_USERS);
+				break;
+			case UserService.INACTIVE_USERS:
+				criteriaHolder.setFindRange(UserService.INACTIVE_USERS);
+				break;
+			case UserService.ALL_USERS:
+				criteriaHolder.setFindRange(UserService.ALL_USERS);
+				break;
+			case UserService.SORT_ORDER_ID:
+				criteriaHolder.setSortOrder(UserService.SORT_ORDER_ID);
+				break;
+			case UserService.SORT_ORDER_USERNAME:
+				criteriaHolder.setSortOrder(UserService.SORT_ORDER_USERNAME);
+				break;
+			default:
+				break;
+
+		}
+
+		model.addAttribute("users", userService.find(criteriaHolder.getFindRange(), criteriaHolder.getSortOrder()));
+		return "users/list";
 	}
 	
 	/**

@@ -42,10 +42,21 @@ public class UserServiceImpl extends GenericServiceAdapter<User, Long> implement
 		}
 		return user;
 	}
+	
+	@Override
+	@Transactional
+	public List<User> find(String range, String sort) {
+    	List<User> result = userRepository.find(range, sort);
+		for (User user: result){
+			Hibernate.initialize(user.getRoles());
+		}
+		return result;
+	}
 
 	@Override
 	public String getPrincipalName() {
 		return SecurityContextHolder.getContext().getAuthentication().getName();
 	}
 
+	
 }

@@ -4,15 +4,15 @@
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport"
 	content="width=device-width, initialscale=1, maximum-scale=1.0, user-scalable=no" />
 <link rel="shortcut_icon" th:href="@{/favicon.ico}" />
-	<link th:href="@{/css/cookies.css}" type="text/css" rel="stylesheet" media="screen,projection" />
 	<link th:href="@{/bootstrap/css/bootstrap.min.css}" type="text/css" rel="stylesheet" media="screen,projection" />	
 	<link th:href="@{/css/normalize.css}" type="text/css" rel="stylesheet" media="screen,projection" />
-	<link th:href="@{/css/readmore.css}" type="text/css" rel="stylesheet" media="screen,projection" />
 	<link th:href="@{/css/default.css}" type="text/css" rel="stylesheet" media="screen,projection" />
 	<title th:text="#{name.company}">ADR Polska S.A.</title>
+	 
 </head>
 <body>
 	<!--=================================== NAVI =================================-->
@@ -42,7 +42,7 @@
                <!-- authenticated -->
                <li sec:authorize="isAuthenticated()"><a th:href="@{/underconstruction}">
 				<span th:text="${#authentication.name}">Profile name</span>
-				<img class="nav-img" th:src="@{images/icons/profile.png}" alt="anonymous profile picture"/>
+				<img class="nav-img" th:src="@{/images/icons/profile_black.png}" alt="profile picture"></img>
 				</a>
                </li>
                <li sec:authorize="isAuthenticated()" role="separator" class="divider">
@@ -88,11 +88,11 @@
     <!--=================================== /FOOTER  ==============================-->
 	<!--=================================== SCRIPTS ===============================-->
 	<!-- JQUERY -->
-		<script th:src="@{/js/jquery-3.1.1.min.js}"></script>
+	<script th:src="@{/js/jquery-3.1.1.min.js}" type="text/javascript"></script>
 	<!-- BOOTSTRAP JS -->
-	<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+	<script th:src="@{/bootstrap/js/bootstrap.min.js}" type="text/javascript"></script>
 	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script th:src="@{/bootstrap/js/ie10-viewport-bug-workaround.js}"></script>
+    <script th:src="@{/bootstrap/js/ie10-viewport-bug-workaround.js}" type="text/javascript"></script>
 	<!-- ALL SPECIFIC SCRIPTS FROM CHILD VIEWS -->
 	<script type="text/javascript" layout:fragment="script">
 	</script>

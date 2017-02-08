@@ -36,16 +36,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.and().exceptionHandling().accessDeniedPage("/noaccess")
 		.and().authorizeRequests()
 		.antMatchers("/", 
-				"/error", 
-				"/webjars/**",
 				"/bootstrap/**",
+				"/css/**",
+				"/images/**",
+				"/js/**",
+				"/error", 
 				"/login",
 				"/contact/**"
 				)
 		.permitAll()
 		.antMatchers(
 				"/admin", 
-				"/configure"
+				"/users/**"
 				)
 		.hasRole("ADMIN")
 		.anyRequest().authenticated().and()

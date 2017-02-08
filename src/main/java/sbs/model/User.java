@@ -20,6 +20,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Table(name = "users")
 public class User {
     private Long id;
+    private boolean active;
     private String username;
     private String name;
     private String email;
@@ -101,6 +102,14 @@ public class User {
 
 	public void setAvatarPath(String avatarPath) {
 		this.avatarPath = avatarPath;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
     
