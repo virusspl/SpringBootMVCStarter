@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
 <ehcache>
-   <cache name="avatar"
+   <cache name="avatarByUsername"
+   maxBytesLocalHeap="50m"
+   timeToLiveSeconds="60">
+   </cache>
+   <cache name="avatarById"
    maxBytesLocalHeap="50m"
    timeToLiveSeconds="60">
    </cache>

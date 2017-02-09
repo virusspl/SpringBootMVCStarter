@@ -26,7 +26,7 @@ public class ProfileForm {
 			this.username =  user.getUsername();
 			this.name = user.getName();
 			this.email = user.getEmail();
-			this.avatarPath= user.getAvatarPath();
+			this.avatarPath= user.getAvatarFileName();
 		}
 	}
 	

@@ -9,18 +9,19 @@
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-xs-12 col-xs-offset-0">
-				<h2 th:text="#{users.edit.title}" class="text-primary">Hello on a
+				<h2 th:text="#{users.show.title}" class="text-primary">Hello on a
 					page</h2>
 			</div>
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-20">
-				<span th:text="#{users.edit.message}" class="flow-text ">
+				<span th:text="#{users.show.message}" class="flow-text ">
 					Welcome message </span>
 			</div>
 		</div>
 		<div class="row margin-top-20 text-center">
 			<div class="col-xs-12">
 				
-<span th:text="${user.avatarPath}"></span>
+				<img th:src="@{/useravatar/1}"></img>
+<span th:text="${user.avatarFileName}"></span>
 				
 			</div>
 		</div>

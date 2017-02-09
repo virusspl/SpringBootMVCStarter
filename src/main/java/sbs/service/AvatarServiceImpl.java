@@ -2,7 +2,10 @@ package sbs.service;
 
 import java.io.IOException;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
@@ -17,33 +20,38 @@ import sbs.service.UserService;
 
 @Service
 public class AvatarServiceImpl implements AvatarService {
-	private final Resource avatarPath;
+	private final String avatarUploadPath;
 	
 	@Autowired UserService userService;
 	
     @Autowired
     public AvatarServiceImpl(UploadProperties uploadProperties) {
-    	avatarPath = uploadProperties.getAvatarPath();
+    	avatarUploadPath = uploadProperties.getAvatarPath();
     }
 
+    
+    @Value(value = "classpath:static/images/anonymous/anonymous_2.jpg")
+    private Resource anonymousPicture;
+    
 	@Override
-	@Cacheable("avatarById")
+	//@Cacheable("avatarById")
+	@Transactional
 	public Resource getAvatarResourceById(Long id){
-		Resource picturePath;
+		Resource picture;
 		User modelUser = userService.findById(id);
-		if( modelUser.getAvatarPath() ==  null || modelUser.getAvatarPath().isEmpty()){
-			//picturePath = avatarPath.;
+		if( modelUser.getAvatarFileName() ==  null || modelUser.getAvatarFileName().isEmpty()){	
+			picture = anonymousPicture;
 		}else{
 			try{
-			picturePath = (new DefaultResourceLoader()).getResource("file:./" + modelUser.getAvatarPath());
-			picturePath.getInputStream().close();
+				picture = (new DefaultResourceLoader()).getResource(avatarUploadPath + "/" + modelUser.getAvatarFileName());
+				picture.getInputStream().close();
 			} catch (IOException ex){
-				modelUser.setAvatarPath(null);
+				modelUser.setAvatarFileName(null);
 				userService.update(modelUser);
-				//picturePath = anonymousPicture;				
+				picture = anonymousPicture;				
 			}
 		}
-		return null;
+		return picture;
 	}
 	
 	@Override

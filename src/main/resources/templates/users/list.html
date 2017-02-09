@@ -73,7 +73,7 @@
 								th:href="|mailto:${user.email}|"><span th:text="${user.email}"></span></a>
 								
 								</td>
-								<td class="text-center"><span class="label label-default"></span><span th:class="${user.avatarPath != null}? 'glyphicon glyphicon-ok' : 'glyphicon glyphicon-remove'"></span></td>
+								<td class="text-center"><span class="label label-default"></span><span th:class="${user.avatarFileName != null}? 'glyphicon glyphicon-ok' : 'glyphicon glyphicon-remove'"></span></td>
 								<td >
 								<ul class="pull-left">
 								<li style="display: inline;" th:each="role : ${user.roles}">

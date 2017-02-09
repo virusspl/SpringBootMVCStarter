@@ -25,7 +25,7 @@ public class User {
     private String name;
     private String email;
     private String password;
-    private String avatarPath;
+    private String avatarFileName;
     private Set<Role> roles;
 
     
@@ -96,12 +96,12 @@ public class User {
 		return "User [id=" + id + ", username=" + username + ", password=" + password + ", roles=" + roles + "]";
 	}
 
-	public String getAvatarPath() {
-		return avatarPath;
+	public String getAvatarFileName() {
+		return avatarFileName;
 	}
 
-	public void setAvatarPath(String avatarPath) {
-		this.avatarPath = avatarPath;
+	public void setAvatarFileName(String avatarFileName) {
+		this.avatarFileName = avatarFileName;
 	}
 
 	public boolean isActive() {
@@ -112,5 +112,4 @@ public class User {
 		this.active = active;
 	}
 
-    
 }

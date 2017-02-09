@@ -6,23 +6,23 @@ import org.springframework.core.io.Resource;
 
 @ConfigurationProperties(prefix = "upload")
 public class UploadProperties {
-	private Resource path;
-	private Resource avatarPath;
+	private String uploadPath;
+	private String avatarPath;
 
-	public Resource getPath() {
-		return path;
+	public String getUploadPath() {
+		return uploadPath;
 	}
 
 	public void setPath(String path) {
-		this.path = new DefaultResourceLoader().getResource(path);
+		this.uploadPath = path;
 	}
 
-	public Resource getAvatarPath() {
+	public String getAvatarPath() {
 		return avatarPath;
 	}
 
 	public void setAvatarPath(String avatarPath) {
-		this.avatarPath = new DefaultResourceLoader().getResource(avatarPath);
+		this.avatarPath = avatarPath;
 	}
 
 }
