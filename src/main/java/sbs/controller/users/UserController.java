@@ -59,7 +59,6 @@ public class UserController {
 		if (criteriaHolder.getSortOrder()==null){
 			criteriaHolder.setSortOrder(UserService.SORT_ORDER_USERNAME);
 		}
-		
 		switch (crit){
 			case UserService.ACTIVE_USERS:
 				criteriaHolder.setFindRange(UserService.ACTIVE_USERS);
@@ -78,32 +77,32 @@ public class UserController {
 				break;
 			default:
 				break;
-
 		}
-
 		model.addAttribute("users", userService.find(criteriaHolder.getFindRange(), criteriaHolder.getSortOrder()));
 		return "users/list";
 	}
 	
-	/**
-	 * show existing profile
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping("/show")
-	public String showProfile(Model model) {
-		model.addAttribute("user", getAuthenticatedUser());
-		return "edit";
+	@RequestMapping("/show/{id}")
+	public String showProfile(@PathVariable("id") long id, Model model) {
+		model.addAttribute("user",userService.findById(id));
+		return "users/show";
+	}
+	
+	@RequestMapping("/edit/{id}")
+	public String showUserCreateForm(@PathVariable("id") long id, Model model) {
+		model.addAttribute("userForm", new UserForm());
+		model.addAttribute("user",userService.findById(id));
+		return "users/edit";
 	}
 	
 	@RequestMapping(value = "/create")
-	public String showUserCreateForm(RegisterForm registerForm) {
+	public String showUserCreateForm(UserForm registerForm) {
 		return "register";
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	@Transactional
-	public String registerUser(@Valid RegisterForm registerForm, BindingResult bindingResult) {
+	public String registerUser(@Valid UserForm registerForm, BindingResult bindingResult) {
 		
 		User modelUser = userService.findByUsername(registerForm.getUsername());
 		if(modelUser != null){

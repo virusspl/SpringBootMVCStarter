@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import sbs.config.qualifier.Password;
 import sbs.config.qualifier.Username;
 
-public class RegisterForm {
+public class UserForm {
 	@Username
 	private String username;
 	@Size(min = 2, max=25)
@@ -20,7 +20,7 @@ public class RegisterForm {
 	private String password;
 	private String repeatPassword;
 	
-	public RegisterForm(){
+	public UserForm(){
 		
 	}
 	

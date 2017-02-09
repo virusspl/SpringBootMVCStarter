@@ -20,23 +20,7 @@
 		<div class="row margin-top-20 text-center">
 			<div class="col-xs-12">
 				
-				
-								<form th:action="@{'/upload/avatar/' + ${user.id}}" method="post"
-					enctype="multipart/form-data">
-					
-							<input type="file" id="file" name="file" style="display: none" />
-							<label for="file"
-								class="btn waves-effect waves-light orange darken-3"> <span
-								th:text="#{profile.choose.avatar}"></span>
-							</label>
-					
-							<button class="btn waves-effect waves-light orange darken-3"
-								type="submit" name="upload">
-								<span  th:text="#{upload}"></span><i class="mdi-content-send right"></i>
-							</button>
-
-				</form>
-				
+<span th:text="${user.avatarPath}"></span>
 				
 			</div>
 		</div>

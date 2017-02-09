@@ -20,20 +20,21 @@
 		<!-- MODULES -->
 		<!-- ADMIN -->
 		<div class="row margin-top-20 text-center">
-			<div class="col-xs-12"
+			<div class="col-xs-8 col-xs-offset-2"
 				sec:authorize="hasAnyRole('ROLE_OWNER', 'ROLE_ADMIN')">
 				<div class="panel panel-primary">
 					<div class="panel-heading">
 						<h3 class="panel-title" th:text="#{department.it}">Panel With title</h3>
 					</div>
 					<div class="panel-body">					
-						<a th:href="@{/users/list/active}" class="btn btn-primary btn-md"> <span
+						<a th:href="@{/users/list/active}" class="btn btn-info btn-md margin-top-5"> <span
 							class="glyphicon glyphicon-user"></span> Users management
 						</a>
+						
 					</div>
 				</div>
 			</div>
-			<div class="col-xs-12 col-xs-offset-0">
+			<div class="col-xs-8 col-xs-offset-2">
 				<div class="panel panel-primary">
 					<div class="panel-heading bg-primary">
 						<h3 class="panel-title" th:text="#{department.quality.control}">Panel
@@ -41,7 +42,7 @@
 					</div>
 					
 					<div class="panel-body">
-						<a href="" class="btn btn-primary btn-md"> <span
+						<a href="" class="btn btn-info btn-md margin-top-5"> <span
 							class="glyphicon glyphicon-link"></span> Survey
 						</a>
 					</div>

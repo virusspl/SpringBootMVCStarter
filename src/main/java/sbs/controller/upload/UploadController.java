@@ -34,33 +34,43 @@ import sbs.service.UserService;
 
 @Controller
 public class UploadController {
-	private final Resource picturesDir;
-	private final MessageSource messageSource;
+	private final Resource uploadDir;
 	
-	@Autowired UserService userService;
-	@Autowired AvatarService avatarService;
+	@Autowired 
+	UserService userService;
+	@Autowired 
+	AvatarService avatarService;
+	@Autowired 
+	MessageSource messageSource;;
 
     @Autowired
-    public UploadController(UploadProperties uploadProperties,
-                                   MessageSource messageSource) {
-        picturesDir = uploadProperties.getPicturesUploadPath();
-        this.messageSource = messageSource;
+    public UploadController(UploadProperties uploadProperties) {
+    	uploadDir = uploadProperties.getAvatarPath();
     }
 
-	@RequestMapping(value = "/profile/uploadAvatar", params = {"upload"},  method = RequestMethod.POST)
+    
+    
+	@RequestMapping(value = "/upload/avatar/{id}",  method = RequestMethod.POST)
 	@Secured("ROLE_USER")
-	public String onUpload(MultipartFile file, RedirectAttributes redirectAttrs, Locale locale) throws IOException {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	public String onUpload(@PathVariable("id") long id, MultipartFile file, RedirectAttributes redirectAttrs, Locale locale) throws IOException {
 		if (file.isEmpty() || !isImage(file)) {
 			redirectAttrs.addFlashAttribute("error", messageSource.getMessage("upload.bad.file.type", null, locale));
-			return "redirect:/profile/edit";
-		}		
-		String path = copyFileToPictures(file);
-		User user = userService.findByUsername(auth.getName());
-		user.setAvatarPath(path);
-		userService.saveOrUpdate(user);
+			return "redirect:/users/edit/"+id;
+		}
 		
-		return "redirect:/profile/show";
+		String fileExtension = getFileExtension(file.getOriginalFilename());
+		File tempFile = File.createTempFile("avatar_", fileExtension, uploadDir.getFile());
+		try (InputStream in = file.getInputStream(); OutputStream out = new FileOutputStream(tempFile)) {
+			IOUtils.copy(in, out);
+		}
+		
+		//String path = new FileSystemResource(tempFile).getPath();
+		User user = userService.findById(id);
+		user.setAvatarPath(tempFile.getName());
+		userService.saveOrUpdate(user);
+		redirectAttrs.addFlashAttribute("ok");
+		
+		return "redirect:/users/edit/"+id;
 	}
 
 	@RequestMapping(value = "/useravatar")
@@ -70,22 +80,15 @@ public class UploadController {
 		IOUtils.copy(picturePath.getInputStream(), response.getOutputStream());
 	}
 	
-	@RequestMapping(value="/useravatar/{username}")
-	public void getUserAvatar(HttpServletResponse response, @PathVariable String username) throws IOException {
-		Resource res = avatarService.getAvatarResourceByUsername(username);
+	@RequestMapping(value="/useravatar/{id}")
+	public void getUserAvatar(HttpServletResponse response, @PathVariable Long id) throws IOException {
+		Resource res = avatarService.getAvatarResourceById(id);
 		response.setHeader("Content-Type", URLConnection.guessContentTypeFromName(res.getFilename()));
 		IOUtils.copy(res.getInputStream(), response.getOutputStream());
 	}
 
+	
 	// ---------------- helpers
-	private String copyFileToPictures(MultipartFile file) throws IOException {
-		String fileExtension = getFileExtension(file.getOriginalFilename());
-		File tempFile = File.createTempFile("pic", fileExtension, picturesDir.getFile());
-		try (InputStream in = file.getInputStream(); OutputStream out = new FileOutputStream(tempFile)) {
-			IOUtils.copy(in, out);
-		}
-		return new FileSystemResource(tempFile).getPath();
-	}
 
 	private boolean isImage(MultipartFile file) {
 		return file.getContentType().startsWith("image");
@@ -98,7 +101,9 @@ public class UploadController {
 	
 	// exceptions
    @ExceptionHandler(IOException.class)
-	    public ModelAndView handleIOException(Locale locale) {
+	    public ModelAndView handleIOException(Locale locale, Exception ex) {
+	   ex.getMessage();
+	   ex.printStackTrace();
 	        ModelAndView modelAndView = new ModelAndView("profileedit");
 	        modelAndView.addObject("error", messageSource.getMessage("upload.io.exception", null, locale));
 	        return modelAndView;

@@ -17,30 +17,30 @@
 					Welcome message </span>
 			</div>
 		</div>
-		<div class="row margin-top-20">
+		<div class="row margin-top-10">
 		<div class="col-xs-12 text-right">
-		 <a th:href="@{/users/create}" class="btn btn-primary btn-md pull-left"> 
+		 <a th:href="@{/users/create}" class="btn btn-primary btn-md pull-left margin-top-5"> 
 		 	<span class="glyphicon glyphicon-plus"></span>
           <span th:text="#{users.create}"> </span>
         </a>
-		 <a th:href="@{/users/list/all}" class="btn btn-info btn-md"> 
+		 <a th:href="@{/users/list/all}" class="btn btn-info btn-md margin-top-5"> 
 		 	<span class="glyphicon glyphicon-th-list"></span>
           <span th:text="#{users.all}"> </span>
         </a>
-		 <a th:href="@{/users/list/active}" class="btn btn-info btn-md"> 
+		 <a th:href="@{/users/list/active}" class="btn btn-info btn-md margin-top-5"> 
 		 	<span class="glyphicon glyphicon-ok"></span>
            <span th:text="#{users.active}"> </span>
         </a>
-		 <a th:href="@{/users/list/inactive}" class="btn btn-info btn-md"> 
+		 <a th:href="@{/users/list/inactive}" class="btn btn-info btn-md margin-top-5"> 
 		 	<span class="glyphicon glyphicon-remove"></span>
           <span th:text="#{users.inactive}"> </span>
         </a>
-		 <a th:href="@{/users/list/username}" class="btn btn-info btn-md"> 
+		 <a th:href="@{/users/list/username}" class="btn btn-info btn-md margin-top-5"> 
 		 	<span class="glyphicon glyphicon-sort-by-alphabet"></span>
           <span th:text="#{user.username}"> </span>
         </a>
-        		 <a th:href="@{/users/list/id}" class="btn btn-info btn-md"> 
-		 	<span class="glyphicon glyphicon-sort-by-order"></span>
+        		 <a th:href="@{/users/list/id}" class="btn btn-info btn-md margin-top-5"> 
+		 	<span class="glyphicon glyphicon-sort-by-order margin"></span>
           <span th:text="#{user.id}"> </span>
         </a>
 				
@@ -53,21 +53,45 @@
 						<thead>
 							<tr>
 								<th>#id</th>
-								<th>Username</th>
-								<th>Name</th>
-								<th>Email</th>
-								<th>Avatar</th>
-								<th>Roles</th>
+								<th th:text="#{user.username}">Username</th>
+								<th th:text="#{user.name}">Name</th>
+								<th th:text="#{user.email}">Email</th>
+								<th class="text-center" th:text="#{user.avatar}">Avatar</th>
+								<th class="text-center"  th:text="#{user.roles}">Roles</th>
+								<th class="text-center" th:text="#{user.active}">Active</th>
+								<th class="text-center" th:text="#{users.options}">Options</th>								
 							</tr>
 						</thead>
 						<tbody>
 							<tr th:each="user : ${users}">
 								<td><span th:text="|#${user.id}|">id</span></td>
-								<td><span th:text="${user.username}"></span></td>
+								<td><a th:href="|@{/users/show/}${user.id}|" data-toggle="tooltip" data-placement="top" th:title="#{action.show}"><span th:text="${user.username}"></span></a></td>
 								<td><span th:text="${user.name}"></span></td>
-								<td><span th:text="${user.email}"></span></td>
-								<td><span th:text="${user.avatarPath}"></span></td>
-								<td><span th:text="${user.roles}"></span></td>
+								<td>
+								<a
+								data-toggle="tooltip" data-placement="top" th:title="#{action.send}" 
+								th:href="|mailto:${user.email}|"><span th:text="${user.email}"></span></a>
+								
+								</td>
+								<td class="text-center"><span class="label label-default"></span><span th:class="${user.avatarPath != null}? 'glyphicon glyphicon-ok' : 'glyphicon glyphicon-remove'"></span></td>
+								<td >
+								<ul class="pull-left">
+								<li style="display: inline;" th:each="role : ${user.roles}">
+									<span th:text="${role.name}" 
+									th:class="${role.name == 'ROLE_ADMIN'}? 'btn btn-danger btn-xs' : 'btn btn-info btn-xs'"
+									></span>
+								</li>
+								</ul>
+								</td>
+								<td class="text-center"><span th:class="${user.active}==true? 'glyphicon glyphicon-ok' : 'glyphicon glyphicon-remove'"></span></td>
+								<td class="text-center" >
+								 <a th:href="|@{/users/edit/}${user.id}|" data-toggle="tooltip" data-placement="top" th:title="#{action.edit}" class="btn btn-success btn-xs"> 
+								 	<span class="glyphicon glyphicon-edit"></span>
+						        </a>
+								 <a th:href="|@{/users/show/}${user.id}|" data-toggle="tooltip" data-placement="top" th:title="#{action.show}" class="btn btn-warning btn-xs"> 
+								 	<span class="glyphicon glyphicon-user"></span>
+        						</a>
+								</td>
 							</tr>
 						</tbody>
 					</table>

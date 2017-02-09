@@ -6,31 +6,23 @@ import org.springframework.core.io.Resource;
 
 @ConfigurationProperties(prefix = "upload")
 public class UploadProperties {
-	private Resource picturesUploadPath;
-	private Resource anonymousPicture;
-	private Resource chatBotPicture;
+	private Resource path;
+	private Resource avatarPath;
 
-	public Resource getChatBotPicture() {
-		return chatBotPicture;
-	}
-	
-	public void setChatBotPicture(String chatBotPicture) {
-		this.chatBotPicture = new DefaultResourceLoader().getResource(chatBotPicture);
-	}
-	
-	public Resource getAnonymousPicture() {
-		return anonymousPicture;
+	public Resource getPath() {
+		return path;
 	}
 
-	public void setAnonymousPicture(String anonymousPicture) {
-    this.anonymousPicture = new DefaultResourceLoader().getResource(anonymousPicture);
-  }
-
-	public Resource getPicturesUploadPath() {
-		return picturesUploadPath;
+	public void setPath(String path) {
+		this.path = new DefaultResourceLoader().getResource(path);
 	}
 
-	public void setPicturesUploadPath(String picturesUploadPath) {
-		this.picturesUploadPath = new DefaultResourceLoader().getResource(picturesUploadPath);
+	public Resource getAvatarPath() {
+		return avatarPath;
 	}
+
+	public void setAvatarPath(String avatarPath) {
+		this.avatarPath = new DefaultResourceLoader().getResource(avatarPath);
+	}
+
 }

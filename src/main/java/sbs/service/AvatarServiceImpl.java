@@ -17,40 +17,22 @@ import sbs.service.UserService;
 
 @Service
 public class AvatarServiceImpl implements AvatarService {
-	private final Resource anonymousPicture;
-	private final Resource chatBotPicture;
+	private final Resource avatarPath;
 	
 	@Autowired UserService userService;
 	
     @Autowired
     public AvatarServiceImpl(UploadProperties uploadProperties) {
-        anonymousPicture = uploadProperties.getAnonymousPicture();
-        chatBotPicture = uploadProperties.getChatBotPicture();
+    	avatarPath = uploadProperties.getAvatarPath();
     }
-    
-    @Override
-	public Resource getCurrentPicturePath(){
-    	Resource picturePath;
-    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (!(auth instanceof AnonymousAuthenticationToken)) {
-				return getAvatarResourceByUsername(auth.getName());
-		}else{
-			picturePath = anonymousPicture;
-		}
-    	
-    	return picturePath;
-    }
-    
+
 	@Override
-	@Cacheable("avatar")
-	public Resource getAvatarResourceByUsername(String username){
-		if(username.equals("ChatBot")){
-			return chatBotPicture;
-		}
+	@Cacheable("avatarById")
+	public Resource getAvatarResourceById(Long id){
 		Resource picturePath;
-		User modelUser = userService.findByUsername(username);
+		User modelUser = userService.findById(id);
 		if( modelUser.getAvatarPath() ==  null || modelUser.getAvatarPath().isEmpty()){
-			picturePath = anonymousPicture;
+			//picturePath = avatarPath.;
 		}else{
 			try{
 			picturePath = (new DefaultResourceLoader()).getResource("file:./" + modelUser.getAvatarPath());
@@ -58,10 +40,16 @@ public class AvatarServiceImpl implements AvatarService {
 			} catch (IOException ex){
 				modelUser.setAvatarPath(null);
 				userService.update(modelUser);
-				picturePath = anonymousPicture;				
+				//picturePath = anonymousPicture;				
 			}
 		}
-		return picturePath;
+		return null;
+	}
+	
+	@Override
+	public Resource getCurrentPicturePath() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
