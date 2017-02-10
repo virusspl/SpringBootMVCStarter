@@ -13,5 +13,7 @@ public interface UserRepository extends GenericRepository<User,Long>{
 	public static final String SORT_ORDER_USERNAME="username";
 	
 	public User findByUsername(String username);
+	public User findActiveByUsername(String username);
 	public List<User> find(String range, String sort);
+	
 }

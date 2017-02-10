@@ -24,6 +24,16 @@ public class UserRepositoryImpl extends GenericRepositoryAdapter<User, Long> imp
         } 
         return result.get(0);
 	}
+	@Override
+	public User findActiveByUsername(String username) {
+		String hql = "from User u where lower(u.username) = :username and u.active=true";
+		@SuppressWarnings("unchecked")
+		List<User> result = (List<User>) currentSession().createQuery(hql).setString("username", username.toLowerCase()).list();
+		if (result == null || result.isEmpty()) {
+			return null;
+		} 
+		return result.get(0);
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
