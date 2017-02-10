@@ -5,56 +5,62 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import sbs.model.User;
+import sbs.config.qualifier.Password;
+import sbs.config.qualifier.Username;
 
-public class ProfileForm {
-	@Size(min = 2, max=25)
+public class UserEditForm {
+	@Username
 	private String username;
 	@Size(min = 2, max=25)
 	private String name;
 	@Email  
 	@NotEmpty
 	private String email;
-	private String avatarPath;
 	
-	public ProfileForm(){
+	public UserEditForm(){
 		
 	}
 	
-	public ProfileForm(User user){
-		if(user!=null){
-			this.username =  user.getUsername();
-			this.name = user.getName();
-			this.email = user.getEmail();
-			this.avatarPath= user.getAvatarFileName();
-		}
-	}
-	
+	/**
+	 * @return the username
+	 */
 	public String getUsername() {
 		return username;
 	}
+
+	/**
+	 * @param username the username to set
+	 */
 	public void setUsername(String username) {
 		this.username = username;
 	}
+
+	/**
+	 * @return the name
+	 */
 	public String getName() {
 		return name;
 	}
+
+	/**
+	 * @param name the name to set
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	/**
+	 * @return the email
+	 */
 	public String getEmail() {
 		return email;
 	}
+
+	/**
+	 * @param email the email to set
+	 */
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getAvatarPath() {
-		return avatarPath;
-	}
-	public void setAvatarPath(String avatarPath) {
-		this.avatarPath = avatarPath;
-	}
 
-	
-	
 }

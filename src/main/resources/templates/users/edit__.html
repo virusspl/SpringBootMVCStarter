@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+<div layout:fragment="script">
+		<script>
+			document.getElementById('file').onchange = function() {
+				document.getElementById('filename').textContent = this.value;
+			};
+		</script>
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12 col-xs-offset-0">
+				<h2 th:text="#{users.edit.title}" class="text-primary">Hello on a
+					page</h2>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-20">
+				<span th:text="#{users.edit.message}" class="flow-text ">
+					Welcome message </span>
+			</div>
+		</div>
+		<div class="row margin-top-20 text-center">
+			<div class="col-xs-12">
+				
+				<div id="errorMessage" class=""
+					th:if="${error}">
+					<span class="card-title" th:text="${error}">upload error</span>
+				</div>
+				<div id="errorMessage" class=""
+					th:if="${ok}">
+					<span class="card-title" th:text="${ok}">upload error</span>
+				</div>
+				
+				
+				<span class="btn btn-default btn-file">
+    Browse <input type="file"/>
+</span>
+<label class="btn btn-primary" for="my-file-selector">
+    <input id="my-file-selector" type="file" style="display:none;"/>
+    Button Text Here
+</label>
+
+
+
+<div class="col s5">
+							<!--  http://markusslima.github.io/bootstrap-filestyle/  ??-->
+							<input type="file" id="file" name="file" style="display: none" />
+							<label for="file"
+								class="btn waves-effect waves-light orange darken-3"> <span
+								th:text="#{profile.choose.avatar}"></span>
+							</label>
+						</div>
+						<div class="col s7 valign-wrapper">
+							<span id="filename" class="flow-text valign"></span>
+						</div>
+						
+
+
+
+									<span th:text="${user.avatarFileName}"></span>
+								<form th:action="@{'/upload/avatar/' + ${user.id}}" method="post"
+					enctype="multipart/form-data">
+					
+							<input type="file" id="file" name="file" style="display: none" />
+							<label for="file"
+								class="btn waves-effect waves-light orange darken-3"> <span
+								th:text="#{profile.choose.avatar}"></span>
+							</label>
+					
+							<button class="btn waves-effect waves-light orange darken-3"
+								type="submit" name="upload">
+								<span  th:text="#{upload}"></span><i class="mdi-content-send right"></i>
+							</button>
+
+				</form>
+				
+				
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -16,4 +16,5 @@ public interface UserService extends GenericService<User, Long>{
 	public User findByUsername(String username);
 	public String getPrincipalName();
 	public List<User> find(String range, String sort);
+	public User getAuthenticatedUser();
 }

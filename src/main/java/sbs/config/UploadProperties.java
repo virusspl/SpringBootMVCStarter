@@ -1,8 +1,6 @@
 package sbs.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.Resource;
 
 @ConfigurationProperties(prefix = "upload")
 public class UploadProperties {

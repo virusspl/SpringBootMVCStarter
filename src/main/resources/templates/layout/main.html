@@ -39,7 +39,7 @@
               <a href="#"  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span th:text="#{navi.profile}">Profile</span> <span class="caret"></span></a>
               <ul class="dropdown-menu">
                <!-- authenticated -->
-               <li sec:authorize="isAuthenticated()"><a th:href="@{/underconstruction}">
+               <li sec:authorize="isAuthenticated()"><a th:href="@{/users/showcurrent}">
 				<span th:text="${#authentication.name}">Profile name</span>
 				<img class="nav-img" th:src="@{/currentavatar}" alt="profile picture" style="heihgt: 20px; width: 20px;"></img>
 				</a>

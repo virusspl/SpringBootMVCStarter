@@ -5,6 +5,8 @@ import java.util.List;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,12 +27,23 @@ public class UserServiceImpl extends GenericServiceAdapter<User, Long> implement
 	}
 	
     @Override
+    @Transactional
     public List<User> findAll(){
     	List<User> result = userRepository.findAll();
 		for (User user: result){
 			Hibernate.initialize(user.getRoles());
 		}
 		return result;
+    }
+    
+    @Override
+    @Transactional
+    public User findById(Long id) {
+    	User user = userRepository.findById(id);
+    	if (user!=null){
+    		Hibernate.initialize(user.getRoles());
+    	}
+    	return user;
     }
     
 	@Override
@@ -58,5 +71,16 @@ public class UserServiceImpl extends GenericServiceAdapter<User, Long> implement
 		return SecurityContextHolder.getContext().getAuthentication().getName();
 	}
 
-	
+	@Override
+	@Transactional
+	public User getAuthenticatedUser() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (!(auth instanceof AnonymousAuthenticationToken)) {
+			User modelUser;
+			org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User)auth.getPrincipal();
+			modelUser = findByUsername(user.getUsername());
+			return modelUser;
+		}
+		return null;
+		}
 }
