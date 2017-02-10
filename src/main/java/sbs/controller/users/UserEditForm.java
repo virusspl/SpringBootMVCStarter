@@ -1,5 +1,6 @@
 package sbs.controller.users;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
@@ -9,6 +10,8 @@ import sbs.config.qualifier.Password;
 import sbs.config.qualifier.Username;
 
 public class UserEditForm {
+	@NotNull
+	private Long id;
 	@Username
 	private String username;
 	@Size(min = 2, max=25)
@@ -16,11 +19,27 @@ public class UserEditForm {
 	@Email  
 	@NotEmpty
 	private String email;
+	@NotNull
+	private Boolean active;
 	
 	public UserEditForm(){
 		
 	}
-	
+
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	/**
 	 * @return the username
 	 */
@@ -62,5 +81,21 @@ public class UserEditForm {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
+	/**
+	 * @return the active
+	 */
+	public Boolean getActive() {
+		return active;
+	}
+
+	/**
+	 * @param active the active to set
+	 */
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+	
+	
 
 }

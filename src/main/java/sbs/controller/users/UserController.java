@@ -4,16 +4,14 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import sbs.model.Role;
+import javassist.NotFoundException;
 import sbs.model.User;
 import sbs.service.RoleService;
 import sbs.service.UserService;
@@ -81,9 +79,20 @@ public class UserController {
 	}
 	
 	@RequestMapping("/edit/{id}")
-	public String showUserCreateForm(@PathVariable("id") long id, Model model) {
-		model.addAttribute("userEditForm", new UserEditForm());
-		model.addAttribute("user",userService.findById(id));
+	public String showUserCreateForm(@PathVariable("id") long id, Model model) throws NotFoundException{
+		UserEditForm userEditForm = new UserEditForm();
+		User user = userService.findById(id);
+		if(user == null){
+			throw new NotFoundException("user not found");
+		}
+		userEditForm.setId(user.getId());
+		userEditForm.setUsername(user.getUsername());
+		userEditForm.setName(user.getName());
+		userEditForm.setEmail(user.getEmail());
+		userEditForm.setActive(user.isActive());
+		model.addAttribute("roles", roleService.findAll());
+		model.addAttribute("user", user);
+		model.addAttribute("userEditForm",userService.findById(id));
 		return "users/edit";
 	}
 	

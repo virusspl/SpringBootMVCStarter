@@ -15,62 +15,44 @@
 		</div>
 
 
-		<form th:action="@{/users/save}" method="post" th:object="${userEditForm}">
-		<input type="text" th:field="${userEditForm.username}"></input>
-		<input type="text" th:field="${userEditForm.name}"></input>
-		<input type="text" th:field="${userEditForm.email}"></input>
-		
+		<form th:action="@{/users/save}" method="post"
+			th:object="${userEditForm}">
 			<div class="row margin-top-10">
-				<div class="col-xs-12 col-sm-3 margin-top-10">
+				<div class="col-xs-12 col-sm-2 margin-top-10">
 					<img th:src="@{'/useravatar/' + ${user.id}}"
 						class="img-responsive img-rounded"></img>
-
 				</div>
-				<div class="col-xs-12 col-sm-9">
-					<div class="row">
-						<div class="col-xs-4 margin-top-10">
-							<span th:text="#{user.name}"></span>
-						</div>
-						<div class="col-xs-4 margin-top-10">
-							<span th:text="${user.name}"></span>
-						</div>
+				<div class="col-xs-4 col-sm-4">
+					<div class="form-group">
+						<label for="name" th:text="#{user.username}">Username</label> <input
+							type="text" class="form-control" id="username" name="username"
+							th:placeholder="#{user.username}"
+							th:field="${userEditForm.username}" />
 					</div>
-					<div class="row">
-						<div class="col-xs-4 margin-top-10">
-							<span th:text="#{user.email}"></span>
-						</div>
-						<div class="col-xs-4 margin-top-10">
-							<a data-toggle="tooltip" data-placement="top"
-								th:title="#{action.send}" th:href="|mailto:${user.email}|"><span
-								th:text="${user.email}"></span> </a>
-						</div>
+					<div class="form-group">
+						<label for="name" th:text="#{user.name}">Name</label> <input
+							type="text" class="form-control" id="name" name="name"
+							th:placeholder="#{user.name}" th:field="${userEditForm.name}" />
 					</div>
-					<div class="row">
-						<div class="col-xs-4 margin-top-10">
-							<span th:text="#{user.roles}"></span>
-						</div>
-						<div class="col-xs-4 margin-top-10">
-							<span style="display: inline;" th:each="role : ${user.roles}">
-								<span th:text="${role.name}"
-								th:class="${role.name == 'ROLE_ADMIN'}? 'btn btn-danger btn-xs' : 'btn btn-info btn-xs'"></span>
-							</span>
-						</div>
+					<div class="form-group">
+						<label for="email" th:text="#{user.email}">E-Mail</label> <input
+							type="text" class="form-control" id="email" name="email"
+							th:placeholder="#{user.email}" th:field="${userEditForm.email}" />
 					</div>
-					<div class="row">
-						<div class="col-xs-4 margin-top-10">
-							<span th:text="#{user.active}"></span>
-						</div>
-						<div class="col-xs-4 margin-top-10">
-							<span
-								th:class="${user.active}==true? 'glyphicon glyphicon-ok' : 'glyphicon glyphicon-remove'"></span>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-xs-4 margin-top-10">
-							<span th:text="#{user.id}"></span>
-						</div>
-						<div class="col-xs-4 margin-top-10">
+				</div>
+				<div class="col-xs-6 col-sm-4">
+					<div class="form-group">
+						<label for="id" th:text="#{user.id}">Username</label> <input
+							type="hidden" th:field="${userEditForm.id}"></input>
+						<div id="id">
 							<span th:text="|#${user.id}|"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="isactive" th:text="#{user.active}">Username</label>
+						<div id="isactive" class="checkbox">
+							<label><input type="checkbox" th:field="${user.active}" /><span
+								th:text="#{user.active}"></span></label>
 						</div>
 					</div>
 				</div>
@@ -80,14 +62,11 @@
 					<a th:href="@{/users/list/active}" class="btn btn-link btn-sm">
 						<span class="glyphicon glyphicon-edit"></span> <span
 						th:text="#{action.back}">edit</span>
-					</a>
-			
-					 <a th:href="|@{/users/show/}${user.id}|"
+					</a> <a th:href="|@{/users/show/}${user.id}|"
 						class="btn btn-warning btn-sm"> <span
 						class="glyphicon glyphicon-user"></span> <span
 						th:text="#{action.show}">show</span>
-					</a>
-								<a th:href="|@{/users/changepassword/}${user.id}|"
+					</a> <a th:href="|@{/users/changepassword/}${user.id}|"
 						class="btn btn-info btn-sm"> <span
 						class="glyphicon glyphicon-alert"></span> <span
 						th:text="#{users.change.password}">change password</span>
@@ -99,6 +78,32 @@
 				</div>
 			</div>
 		</form>
+		<div>
+		
+		 <div class="row">
+		 
+		 </div>
+		 <div class="list-group margin-top-30">
+  <a th:each="role : ${roles}" 
+  th:href="|@{/users/addrole/}${user.id}/${role.id}|" 
+  class="list-group-item"
+  th:class="${role.name == 'ROLE_ADMIN'}? 'list-group-item list-group-item-danger' : 'list-group-item list-group-item-info'"
+  ><span th:text="${role.name}"></span></a>
+</div>
+
+					<div class="form-group">
+						<label for="roles" th:text="#{user.roles}">Username</label>
+						<div>
+							<ul style="margin: 0px; padding: 0px;">
+								<li style="display: inline;" th:each="role : ${user.roles}">
+									<span th:text="${role.name}"
+									th:class="${role.name == 'ROLE_ADMIN'}? 'btn btn-danger btn-xs' : 'btn btn-info btn-xs'"></span>
+								</li>
+							</ul>
+						</div>
+					</div>
+		</div>
+		
 	</div>
 </body>
 </html>

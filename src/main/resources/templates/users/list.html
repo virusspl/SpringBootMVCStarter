@@ -75,7 +75,7 @@
 								</td>
 								<td class="text-center"><span class="label label-default"></span><span th:class="${user.avatarFileName != null}? 'glyphicon glyphicon-ok' : 'glyphicon glyphicon-remove'"></span></td>
 								<td >
-								<ul class="pull-left">
+								<ul style="margin: 0px; padding: 0px;">
 								<li style="display: inline;" th:each="role : ${user.roles}">
 									<span th:text="${role.name}" 
 									th:class="${role.name == 'ROLE_ADMIN'}? 'btn btn-danger btn-xs' : 'btn btn-info btn-xs'"
