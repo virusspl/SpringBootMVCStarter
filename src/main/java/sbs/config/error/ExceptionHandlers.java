@@ -17,6 +17,12 @@ public class ExceptionHandlers {
 	public String accessDeniedHandler(HttpServletRequest req, Exception e) throws Exception {
 		return "various/noaccess";
 	}
+	
+	@ExceptionHandler(value = org.springframework.web.multipart.MultipartException.class)
+	public String MultipartExceptionHandler(HttpServletRequest req, Exception e) throws Exception {
+		return "redirect:/uploadError";
+	}
+	
 	@ExceptionHandler(value = Exception.class)
 	public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
 		// If the exception is annotated with @ResponseStatus rethrow it and let the framework handle it

@@ -20,6 +20,14 @@
 		<div class="row margin-top-20 text-center">
 			<div class="col-xs-12">
 				
+				<div id="errorMessage" class="card-panel red lighten-2 center"
+					th:if="${error}">
+					<span class="card-title" th:text="${error}">upload error</span>
+				</div>
+				<div id="errorMessage" class="card-panel red lighten-2 center"
+					th:if="${ok}">
+					<span class="card-title" th:text="${ok}">upload error</span>
+				</div>
 				
 								<form th:action="@{'/upload/avatar/' + ${user.id}}" method="post"
 					enctype="multipart/form-data">
