@@ -1,19 +1,22 @@
 package sbs.controller.users;
 
+import java.util.Set;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import sbs.config.qualifier.Password;
 import sbs.config.qualifier.Username;
+import sbs.model.Role;
 
 public class UserEditForm {
 	@NotNull
 	private Long id;
 	@Username
 	private String username;
+	@NotNull
 	@Size(min = 2, max=25)
 	private String name;
 	@Email  
@@ -21,6 +24,8 @@ public class UserEditForm {
 	private String email;
 	@NotNull
 	private Boolean active;
+	
+	private Set<Role> roles;
 	
 	public UserEditForm(){
 		
@@ -95,7 +100,13 @@ public class UserEditForm {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-	
-	
+
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
 
 }

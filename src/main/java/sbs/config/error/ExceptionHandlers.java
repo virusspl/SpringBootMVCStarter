@@ -29,6 +29,7 @@ public class ExceptionHandlers {
 		if (AnnotationUtils.findAnnotation(e.getClass(), ResponseStatus.class) != null) {
 			throw e;
 		}
+		e.printStackTrace();
 		// Otherwise setup and send the user to a default error-view.
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("exception", e);

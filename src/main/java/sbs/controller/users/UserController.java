@@ -1,5 +1,10 @@
 package sbs.controller.users;
 
+import java.util.List;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,11 +12,14 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javassist.NotFoundException;
+import sbs.model.Role;
 import sbs.model.User;
 import sbs.service.RoleService;
 import sbs.service.UserService;
@@ -28,6 +36,12 @@ public class UserController {
 	MessageSource messageSource;
 	@Autowired
 	UsersCriteriaHolder criteriaHolder;
+	
+	
+	@ModelAttribute("availableRoles")
+	public List<Role> getAvailableRoles(){
+	    return roleService.findAll();
+	}
 	
 	/**
 	 * show existing profile
@@ -79,6 +93,7 @@ public class UserController {
 	}
 	
 	@RequestMapping("/edit/{id}")
+	@Transactional
 	public String showUserCreateForm(@PathVariable("id") long id, Model model) throws NotFoundException{
 		UserEditForm userEditForm = new UserEditForm();
 		User user = userService.findById(id);
@@ -90,28 +105,81 @@ public class UserController {
 		userEditForm.setName(user.getName());
 		userEditForm.setEmail(user.getEmail());
 		userEditForm.setActive(user.isActive());
-		model.addAttribute("roles", roleService.findAll());
-		model.addAttribute("user", user);
-		model.addAttribute("userEditForm",userService.findById(id));
+		userEditForm.setRoles(user.getRoles());
+		model.addAttribute("userEditForm",userEditForm);
 		return "users/edit";
 	}
 	
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public String saveUser(@Valid UserEditForm userEditForm, BindingResult bindingResult){
-		System.out.println("SAVING");
+	public String saveUser(@Valid UserEditForm userEditForm, BindingResult bindingResult,  RedirectAttributes redirectAttrs, Locale locale, Model model){
 		if(bindingResult.hasErrors()){
-			return "profileedit";
+			/*
+			redirectAttrs.addFlashAttribute("org.springframework.validation.BindingResult.register", bindingResult);
+			redirectAttrs.addFlashAttribute("userEditForm", userEditForm);
+			redirectAttrs.addFlashAttribute("error",bindingResult.getAllErrors());
+			return "redirect:/users/edit/" + userEditForm.getId();
+			*/
+			userEditForm.setRoles(userService.findById(userEditForm.getId()).getRoles());
+			return "users/edit";
 		}
-		User modelUser = userService.findByUsername(userEditForm.getUsername());
+		User modelUser = userService.findById(userEditForm.getId());
+		modelUser.setUsername(userEditForm.getUsername());
 		modelUser.setName(userEditForm.getName());
 		modelUser.setEmail(userEditForm.getEmail());
+		modelUser.setActive(userEditForm.getActive());
 		userService.update(modelUser);
 		
-		return "redirect:/profile/show";
+		redirectAttrs.addFlashAttribute("ok", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/users/edit/" + userEditForm.getId();
+	}
+
+	@RequestMapping(value = "/manageroles/{id}", params = { "add" }, method = RequestMethod.POST)
+	@Transactional
+	public String addRole(@PathVariable("id") long userId, RedirectAttributes redirectAttrs, HttpServletRequest req,
+			Locale locale) {
+		long roleId = Long.valueOf(req.getParameter("add"));
+		Role role = roleService.findById(roleId);
+		User user = userService.findById(userId);
+		user.getRoles().add(role);
+		role.getUsers().add(user);
+		redirectAttrs.addFlashAttribute("ok", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/users/edit/" + userId;
+	}
+	
+	@RequestMapping(value = "/manageroles/{id}", params = { "remove" }, method = RequestMethod.POST)
+	@Transactional
+	public String removeRole(@PathVariable("id") long userId, RedirectAttributes redirectAttrs, HttpServletRequest req,
+			Locale locale) {
+		long roleId = Long.valueOf(req.getParameter("remove"));
+		Role role = roleService.findById(roleId);
+		User user = userService.findById(userId);
+		user.getRoles().remove(role);
+		role.getUsers().remove(user);
+		redirectAttrs.addFlashAttribute("ok", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/users/edit/" + userId;
+	}
+	
+	
+	@RequestMapping(value = "/manageroles", method = RequestMethod.POST)
+	public String manageRoles(){
+		
+		return "redirect:/";
+		
 	}
 	
 	
 	/*
+
+// for thymeleaf list binding
+  <span th:each="role, stat : *{roles}">         
+    <input type="checkbox" 
+            th:name="|roles[${stat.index}]|"
+            th:value="${role.id}"
+            th:checked="${true}" />
+
+     </span>
+
+
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	@Transactional
