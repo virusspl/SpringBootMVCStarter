@@ -112,6 +112,12 @@ public class UserController {
 	
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String saveUser(@Valid UserEditForm userEditForm, BindingResult bindingResult,  RedirectAttributes redirectAttrs, Locale locale, Model model){
+		User modelUser = userService.findById(userEditForm.getId());
+		if(!modelUser.getUsername().equals(userEditForm.getUsername())){
+			if (userService.findByUsername(userEditForm.getUsername())!= null){
+				bindingResult.rejectValue("username", "error.user.already.exist", "ERROR");
+			}
+		}
 		if(bindingResult.hasErrors()){
 			/*
 			redirectAttrs.addFlashAttribute("org.springframework.validation.BindingResult.register", bindingResult);
@@ -122,7 +128,6 @@ public class UserController {
 			userEditForm.setRoles(userService.findById(userEditForm.getId()).getRoles());
 			return "users/edit";
 		}
-		User modelUser = userService.findById(userEditForm.getId());
 		modelUser.setUsername(userEditForm.getUsername());
 		modelUser.setName(userEditForm.getName());
 		modelUser.setEmail(userEditForm.getEmail());

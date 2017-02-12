@@ -32,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 		.formLogin().loginPage("/login").usernameParameter("username").passwordParameter("password")
 		.successHandler(savedRequestAwareAuthenticationSuccessHandler())
-		.and().logout().logoutSuccessUrl("/")
+		.and().logout().logoutSuccessUrl("/logout")
 		.and().exceptionHandling().accessDeniedPage("/noaccess")
 		.and().authorizeRequests()
 		.antMatchers("/", 
@@ -42,6 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/js/**",
 				"/error", 
 				"/login",
+				"/logout",
 				"/contact/**"
 				)
 		.permitAll()

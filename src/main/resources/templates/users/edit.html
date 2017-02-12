@@ -6,6 +6,28 @@
 <head lang="pl">
 </head>
 <body>
+	<div layout:fragment="script">
+		<script>
+			document.getElementById('file').onchange = function() {
+				document.getElementById('filename').textContent = this.value;
+				readURL(this);
+				document.getElementById('hidediv').style.display = 'block';
+			};
+			function readURL(input) {
+				if (!input.files) {
+					return;
+				}
+				if (!input.files[0]) {
+					return;
+				}
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					$('#prev').attr('src', e.target.result);
+				}
+				reader.readAsDataURL(input.files[0]);
+			}
+		</script>
+	</div>
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-xs-12">
@@ -13,49 +35,46 @@
 					class="text-primary"></h1>
 			</div>
 		</div>
+		<!-- POPUPS -->
 		<div class="row text-center">
 			<div class="col-xs-12">
-				
-				<div id="errorMessage" class="alert alert-danger"
-					th:if="${error}">
+				<div id="errorMessage" class="alert alert-danger" th:if="${error}">
 					<span th:text="${error}">error</span>
 				</div>
-				
-				<div class="alert alert-success alert-dismissable"
-				th:if="${ok}">
-  					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-  					<span th:text="${ok}">ok message</span>
+				<div class="alert alert-success alert-dismissable" th:if="${ok}">
+					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+					<span th:text="${ok}">ok message</span>
 				</div>
-		
-				</div>
-				</div>
-
+			</div>
+		</div>
+		<!-- /POPUPS -->
+		<!-- USER FORM -->
 		<form th:action="@{/users/save}" method="post"
 			th:object="${userEditForm}">
 			<div class="row margin-top-10">
-				<div class="col-xs-12 col-sm-2 margin-top-10">
+				<div class="col-xs-12 col-sm-2 margin-top-10 margin-bottom-10">
 					<img th:src="@{'/useravatar/' + ${userEditForm.id}}"
 						class="img-responsive img-rounded"></img>
 				</div>
 				<div class="col-xs-4 col-sm-4">
 					<div class="form-group">
-						<label for="username" th:text="#{user.username}">Username</label> <input
-							type="text" class="form-control" id="username" name="username"
-							th:placeholder="#{user.username}"
+						<label for="username" th:text="#{user.username}">Username</label>
+						<input type="text" class="form-control" id="username"
+							name="username" th:placeholder="#{user.username}"
 							th:field="${userEditForm.username}" />
-							<div th:errors="*{username}" class="alert alert-danger">error</div>
+						<div th:errors="*{username}" class="alert alert-danger">error</div>
 					</div>
 					<div class="form-group">
 						<label for="name" th:text="#{user.name}">Name</label> <input
 							type="text" class="form-control" id="name" name="name"
 							th:placeholder="#{user.name}" th:field="${userEditForm.name}" />
-							<div th:errors="*{name}" class="alert alert-danger">error</div>
+						<div th:errors="*{name}" class="alert alert-danger">error</div>
 					</div>
 					<div class="form-group">
 						<label for="email" th:text="#{user.email}">E-Mail</label> <input
 							type="text" class="form-control" id="email" name="email"
 							th:placeholder="#{user.email}" th:field="${userEditForm.email}" />
-							<div th:errors="*{email}" class="alert alert-danger">error</div>
+						<div th:errors="*{email}" class="alert alert-danger">error</div>
 					</div>
 				</div>
 				<div class="col-xs-6 col-sm-4">
@@ -69,19 +88,21 @@
 					<div class="form-group">
 						<label for="isactive" th:text="#{user.active}">Username</label>
 						<div id="isactive" class="checkbox">
-							<label><input type="checkbox" th:field="${userEditForm.active}" /><span
+							<label><input type="checkbox"
+								th:field="${userEditForm.active}" /><span
 								th:text="#{user.active}"></span></label>
 						</div>
 					</div>
-								<label for="roles" th:text="#{user.roles}">Username</label>	
-			<div>
-				<ul style="margin: 0px; padding: 0px;">
-					<li style="display: inline;" th:each="role : ${userEditForm.roles}"><span
-						th:text="${role.name}"
-						th:class="${role.name == 'ROLE_ADMIN'}? 'btn btn-danger btn-xs' : 'btn btn-info btn-xs'"></span>
-					</li>
-				</ul>
-			</div>
+					<label for="roles" th:text="#{user.roles}">Username</label>
+					<div>
+						<ul style="margin: 0px; padding: 0px;">
+							<li style="display: inline;"
+								th:each="role : ${userEditForm.roles}"><span
+								th:text="${role.name}"
+								th:class="${role.name == 'ROLE_ADMIN'}? 'btn btn-danger btn-xs' : 'btn btn-info btn-xs'"></span>
+							</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 			<div class="row margin-top-30">
@@ -105,30 +126,71 @@
 				</div>
 			</div>
 		</form>
-		<div>
-			<div class="row">
-			<form th:action="|@{/users/manageroles}/${userEditForm.id}|" method="post">
-				<div class="col-xs-6">
-					<div class="list-group margin-top-30">
-						<span th:each="role : ${availableRoles}" class="list-group-item"
-							th:class="${role.name == 'ROLE_ADMIN'}? 'list-group-item list-group-item-danger' : 'list-group-item list-group-item-info'">
-							<span th:text="${role.name}"></span>
-							<button style="margin-left: 5px;"
-								class="btn btn-warning btn-xs pull-right" type="submit"
-								name="remove" th:value="${role.id}"
-								th:text="#{action.remove}">remove</button>
-							<button style="margin-left: 5px;"
-								class="btn btn-primary btn-xs pull-right" type="submit"
-								name="add" th:value="${role.id}"
-								th:text="#{action.add}">add</button>
-						</span>
+		<!-- /USER FORM -->
+
+		<div class="row">
+			<!-- MANAGE ROLES -->
+			<div class="col-xs-12 col-sm-6">
+				<form th:action="|@{/users/manageroles}/${userEditForm.id}|"
+					method="post">
+					<div class="row">
+						<div class="col-xs-12">
+							<h1 th:text="#{users.edit.manage.roles}"
+								class="text-primary margin-top-30"></h1>
+						</div>
+						<div class="col-xs-12">
+							<div class="list-group margin-top-10">
+								<span th:each="role : ${availableRoles}" class="list-group-item"
+									th:class="${role.name == 'ROLE_ADMIN'}? 'list-group-item list-group-item-danger' : 'list-group-item list-group-item-info'">
+									<span th:text="${role.name}"></span>
+									<button style="margin-left: 5px;"
+										class="btn btn-danger btn-xs pull-right" type="submit"
+										name="remove" th:value="${role.id}" th:text="#{action.remove}">remove</button>
+									<button style="margin-left: 5px;"
+										class="btn btn-success btn-xs pull-right" type="submit"
+										name="add" th:value="${role.id}" th:text="#{action.add}">add</button>
+								</span>
+							</div>
+						</div>
 					</div>
-				</div>
 				</form>
 			</div>
+			<!-- /MANAGE ROLES -->
+			<!-- CHOOSE AVATAR -->
+			<div class="col-xs-12 col-sm-6">
 
+				<div class="row">
+					<div class="col-xs-12">
+						<h1 th:text="#{users.edit.choose.avatar}"
+							class="text-primary margin-top-30"></h1>
+					</div>
+					<div class="col-xs-12">
+
+						<form th:action="@{'/upload/avatar/' + ${userEditForm.id}}"
+							method="post" enctype="multipart/form-data">
+							<input type="file" id="file" name="file" style="display: none" />
+							<label for="file" class="btn btn-info"> <span
+								th:text="#{users.edit.choose.avatar}"></span>
+							</label>
+							<button class="btn btn-primary" type="submit" name="upload">
+								<span th:text="#{action.upload}">upload</span>
+							</button>
+
+							<div id="hidediv" style="display: none;">
+								<img class="img-responsive img-rounded margin-top-10" id="prev"
+									src="#" alt="[prev]" /> 
+								<span id="filename"
+									class="margin-top-10 text-muted">[file]</span>
+							</div>
+
+
+						</form>
+					</div>
+				</div>
+			</div>
+			<!-- /CHOOSE AVATAR -->
 		</div>
-
+		<div class="row margin-top-30" style="min-height: 1px;"></div>
 	</div>
 </body>
 </html>
