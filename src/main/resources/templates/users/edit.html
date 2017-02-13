@@ -35,19 +35,6 @@
 					class="text-primary"></h1>
 			</div>
 		</div>
-		<!-- POPUPS -->
-		<div class="row text-center">
-			<div class="col-xs-12">
-				<div id="errorMessage" class="alert alert-danger" th:if="${error}">
-					<span th:text="${error}">error</span>
-				</div>
-				<div class="alert alert-success alert-dismissable" th:if="${ok}">
-					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-					<span th:text="${ok}">ok message</span>
-				</div>
-			</div>
-		</div>
-		<!-- /POPUPS -->
 		<!-- USER FORM -->
 		<form th:action="@{/users/save}" method="post"
 			th:object="${userEditForm}">
@@ -184,8 +171,6 @@
 								<span id="filename"
 									class="margin-top-10 text-muted">[file]</span>
 							</div>
-
-
 						</form>
 					</div>
 				</div>

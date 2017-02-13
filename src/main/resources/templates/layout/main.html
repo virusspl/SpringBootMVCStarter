@@ -73,16 +73,23 @@
 	<!--=================================== /NAVI =================================-->
 	<!--=================================== CONTENT ===============================-->
 	<div class="container">
+	<!-- POPUPS -->
 				<div class="row"><div class="col-xs-12 text-center">	
+				<div id="errorMessage" class="alert alert-danger" th:if="${error}">
+					<span th:text="${error}">error</span>
+				</div>
 				<div class="alert alert-success alert-dismissable" th:if="${msg}">
   					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
   					<span th:text="${msg}">ok message</span>
 				</div>
 				</div>
 				</div>
+				<!-- /POPUPS -->
 				<section layout:fragment="content">
 					<p>page content</p>
 				</section>
+				<!-- clear before footer -->
+				<div class="row" style="min-height:1px; margin-bottom: 40px;"></div>
 	</div>
 	<!--=================================== /CONTENT ==============================-->
 	<!--=================================== FOOTER  ===============================-->

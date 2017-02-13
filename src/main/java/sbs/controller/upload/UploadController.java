@@ -75,7 +75,7 @@ public class UploadController {
 			user.setAvatarFileName(tempFile.getName());
 			userService.saveOrUpdate(user);
 			// say ok
-			redirectAttrs.addFlashAttribute("ok", messageSource.getMessage("upload.success", null, locale));
+			redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("upload.success", null, locale));
 		} catch (IOException ioex) {
 			redirectAttrs.addFlashAttribute("error", messageSource.getMessage("upload.io.exception", null, locale));
 			return "redirect:/users/edit/" + id;

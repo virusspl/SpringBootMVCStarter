@@ -112,6 +112,28 @@ public class UserController {
 		return "users/edit";
 	}
 	
+	@RequestMapping(value = "/save", method = RequestMethod.POST)
+	public String saveUser(@Valid UserEditForm userEditForm, BindingResult bindingResult,  RedirectAttributes redirectAttrs, Locale locale, Model model){
+		User modelUser = userService.findById(userEditForm.getId());
+		if(!modelUser.getUsername().equals(userEditForm.getUsername())){
+			if (userService.findByUsername(userEditForm.getUsername())!= null){
+				bindingResult.rejectValue("username", "error.user.already.exist", "ERROR");
+			}
+		}
+		if(bindingResult.hasErrors()){
+			userEditForm.setRoles(userService.findById(userEditForm.getId()).getRoles());
+			return "users/edit";
+		}
+		modelUser.setUsername(userEditForm.getUsername());
+		modelUser.setName(userEditForm.getName());
+		modelUser.setEmail(userEditForm.getEmail());
+		modelUser.setActive(userEditForm.getActive());
+		userService.update(modelUser);
+		
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/users/edit/" + userEditForm.getId();
+	}
+	
 	@RequestMapping("/changepassword/{id}")
 	@Transactional
 	public String showChangePass(@PathVariable("id") long id, Model model) throws NotFoundException{
@@ -145,35 +167,6 @@ public class UserController {
 		return "redirect:/users/edit/" + userPasswordForm.getId();
 	}
 	
-	
-	
-	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public String saveUser(@Valid UserEditForm userEditForm, BindingResult bindingResult,  RedirectAttributes redirectAttrs, Locale locale, Model model){
-		User modelUser = userService.findById(userEditForm.getId());
-		if(!modelUser.getUsername().equals(userEditForm.getUsername())){
-			if (userService.findByUsername(userEditForm.getUsername())!= null){
-				bindingResult.rejectValue("username", "error.user.already.exist", "ERROR");
-			}
-		}
-		if(bindingResult.hasErrors()){
-			/*
-			redirectAttrs.addFlashAttribute("org.springframework.validation.BindingResult.register", bindingResult);
-			redirectAttrs.addFlashAttribute("userEditForm", userEditForm);
-			redirectAttrs.addFlashAttribute("error",bindingResult.getAllErrors());
-			return "redirect:/users/edit/" + userEditForm.getId();
-			*/
-			userEditForm.setRoles(userService.findById(userEditForm.getId()).getRoles());
-			return "users/edit";
-		}
-		modelUser.setUsername(userEditForm.getUsername());
-		modelUser.setName(userEditForm.getName());
-		modelUser.setEmail(userEditForm.getEmail());
-		modelUser.setActive(userEditForm.getActive());
-		userService.update(modelUser);
-		
-		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
-		return "redirect:/users/edit/" + userEditForm.getId();
-	}
 
 	@RequestMapping(value = "/manageroles/{id}", params = { "add" }, method = RequestMethod.POST)
 	@Transactional
@@ -236,51 +229,4 @@ public class UserController {
 		return "redirect:/users/edit/" + user.getId();
 	}
 	
-	
-	/*
-
-// for thymeleaf list binding
-  <span th:each="role, stat : *{roles}">         
-    <input type="checkbox" 
-            th:name="|roles[${stat.index}]|"
-            th:value="${role.id}"
-            th:checked="${true}" />
-
-     </span>
-
-
-
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	@Transactional
-	public String registerUser(@Valid UserForm registerForm, BindingResult bindingResult) {
-		
-		User modelUser = userService.findByUsername(registerForm.getUsername());
-		if(modelUser != null){
-			bindingResult.rejectValue("username", "error.user.already.exist", "ERROR");
-		}
-		if(!registerForm.getPassword().equals(registerForm.getRepeatPassword())){
-			bindingResult.rejectValue("repeatPassword", "password.repeat", "ERROR");
-		}
-		if (bindingResult.hasErrors()) {
-			return "register";
-		}
-		
-		// user role
-		Role userRole = roleService.findByName("ROLE_USER");
-		modelUser = new User();
-		modelUser.setUsername(registerForm.getUsername());
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		String hashedPassword = passwordEncoder.encode(registerForm.getPassword());
-		modelUser.setPassword(hashedPassword);
-		modelUser.setName(registerForm.getName());
-		modelUser.setEmail(registerForm.getEmail());
-		// many to many
-		modelUser.getRoles().add(userRole);
-		userRole.getUsers().add(modelUser);
-		
-		userService.save(modelUser);
-		
-		return "redirect:/profile/show";
-	}
-	*/
 }
