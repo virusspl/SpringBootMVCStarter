@@ -1,29 +1,38 @@
 package sbs.controller.users;
 
-import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import sbs.config.qualifier.Password;
 import sbs.config.qualifier.Username;
 
 public class UserPasswordForm {
+	@NotNull
+	private Long id;
 	@Username
 	private String username;
-	@Size(min = 2, max=25)
-	private String name;
-	@Email  
-	@NotEmpty
-	private String email;
 	@Password
-	private String password;
+	private String newPassword;
+	@Password
 	private String repeatPassword;
 	
 	public UserPasswordForm(){
 		
 	}
-	
+
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	/**
 	 * @return the username
 	 */
@@ -39,52 +48,26 @@ public class UserPasswordForm {
 	}
 
 	/**
-	 * @return the name
+	 * @return the newPassword
 	 */
-	public String getName() {
-		return name;
+	public String getNewPassword() {
+		return newPassword;
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param newPassword the newPassword to set
 	 */
-	public void setName(String name) {
-		this.name = name;
+	public void setNewPassword(String newPassword) {
+		this.newPassword = newPassword;
 	}
 
-	/**
-	 * @return the email
-	 */
-	public String getEmail() {
-		return email;
-	}
-
-	/**
-	 * @param email the email to set
-	 */
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	/**
-	 * @return the password
-	 */
-	public String getPassword() {
-		return password;
-	}
-
-	/**
-	 * @param password the password to set
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
 	/**
 	 * @return the repeatPassword
 	 */
 	public String getRepeatPassword() {
 		return repeatPassword;
 	}
+
 	/**
 	 * @param repeatPassword the repeatPassword to set
 	 */
@@ -92,7 +75,5 @@ public class UserPasswordForm {
 		this.repeatPassword = repeatPassword;
 	}
 
-
 	
-
 }

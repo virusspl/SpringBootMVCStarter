@@ -10,17 +10,17 @@ import java.util.regex.Pattern;
 
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = Password.PasswordValidator.class)
+@Constraint(validatedBy = AdvancedPassword.PasswordValidator.class)
 @Documented
-public @interface Password {
+public @interface AdvancedPassword {
 	String message() default "{javax.validation.constraints.Pattern.message}";
 
 	Class<?>[] groups() default {};
 
 	Class<? extends Payload>[] payload() default {};
 
-	class PasswordValidator implements ConstraintValidator<Password, String> {
-		public void initialize(Password password) {
+	class PasswordValidator implements ConstraintValidator<AdvancedPassword, String> {
+		public void initialize(AdvancedPassword password) {
 		}
 		
 		
@@ -30,16 +30,12 @@ public @interface Password {
   			(?=.*\d)		#   must contains one digit from 0-9
   			(?=.*[a-z])		#   must contains one lowercase characters
   			(?=.*[A-Z])		#   must contains one uppercase characters
+  			(?=.*[!@#$%])	#   must contains one special symbols in the list "@#$%"
 			.				#   match anything with previous condition checking
 			{6,20}			#	length at least 6 characters and maximum of 20
 			)				# End of group
 			 */
-			  String password_pattern = "("
-			  		+ "(?=.*\\d)"
-			  		+ "(?=.*[a-z])"
-			  		+ "(?=.*[A-Z])"
-			  		+ ".{6,20}"
-			  		+ ")";
+			  String password_pattern = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%]).{6,20})";
 			  Pattern pattern = Pattern.compile(password_pattern);
 			  Matcher matcher = pattern.matcher(password);
 			  return matcher.matches();	

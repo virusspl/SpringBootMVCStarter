@@ -9,6 +9,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -109,6 +110,41 @@ public class UserController {
 		model.addAttribute("userEditForm",userEditForm);
 		return "users/edit";
 	}
+	
+	@RequestMapping("/changepassword/{id}")
+	@Transactional
+	public String showChangePass(@PathVariable("id") long id, Model model) throws NotFoundException{
+		User user = userService.findById(id);
+		if(user == null){
+			throw new NotFoundException("user not found");
+		}
+		UserPasswordForm userPasswordForm = new UserPasswordForm();
+		userPasswordForm.setId(user.getId());
+		userPasswordForm.setUsername(user.getUsername());
+		
+		model.addAttribute("userPasswordForm", userPasswordForm);
+		return "users/changepassword";
+	}
+	
+	@RequestMapping(value = "/changepassword", method = RequestMethod.POST)
+	public String changePass(@Valid UserPasswordForm userPasswordForm, BindingResult bindingResult,  RedirectAttributes redirectAttrs, Locale locale, Model model){
+		if (!userPasswordForm.getNewPassword().equals(userPasswordForm.getRepeatPassword())){
+			bindingResult.rejectValue("repeatPassword", "error.password.repeat", "ERROR");
+		}
+		if(bindingResult.hasErrors()){
+			return "users/changepassword";
+		}
+		
+		User user = userService.findById(userPasswordForm.getId());
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		String hashedPassword = passwordEncoder.encode(userPasswordForm.getNewPassword());
+		user.setPassword(hashedPassword);
+		userService.update(user);
+		redirectAttrs.addFlashAttribute("ok", messageSource.getMessage("action.password.changed", null, locale));
+		return "redirect:/users/edit/" + userPasswordForm.getId();
+	}
+	
+	
 	
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String saveUser(@Valid UserEditForm userEditForm, BindingResult bindingResult,  RedirectAttributes redirectAttrs, Locale locale, Model model){
