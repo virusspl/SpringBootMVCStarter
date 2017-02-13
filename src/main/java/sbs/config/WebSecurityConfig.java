@@ -43,7 +43,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/error", 
 				"/login",
 				"/logout",
-				"/contact/**"
+				"/contact/**",
+				"/users/showcurrent"
 				)
 		.permitAll()
 		.antMatchers(

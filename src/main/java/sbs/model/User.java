@@ -53,7 +53,7 @@ public class User {
         this.username = username;
     }
 
-    @NotEmpty
+    
     public String getPassword() {
         return password;
     }

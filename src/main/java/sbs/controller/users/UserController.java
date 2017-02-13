@@ -107,6 +107,7 @@ public class UserController {
 		userEditForm.setEmail(user.getEmail());
 		userEditForm.setActive(user.isActive());
 		userEditForm.setRoles(user.getRoles());
+		userEditForm.setAvatarFileName(user.getAvatarFileName());
 		model.addAttribute("userEditForm",userEditForm);
 		return "users/edit";
 	}
@@ -201,11 +202,38 @@ public class UserController {
 	}
 	
 	
-	@RequestMapping(value = "/manageroles", method = RequestMethod.POST)
-	public String manageRoles(){
+	@RequestMapping("/create")
+	@Transactional
+	public String showCreate(UserCreateForm userCreateForm) throws NotFoundException{
+		return "users/create";
+	}
+	
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@Transactional
+	public String createUser(@Valid UserCreateForm userCreateForm, BindingResult bindingResult,  RedirectAttributes redirectAttrs, Locale locale, Model model){
+		User user = userService.findByUsername(userCreateForm.getUsername());
+			if (user != null){
+				bindingResult.rejectValue("username", "error.user.already.exist", "ERROR");
+			}
 		
-		return "redirect:/";
+		if(bindingResult.hasErrors()){
+			return "users/create";
+		}
+		;
+		Role userRole=roleService.findByName("ROLE_USER");
+		user = new User();
 		
+		user.setActive(true);
+		user.setUsername(userCreateForm.getUsername());
+		user.setName(userCreateForm.getName());
+		user.setEmail(userCreateForm.getEmail());
+		
+		user.getRoles().add(userRole);
+		userRole.getUsers().add(user);
+		
+		userService.save(user);
+		redirectAttrs.addFlashAttribute("ok", messageSource.getMessage("action.user.created", null, locale));
+		return "redirect:/users/edit/" + user.getId();
 	}
 	
 	

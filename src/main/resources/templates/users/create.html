@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script">
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h1 th:text="#{users.create.title}"
+					class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{users.create.message}">
+					Welcome message </span>
+			</div>
+		</div>
+		<!-- USER FORM -->
+		<form th:action="@{/users/create}" method="post"
+			th:object="${userCreateForm}">
+			<div class="row margin-top-10">
+				<div class="col-xs-4 col-sm-4">
+					<div class="form-group">
+						<label for="username" th:text="#{user.username}">Username</label>
+						<input type="text" class="form-control" id="username"
+							name="username" th:placeholder="#{user.username}"
+							th:field="*{username}" />
+						<div th:errors="*{username}" class="alert alert-danger">error</div>
+					</div>
+					<div class="form-group">
+						<label for="name" th:text="#{user.name}">Name</label> <input
+							type="text" class="form-control" id="name" name="name"
+							th:placeholder="#{user.name}" th:field="*{name}" />
+						<div th:errors="*{name}" class="alert alert-danger">error</div>
+					</div>
+					<div class="form-group">
+						<label for="email" th:text="#{user.email}">E-Mail</label> <input
+							type="text" class="form-control" id="email" name="email"
+							th:placeholder="#{user.email}" th:field="*{email}" />
+						<div th:errors="*{email}" class="alert alert-danger">error</div>
+					</div>
+				</div>
+			</div>
+			<div class="row margin-top-30">
+				<div class="col-xs-12">
+					<a th:href="@{/users/list/active}" class="btn btn-link btn-sm">
+						<span class="glyphicon glyphicon-menu-left"></span> <span
+						th:text="#{action.back}">back</span>
+					</a> 
+					<button class="btn btn-primary btn-sm" type="submit" name="save">
+						<span class="glyphicon glyphicon-save"></span> <span
+							th:text="#{action.create}">create</span>
+					</button>
+				</div>
+			</div>
+		</form>
+		<!-- /USER FORM -->
+	</div>
+</body>
+</html>

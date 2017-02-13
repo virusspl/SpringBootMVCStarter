@@ -11,9 +11,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import sbs.config.qualifier.Username;
 import sbs.model.Role;
 
-public class UserEditForm {
-	@NotNull
-	private Long id;
+public class UserCreateForm {
 	@Username
 	private String username;
 	@NotNull
@@ -22,28 +20,11 @@ public class UserEditForm {
 	@Email  
 	@NotEmpty
 	private String email;
-	@NotNull
-	private Boolean active;
 	
-	private String avatarFileName;
 	private Set<Role> roles;
 	
-	public UserEditForm(){
+	public UserCreateForm(){
 		
-	}
-
-	/**
-	 * @return the id
-	 */
-	public Long getId() {
-		return id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	/**
@@ -88,34 +69,12 @@ public class UserEditForm {
 		this.email = email;
 	}
 
-	/**
-	 * @return the active
-	 */
-	public Boolean getActive() {
-		return active;
-	}
-
-	/**
-	 * @param active the active to set
-	 */
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
-
 	public Set<Role> getRoles() {
 		return roles;
 	}
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
-	}
-
-	public String getAvatarFileName() {
-		return avatarFileName;
-	}
-
-	public void setAvatarFileName(String avatarFileName) {
-		this.avatarFileName = avatarFileName;
 	}
 
 }
