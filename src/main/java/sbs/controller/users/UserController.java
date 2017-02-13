@@ -141,7 +141,7 @@ public class UserController {
 		String hashedPassword = passwordEncoder.encode(userPasswordForm.getNewPassword());
 		user.setPassword(hashedPassword);
 		userService.update(user);
-		redirectAttrs.addFlashAttribute("ok", messageSource.getMessage("action.password.changed", null, locale));
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.password.changed", null, locale));
 		return "redirect:/users/edit/" + userPasswordForm.getId();
 	}
 	
@@ -171,7 +171,7 @@ public class UserController {
 		modelUser.setActive(userEditForm.getActive());
 		userService.update(modelUser);
 		
-		redirectAttrs.addFlashAttribute("ok", messageSource.getMessage("action.saved", null, locale));
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/users/edit/" + userEditForm.getId();
 	}
 
@@ -184,7 +184,7 @@ public class UserController {
 		User user = userService.findById(userId);
 		user.getRoles().add(role);
 		role.getUsers().add(user);
-		redirectAttrs.addFlashAttribute("ok", messageSource.getMessage("action.saved", null, locale));
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/users/edit/" + userId;
 	}
 	
@@ -197,7 +197,7 @@ public class UserController {
 		User user = userService.findById(userId);
 		user.getRoles().remove(role);
 		role.getUsers().remove(user);
-		redirectAttrs.addFlashAttribute("ok", messageSource.getMessage("action.saved", null, locale));
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/users/edit/" + userId;
 	}
 	
@@ -232,7 +232,7 @@ public class UserController {
 		userRole.getUsers().add(user);
 		
 		userService.save(user);
-		redirectAttrs.addFlashAttribute("ok", messageSource.getMessage("action.user.created", null, locale));
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.user.created", null, locale));
 		return "redirect:/users/edit/" + user.getId();
 	}
 	

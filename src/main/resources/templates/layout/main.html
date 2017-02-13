@@ -73,12 +73,13 @@
 	<!--=================================== /NAVI =================================-->
 	<!--=================================== CONTENT ===============================-->
 	<div class="container">
-				<div class="row"><div class="col-xs-12">	
+				<div class="row"><div class="col-xs-12 text-center">	
 				<div class="alert alert-success alert-dismissable" th:if="${msg}">
   					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
   					<span th:text="${msg}">ok message</span>
 				</div>
-				</div></div>
+				</div>
+				</div>
 				<section layout:fragment="content">
 					<p>page content</p>
 				</section>
