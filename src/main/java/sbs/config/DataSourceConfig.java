@@ -48,25 +48,25 @@ public class DataSourceConfig {
 		sessionBuilder.scanPackages("sbs.model");
 		return sessionBuilder.buildSessionFactory();
 	}
-	@Profile("mysl")
+	@Profile("mysql")
 	@Bean
 	  public DataSource dataSource() {
 	    DriverManagerDataSource dataSource = new DriverManagerDataSource();
 	    dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-	    dataSource.setUrl("jdbc:mysql://localhost:3306/sappdb");
+	    dataSource.setUrl("jdbc:mysql://localhost:3306/adrp");
 	    dataSource.setUsername("root");
-	    dataSource.setPassword("admin");
+	    dataSource.setPassword("pass");
 
 	    return dataSource;
 	  }
-	@Profile("mysl")
+	@Profile("mysql")
 	@Bean
 	public SessionFactory sessionFactory() {
 		DataSource dataSource = dataSource();
 		Properties properties = new Properties();
 		properties.put("hibernate.show_sql", "true");
 		properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
-		properties.put("hibernate.hbm2ddl.auto", "create");
+		properties.put("hibernate.hbm2ddl.auto", "update");
 		LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(dataSource);	
 		sessionBuilder.addProperties(properties);
 		sessionBuilder.scanPackages("sbs.model");

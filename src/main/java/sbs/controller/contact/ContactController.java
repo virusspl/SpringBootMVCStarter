@@ -68,8 +68,12 @@ public class ContactController {
 			} catch (MessagingException e) {
 				log.debug("e-mail send error", e);
 			}
-		model.addAttribute("title",messageSource.getMessage("contact.sent", null, locale));
-		model.addAttribute("message",messageSource.getMessage("contact.thank.you", null, locale));
-		return "message";
+			
+			model.addAttribute("msg",messageSource.getMessage("contact.sent", null, locale)
+					+
+					". "
+					+
+					messageSource.getMessage("contact.thank.you", null, locale));
+			return "welcome";
 	}
 }

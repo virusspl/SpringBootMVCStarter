@@ -35,7 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.and().logout().logoutSuccessUrl("/logout")
 		.and().exceptionHandling().accessDeniedPage("/noaccess")
 		.and().authorizeRequests()
-		.antMatchers("/", 
+		.antMatchers("/", "/init",
 				"/bootstrap/**",
 				"/css/**",
 				"/images/**",
