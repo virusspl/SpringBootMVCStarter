@@ -2,7 +2,6 @@ package sbs.controller.users;
 
 import java.util.Set;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
@@ -14,7 +13,6 @@ import sbs.model.Role;
 public class UserCreateForm {
 	@Username
 	private String username;
-	@NotNull
 	@Size(min = 2, max=25)
 	private String name;
 	@Email  
