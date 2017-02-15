@@ -11,7 +11,6 @@
 	<link th:href="@{/css/normalize.css}" type="text/css" rel="stylesheet" media="screen,projection" />
 	<link th:href="@{/css/default.css}" type="text/css" rel="stylesheet" media="screen,projection" />
 	<title th:text="#{name.company}">ADR Polska S.A.</title>
-	 
 </head>
 <body>
 	<!--=================================== NAVI =================================-->
@@ -41,11 +40,10 @@
                <!-- authenticated -->
                <li sec:authorize="isAuthenticated()"><a th:href="@{/users/showcurrent}">
 				<span th:text="${#authentication.name}">Profile name</span>
-				<img class="nav-img" th:src="@{/currentavatar}" alt="profile picture" style="heihgt: 20px; width: 20px;"></img>
+				<img class="nav-img img-rounded" th:src="@{/currentavatar}" alt="profile picture" style="heihgt: 20px; width: 20px;"></img>
 				</a>
                </li>
-               <li sec:authorize="isAuthenticated()" role="separator" class="divider">
-               </li>
+               <!-- <li sec:authorize="isAuthenticated()" role="separator" class="divider"> </li> -->
                <li sec:authorize="isAuthenticated()">
                	<a href="javascript: document.logoutForm.submit()">
                <span th:text="#{action.logout}">Log out</span></a>

@@ -20,5 +20,4 @@ public class HomeController {
 		//return "redirect:/init";
 		return "welcome";
 	}
-	
 }

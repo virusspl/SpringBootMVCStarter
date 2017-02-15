@@ -13,7 +13,9 @@
 					<div class="row margin-top-10">
 						<div class="col-xs-12">
 							<div id="errorMessage" class="bg-danger text-danger text-center" th:if="${param.error}">
-									<span th:text="#{login.error}"> incorrect login or password</span>
+									<span th:text="#{login.error}"> incorrect login or password</span><br/>
+									<a th:href="@{/contact}" class="text-danger"><span th:text="|#{navi.help} > #{faq.q.userlogin}|"></span></a>
+									
 							</div>
 						</div>
 					</div>

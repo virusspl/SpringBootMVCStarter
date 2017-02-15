@@ -11,153 +11,245 @@
 	<div layout:fragment="content">
 		<!-- CONTENT -->
 
-<div class="row">
-<div class="col-xs-12">
-	<h1 th:text="#{faq.title}" class="text-primary">FAQ</h1>
-</div>
-<div class="col-xs-12 text-justify">
-	<span th:text="#{faq.message}"></span>
-</div>
-</div>
-
- <div class="panel-group margin-top-20" id="accordion">
-  <!-- Question -->
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
-        <span th:text="#{faq.q.crm}">do i have to create CRM?</span>
-        </a>
-      </h4>
-    </div>
-    <div id="collapse1" class="panel-collapse collapse">
-      <div class="panel-body">
-		<span th:text="#{faq.a.crm}">Yes, you do.</span>
-		</div>
-    </div>
-  </div>
-  <!-- Question -->
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
-        <span th:text="#{faq.q.whycrm}">why i have to create CRM?</span>
-        </a>
-      </h4>
-    </div>
-    <div id="collapse2" class="panel-collapse collapse">
-      <div class="panel-body">
-		<span th:text="#{faq.a.whycrm}">because</span>
-		</div>
-    </div>
-  </div>
-  <!-- Question -->
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
-        <span th:text="#{faq.q.howcrm}">how i have to create CRM?</span>
-        </a>
-      </h4>
-    </div>
-    <div id="collapse3" class="panel-collapse collapse">
-      <div class="panel-body">
-		<span th:text="#{faq.a.howcrm}">how to create CRM</span>
-		 <br/><br/>
-		 <a href="http://atwsrv-java/CRM/CRM.pdf" target="_blank"><span class="glyphicon glyphicon-folder-open" style="margin-right: 10px;"></span>  SAGE_X3_CRM.pdf</a>
-		</div>
-    </div>
-  </div>
- <!-- Question -->
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">
-        <span th:text="#{faq.q.nox3}">why i have to create CRM?</span>
-        </a>
-      </h4>
-    </div>
-    <div id="collapse4" class="panel-collapse collapse">
-      <div class="panel-body">
-		<span th:text="#{faq.a.nox3}">because</span>
-		</div>
-    </div>
-  </div>
-  
-  
-  
-  
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#collapseEmail">
-        <span th:text="#{faq.didnt.find.answer}">I didn't find answer for my question</span>
-		</a>
-      </h4>
-    </div>
-    <div th:class="${mailerror}? 'panel-collapse collapse in' : 'panel-collapse collapse'" id="collapseEmail">
-      <div class="panel-body">
-<!-- CONTACT FORM -->      
 		<div class="row">
-				<div class="col-xs-8 col-xs-offset-2 col-md-6 col-md-offset-3 text-justify" style="border: 1px solid #CDCDCD; padding-bottom: 10px;">
-				<h2 class="text-primary" th:text="#{contact.title}" style="border-bottom: 1px solid #CDCDCD">Logowanie</h2>
-				<span th:text="#{contact.message}">tell
-					what you can do here</span>
-			
-					<div class="row margin-top-10">
-						<div class="col-xs-12">
-						<form id="contactform" th:action="@{/contact/send}" method="post" th:object="${contactForm}">
-			
-						<div class="form-group">
-							<label for="name" th:text="#{contact.name}">Name</label> 
-							<input type="text" class="form-control" id="name" name="name" 
-							th:field="${contactForm.name}"
-							th:errorclass="input-error"
-							th:placeholder="#{contact.enter.name}"
-							 />
-							 <div th:errors="*{name}" class="red-text">error</div>
-						</div>
-						
-						<div class="form-group">
-							<label for="email" th:text="#{contact.email}">E-Mail</label> 
-							<input type="text" class="form-control" id="email" name="email" 
-							th:field="${contactForm.email}"
-							th:errorclass="input-error"
-							th:placeholder="#{contact.enter.email}"
-							 />
-							 <div th:errors="*{email}" class="red-text">error</div>
-						</div>
-						
-						<div class="form-group">
-							<label for="content" th:text="#{contact.content}">E-Mail</label> 
-							<textarea class="form-control" id="content" name="content" 
-							th:field="${contactForm.content}"
-							th:errorclass="input-error"
-							th:placeholder="#{contact.enter.content}"
-							 style="min-height: 120px"></textarea>
-							 <div th:errors="*{content}" class="red-text">error</div>
-						</div>
-						
-					<span th:text="#{contact.your.ip}" class="text-muted">Your IP is</span> <span
-							th:text="${contactForm.ip}" class="text-muted">192.168.1.1</span>
-					<input type="hidden" class="form-control" id="ip" name="ip" 
-							th:field="${contactForm.ip}"
-							 />
-					
-					<button type="submit" name="action" class="btn btn-primary pull-right">
-							<span th:text="#{action.send}"></span>
-						</button>
-			
-			</form>				
-						</div>
-						</div>
+			<div class="col-xs-12">
+				<h1 th:text="#{faq.title}" class="text-primary">FAQ</h1>
+			</div>
+			<div class="col-xs-12 text-justify">
+				<span th:text="#{faq.message}"></span>
+			</div>
+		</div>
+
+		<div class="panel-group margin-top-20" id="accordion">
+			<!-- Question -->
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+						<a data-toggle="collapse" data-parent="#accordion"
+							href="#collapse1"> <span th:text="#{faq.q.crm}">do i
+								have to create CRM?</span>
+						</a>
+					</h4>
+				</div>
+				<div id="collapse1" class="panel-collapse collapse">
+					<div class="panel-body">
+						<span th:text="#{faq.a.crm}">Yes, you do.</span>
 					</div>
+				</div>
+			</div>
+			<!-- Question -->
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+						<a data-toggle="collapse" data-parent="#accordion"
+							href="#collapse2"> <span th:text="#{faq.q.whycrm}">why
+								i have to create CRM?</span>
+						</a>
+					</h4>
+				</div>
+				<div id="collapse2" class="panel-collapse collapse">
+					<div class="panel-body">
+						<span th:text="#{faq.a.whycrm}">because</span>
 					</div>
-<!-- /CONTACT FORM -->
-</div>
-    </div>
-  </div>
-</div> 
+				</div>
+			</div>
+			<!-- Question -->
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+						<a data-toggle="collapse" data-parent="#accordion"
+							href="#collapse3"> <span th:text="#{faq.q.howcrm}">how
+								i have to create CRM?</span>
+						</a>
+					</h4>
+				</div>
+				<div id="collapse3" class="panel-collapse collapse">
+					<div class="panel-body">
+						<span th:text="#{faq.a.howcrm}">how to create CRM</span> <br />
+						<br /> <a href="http://atwsrv-java/CRM/CRM.pdf" target="_blank"><span
+							class="glyphicon glyphicon-folder-open"
+							style="margin-right: 10px;"></span> SAGE_X3_CRM.pdf</a>
+					</div>
+				</div>
+			</div>
+			<!-- Question -->
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+						<a data-toggle="collapse" data-parent="#accordion"
+							href="#collapse4"> <span th:text="#{faq.q.nox3}">why i
+								have to create CRM?</span>
+						</a>
+					</h4>
+				</div>
+				<div id="collapse4" class="panel-collapse collapse">
+					<div class="panel-body">
+						<span th:text="#{faq.a.nox3}">because</span>
+					</div>
+				</div>
+			</div>
+			<!-- Question -->
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+						<a data-toggle="collapse" data-parent="#accordion"
+							href="#collapse5"> <span th:text="#{faq.q.changeother}">why i
+								have to create CRM?</span>
+						</a>
+					</h4>
+				</div>
+				<div id="collapse5" class="panel-collapse collapse">
+					<div class="panel-body">
+						<span th:text="#{faq.a.changeother}">because</span>
+					</div>
+				</div>
+			</div>
+			<!-- Question -->
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+						<a data-toggle="collapse" data-parent="#accordion"
+							href="#collapse6"> <span th:text="#{faq.q.noaccount}">why i
+								have to create CRM?</span>
+						</a>
+					</h4>
+				</div>
+				<div id="collapse6" class="panel-collapse collapse">
+					<div class="panel-body">
+						<span th:text="#{faq.a.noaccount}">because</span>
+					</div>
+				</div>
+			</div>
+			<!-- Question -->
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+						<a data-toggle="collapse" data-parent="#accordion"
+							href="#collapse7"> <span th:text="#{faq.q.userlogin}">why i
+								have to create CRM?</span>
+						</a>
+					</h4>
+				</div>
+				<div id="collapse7" class="panel-collapse collapse">
+					<div class="panel-body">
+						<span th:text="#{faq.a.userlogin}">because</span>
+					</div>
+				</div>
+			</div>
+			<!-- Question -->
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+						<a data-toggle="collapse" data-parent="#accordion"
+							href="#collapse8"> <span th:text="#{faq.q.baddata}">why i
+								have to create CRM?</span>
+						</a>
+					</h4>
+				</div>
+				<div id="collapse8" class="panel-collapse collapse">
+					<div class="panel-body">
+						<span th:text="#{faq.a.baddata}">because</span>
+					</div>
+				</div>
+			</div>
+			<!-- Question -->
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+						<a data-toggle="collapse" data-parent="#accordion"
+							href="#collapse9"> <span th:text="#{faq.q.avatar}">why i
+								have to create CRM?</span>
+						</a>
+					</h4>
+				</div>
+				<div id="collapse9" class="panel-collapse collapse">
+					<div class="panel-body">
+						<span th:text="#{faq.a.avatar}">because</span>
+					</div>
+				</div>
+			</div>
+
+
+
+
+
+			<!-- DIDNT FIND ANSWER -->
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+						<a data-toggle="collapse" data-parent="#accordion"
+							href="#collapseEmail"> <span
+							th:text="#{faq.didnt.find.answer}">I didn't find answer
+								for my question</span>
+						</a>
+					</h4>
+				</div>
+				<div
+					th:class="${mailerror}? 'panel-collapse collapse in' : 'panel-collapse collapse'"
+					id="collapseEmail">
+					<div class="panel-body">
+						<!-- CONTACT FORM -->
+						<div class="row">
+							<div
+								class="col-xs-8 col-xs-offset-2 col-md-6 col-md-offset-3 text-justify"
+								style="border: 1px solid #CDCDCD; padding-bottom: 10px;">
+								<h2 class="text-primary" th:text="#{contact.title}"
+									style="border-bottom: 1px solid #CDCDCD">Logowanie</h2>
+								<span th:text="#{contact.message}">tell what you can do
+									here</span>
+
+								<div class="row margin-top-10">
+									<div class="col-xs-12">
+										<form id="contactform" th:action="@{/contact/send}"
+											method="post" th:object="${contactForm}">
+
+											<div class="form-group">
+												<label for="name" th:text="#{contact.name}">Name</label> <input
+													type="text" class="form-control" id="name" name="name"
+													th:field="${contactForm.name}" th:errorclass="input-error"
+													th:placeholder="#{contact.enter.name}" />
+												<div th:errors="*{name}" class="red-text">error</div>
+											</div>
+
+											<div class="form-group">
+												<label for="email" th:text="#{contact.email}">E-Mail</label>
+												<input type="text" class="form-control" id="email"
+													name="email" th:field="${contactForm.email}"
+													th:errorclass="input-error"
+													th:placeholder="#{contact.enter.email}" />
+												<div th:errors="*{email}" class="red-text">error</div>
+											</div>
+
+											<div class="form-group">
+												<label for="content" th:text="#{contact.content}">E-Mail</label>
+												<textarea class="form-control" id="content" name="content"
+													th:field="${contactForm.content}"
+													th:errorclass="input-error"
+													th:placeholder="#{contact.enter.content}"
+													style="min-height: 120px"></textarea>
+												<div th:errors="*{content}" class="red-text">error</div>
+											</div>
+
+											<span th:text="#{contact.your.ip}" class="text-muted">Your
+												IP is</span> <span th:text="${contactForm.ip}" class="text-muted">192.168.1.1</span>
+											<input type="hidden" class="form-control" id="ip" name="ip"
+												th:field="${contactForm.ip}" />
+
+											<button type="submit" name="action"
+												class="btn btn-primary pull-right">
+												<span th:text="#{action.send}"></span>
+											</button>
+
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- /CONTACT FORM -->
+					</div>
+				</div>
+			</div>
+		</div>
 
 		<!-- /CONTENT -->
 	</div>
