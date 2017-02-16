@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="content">
+		<ul>
+			<li th:each="obj,stat : ${result}">
+			<span th:text="${result[stat.index]}">line</span>
+			</li>
+		</ul>
+	</div>
+</body>
+</html>

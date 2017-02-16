@@ -92,7 +92,13 @@
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 		</dependency>
-		<!-- CONFIGURATION PROCESSOR -->
+		<!-- ORACLE -->
+		<dependency>
+		    <groupId>com.oracle</groupId>
+		    <artifactId>ojdbc14</artifactId>
+		    <version>10.2.0.4.0</version>
+		</dependency>
+	<!-- CONFIGURATION PROCESSOR -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>

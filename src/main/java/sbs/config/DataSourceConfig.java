@@ -1,5 +1,6 @@
 package sbs.config;
 
+import java.sql.SQLException;
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -8,7 +9,9 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -25,7 +28,26 @@ import sbs.service.CustomUserDetailsService;
 @EnableTransactionManagement
 public class DataSourceConfig {
 	
+	@Bean("oracleX3DataSource")
+	public DataSource oracleX3DataSource() throws SQLException {
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
+		dataSource.setUrl("jdbc:oracle:thin:@192.168.1.6:1521:X3V6POL");
+		dataSource.setUsername("x3ro");
+        dataSource.setPassword("readonly");
+		return dataSource;
+	}
+	
+	@Bean(name = "oracleX3JdbcTemplate") 
+    public JdbcTemplate jdbcTemplate() throws SQLException{ 
+        return new JdbcTemplate(oracleX3DataSource()); 
+    }
+
+	/*
+	 * POSTGRES
+	 */
 	@Profile("postgres")
+	@Primary
 	@Bean("dataSource")
 	public DataSource postgreDataSource() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -48,7 +70,13 @@ public class DataSourceConfig {
 		sessionBuilder.scanPackages("sbs.model");
 		return sessionBuilder.buildSessionFactory();
 	}
+	
+	/*
+	 * MYSQL
+	 */
+	
 	@Profile("mysql")
+	@Primary
 	@Bean
 	  public DataSource dataSource() {
 	    DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -72,7 +100,12 @@ public class DataSourceConfig {
 		sessionBuilder.scanPackages("sbs.model");
 		return sessionBuilder.buildSessionFactory();
 	}
+	
+	/*
+	 * H2
+	 */
 	@Profile("h2")
+	@Primary
 	@Bean("dataSource")
 	public DataSource h2DataSource(){
 		return new EmbeddedDatabaseBuilder()

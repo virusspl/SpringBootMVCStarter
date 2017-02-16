@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import sbs.model.Role;
 import sbs.model.User;
+import sbs.service.JdbcOracleX3Service;
 import sbs.service.RoleService;
 import sbs.service.UserService;
 
@@ -22,6 +23,8 @@ public class VariousPagesController {
 	RoleService roleService;
 	@Autowired
 	MessageSource messageSource;
+	@Autowired 
+	JdbcOracleX3Service jdbcOracleX3Service;
 	
 	@RequestMapping("/noaccess")
 	public String noAccess() {
@@ -33,32 +36,46 @@ public class VariousPagesController {
 		return "various/construction";
 	}
 	
+	@RequestMapping("/jdbc")
+	public String jdbc(Model model) {
+	        model.addAttribute("result", jdbcOracleX3Service.findAllUsers("ATW"));
+		return "various/jdbc";
+	}
+
 	@RequestMapping("/init")
 	public String initDatabaseData(Model model, Locale locale) {
 		String msg = messageSource.getMessage("action.objects.created", null, locale) + ": ";
 		
-
-		// get basic users from db
-		User admin = userService.findByUsername("Admin");
-		User user = userService.findByUsername("User");
-		User krzysiek = userService.findByUsername("Krzysiek");
-		User maciek = userService.findByUsername("Maciek");
-		User seweryn = userService.findByUsername("Seweryn");
 		Role adminRole = roleService.findByName("ROLE_ADMIN");
-		Role userRole = roleService.findByName("ROLE_USER");
-		
-		// init if null
 		if (adminRole == null) {
 			adminRole = new Role();
 			adminRole.setName("ROLE_ADMIN");
 			msg += "[role: " + adminRole.getName() + "], ";
 		}
+		Role userRole = roleService.findByName("ROLE_USER");
 		if (userRole == null) {
 			userRole = new Role();
 			userRole.setName("ROLE_USER");
 			msg += "[role: " + userRole.getName() + "], ";
 		}
+		Role qualityManagerRole = roleService.findByName("ROLE_QUALITYMANAGER");
+		if (qualityManagerRole == null) {
+			qualityManagerRole = new Role();
+			qualityManagerRole.setName("ROLE_QUALITYMANAGER");
+			msg += "[role: " + qualityManagerRole.getName() + "], ";
+		}
+		Role qualityUserRole = roleService.findByName("ROLE_QUALITYUSER");
+		if (qualityUserRole == null) {
+			qualityUserRole = new Role();
+			qualityUserRole.setName("ROLE_QUALITYUSER");
+			msg += "[role: " + qualityUserRole.getName() + "], ";
+		}
 
+		User admin = userService.findByUsername("Admin");
+		User user = userService.findByUsername("User");
+		User krzysiek = userService.findByUsername("Krzysiek");
+		User maciek = userService.findByUsername("Maciek");
+		User seweryn = userService.findByUsername("Seweryn");
 		if (admin == null) {
 			// object
 			admin = new User();
