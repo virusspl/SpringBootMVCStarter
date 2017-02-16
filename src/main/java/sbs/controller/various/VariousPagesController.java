@@ -63,12 +63,14 @@ public class VariousPagesController {
 		if (qualityManagerRole == null) {
 			qualityManagerRole = new Role();
 			qualityManagerRole.setName("ROLE_QUALITYMANAGER");
+			roleService.save(qualityManagerRole);
 			msg += "[role: " + qualityManagerRole.getName() + "], ";
 		}
 		Role qualityUserRole = roleService.findByName("ROLE_QUALITYUSER");
 		if (qualityUserRole == null) {
 			qualityUserRole = new Role();
 			qualityUserRole.setName("ROLE_QUALITYUSER");
+			roleService.save(qualityUserRole);
 			msg += "[role: " + qualityUserRole.getName() + "], ";
 		}
 
