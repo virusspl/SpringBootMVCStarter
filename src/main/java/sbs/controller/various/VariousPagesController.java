@@ -17,6 +17,7 @@ import sbs.service.UserService;
 @Controller
 public class VariousPagesController {
 
+	
 	@Autowired
 	UserService userService;
 	@Autowired
