@@ -57,9 +57,9 @@
 								<th th:text="#{user.name}">Name</th>
 								<th th:text="#{user.email}">Email</th>
 								<th class="text-center" th:text="#{user.avatar}">Avatar</th>
-								<th class="text-center"  th:text="#{user.roles}">Roles</th>
+								<th class="text-center"  th:text="#{user.roles}" style="max-width: 10%;">Roles</th>
 								<th class="text-center" th:text="#{user.active}">Active</th>
-								<th class="text-center" th:text="#{users.options}">Options</th>								
+								<th class="text-center" th:text="#{users.options}" style="min-width: 10%;">Options</th>								
 							</tr>
 						</thead>
 						<tbody>
@@ -78,7 +78,7 @@
 								<ul style="margin: 0px; padding: 0px;">
 								<li style="display: inline;" th:each="role : ${user.roles}">
 									<span th:text="${role.name}" 
-									th:class="${role.name == 'ROLE_ADMIN'}? 'btn btn-danger btn-xs' : 'btn btn-info btn-xs'"
+									th:class="${role.name == 'ROLE_ADMIN'}? 'btn btn-danger btn-xs margin-bottom-5' : 'btn btn-info btn-xs margin-bottom-5'"
 									></span>
 								</li>
 								</ul>
