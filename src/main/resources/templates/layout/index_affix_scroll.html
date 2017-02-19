@@ -1,18 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<html>
 <head>
   <title>Bootstrap Example</title>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-	<link th:href="@{/bootstrap/css/bootstrap.min.css}" type="text/css" rel="stylesheet" media="screen,projection" />	
-	<!-- JQUERY -->
-		<script th:src="@{/js/jquery-3.1.1.min.js}"></script>
-	<!-- BOOTSTRAP JS -->
-	<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
-	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script th:src="@{/bootstrap/js/ie10-viewport-bug-workaround.js}"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <style>
   body {
       position: relative; 
@@ -40,7 +34,7 @@
 <body data-spy="scroll" data-target=".navbar" data-offset="50">
 
 <div class="container-fluid" style="background-color:#F44336;color:#fff;height:200px;">
-  <h1>Scrollspy Affix Example</h1>
+  <h1>Scrollspy & Affix Example</h1>
   <h3>Fixed navbar on scroll</h3>
   <p>Scroll this page to see how the navbar behaves with data-spy="affix" and data-spy="scrollspy".</p>
   <p>The navbar is attached to the top of the page after you have scrolled a specified amount of pixels, and the links in the navbar are automatically updated based on scroll position.</p>
