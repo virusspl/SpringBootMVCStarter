@@ -27,66 +27,27 @@ import sbs.service.CustomUserDetailsService;
 @Configuration
 @EnableTransactionManagement
 public class DataSourceConfig {
-	
-	@Bean("oracleX3DataSource")
-	public DataSource oracleX3DataSource() throws SQLException {
-		DriverManagerDataSource dataSource = new DriverManagerDataSource();
-		dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
-		dataSource.setUrl("jdbc:oracle:thin:@192.168.1.6:1521:X3V6POL");
-		dataSource.setUsername("x3ro");
-        dataSource.setPassword("readonly");
-		return dataSource;
-	}
-	
-	@Bean(name = "oracleX3JdbcTemplate") 
-    public JdbcTemplate jdbcTemplate() throws SQLException{ 
-        return new JdbcTemplate(oracleX3DataSource()); 
-    }
-
+	private static final String MYSQL_DRIVER="com.mysql.jdbc.Driver";
+	private static final String ORACLE_DRIVER="oracle.jdbc.driver.OracleDriver";
+	@SuppressWarnings("unused")
+	private static final String POSTGRESQL_DRIVER="org.postgresql.Driver";
 	/*
-	 * POSTGRES
+	 * MYSQL DATASOURCE - MAIN APP DATABASE
 	 */
-	@Profile("postgres")
-	@Primary
-	@Bean("dataSource")
-	public DataSource postgreDataSource() {
-		DriverManagerDataSource dataSource = new DriverManagerDataSource();
-		dataSource.setDriverClassName("org.postgresql.Driver");
-		dataSource.setUrl(System.getenv("JDBC_DATABASE_URL"));
-		dataSource.setUsername(System.getenv("JDBC_DATABASE_USERNAME"));
-		dataSource.setPassword(System.getenv("JDBC_DATABASE_PASSWORD"));
-		return dataSource;
-	}
-	@Profile("postgres")
-	@Bean("sessionFactory")
-	public SessionFactory postgreSessionFactory() {
-		DataSource dataSource = postgreDataSource();
-		Properties properties = new Properties();
-		properties.put("hibernate.show_sql", "true");
-		properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-		properties.put("hibernate.hbm2ddl.auto", "update");
-		LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(dataSource);	
-		sessionBuilder.addProperties(properties);
-		sessionBuilder.scanPackages("sbs.model");
-		return sessionBuilder.buildSessionFactory();
-	}
-	
-	/*
-	 * MYSQL
-	 */
-	
 	@Profile("mysql")
 	@Primary
 	@Bean
 	  public DataSource dataSource() {
 	    DriverManagerDataSource dataSource = new DriverManagerDataSource();
-	    dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+	    dataSource.setDriverClassName(MYSQL_DRIVER);
 	    dataSource.setUrl("jdbc:mysql://localhost:3306/adrp");
 	    dataSource.setUsername("root");
 	    dataSource.setPassword("pass");
-
 	    return dataSource;
 	  }
+	/*
+	 * HIBERNATE SESSION FACTORY - MAIN APP DATABASE SESSION FACTORY
+	 */
 	@Profile("mysql")
 	@Bean
 	public SessionFactory sessionFactory() {
@@ -100,9 +61,67 @@ public class DataSourceConfig {
 		sessionBuilder.scanPackages("sbs.model");
 		return sessionBuilder.buildSessionFactory();
 	}
+	/*
+	 * HIBERNATE TRANSACTION MANAGER - MAIN APP TRANSACTION MANAGER
+	 */
+	@Bean
+	public HibernateTransactionManager getTransactionManager() {
+		SessionFactory sessionFactory = sessionFactory();
+		HibernateTransactionManager transactionManager = new HibernateTransactionManager(sessionFactory);
+		return transactionManager;
+	}
+	/*
+	 * USER DETAILS SERVICE - USING MAIN APP DATABASE
+	 */
+	@Bean
+	@Autowired
+    public UserDetailsService userDetailsService(CustomUserDetailsService customUserDetailsService){
+		return customUserDetailsService;
+		/*JdbcDaoImpl jdbcImpl = new JdbcDaoImpl();
+    	jdbcImpl.setDataSource(dataSource());
+    	jdbcImpl.setUsersByUsernameQuery("select username, password, enabled from users where lower(username)=lower(?)");
+    	jdbcImpl.setAuthoritiesByUsernameQuery("select b.username, a.role from user_roles a, users b where lower(b.username)=lower(?) and a.userid=b.userid");
+    	return jdbcImpl;
+    	*/
+    }
+	/*
+	 * PERSISTENT TOKEN - STORED IN MAIN APP DATABASE
+	 */
+	@Bean
+	public PersistentTokenRepository persistentTokenRepository() {
+		JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
+		db.setDataSource(dataSource());
+		return db;
+	}
 	
 	/*
-	 * H2
+	 * ------------------------ ADDITIONAL DATASOURCES --------------------------
+	 */
+	
+	/*
+	 * ORACLE X3 DATASOURCE
+	 */
+	@Bean("oracleX3DataSource")
+	public DataSource oracleX3DataSource() throws SQLException {
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setDriverClassName(ORACLE_DRIVER);
+		dataSource.setUrl("jdbc:oracle:thin:@192.168.1.6:1521:X3V6POL");
+		dataSource.setUsername("x3ro");
+        dataSource.setPassword("readonly");
+		return dataSource;
+	}
+	
+	@Bean(name = "oracleX3JdbcTemplate") 
+    public JdbcTemplate jdbcTemplate() throws SQLException{ 
+        return new JdbcTemplate(oracleX3DataSource()); 
+    }
+	
+	/*
+	 * ------------------------ DEVELOPMENT DATASOURCES --------------------------
+	 */
+	
+	/*
+	 * H2 - DEVELOPMENT IN-MEMORY DATABASE
 	 */
 	@Profile("h2")
 	@Primary
@@ -114,6 +133,7 @@ public class DataSourceConfig {
 				//.addScript("classpath:sql/init-data.sql")
 				.build();
 	}
+	
 	@Profile("h2")
 	@Bean("sessionFactory")
 	public SessionFactory h2SessionFactory() {
@@ -132,29 +152,4 @@ public class DataSourceConfig {
 	    return sessionBuilder.buildSessionFactory();
 	}
 	
-	@Bean
-	public HibernateTransactionManager getTransactionManager() {
-		SessionFactory sessionFactory = sessionFactory();
-		HibernateTransactionManager transactionManager = new HibernateTransactionManager(sessionFactory);
-		return transactionManager;
-	}
-	
-	@Bean
-	@Autowired
-    public UserDetailsService userDetailsService(CustomUserDetailsService customUserDetailsService){
-		/*JdbcDaoImpl jdbcImpl = new JdbcDaoImpl();
-    	jdbcImpl.setDataSource(dataSource());
-    	jdbcImpl.setUsersByUsernameQuery("select username, password, enabled from users where lower(username)=lower(?)");
-    	jdbcImpl.setAuthoritiesByUsernameQuery("select b.username, a.role from user_roles a, users b where lower(b.username)=lower(?) and a.userid=b.userid");
-    	return jdbcImpl;
-    	*/
-		return customUserDetailsService;
-    }
-	
-	@Bean
-	public PersistentTokenRepository persistentTokenRepository() {
-		JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
-		db.setDataSource(dataSource());
-		return db;
-	}
 }

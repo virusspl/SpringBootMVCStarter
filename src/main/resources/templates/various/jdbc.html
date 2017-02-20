@@ -5,12 +5,19 @@
 <head lang="pl">
 </head>
 <body>
+<div layout:fragment="script">
+	<!-- SELECTIZE -->
+	<script th:src="@{/selectize/js/selectize.min.js}" type="text/javascript"></script>
+	<script>
+		$('#x3users').selectize();
+	</script>
+</div>
 	<div layout:fragment="content">
-		<ul>
-			<li th:each="obj,stat : ${result}">
-			<span th:text="${result[stat.index]}">line</span>
-			</li>
-		</ul>
+		<select id="x3users">
+			<option th:each="obj,stat : ${result}" th:value="${result[stat.index]}" th:text="${result[stat.index]}">
+			X3 User
+			</option>
+		</select>
 	</div>
 </body>
 </html>
