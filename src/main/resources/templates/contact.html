@@ -210,7 +210,7 @@
 								class="col-xs-8 col-xs-offset-2 col-md-6 col-md-offset-3 text-justify"
 								style="border: 1px solid #CDCDCD; padding-bottom: 10px;">
 								<h2 class="text-primary" th:text="#{contact.title}"
-									style="border-bottom: 1px solid #CDCDCD">Logowanie</h2>
+									style="border-bottom: 1px solid #CDCDCD">Kontakt</h2>
 								<span th:text="#{contact.message}">tell what you can do
 									here</span>
 
@@ -224,7 +224,7 @@
 													type="text" class="form-control" id="name" name="name"
 													th:field="${contactForm.name}" th:errorclass="input-error"
 													th:placeholder="#{contact.enter.name}" />
-												<div th:errors="*{name}" class="red-text">error</div>
+												<div th:errors="*{name}" class="text-danger">error</div>
 											</div>
 
 											<div class="form-group">
@@ -233,7 +233,7 @@
 													name="email" th:field="${contactForm.email}"
 													th:errorclass="input-error"
 													th:placeholder="#{contact.enter.email}" />
-												<div th:errors="*{email}" class="red-text">error</div>
+												<div th:errors="*{email}" class="text-danger">error</div>
 											</div>
 
 											<div class="form-group">
@@ -243,7 +243,7 @@
 													th:errorclass="input-error"
 													th:placeholder="#{contact.enter.content}"
 													style="min-height: 120px"></textarea>
-												<div th:errors="*{content}" class="red-text">error</div>
+												<div th:errors="*{content}" class="text-danger">error</div>
 											</div>
 
 											<span th:text="#{contact.your.ip}" class="text-muted">Your
