@@ -31,6 +31,7 @@ public class DataSourceConfig {
 	private static final String ORACLE_DRIVER="oracle.jdbc.driver.OracleDriver";
 	@SuppressWarnings("unused")
 	private static final String POSTGRESQL_DRIVER="org.postgresql.Driver";
+	private static final String SQLSERVER_DRIVER="com.microsoft.sqlserver.jdbc.SQLServerConnection";
 	/*
 	 * MYSQL DATASOURCE - MAIN APP DATABASE
 	 */
@@ -112,9 +113,27 @@ public class DataSourceConfig {
 	}
 	
 	@Bean(name = "oracleX3JdbcTemplate") 
-    public JdbcTemplate jdbcTemplate() throws SQLException{ 
+    public JdbcTemplate oracleX3JdbcTemplate() throws SQLException{ 
         return new JdbcTemplate(oracleX3DataSource()); 
     }
+	
+	/*
+	 * SQL SERVER - OPTIMA
+	 */
+	@Bean("optimaAdrDataSource")
+	public DataSource optimaAdrDataSource() throws SQLException {
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setDriverClassName(SQLSERVER_DRIVER);
+		dataSource.setUrl("jdbc:sqlserver://ATWSRV-OPTIMA\\OPTIMA:50066;databaseName=CDN_ADR;");
+		dataSource.setUsername("sa");
+        dataSource.setPassword("Optima123!");
+		return dataSource;
+	}
+	
+	@Bean(name = "optimaAdrJdbcTemplate") 
+    public JdbcTemplate optimaAdrJdbcTemplate() throws SQLException{ 
+        return new JdbcTemplate(optimaAdrDataSource()); 
+    }	
 	
 	/*
 	 * ------------------------ DEVELOPMENT DATASOURCES --------------------------

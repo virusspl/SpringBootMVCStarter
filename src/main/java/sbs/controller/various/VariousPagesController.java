@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import sbs.model.Role;
 import sbs.model.User;
+import sbs.service.JdbcAdrOptimaService;
 import sbs.service.JdbcOracleX3Service;
 import sbs.service.RoleService;
 import sbs.service.UserService;
@@ -26,6 +27,8 @@ public class VariousPagesController {
 	MessageSource messageSource;
 	@Autowired 
 	JdbcOracleX3Service jdbcOracleX3Service;
+	@Autowired
+	JdbcAdrOptimaService jdbcAdrOptimaService;
 	
 	@RequestMapping("/noaccess")
 	public String noAccess() {
@@ -37,9 +40,11 @@ public class VariousPagesController {
 		return "various/construction";
 	}
 	
+	
 	@RequestMapping("/jdbc")
 	public String jdbc(Model model) {
-	        model.addAttribute("result", jdbcOracleX3Service.findAllUsers("ATW"));
+	       model.addAttribute("resultOptima", jdbcAdrOptimaService.findAllUsers());
+	       model.addAttribute("resultX3", jdbcOracleX3Service.findAllUsers("ATW"));
 		return "various/jdbc";
 	}
 

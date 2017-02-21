@@ -98,6 +98,12 @@
 		    <artifactId>ojdbc14</artifactId>
 		    <version>10.2.0.4.0</version>
 		</dependency>
+		<!-- SQLSERVER -->
+		<dependency>
+		  <groupId>com.microsoft.sqlserver</groupId>
+		  <artifactId>sqljdbc4</artifactId>
+		  <version>6.0.8112.100</version>
+		</dependency>
 	<!-- CONFIGURATION PROCESSOR -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
