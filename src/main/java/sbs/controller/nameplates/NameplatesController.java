@@ -1,12 +1,17 @@
 package sbs.controller.nameplates;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Locale;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,10 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("nameplates")
 public class NameplatesController {
 
+	@Autowired
+	MessageSource messageSource;
+	
 	@RequestMapping("/list")
-	public String jdbc(Model model) {
-
-		
+	public String list(Model model, Locale locale) throws FileNotFoundException {
 		ArrayList<NameplatesLogLine> logLines = new ArrayList<>();
 		ArrayList<NameplatesErrorLine> errorLines = new ArrayList<>();
 		ArrayList<NameplatesLogLine> backlistLog;
@@ -66,9 +72,12 @@ public class NameplatesController {
 			
 			model.addAttribute("logLines", backlistLog);
 			model.addAttribute("errorLines", backlistError);
-		} catch (Exception ex) {
-				ex.printStackTrace();
-		}
+		} catch (FileNotFoundException ex) {
+			throw new FileNotFoundException(
+					messageSource.getMessage("error.file.not.found",null, locale)
+					+ " "
+					+ ex.getMessage());
+		} catch (IOException ignore){}
 		return "nameplates/list";
 	}
 
