@@ -37,6 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.and().authorizeRequests()
 		.antMatchers("/", "/init",
 				"/bootstrap/**",
+				"/selectize/**",
 				"/css/**",
 				"/images/**",
 				"/js/**",
@@ -44,7 +45,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/login",
 				"/logout",
 				"/contact/**",
-				"/users/showcurrent"
+				"/users/showcurrent",
+				"/nameplates/list"
 				)
 		.permitAll()
 		.antMatchers(

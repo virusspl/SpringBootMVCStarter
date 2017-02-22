@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +21,8 @@ public class NameplatesController {
 		
 		ArrayList<NameplatesLogLine> logLines = new ArrayList<>();
 		ArrayList<NameplatesErrorLine> errorLines = new ArrayList<>();
-
+		ArrayList<NameplatesLogLine> backlistLog;
+		ArrayList<NameplatesErrorLine> backlistError;
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(
 					"\\\\192.168.1.13\\atwsystem\\User_file\\Produkcja\\RF_ID\\MIFARE_Ultralight_Log.txt"));
@@ -31,7 +33,7 @@ public class NameplatesController {
 			long i = 1;
 			
 			while ((line = in.readLine()) != null) {
-				if (line.length()<90){
+				if (line.split(",").length != 7){
 					errorLines.add(new NameplatesErrorLine(i,line));
 				}
 				else{
@@ -46,18 +48,26 @@ public class NameplatesController {
 					logLine.setDate(split.get(4));
 					logLine.setFlag(split.get(5));
 					logLine.setComment(split.get(6));
-					
-					
-					
 					logLines.add(logLine);
 				}
 				i++;
 			}
 			in.close();
-			model.addAttribute("logLines", logLines);
-			model.addAttribute("errorLines", errorLines);
-		} catch (Exception ex) {
+			
+			backlistLog = new ArrayList<>();
+			for (ListIterator<NameplatesLogLine> iterator = logLines.listIterator(logLines.size()); iterator.hasPrevious();) {
+				backlistLog.add(iterator.previous());
+			}
 
+			backlistError = new ArrayList<>();
+			for (ListIterator<NameplatesErrorLine> iterator = errorLines.listIterator(errorLines.size()); iterator.hasPrevious();) {
+				backlistError.add(iterator.previous());
+			}
+			
+			model.addAttribute("logLines", backlistLog);
+			model.addAttribute("errorLines", backlistError);
+		} catch (Exception ex) {
+				ex.printStackTrace();
 		}
 		return "nameplates/list";
 	}
