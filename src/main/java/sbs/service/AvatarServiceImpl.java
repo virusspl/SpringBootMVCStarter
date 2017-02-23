@@ -2,6 +2,8 @@ package sbs.service;
 
 import java.io.IOException;
 
+
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.DefaultResourceLoader;
@@ -31,11 +33,13 @@ public class AvatarServiceImpl implements AvatarService {
 	}
 
 	@Override
+	@Cacheable(value="avatarById")
 	public Resource getAvatarResourceById(Long id){
 		return getUserAvatar(userService.findById(id));
 	}
 	
 	@Override
+	@Cacheable(value="avatarByUsername")
 	public Resource getAvatarResourceByUsername(String username){
 		return getUserAvatar(userService.findByUsername(username));
 	}

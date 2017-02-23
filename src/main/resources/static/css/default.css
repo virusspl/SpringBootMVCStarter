@@ -1,3 +1,14 @@
+#flip {display: table; width: 100%; }
+#top {display: table-header-group; } /* Will be displayed at the top */
+#middle {display: table-row-group;    } /* Will be displayed in the middle */
+#bottom {display: table-footer-group; } /* Will be displayed at the bottom of the pseudo-table */
+/*<div id="flip">...
+    <div id="bottom">First ...
+    <div id="middle">Second ... 
+    <div id="top">Third ...
+  
+*/
+
 body {
 	padding-top: 70px;
 }

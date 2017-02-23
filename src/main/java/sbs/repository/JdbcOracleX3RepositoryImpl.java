@@ -31,4 +31,19 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		return result;
 	}
 
+	@Override
+	public String findItemDescription(String company, String product) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT " 
+						+ company + ".ITMMASTER.ITMDES1_0 "
+						+ "FROM " + company + ".ITMMASTER "
+						+ "WHERE UPPER(" + company + ".ITMMASTER.ITMREF_0) = ? "
+						, new Object[] {product.toUpperCase()});
+        String result = null;
+        for(Map<String,Object> row: resultSet ){
+        	result = (String)row.get("ITMDES1_0");
+        }
+		return result;
+	}
+
 }

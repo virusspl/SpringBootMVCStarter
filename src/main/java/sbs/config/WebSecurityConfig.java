@@ -46,7 +46,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/logout",
 				"/contact/**",
 				"/users/showcurrent",
-				"/nameplates/list"
+				"/nameplates/list",
+				"/geolook/**"
 				)
 		.permitAll()
 		.antMatchers(

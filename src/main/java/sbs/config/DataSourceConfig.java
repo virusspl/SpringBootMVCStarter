@@ -116,7 +116,23 @@ public class DataSourceConfig {
     public JdbcTemplate oracleX3JdbcTemplate() throws SQLException{ 
         return new JdbcTemplate(oracleX3DataSource()); 
     }
+	/*
+	 * ORACLE GEODE DATASOURCE
+	 */
+	@Bean("oracleGeodeDataSource")
+	public DataSource oracleGeodeDataSource() throws SQLException {
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setDriverClassName(ORACLE_DRIVER);
+		dataSource.setUrl("jdbc:oracle:thin:@192.168.1.26:1521:GEODEV6");
+		dataSource.setUsername("system");
+        dataSource.setPassword("manager");
+		return dataSource;
+	}
 	
+	@Bean(name = "oracleGeodeJdbcTemplate") 
+    public JdbcTemplate oracleGeodeJdbcTemplate() throws SQLException{ 
+        return new JdbcTemplate(oracleGeodeDataSource()); 
+    }	
 	/*
 	 * SQL SERVER - OPTIMA
 	 */

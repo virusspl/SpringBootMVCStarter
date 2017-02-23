@@ -224,7 +224,7 @@
 													type="text" class="form-control" id="name" name="name"
 													th:field="${contactForm.name}" th:errorclass="input-error"
 													th:placeholder="#{contact.enter.name}" />
-												<div th:errors="*{name}" class="text-danger">error</div>
+												<div th:errors="*{name}" class="text-danger margin-top-5">error</div>
 											</div>
 
 											<div class="form-group">
@@ -233,7 +233,7 @@
 													name="email" th:field="${contactForm.email}"
 													th:errorclass="input-error"
 													th:placeholder="#{contact.enter.email}" />
-												<div th:errors="*{email}" class="text-danger">error</div>
+												<div th:errors="*{email}" class="text-danger margin-top-5">error</div>
 											</div>
 
 											<div class="form-group">
@@ -243,7 +243,7 @@
 													th:errorclass="input-error"
 													th:placeholder="#{contact.enter.content}"
 													style="min-height: 120px"></textarea>
-												<div th:errors="*{content}" class="text-danger">error</div>
+												<div th:errors="*{content}" class="text-danger margin-top-5">error</div>
 											</div>
 
 											<span th:text="#{contact.your.ip}" class="text-muted">Your

@@ -57,7 +57,7 @@
 					</div>
 				</div>
 			</div>
-			<!-- QUALITY -->
+			<!-- PRODUCTION -->
 			<div class="col-xs-8 col-xs-offset-2">
 				<div class="panel panel-primary">
 					<div class="panel-heading bg-primary">
@@ -70,6 +70,23 @@
 						</a>
 						<a th:href="@{/underconstruction}" class="btn btn-info btn-md margin-top-5"> <span
 							class="glyphicon glyphicon-link"></span> <span th:text="#{quality.surveys}">quality surveys</span>
+						</a>
+					</div>
+				</div>
+			</div>
+			<!-- WAREHOUSE -->
+			<div class="col-xs-8 col-xs-offset-2">
+				<div class="panel panel-primary">
+					<div class="panel-heading bg-primary">
+						<h3 class="panel-title" th:text="#{department.warehouses}">Panel
+							With title</h3>
+					</div>
+					<div class="panel-body">
+						<a th:href="@{/geolook/map}" class="btn btn-info btn-md margin-top-5"> <span
+							class="glyphicon glyphicon-th"></span> <span th:text="#{geolook.warehouses.map}">GEODE Lookup</span>
+						</a>
+						<a th:href="@{/geolook/search}" class="btn btn-info btn-md margin-top-5"> <span
+							class="glyphicon glyphicon-search"></span> <span th:text="#{geolook.warehouses.lookup}">GEODE Lookup</span>
 						</a>
 					</div>
 				</div>

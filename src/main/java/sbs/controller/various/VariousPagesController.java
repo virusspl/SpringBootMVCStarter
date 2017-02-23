@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import sbs.model.Role;
 import sbs.model.User;
 import sbs.service.JdbcAdrOptimaService;
+import sbs.service.JdbcOracleGeodeService;
 import sbs.service.JdbcOracleX3Service;
 import sbs.service.RoleService;
 import sbs.service.UserService;
@@ -29,6 +30,8 @@ public class VariousPagesController {
 	JdbcOracleX3Service jdbcOracleX3Service;
 	@Autowired
 	JdbcAdrOptimaService jdbcAdrOptimaService;
+	@Autowired
+	JdbcOracleGeodeService jdbcOracleGeodeService;
 	
 	@RequestMapping("/noaccess")
 	public String noAccess() {
@@ -45,6 +48,7 @@ public class VariousPagesController {
 	public String jdbc(Model model) {
 	       model.addAttribute("resultOptima", jdbcAdrOptimaService.findAllUsers());
 	       model.addAttribute("resultX3", jdbcOracleX3Service.findAllUsers("ATW"));
+	       model.addAttribute("geodeList", jdbcOracleGeodeService.findLocationsOfProduct("836004"));
 		return "various/jdbc";
 	}
 

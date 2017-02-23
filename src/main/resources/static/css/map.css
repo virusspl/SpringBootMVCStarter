@@ -1,0 +1,71 @@
+#imageArea{
+	width: 1024px;
+	height: 476px;
+	margin: 30px auto 0px auto;
+	background: url("../images/map/_main_map.png");
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+/*
+<!-- A B C D E F G H L O R T -->
+<!-- P S N X -->
+<!-- J00 A B C -->
+*/
+
+#A:hover ~ #imageArea {
+    background: url("../images/map/A.png");
+}
+#B:hover ~ #imageArea {
+  	background: url("../images/map/B.png");
+}
+#C:hover ~ #imageArea {
+  	background: url("../images/map/C.png");
+}
+#D:hover ~ #imageArea {
+  	background: url("../images/map/D.png");
+}
+#E:hover ~ #imageArea {
+  	background: url("../images/map/E.png");
+}
+#F:hover ~ #imageArea {
+  	background: url("../images/map/F.png");
+}
+#G:hover ~ #imageArea {
+  	background: url("../images/map/G.png");
+}
+#H:hover ~ #imageArea {
+  	background: url("../images/map/H.png");
+}
+#J00A:hover ~ #imageArea {
+  	background: url("../images/map/J00A.png");
+}
+#J00B:hover ~ #imageArea {
+  	background: url("../images/map/J00B.png");
+}
+#J00C:hover ~ #imageArea {
+  	background: url("../images/map/J00C.png");
+}
+#L:hover ~ #imageArea {
+  	background: url("../images/map/L.png");
+}
+#N:hover ~ #imageArea {
+  	background: url("../images/map/N.png");
+}
+#O:hover ~ #imageArea {
+  	background: url("../images/map/O.png");
+}
+#P:hover ~ #imageArea {
+  	background: url("../images/map/P.png");
+}
+#R:hover ~ #imageArea {
+  	background: url("../images/map/R.png");
+}
+#S:hover ~ #imageArea {
+  	background: url("../images/map/S.png");
+}
+#T:hover ~ #imageArea {
+  	background: url("../images/map/T.png");
+}
+#X:hover ~ #imageArea {
+  	background: url("../images/map/X.png");
+}
