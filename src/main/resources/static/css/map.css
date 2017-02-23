@@ -6,6 +6,9 @@
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
+#mapModuleContainer{
+	min-width: 1024px;
+}
 /*
 <!-- A B C D E F G H L O R T -->
 <!-- P S N X -->
@@ -63,9 +66,51 @@
 #S:hover ~ #imageArea {
   	background: url("../images/map/S.png");
 }
-#T:hover ~ #imageArea {
-  	background: url("../images/map/T.png");
+#W:hover ~ #imageArea {
+  	background: url("../images/map/W.png");
 }
-#X:hover ~ #imageArea {
-  	background: url("../images/map/X.png");
+#XA:hover ~ #imageArea {
+  	background: url("../images/map/XA.png");
+}
+#XB:hover ~ #imageArea {
+  	background: url("../images/map/XB.png");
+}
+#XC:hover ~ #imageArea {
+  	background: url("../images/map/XC.png");
+}
+#YA:hover ~ #imageArea {
+  	background: url("../images/map/YA.png");
+}
+#YB:hover ~ #imageArea {
+  	background: url("../images/map/YB.png");
+}
+#YC:hover ~ #imageArea {
+  	background: url("../images/map/YC.png");
+}
+#YD:hover ~ #imageArea {
+  	background: url("../images/map/YD.png");
+}
+#YE:hover ~ #imageArea {
+  	background: url("../images/map/YE.png");
+}
+#YF:hover ~ #imageArea {
+  	background: url("../images/map/YF.png");
+}
+#YG:hover ~ #imageArea {
+  	background: url("../images/map/YG.png");
+}
+#YH:hover ~ #imageArea {
+  	background: url("../images/map/YH.png");
+}
+#YI:hover ~ #imageArea {
+  	background: url("../images/map/YI.png");
+}
+#YJ:hover ~ #imageArea {
+  	background: url("../images/map/YJ.png");
+}
+#YK:hover ~ #imageArea {
+  	background: url("../images/map/YK.png");
+}
+#YL:hover ~ #imageArea {
+  	background: url("../images/map/YL.png");
 }

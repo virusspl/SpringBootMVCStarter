@@ -25,84 +25,125 @@
 			</div>
 		</div>
 	<!-- /TITLE -->	
-		<div class="row margin-top-5">
-			<div class="col-xs-12 col-xs-offset-0">
+
+			<div id="mapModuleContainer">
+			
 				<!-- SHIPMENTS -->
-				<!-- J00 -->
 				<h4 th:text="#{department.shipments}">Category</h4>
-					<a id="J00A" href="#" class="btn btn-info btn-sm margin-bottom-5">
+					<span id="J00A" class="btn btn-info btn-sm margin-bottom-5">
 						<b>J00A</b> - <span th:text="#{department.shipments.warehouse}">Shipments Warehouse</span>
-					</a>					
-					<a id="J00B" href="#" class="btn btn-info btn-sm margin-bottom-5">
+					</span>					
+					<span id="J00B" class="btn btn-info btn-sm margin-bottom-5">
 						<b>J00B</b> - <span th:text="#{department.shipments.warehouse}">Shipments Warehouse</span>
-					</a>					
-					<a id="J00C" href="#" class="btn btn-info btn-sm margin-bottom-5">
+					</span>					
+					<span id="J00C" class="btn btn-info btn-sm margin-bottom-5">
 						<b>J00C</b> - <span th:text="#{department.outside}">Shipments Warehouse</span>
-					</a>			
-					<a id="YI" href="#" class="btn btn-info btn-sm margin-bottom-5">
+					</span>			
+					<span id="YI" class="btn btn-info btn-sm margin-bottom-5">
 						<b>YI</b> - <span th:text="#{department.floor}">Shipments Warehouse</span>
-					</a>			
+					</span>			
 			<!-- RECEPTIONS -->
-				<!-- P S N X -->
 				<h4 th:text="#{department.receptions}">Category</h4>
-					<a id="P" href="#" class="btn btn-info btn-sm margin-bottom-5">
+					<span id="P" class="btn btn-info btn-sm margin-bottom-5">
 						<b>P</b> - <span th:text="#{department.receptions.warehouse}">Receptions Warehouse</span>
-					</a>
-					<a id="S" href="#" class="btn btn-info btn-sm margin-bottom-5">
+					</span>
+					<span id="S" class="btn btn-info btn-sm margin-bottom-5">
 						<b>S</b> - <span th:text="#{department.receptions.warehouse}">Receptions Warehouse</span>
-					</a>
-					<a id="N" href="#" class="btn btn-info btn-sm margin-bottom-5">
+					</span>
+					<span id="N" class="btn btn-info btn-sm margin-bottom-5">
 						<b>N</b> - <span th:text="#{department.receptions.warehouse}">Receptions Warehouse</span>
-					</a>
-					<a id="X" href="#" class="btn btn-info btn-sm margin-bottom-5">
-						<b>X</b> - <span th:text="#{department.floor}">Floor</span>
-					</a>		
+					</span>
+					<span id="XA" class="btn btn-info btn-sm margin-bottom-5">
+						<b>XA</b> - <span th:text="#{department.floor}">Floor</span>
+					</span>		
+					<span id="XB" class="btn btn-info btn-sm margin-bottom-5">
+						<b>XB</b> - <span th:text="#{department.floor}">Floor</span>
+					</span>		
+					<span id="XC" class="btn btn-info btn-sm margin-bottom-5">
+						<b>XC</b> - <span th:text="#{department.floor}">Floor</span>
+					</span>		
 				<!-- PRODUCTION -->
-				<!-- A B C D E F G H L O R T -->
 				<h4  th:text="#{department.production}">Category</h4>
-					<a id="A" href="#" class="btn btn-info btn-sm margin-bottom-5">
+					<span id="A" class="btn btn-info btn-sm margin-bottom-5">
 						<b>A</b> - <span th:text="#{department.}">Production</span>
-					</a>
-					<a id="B" href="#" class="btn btn-info btn-sm margin-bottom-5">
+					</span>
+					<span id="B" class="btn btn-info btn-sm margin-bottom-5">
 						<b>B</b> - <span th:text="#{department.}">Production</span>
-					</a>
-					<a id="C" href="#" class="btn btn-info btn-sm margin-bottom-5">
+					</span>
+					<span id="C" class="btn btn-info btn-sm margin-bottom-5">
 						<b>C</b> - <span th:text="#{department.}">Production</span>
-					</a>
-					<a id="D" href="#" class="btn btn-info btn-sm margin-bottom-5">
+					</span>
+					<span id="D" class="btn btn-info btn-sm margin-bottom-5">
 						<b>D</b> - <span th:text="#{department.}">Production</span>
-					</a>
-					<a id="E" href="#" class="btn btn-info btn-sm margin-bottom-5">
+					</span>
+					<span id="E" class="btn btn-info btn-sm margin-bottom-5">
 						<b>E</b> - <span th:text="#{department.}">Production</span>
-					</a>
-					<a id="F" href="#" class="btn btn-info btn-sm margin-bottom-5">
+					</span>
+					<span id="F" class="btn btn-info btn-sm margin-bottom-5">
 						<b>F</b> - <span th:text="#{department.}">Production</span>
-					</a>
-					<a id="G" href="#" class="btn btn-info btn-sm margin-bottom-5">
+					</span>
+					<span id="G" class="btn btn-info btn-sm margin-bottom-5">
 						<b>G</b> - <span th:text="#{department.}">Production</span>
-					</a>
-					<a id="H" href="#" class="btn btn-info btn-sm margin-bottom-5">
+					</span>
+					<span id="H" class="btn btn-info btn-sm margin-bottom-5">
 						<b>H</b> - <span th:text="#{department.}">Production</span>
-					</a>
-					<a id="L" href="#" class="btn btn-info btn-sm margin-bottom-5">
+					</span>
+					<span id="L" class="btn btn-info btn-sm margin-bottom-5">
 						<b>L</b> - <span th:text="#{department.}">Production</span>
-					</a>
-					<a id="O" href="#" class="btn btn-info btn-sm margin-bottom-5">
+					</span>
+					<span id="O" class="btn btn-info btn-sm margin-bottom-5">
 						<b>O</b> - <span th:text="#{department.}">Production</span>
-					</a>
-					<a id="R" href="#" class="btn btn-info btn-sm margin-bottom-5">
+					</span>
+					<span id="R" class="btn btn-info btn-sm margin-bottom-5">
 						<b>R</b> - <span th:text="#{department.}">Production</span>
-					</a>
-					<a id="T" href="#" class="btn btn-info btn-sm margin-bottom-5">
-						<b>T</b> - <span th:text="#{department.}">Production</span>
-					</a>
+					</span>
+					<span id="W" class="btn btn-info btn-sm margin-bottom-5">
+						<b>W</b> - <span th:text="#{department.}">Production</span>
+					</span>
+					<span id="YA" class="btn btn-info btn-sm margin-bottom-5">
+						<b>YA</b> - <span th:text="#{department.floor}">Floor</span>
+					</span>
+					<span id="YB" class="btn btn-info btn-sm margin-bottom-5">
+						<b>YB</b> - <span th:text="#{department.floor}">Floor</span>
+					</span>
+					<span id="YC" class="btn btn-info btn-sm margin-bottom-5">
+						<b>YC</b> - <span th:text="#{department.floor}">Floor</span>
+					</span>
+					<span id="YD" class="btn btn-info btn-sm margin-bottom-5">
+						<b>YD</b> - <span th:text="#{department.floor}">Floor</span>
+					</span>
+					<span id="YE" class="btn btn-info btn-sm margin-bottom-5">
+						<b>YE</b> - <span th:text="#{department.floor}">Floor</span>
+					</span>
+					<span id="YF" class="btn btn-info btn-sm margin-bottom-5">
+						<b>YF</b> - <span th:text="#{department.floor}">Floor</span>
+					</span>
+					<span id="YG" class="btn btn-info btn-sm margin-bottom-5">
+						<b>YG</b> - <span th:text="#{department.floor}">Floor</span>
+					</span>
+					<span id="YH" class="btn btn-info btn-sm margin-bottom-5">
+						<b>YH</b> - <span th:text="#{department.floor}">Floor</span>
+					</span>
+					<span id="YI" class="btn btn-info btn-sm margin-bottom-5">
+						<b>YI</b> - <span th:text="#{department.floor}">Floor</span>
+					</span>
+					<span id="YJ" class="btn btn-info btn-sm margin-bottom-5">
+						<b>YJ</b> - <span th:text="#{department.floor}">Floor</span>
+					</span>
+					<span id="YK" class="btn btn-info btn-sm margin-bottom-5">
+						<b>YK</b> - <span th:text="#{department.floor}">Floor</span>
+					</span>
+					<span id="YL" class="btn btn-info btn-sm margin-bottom-5">
+						<b>YL</b> - <span th:text="#{department.floor}">Floor</span>
+					</span>
 				<!-- IMAGE AREA - WAREHOUSE MAP -->
+				
 				<div id="imageArea" class="margin-top-30">
 					
-				</div>		
-			</div>
+				</div>
+</div>
 		</div>
 
-	</div>
+	
 </body>
 </html>
