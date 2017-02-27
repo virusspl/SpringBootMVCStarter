@@ -1,6 +1,8 @@
 package sbs.config;
 
 
+import java.util.Locale;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -30,7 +32,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	// ----------> i18n <----------
 	@Bean
 	public LocaleResolver localeResolver() {
-		return new SessionLocaleResolver();
+		SessionLocaleResolver localeResolver = new SessionLocaleResolver();
+		Locale defaultLocale = new Locale("pl");
+		localeResolver.setDefaultLocale(defaultLocale);
+		return localeResolver;
 	}
 	@Bean
 	public LocaleChangeInterceptor localeChangeInterceptor() {
