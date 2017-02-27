@@ -1,4 +1,4 @@
-package sbs.controller.geolook;
+package sbs.model.geolook;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;

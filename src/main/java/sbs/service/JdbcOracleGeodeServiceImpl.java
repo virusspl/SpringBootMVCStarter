@@ -9,7 +9,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import sbs.controller.geolook.GeolookRow;
+import sbs.model.geolook.GeolookRow;
 import sbs.repository.JdbcOracleGeodeRepository;
 
 @Service
