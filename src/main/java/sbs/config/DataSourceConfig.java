@@ -31,7 +31,8 @@ public class DataSourceConfig {
 	private static final String ORACLE_DRIVER="oracle.jdbc.driver.OracleDriver";
 	@SuppressWarnings("unused")
 	private static final String POSTGRESQL_DRIVER="org.postgresql.Driver";
-	private static final String SQLSERVER_DRIVER="com.microsoft.sqlserver.jdbc.SQLServerConnection";
+	//private static final String SQLSERVER_DRIVER="com.microsoft.sqlserver.jdbc.SQLServerConnection";
+	private static final String SQLSERVER_DRIVER="com.microsoft.sqlserver.jdbc.SQLServerDriver";
 	/*
 	 * MYSQL DATASOURCE - MAIN APP DATABASE
 	 */
