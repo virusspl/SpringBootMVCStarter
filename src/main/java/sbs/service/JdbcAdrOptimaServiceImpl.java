@@ -11,6 +11,7 @@ import sbs.repository.JdbcAdrOptimaRepository;
 public class JdbcAdrOptimaServiceImpl implements JdbcAdrOptimaService {
 	@Autowired
 	JdbcAdrOptimaRepository jdbcAdrOptimaRepository;
+
 	
 	public List<String> findAllUsers(){
 		return jdbcAdrOptimaRepository.findAllUsers();
