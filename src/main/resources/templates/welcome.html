@@ -17,79 +17,70 @@
 			</div>
 		</div>
 		<!-- MODULES -->
-		<div class="row margin-top-20 text-center">
+		<div class="row margin-top-20">
 			<!-- HANDY LINKS -->
-			<div class="col-xs-8 col-xs-offset-2">
-				<div class="panel panel-primary">
-					<div class="panel-heading bg-primary">
-						<h3 class="panel-title" th:text="#{handy.links}">Panel With
-							title</h3>
-					</div>
-					<div class="panel-body">
-						<a class="btn btn-info btn-md margin-top-5"
-							href="http://atwsrv-java/DOCS/phones.pdf" target="_blank"> <span
-							class="glyphicon glyphicon-folder-open"
-							style="margin-right: 10px;"></span> <span
-							th:text="#{phone.numbers}">Phone numbers</span>
-						</a> <a class="btn btn-info btn-md margin-top-5"
-							href="http://atwsrv-java/CRM/CRM.pdf" target="_blank"> <span
-							class="glyphicon glyphicon-folder-open"
-							style="margin-right: 10px;"></span> <span th:text="#{crm.manual}">CRM
-								Manual</span>
-						</a>
-					</div>
-				</div>
+			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
+				<h3 class="text-primary" th:text="#{handy.links}">Panel With
+					title</h3>
+			</div>
+			<div class="col-xs-12 margin-top-10">
+				<a class="btn btn-link btn-md margin-top-5"
+					href="http://atwsrv-java/DOCS/phones.pdf" target="_blank"> <span
+					class="glyphicon glyphicon-folder-open" style="margin-right: 10px;"></span>
+					<span th:text="#{phone.numbers}">Phone numbers</span>
+				</a> <a class="btn btn-link btn-md margin-top-5"
+					href="http://atwsrv-java/CRM/CRM.pdf" target="_blank"> <span
+					class="glyphicon glyphicon-folder-open" style="margin-right: 10px;"></span>
+					<span th:text="#{crm.manual}">CRM Manual</span>
+				</a>
 			</div>
 			<!-- ADMIN -->
-			<div class="col-xs-8 col-xs-offset-2"
+			<div id="adminOnly"
 				sec:authorize="hasAnyRole('ROLE_OWNER', 'ROLE_ADMIN')">
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						<h3 class="panel-title" th:text="#{department.it}">Panel With
-							title</h3>
-					</div>
-					<div class="panel-body">
-						<a th:href="@{/users/list/active}"
-							class="btn btn-info btn-md margin-top-5"> <span
-							class="glyphicon glyphicon-user"></span> <span th:text="#{users.management}">users management</span>
-						</a>
-
-					</div>
+				<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
+					<h3 class="text-warning" th:text="#{department.it}">Panel With
+						title</h3>
+				</div>
+				<div class="col-xs-12 margin-top-10">
+					<a th:href="@{/users/list/active}"
+						class="btn btn-warning btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-user"></span> <span
+						th:text="#{users.management}">users management</span>
+					</a>
 				</div>
 			</div>
 			<!-- PRODUCTION -->
-			<div class="col-xs-8 col-xs-offset-2">
-				<div class="panel panel-primary">
-					<div class="panel-heading bg-primary">
-						<h3 class="panel-title" th:text="#{department.production}">Panel
-							With title</h3>
-					</div>
-					<div class="panel-body">
-						<a th:href="@{/nameplates/list}" class="btn btn-info btn-md margin-top-5"> <span
-							class="glyphicon glyphicon-list"></span> <span th:text="#{nameplates.rfid.log}">RFID Log</span>
-						</a>
-						<a th:href="@{/underconstruction}" class="btn btn-info btn-md margin-top-5"> <span
-							class="glyphicon glyphicon-link"></span> <span th:text="#{quality.surveys}">quality surveys</span>
-						</a>
-					</div>
-				</div>
+			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
+				<h3 class="text-info" th:text="#{department.production}">Panel
+					With title</h3>
+			</div>
+			<div class="col-xs-12 margin-top-10">
+				<a th:href="@{/nameplates/list}"
+					class="btn btn-info btn-md margin-top-5"> <span
+					class="glyphicon glyphicon-list"></span> <span
+					th:text="#{nameplates.rfid.log}">RFID Log</span>
+				</a> <a th:href="@{/underconstruction}"
+					class="btn btn-info btn-md margin-top-5"> <span
+					class="glyphicon glyphicon-link"></span> <span
+					th:text="#{quality.surveys}">quality surveys</span>
+				</a>
+
 			</div>
 			<!-- WAREHOUSE -->
-			<div class="col-xs-8 col-xs-offset-2">
-				<div class="panel panel-primary">
-					<div class="panel-heading bg-primary">
-						<h3 class="panel-title" th:text="#{department.warehouses}">Panel
-							With title</h3>
-					</div>
-					<div class="panel-body">
-						<a th:href="@{/geolook/map}" class="btn btn-info btn-md margin-top-5"> <span
-							class="glyphicon glyphicon-th"></span> <span th:text="#{geolook.warehouses.map}">GEODE Lookup</span>
-						</a>
-						<a th:href="@{/geolook/search}" class="btn btn-info btn-md margin-top-5"> <span
-							class="glyphicon glyphicon-search"></span> <span th:text="#{geolook.warehouses.lookup}">GEODE Lookup</span>
-						</a>
-					</div>
-				</div>
+			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
+				<h3 class="text-info" th:text="#{department.warehouses}">Panel
+					With title</h3>
+			</div>
+			<div class="col-xs-12 margin-top-10">
+				<a th:href="@{/geolook/map}"
+					class="btn btn-info btn-md margin-top-5"> <span
+					class="glyphicon glyphicon-th"></span> <span
+					th:text="#{geolook.warehouses.map}">GEODE Lookup</span>
+				</a> <a th:href="@{/geolook/search}"
+					class="btn btn-info btn-md margin-top-5"> <span
+					class="glyphicon glyphicon-search"></span> <span
+					th:text="#{geolook.warehouses.lookup}">GEODE Lookup</span>
+				</a>
 			</div>
 		</div>
 	</div>

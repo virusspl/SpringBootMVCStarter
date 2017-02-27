@@ -7,7 +7,7 @@
 </head>
 <body>
 	<div layout:fragment="script">
-		<script type="text/javascript" src="/js/detectIE.js"></script>
+		<script type="text/javascript" th:src="@{/js/detectIE.js}"></script>
 		<script>
 			if (detectIE() === false) {
 				document.getElementById('filelink').style.display = 'none';

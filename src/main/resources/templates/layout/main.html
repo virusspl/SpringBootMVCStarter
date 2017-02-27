@@ -59,7 +59,17 @@
               </ul>
             </li>
             <li class="dropdown">
-              <a href="#"  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span th:text="#{navi.lang}">Profile</span> <span class="caret"></span></a>
+              <a href="#"  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+              <span th:text="#{navi.lang}">Lang</span>
+              
+              <span th:switch="__${#locale}__"> 
+			  <span th:case="'pl'"><img style="margin-left: 5px;" th:src="@{/images/i18n/polish_flag.jpg}"/></span>
+			  <span th:case="'en'"><img style="margin-left: 5px;" th:src="@{/images/i18n/english_flag.gif}" /></span>
+			  <span th:case="'it'"><img style="margin-left: 5px;" th:src="@{/images/i18n/italian_flag.png}" /></span> 
+			</span>
+              
+              
+               <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="?lang=pl" ><span th:text="#{lang.polish}"></span><img class="nav-img" th:src="@{/images/i18n/polish_flag.jpg}" ></img></a></li>
                 <li><a href="?lang=en" ><span th:text="#{lang.english}"></span><img class="nav-img" th:src="@{/images/i18n/english_flag.gif}"  style="position: absolute; right: 5px;"></img></a></li>
