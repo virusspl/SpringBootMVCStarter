@@ -10,7 +10,7 @@ public class HrUserInfo {
 	String department;
 	String rcpNumber;
 	String position;
-	Timestamp curentJobStart;
+	Timestamp currentJobStart;
 	Timestamp currentJobEnd;
 	
 	public HrUserInfo() {
@@ -18,14 +18,14 @@ public class HrUserInfo {
 	}
 
 	public HrUserInfo(String id, String lastName, String firstName, String department, String rcpNumber,
-			String position, Timestamp curentJobStart, Timestamp currentJobEnd) {
+			String position, Timestamp currentJobStart, Timestamp currentJobEnd) {
 		this.id = id;
 		this.lastName = lastName;
 		this.firstName = firstName;
 		this.department = department;
 		this.rcpNumber = rcpNumber;
 		this.position = position;
-		this.curentJobStart = curentJobStart;
+		this.currentJobStart = currentJobStart;
 		this.currentJobEnd = currentJobEnd;
 	}
 
@@ -114,17 +114,17 @@ public class HrUserInfo {
 	}
 
 	/**
-	 * @return the curentJobStart
+	 * @return the currentJobStart
 	 */
 	public Timestamp getCurentJobStart() {
-		return curentJobStart;
+		return currentJobStart;
 	}
 
 	/**
 	 * @param curentJobStart the curentJobStart to set
 	 */
-	public void setCurentJobStart(Timestamp curentJobStart) {
-		this.curentJobStart = curentJobStart;
+	public void setCurrentJobStart(Timestamp currentJobStart) {
+		this.currentJobStart = currentJobStart;
 	}
 
 	/**
