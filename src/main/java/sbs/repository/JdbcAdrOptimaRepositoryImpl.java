@@ -76,7 +76,7 @@ public class JdbcAdrOptimaRepositoryImpl implements JdbcAdrOptimaRepository {
 	}
 
 	/*
-	 * FIND BY ID
+	 * FIND BY EMPLOYEE ID
 	 */
 	
 	@Override
@@ -127,7 +127,7 @@ public class JdbcAdrOptimaRepositoryImpl implements JdbcAdrOptimaRepository {
 	}
 
 	/*
-	 * FIND ALL
+	 * FIND BY CARD NO
 	 */
 	
 	@Override
@@ -177,5 +177,4 @@ public class JdbcAdrOptimaRepositoryImpl implements JdbcAdrOptimaRepository {
 		return hr;
 	}
 	
-
 }
