@@ -12,13 +12,16 @@ public class HrUserInfo {
 	String position;
 	Timestamp currentJobStart;
 	Timestamp currentJobEnd;
+	Timestamp employDate;
+	Timestamp quitDate;
 	
 	public HrUserInfo() {
 
 	}
 
 	public HrUserInfo(String id, String lastName, String firstName, String department, String rcpNumber,
-			String position, Timestamp currentJobStart, Timestamp currentJobEnd) {
+			String position, Timestamp currentJobStart, Timestamp currentJobEnd, 
+			Timestamp employDate, Timestamp quitDate) {
 		this.id = id;
 		this.lastName = lastName;
 		this.firstName = firstName;
@@ -27,6 +30,8 @@ public class HrUserInfo {
 		this.position = position;
 		this.currentJobStart = currentJobStart;
 		this.currentJobEnd = currentJobEnd;
+		this.employDate = employDate;
+		this.quitDate = quitDate;
 	}
 
 	/**
@@ -114,13 +119,6 @@ public class HrUserInfo {
 	}
 
 	/**
-	 * @return the currentJobStart
-	 */
-	public Timestamp getCurentJobStart() {
-		return currentJobStart;
-	}
-
-	/**
 	 * @param curentJobStart the curentJobStart to set
 	 */
 	public void setCurrentJobStart(Timestamp currentJobStart) {
@@ -139,6 +137,41 @@ public class HrUserInfo {
 	 */
 	public void setCurrentJobEnd(Timestamp currentJobEnd) {
 		this.currentJobEnd = currentJobEnd;
+	}
+
+	/**
+	 * @return the employDate
+	 */
+	public Timestamp getEmployDate() {
+		return employDate;
+	}
+
+	/**
+	 * @param employDate the employDate to set
+	 */
+	public void setEmployDate(Timestamp employDate) {
+		this.employDate = employDate;
+	}
+
+	/**
+	 * @return the quitDate
+	 */
+	public Timestamp getQuitDate() {
+		return quitDate;
+	}
+
+	/**
+	 * @param quitDate the quitDate to set
+	 */
+	public void setQuitDate(Timestamp quitDate) {
+		this.quitDate = quitDate;
+	}
+
+	/**
+	 * @return the currentJobStart
+	 */
+	public Timestamp getCurrentJobStart() {
+		return currentJobStart;
 	}
 	
 	

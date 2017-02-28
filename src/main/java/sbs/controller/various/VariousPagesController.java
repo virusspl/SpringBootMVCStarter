@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import sbs.model.Role;
 import sbs.model.User;
 import sbs.model.hr.HrUserInfo;
-import sbs.model.hr.RcpInfo;
 import sbs.service.JdbcAdrOptimaService;
 import sbs.service.JdbcOracleGeodeService;
 import sbs.service.JdbcOracleX3Service;
@@ -46,37 +45,22 @@ public class VariousPagesController {
 
 	@RequestMapping("/jdbc")
 	public String jdbc(Model model) {
+		
 		model.addAttribute("resultOptima",jdbcAdrOptimaService.findAllCurrentlyEmployed());
-		// model.addAttribute("resultOptima",
-		// jdbcAdrOptimaService.findAllUsers());
-		// model.addAttribute("resultX3",
-		// jdbcOracleX3Service.findAllUsers("ATW"));
-		// model.addAttribute("geodeList",
-		// jdbcOracleGeodeService.findLocationsOfProduct("836004"));
-		RcpInfo rcp = jdbcAdrOptimaService.findRcpInfoByUserId("1116");
-		if (rcp != null) {
-			System.out.println(" ===== RCP INFO =====");
-			System.out.println(
-					rcp.getId() + " " + rcp.getLastName() + " " + rcp.getDepartment() + " " + rcp.getRcpNumber());
-		} else {
-			System.out.println("no user found by id");
-		}
-		RcpInfo rcp2 = jdbcAdrOptimaService.findRcpInfoByCardNo("01029EF8F9");
-		if (rcp2 != null) {
-			System.out.println(" ===== RCP INFO =====");
-			System.out.println(rcp2.getId() + " " + rcp2.getDepartment() + " " + rcp2.getRcpNumber());
-		} else {
-			System.out.println("no user found by card");
-		}
-
+		 model.addAttribute("resultX3", jdbcOracleX3Service.findAllUsers("ATW"));
+		// model.addAttribute("geodeList",jdbcOracleGeodeService.findLocationsOfProduct("836004"));
+		
+		
 		HrUserInfo hr = jdbcAdrOptimaService.findCurrentlyEmployedById("1116");
 		if (hr != null) {
 			System.out.println(" ==== HR INFO =====");
 			System.out.println(hr.getId());
 			System.out.println(hr.getFirstName());
 			System.out.println(hr.getLastName());
-			System.out.println(hr.getCurentJobStart());
+			System.out.println(hr.getCurrentJobStart());
 			System.out.println(hr.getCurrentJobEnd());
+			System.out.println(hr.getEmployDate());
+			System.out.println(hr.getQuitDate());
 			System.out.println(hr.getDepartment());
 			System.out.println(hr.getPosition());
 			System.out.println(hr.getRcpNumber());
@@ -84,14 +68,16 @@ public class VariousPagesController {
 			System.out.println("no current user HR info found by id");
 		}
 
-		HrUserInfo hr2 = jdbcAdrOptimaService.findCurrentlyEmployedByCardNo("600817731");
+		HrUserInfo hr2 = jdbcAdrOptimaService.findCurrentlyEmployedByCardNo("1600DFF297");
 		if (hr2 != null) {
 			System.out.println(" ==== HR INFO =====");
 			System.out.println(hr2.getId());
 			System.out.println(hr2.getFirstName());
 			System.out.println(hr2.getLastName());
-			System.out.println(hr2.getCurentJobStart());
+			System.out.println(hr2.getCurrentJobStart());
 			System.out.println(hr2.getCurrentJobEnd());
+			System.out.println(hr2.getEmployDate());
+			System.out.println(hr2.getQuitDate());
 			System.out.println(hr2.getDepartment());
 			System.out.println(hr2.getPosition());
 			System.out.println(hr2.getRcpNumber());
