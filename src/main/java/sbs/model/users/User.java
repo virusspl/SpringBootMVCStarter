@@ -10,11 +10,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import sbs.model.qualitysurveys.QualitySurvey;
 
 @Entity
 @Table(name = "users")
@@ -27,10 +30,11 @@ public class User {
     private String password;
     private String avatarFileName;
     private Set<Role> roles;
-
+    private Set<QualitySurvey> qualitySurveys;
     
     public User() {
 		this.roles = new HashSet<>();
+		this.qualitySurveys = new HashSet<>();
 	}
 
 	@Id
@@ -111,5 +115,16 @@ public class User {
 	public void setActive(boolean active) {
 		this.active = active;
 	}
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+	public Set<QualitySurvey> getQualitySurveys() {
+		return qualitySurveys;
+	}
+
+	public void setQualitySurveys(Set<QualitySurvey> qualitySurveys) {
+		this.qualitySurveys = qualitySurveys;
+	}
+	
+	
 
 }
