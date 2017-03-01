@@ -2,7 +2,7 @@ package sbs.service.users;
 
 import java.util.List;
 
-import sbs.model.User;
+import sbs.model.users.User;
 import sbs.service.GenericService;
 
 public interface UserService extends GenericService<User, Long>{

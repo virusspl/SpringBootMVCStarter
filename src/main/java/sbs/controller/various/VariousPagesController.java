@@ -8,8 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import sbs.model.Role;
-import sbs.model.User;
+import sbs.model.users.Role;
+import sbs.model.users.User;
 import sbs.model.hr.HrUserInfo;
 import sbs.service.optima.JdbcAdrOptimaService;
 import sbs.service.geode.JdbcOracleGeodeService;

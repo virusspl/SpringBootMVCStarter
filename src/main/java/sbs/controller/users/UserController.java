@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javassist.NotFoundException;
-import sbs.model.Role;
-import sbs.model.User;
+import sbs.model.users.Role;
+import sbs.model.users.User;
 import sbs.service.users.RoleService;
 import sbs.service.users.UserService;
 

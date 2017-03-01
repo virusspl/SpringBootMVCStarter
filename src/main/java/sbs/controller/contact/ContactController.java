@@ -19,7 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 
-import sbs.model.User;
+import sbs.model.users.User;
 import sbs.service.mail.MailService;
 import sbs.service.users.UserService;
 

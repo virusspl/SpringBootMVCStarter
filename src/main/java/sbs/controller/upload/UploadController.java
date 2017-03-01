@@ -28,7 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import sbs.config.UploadProperties;
-import sbs.model.User;
+import sbs.model.users.User;
 import sbs.service.users.AvatarService;
 import sbs.service.users.UserService;
 

@@ -12,8 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import sbs.model.Role;
-import sbs.model.User;
+import sbs.model.users.Role;
+import sbs.model.users.User;
 import sbs.repository.users.UserRepository;
 
 @Service

@@ -2,7 +2,7 @@ package sbs.repository.users;
 
 import java.util.List;
 
-import sbs.model.User;
+import sbs.model.users.User;
 import sbs.repository.GenericRepository;
 
 public interface UserRepository extends GenericRepository<User,Long>{

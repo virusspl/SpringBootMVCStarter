@@ -11,7 +11,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import sbs.config.UploadProperties;
-import sbs.model.User;
+import sbs.model.users.User;
 
 @Service
 public class AvatarServiceImpl implements AvatarService {

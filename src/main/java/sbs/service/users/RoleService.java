@@ -1,6 +1,6 @@
 package sbs.service.users;
 
-import sbs.model.Role;
+import sbs.model.users.Role;
 import sbs.service.GenericService;
 
 public interface RoleService extends GenericService<Role, Long>{

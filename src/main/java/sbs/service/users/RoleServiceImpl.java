@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 
-import sbs.model.Role;
+import sbs.model.users.Role;
 import sbs.repository.GenericRepository;
 import sbs.repository.users.RoleRepository;
 import sbs.service.GenericServiceAdapter;

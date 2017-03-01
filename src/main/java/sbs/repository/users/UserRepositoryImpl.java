@@ -8,7 +8,7 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
-import sbs.model.User;
+import sbs.model.users.User;
 import sbs.repository.GenericRepositoryAdapter;
 
 @Repository

@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import sbs.config.qualifier.Username;
-import sbs.model.Role;
+import sbs.model.users.Role;
 
 public class UserCreateForm {
 	@Username

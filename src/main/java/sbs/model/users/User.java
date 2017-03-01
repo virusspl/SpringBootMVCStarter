@@ -1,4 +1,4 @@
-package sbs.model;
+package sbs.model.users;
 
 import java.util.HashSet;
 import java.util.Set;

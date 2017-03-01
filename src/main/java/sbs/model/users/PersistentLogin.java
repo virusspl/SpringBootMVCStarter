@@ -1,4 +1,4 @@
-package sbs.model;
+package sbs.model.users;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

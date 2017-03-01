@@ -5,7 +5,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
 
-import sbs.model.Role;
+import sbs.model.users.Role;
 import sbs.repository.GenericRepositoryAdapter;
 
 @Repository
