@@ -29,8 +29,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import sbs.config.UploadProperties;
 import sbs.model.User;
-import sbs.service.AvatarService;
-import sbs.service.UserService;
+import sbs.service.users.AvatarService;
+import sbs.service.users.UserService;
 
 @Controller
 public class UploadController {

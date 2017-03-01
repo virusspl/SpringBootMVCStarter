@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import sbs.model.Role;
 import sbs.model.User;
 import sbs.model.hr.HrUserInfo;
-import sbs.service.JdbcAdrOptimaService;
-import sbs.service.JdbcOracleGeodeService;
-import sbs.service.JdbcOracleX3Service;
-import sbs.service.RoleService;
-import sbs.service.UserService;
+import sbs.service.optima.JdbcAdrOptimaService;
+import sbs.service.geode.JdbcOracleGeodeService;
+import sbs.service.x3.JdbcOracleX3Service;
+import sbs.service.users.RoleService;
+import sbs.service.users.UserService;
 
 @Controller
 public class VariousPagesController {

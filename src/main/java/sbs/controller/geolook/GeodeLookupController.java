@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import sbs.service.JdbcOracleGeodeService;
-import sbs.service.JdbcOracleX3Service;
+import sbs.service.geode.JdbcOracleGeodeService;
+import sbs.service.x3.JdbcOracleX3Service;
 
 @Controller
 @RequestMapping("/geolook")

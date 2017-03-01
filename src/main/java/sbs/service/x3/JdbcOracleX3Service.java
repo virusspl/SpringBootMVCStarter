@@ -1,4 +1,4 @@
-package sbs.service;
+package sbs.service.x3;
 
 import java.util.List;
 

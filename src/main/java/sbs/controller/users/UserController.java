@@ -22,8 +22,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javassist.NotFoundException;
 import sbs.model.Role;
 import sbs.model.User;
-import sbs.service.RoleService;
-import sbs.service.UserService;
+import sbs.service.users.RoleService;
+import sbs.service.users.UserService;
 
 @Controller
 @RequestMapping("/users")

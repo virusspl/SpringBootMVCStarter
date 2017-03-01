@@ -1,4 +1,4 @@
-package sbs.service;
+package sbs.service.geode;
 
 import java.util.List;
 

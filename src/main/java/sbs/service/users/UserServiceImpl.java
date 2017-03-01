@@ -1,4 +1,4 @@
-package sbs.service;
+package sbs.service.users;
 
 import java.util.List;
 
@@ -13,7 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import sbs.model.User;
 import sbs.repository.GenericRepository;
-import sbs.repository.UserRepository;
+import sbs.repository.users.UserRepository;
+import sbs.service.GenericServiceAdapter;
 
 @Service
 public class UserServiceImpl extends GenericServiceAdapter<User, Long> implements UserService{

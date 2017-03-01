@@ -1,4 +1,4 @@
-package sbs.service;
+package sbs.service.mail;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;

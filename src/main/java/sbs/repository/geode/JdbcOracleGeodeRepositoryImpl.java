@@ -1,4 +1,4 @@
-package sbs.repository;
+package sbs.repository.geode;
 
 import java.util.List;
 import java.util.Map;

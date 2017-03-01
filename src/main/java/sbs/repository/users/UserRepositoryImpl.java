@@ -1,4 +1,4 @@
-package sbs.repository;
+package sbs.repository.users;
 
 import java.util.List;
 
@@ -9,6 +9,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import sbs.model.User;
+import sbs.repository.GenericRepositoryAdapter;
 
 @Repository
 @Transactional

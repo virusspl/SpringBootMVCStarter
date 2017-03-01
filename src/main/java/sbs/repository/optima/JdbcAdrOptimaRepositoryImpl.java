@@ -1,4 +1,4 @@
-package sbs.repository;
+package sbs.repository.optima;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;

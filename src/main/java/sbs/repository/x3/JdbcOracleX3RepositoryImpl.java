@@ -1,4 +1,4 @@
-package sbs.repository;
+package sbs.repository.x3;
 
 import java.util.ArrayList;
 import java.util.List;

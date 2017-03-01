@@ -1,4 +1,4 @@
-package sbs.service;
+package sbs.service.users;
 
 import java.io.IOException;
 

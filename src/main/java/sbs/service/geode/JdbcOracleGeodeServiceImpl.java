@@ -1,4 +1,4 @@
-package sbs.service;
+package sbs.service.geode;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import sbs.model.geolook.GeolookRow;
-import sbs.repository.JdbcOracleGeodeRepository;
+import sbs.repository.geode.JdbcOracleGeodeRepository;
 
 @Service
 public class JdbcOracleGeodeServiceImpl implements JdbcOracleGeodeService {

@@ -22,7 +22,7 @@ import org.springframework.security.web.authentication.rememberme.JdbcTokenRepos
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import sbs.service.CustomUserDetailsService;
+import sbs.service.users.CustomUserDetailsService;
 
 @Configuration
 @EnableTransactionManagement

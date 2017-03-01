@@ -1,11 +1,11 @@
-package sbs.service;
+package sbs.service.x3;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import sbs.repository.JdbcOracleX3Repository;
+import sbs.repository.x3.JdbcOracleX3Repository;
 
 @Service
 public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {

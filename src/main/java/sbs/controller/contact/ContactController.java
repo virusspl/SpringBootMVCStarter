@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 
 import sbs.model.User;
-import sbs.service.MailService;
-import sbs.service.UserService;
+import sbs.service.mail.MailService;
+import sbs.service.users.UserService;
 
 
 

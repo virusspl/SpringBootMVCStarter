@@ -1,4 +1,4 @@
-package sbs.service;
+package sbs.service.users;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import sbs.model.Role;
 import sbs.model.User;
-import sbs.repository.UserRepository;
+import sbs.repository.users.UserRepository;
 
 @Service
 public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {

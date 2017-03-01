@@ -8,8 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import sbs.service.RoleService;
-import sbs.service.UserService;
+import sbs.service.users.RoleService;
+import sbs.service.users.UserService;
 
 @Controller
 public class LoginController {
