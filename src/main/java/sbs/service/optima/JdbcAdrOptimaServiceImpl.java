@@ -3,6 +3,7 @@ package sbs.service.optima;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import sbs.model.hr.HrUserInfo;
@@ -26,6 +27,7 @@ public class JdbcAdrOptimaServiceImpl implements JdbcAdrOptimaService {
 
 
 	@Override
+	@Cacheable(value="allEmployed")
 	public List<HrUserInfo> findAllCurrentlyEmployed() {
 		return jdbcAdrOptimaRepository.findAllCurrentlyEmployed();
 	}

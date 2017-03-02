@@ -9,4 +9,8 @@
    maxBytesLocalHeap="50m"
    timeToLiveSeconds="60">
    </cache>
+   <cache name="allEmployed"
+   maxBytesLocalHeap="50m"
+   timeToLiveSeconds="3600">
+   </cache>
 </ehcache>

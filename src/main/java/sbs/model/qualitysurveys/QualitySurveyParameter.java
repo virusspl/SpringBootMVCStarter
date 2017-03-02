@@ -16,8 +16,8 @@ import javax.persistence.Table;
 @Table(name = "quality_survey_parameters")
 public class QualitySurveyParameter {
 	
-	public static final int PARAMETER_TEXT = 0;
-	public static final int PARAMETER_BOOLEAN = 1;
+	public static final char PARAMETER_TEXT = 't';
+	public static final char PARAMETER_BOOLEAN = 'b';
 		
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "parameter")
 	Set<QualitySurveyParameterAnswer> answers;
@@ -34,7 +34,7 @@ public class QualitySurveyParameter {
 	private String title;
 	
 	@Column(name = "qsp_type", nullable = false)
-	private int type;
+	private char type;
 	
 	public QualitySurveyParameter() {
 		answers = new HashSet<>();
@@ -72,11 +72,11 @@ public class QualitySurveyParameter {
 		this.title = title;
 	}
 
-	public int getType() {
+	public char getType() {
 		return type;
 	}
 
-	public void setType(int type) {
+	public void setType(char type) {
 		this.type = type;
 	}
 

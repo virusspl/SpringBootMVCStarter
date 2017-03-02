@@ -53,7 +53,8 @@ public class JdbcAdrOptimaRepositoryImpl implements JdbcAdrOptimaRepository {
 				+ "[PRE_Kod], [PRE_Nazwisko], [PRE_Imie1], [DZL_Nazwa], [PKR_Numer], "
 				+ "[DKM_Nazwa], [PRE_DataOd], [PRE_DataDo], [PRE_ZatrudnionyOd], [PRE_ZatrudnionyDo] "
 				+ "HAVING "
-				+ "((([PRE_DataOd]) <= ?) AND (([PRE_DataDo]) >= ?));"
+				+ "((([PRE_DataOd]) <= ?) AND (([PRE_DataDo]) >= ?)) "
+				+ "ORDER BY [PRE_Nazwisko] ASC, [PRE_Imie1] ASC;"
 				, new Object[] {new Date(), new Date()});
 		
 		ArrayList<HrUserInfo> hrList = new ArrayList<>();

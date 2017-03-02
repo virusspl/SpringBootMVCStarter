@@ -21,14 +21,12 @@ import sbs.model.users.User;
 @Table(name = "quality_surveys")
 public class QualitySurvey {
 
+	public static final String QUALITY_SURVEY_TYPE_PARAM = "param";
+	public static final String QUALITY_SURVEY_TYPE_BOM = "bom";
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "qs_user_id", nullable = false)
 	private User user;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "qs_qst_id", nullable = false)
-	private QualitySurveyType type;
-
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "survey")
 	Set<QualitySurveyParameterAnswer> parameterAnswers;
 
@@ -72,7 +70,7 @@ public class QualitySurvey {
 	private String productDescription;
 
 	
-	@Column(name = "qs_production_order",  nullable = false)
+	@Column(name = "qs_production_order", length = 20,  nullable = false)
 	private String productionOrder;
 
 	
@@ -87,6 +85,9 @@ public class QualitySurvey {
 	@Column(name = "qs_client_order", length = 25, nullable = false)
 	private String salesOrder;
 
+	@Column(name = "qs_type", length = 15, nullable = false)
+	private String type;
+	
 	public QualitySurvey() {
 		 parameterAnswers = new HashSet<>();
 	}
@@ -99,11 +100,11 @@ public class QualitySurvey {
 		this.user = user;
 	}
 
-	public QualitySurveyType getType() {
+	public String getType() {
 		return type;
 	}
 
-	public void setType(QualitySurveyType type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 

@@ -1,5 +1,7 @@
 package sbs.controller.various;
 
+import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,14 +10,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import sbs.model.qualitysurveys.QualitySurvey;
+import sbs.model.qualitysurveys.QualitySurveyParameterAnswer;
 import sbs.model.users.Role;
 import sbs.model.users.User;
-import sbs.model.hr.HrUserInfo;
-import sbs.service.optima.JdbcAdrOptimaService;
 import sbs.service.geode.JdbcOracleGeodeService;
-import sbs.service.x3.JdbcOracleX3Service;
+import sbs.service.optima.JdbcAdrOptimaService;
+import sbs.service.qualitysurveys.QualitySurveysService;
 import sbs.service.users.RoleService;
 import sbs.service.users.UserService;
+import sbs.service.x3.JdbcOracleX3Service;
 
 @Controller
 public class VariousPagesController {
@@ -32,6 +36,8 @@ public class VariousPagesController {
 	JdbcAdrOptimaService jdbcAdrOptimaService;
 	@Autowired
 	JdbcOracleGeodeService jdbcOracleGeodeService;
+	@Autowired
+	QualitySurveysService qualitySurveysService;
 
 	@RequestMapping("/noaccess")
 	public String noAccess() {
@@ -46,6 +52,29 @@ public class VariousPagesController {
 	@RequestMapping("/jdbc")
 	public String jdbc(Model model) {
 		
+		QualitySurvey qs = new QualitySurvey();
+		qs.setClientCode("CAD40");
+		qs.setClientName("ADR Uboldo");
+		qs.setCreationDate(new Timestamp(new java.util.Date().getTime()));
+		qs.setOperatorDepartment("Informatyka");
+		qs.setOperatorFirstName("Krzysztof");
+		qs.setOperatorId("1116");
+		qs.setOperatorLastName("Michalak");
+		qs.setOperatorPosition("Ciężko powiedzieć / programista");
+		qs.setOperatorRcpNo("BLABLABLA123");
+		qs.setParameterAnswers(new HashSet<QualitySurveyParameterAnswer>());
+		qs.setProductCode("98E01");
+		qs.setProductDescription("BLA.. blabla...bla bla bla bla (Gigi D'Agostino");
+		qs.setProductionOrder("X111111111111");
+		qs.setSalesOrder("ADASALES00001");
+		qs.setUser(userService.findByUsername("admin"));
+		qs.setType("bom");
+		
+		qualitySurveysService.save(qs);
+		System.out.println(qs.getId());
+
+		
+		/*
 		model.addAttribute("resultOptima",jdbcAdrOptimaService.findAllCurrentlyEmployed());
 		 model.addAttribute("resultX3", jdbcOracleX3Service.findAllUsers("ATW"));
 		// model.addAttribute("geodeList",jdbcOracleGeodeService.findLocationsOfProduct("836004"));
@@ -84,14 +113,14 @@ public class VariousPagesController {
 		} else {
 			System.out.println("no current user HR info found by card no");
 		}
-		
+		*/
 		return "various/jdbc";
 	}
 
 	@RequestMapping("/init")
 	public String initDatabaseData(Model model, Locale locale) {
 		String msg = messageSource.getMessage("action.objects.created", null, locale) + ": ";
-
+		
 		Role adminRole = roleService.findByName("ROLE_ADMIN");
 		if (adminRole == null) {
 			adminRole = new Role();

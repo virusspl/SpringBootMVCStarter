@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/main">
+<head>
+</head>
+<body>
+	<div layout:fragment="script">
+		<!-- SELECTIZE JS -->
+		<script th:src="@{/selectize/js/selectize.min.js}"
+			type="text/javascript"></script>
+		<script>
+			$('#operator').selectize();
+		</script>
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12 col-xs-offset-0">
+				<h2 th:text="#{quality.surveys.select.user.title}"
+					class="text-primary">Hello on a page</h2>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{quality.surveys.select.user.message}">
+					Welcome message </span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-xs-offset-0">
+				<form th:action="@{/qualitysurveys/create}" method="post"
+					th:object="${operatorForm}">
+					<div class="form-group margin-top-30">
+						<label for="user" th:text="#{quality.surveys.operator}">Operator</label>
+						<select class="form-control" id="operator" name="operator"
+							th:placeholder="#{quality.surveys.operator}" th:field="*{id}">
+							<option th:each="obj,stat : ${hrUsers}"
+								th:value="${hrUsers[__${stat.index}__].id}"
+								th:text="|
+								${hrUsers[__${stat.index}__].lastName}  
+								${hrUsers[__${stat.index}__].firstName} /
+								${hrUsers[__${stat.index}__].department} / 
+								${hrUsers[__${stat.index}__].position} / 
+								${hrUsers[__${stat.index}__].id} /
+								${hrUsers[__${stat.index}__].rcpNumber} 
+								|">User</option>
+						</select>
+						<div th:errors="*{id}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+
+
+					<a th:href="@{/}" class="btn btn-link btn-sm"> <span
+						class="glyphicon glyphicon-menu-left"></span> <span
+						th:text="#{action.back}">back</span>
+					</a>
+					<button class="btn btn-primary btn-sm" type="submit" name="surveyDetails">
+						<span class="glyphicon glyphicon-ok"></span> <span
+							th:text="#{action.submit}">search</span>
+					</button>
+
+				</form>
+
+			</div>
+		</div>
+
+	</div>
+</body>
+</html>
