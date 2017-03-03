@@ -10,21 +10,15 @@
 		<script th:src="@{/selectize/js/selectize.min.js}"
 			type="text/javascript"></script>
 		<script>
-			$('#x3users').selectize();
-			$('#optimausers').selectize();
+			$('#list').selectize();
+			
 		</script>
 	</div>
 	<div layout:fragment="content">
-		<h3>Optima Users</h3>
-		<select id="optimausers">
-			<option th:each="obj,stat : ${resultOptima}" th:value="*{obj.id}"
-				th:text="|*{obj.firstName} *{obj.lastName} / *{obj.department} / *{obj.position} / *{obj.id} / *{obj.rcpNumber}|">
-				X3 User</option>
-		</select>
-		<h3>X3 Users</h3>
-		<select id="x3users">
-			<option th:each="obj,stat : ${resultX3}"
-				th:value="${resultX3[stat.index]}" th:text="${resultX3[stat.index]}">
+		<h3>list</h3>
+		<select id="list">
+			<option th:each="obj,stat : ${list}"
+				th:value="${stat.index}" th:text="${list[stat.index]}">
 				X3 User</option>
 		</select>
 

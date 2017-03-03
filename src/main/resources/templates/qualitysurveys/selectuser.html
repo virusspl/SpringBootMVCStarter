@@ -26,10 +26,12 @@
 		</div>
 		<div class="row">
 			<div class="col-xs-12 col-xs-offset-0">
+				<h3 th:text="#{quality.surveys.operator}" class="text-primary underline"></h3>
+				<div class="col-xs-12">
 				<form th:action="@{/qualitysurveys/create}" method="post"
 					th:object="${operatorForm}">
-					<div class="form-group margin-top-30">
-						<label for="user" th:text="#{quality.surveys.operator}">Operator</label>
+					<div class="form-group margin-top-10">
+					<label for="operator" th:text="#{quality.surveys.operator}">User</label>
 						<select class="form-control" id="operator" name="operator"
 							th:placeholder="#{quality.surveys.operator}" th:field="*{id}">
 							<option th:each="obj,stat : ${hrUsers}"
@@ -45,11 +47,9 @@
 						</select>
 						<div th:errors="*{id}" class="alert alert-danger margin-top-5">error</div>
 					</div>
-
-
-					<a th:href="@{/}" class="btn btn-link btn-sm"> <span
-						class="glyphicon glyphicon-menu-left"></span> <span
-						th:text="#{action.back}">back</span>
+					<a th:href="@{/}" class="btn btn-link btn-sm text-danger"> <span
+						class="glyphicon glyphicon-remove"></span> <span
+						th:text="#{quality.surveys.cancel.survey}">back</span>
 					</a>
 					<button class="btn btn-primary btn-sm" type="submit" name="surveyDetails">
 						<span class="glyphicon glyphicon-ok"></span> <span
@@ -57,7 +57,7 @@
 					</button>
 
 				</form>
-
+</div>
 			</div>
 		</div>
 

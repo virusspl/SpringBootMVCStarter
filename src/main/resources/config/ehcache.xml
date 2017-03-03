@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
+	
+	<!-- 
+	sec		1
+	min		60
+	h		3600
+	3h		10800
+	6h		21600
+	12h		43200
+	24h		86400
+	week	604800
+	-->
+
 <ehcache>
+	<!-- NATIVE CACHE -->
    <cache name="avatarByUsername"
    maxBytesLocalHeap="50m"
    timeToLiveSeconds="60">
@@ -9,8 +22,37 @@
    maxBytesLocalHeap="50m"
    timeToLiveSeconds="60">
    </cache>
+   
+   <!-- OPTIMA CACHE -->
    <cache name="allEmployed"
    maxBytesLocalHeap="50m"
    timeToLiveSeconds="3600">
    </cache>
+   
+   <!-- X3 CACHE -->
+   <cache name="x3AllUsers"
+   maxBytesLocalHeap="50m"
+   timeToLiveSeconds="3600">
+   </cache>
+   <cache name="x3ItemDescByCode"
+   maxBytesLocalHeap="50m"
+   timeToLiveSeconds="604800"> 
+   </cache>
+   <cache name="x3AllClients"
+   maxBytesLocalHeap="50m"
+   timeToLiveSeconds="43200">
+   </cache>
+   <cache name="x3AllSalesOrders"
+   maxBytesLocalHeap="50m"
+   timeToLiveSeconds="3600">
+   </cache>
+   <cache name="x3OpenedSalesOrders"
+   maxBytesLocalHeap="50m"
+   timeToLiveSeconds="3600">
+   </cache>
+   <cache name="x3AllActiveProducts"
+   maxBytesLocalHeap="50m"
+   timeToLiveSeconds="43200">
+   </cache>
+   
 </ehcache>

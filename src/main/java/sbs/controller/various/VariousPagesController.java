@@ -2,6 +2,7 @@ package sbs.controller.various;
 
 import java.sql.Timestamp;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ import sbs.model.qualitysurveys.QualitySurvey;
 import sbs.model.qualitysurveys.QualitySurveyParameterAnswer;
 import sbs.model.users.Role;
 import sbs.model.users.User;
+import sbs.model.x3.X3Client;
+import sbs.model.x3.X3Product;
+import sbs.model.x3.X3SalesOrder;
 import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.optima.JdbcAdrOptimaService;
 import sbs.service.qualitysurveys.QualitySurveysService;
@@ -52,6 +56,18 @@ public class VariousPagesController {
 	@RequestMapping("/jdbc")
 	public String jdbc(Model model) {
 		
+		
+		
+		//X3Client result = jdbcOracleX3Service.findClientByCode("ATW", "cad40");
+		//X3SalesOrder result = jdbcOracleX3Service.findSalesOrderByNumber("ATW", "yza140099");
+		X3Product result = jdbcOracleX3Service.findProductByCode("ATW", "98e01");
+		
+		System.out.println(result);
+		
+		//model.addAttribute("list", list);
+		
+		/*
+		// CREATE DEMO SURVEY
 		QualitySurvey qs = new QualitySurvey();
 		qs.setClientCode("CAD40");
 		qs.setClientName("ADR Uboldo");
@@ -72,14 +88,17 @@ public class VariousPagesController {
 		
 		qualitySurveysService.save(qs);
 		System.out.println(qs.getId());
-
+		 */
 		
 		/*
+		 // VARIOUS TESTS
 		model.addAttribute("resultOptima",jdbcAdrOptimaService.findAllCurrentlyEmployed());
-		 model.addAttribute("resultX3", jdbcOracleX3Service.findAllUsers("ATW"));
-		// model.addAttribute("geodeList",jdbcOracleGeodeService.findLocationsOfProduct("836004"));
+		model.addAttribute("resultX3", jdbcOracleX3Service.findAllUsers("ATW"));
+		model.addAttribute("geodeList",jdbcOracleGeodeService.findLocationsOfProduct("836004"));
+		*/
 		
-		
+		/*
+		// TEST HR
 		HrUserInfo hr = jdbcAdrOptimaService.findCurrentlyEmployedById("1116");
 		if (hr != null) {
 			System.out.println(" ==== HR INFO =====");

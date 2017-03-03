@@ -43,6 +43,10 @@ html {
 	right: 5px;
 }
 
+.underline {
+	border-bottom: 1px solid #E0E0E0;
+}
+
 .margin-bottom-5{
 	margin-bottom: 5px;
 }
