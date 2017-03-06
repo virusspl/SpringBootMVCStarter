@@ -50,6 +50,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/geolook/**"
 				)
 		.permitAll()
+		.antMatchers("/qualitysurveys/create")
+		.hasAnyRole("ADMIN","QUALITYUSER")
 		.antMatchers(
 				"/admin", 
 				"/users/**"

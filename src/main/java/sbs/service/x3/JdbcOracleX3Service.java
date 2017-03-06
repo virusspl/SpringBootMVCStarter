@@ -4,6 +4,7 @@ import java.util.List;
 
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3Product;
+import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3SalesOrder;
 
 public interface JdbcOracleX3Service {
@@ -17,4 +18,5 @@ public interface JdbcOracleX3Service {
 	public List<X3SalesOrder> findAllSalesOrders(String company);
 	public List<X3SalesOrder> findOpenedSalesOrders(String company);
 	public X3SalesOrder findSalesOrderByNumber(String company, String number);
+	public X3ProductionOrderDetails getProductionOrderInfoByNumber(String company, String number);
 }

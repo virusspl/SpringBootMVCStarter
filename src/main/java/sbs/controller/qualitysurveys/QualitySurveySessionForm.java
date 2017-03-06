@@ -46,6 +46,8 @@ public class QualitySurveySessionForm {
 	@Size(min = 1, max = 250)
 	private String salesOrder;
 
+	private String type;
+	
 	public String getOperatorId() {
 		return operatorId;
 	}
@@ -144,6 +146,26 @@ public class QualitySurveySessionForm {
 
 	public void setSalesOrder(String salesOrder) {
 		this.salesOrder = salesOrder;
+	}
+
+
+	public void copyOperatorInfo(QualitySurveySessionForm sessionForm) {
+		this.setOperatorId(sessionForm.getOperatorId());
+		this.setOperatorFirstName(sessionForm.getOperatorFirstName());
+		this.setOperatorLastName(sessionForm.getOperatorLastName());
+		this.setOperatorRcpNo(sessionForm.getOperatorRcpNo());
+		this.setOperatorDepartment(sessionForm.getOperatorDepartment());
+		this.setOperatorPosition(sessionForm.getOperatorPosition());
+	}
+
+
+	public String getType() {
+		return type;
+	}
+
+
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 	

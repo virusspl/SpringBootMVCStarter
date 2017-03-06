@@ -146,14 +146,24 @@
 				</div>
 			</div>
 			<div class="col-xs-12 margin-top-5">
-				<a th:href="@{/qualitysurveys/create}"
+				<a th:href="@{/}" class="btn btn-link btn-sm text-danger"> <span
+					class="glyphicon glyphicon-remove"></span> <span
+					th:text="#{quality.surveys.cancel.survey}">back</span>
+				</a> <a th:href="@{/qualitysurveys/create}"
 					class="btn btn-link btn-sm text-danger"> <span
 					class="glyphicon glyphicon-refresh"></span> <span
 					th:text="#{action.back.to.start}">back</span>
-				</a> <a th:href="@{/}" class="btn btn-link btn-sm text-danger"> <span
-					class="glyphicon glyphicon-remove"></span> <span
-					th:text="#{quality.surveys.cancel.survey}">back</span>
 				</a>
+				<form th:action="@{/qualitysurveys/create}" method="post"
+					style="display: inline;">
+					<button class="btn btn-link btn-sm" type="submit"
+						name="anotherProductionOrder">
+						<span class="glyphicon glyphicon-refresh"></span> <span
+							th:text="#{quality.surveys.change.production.order}">search</span>
+					</button>
+
+				</form>
+
 			</div>
 		</div>
 

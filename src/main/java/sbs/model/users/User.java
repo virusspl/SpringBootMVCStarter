@@ -67,7 +67,7 @@ public class User {
     }
 
     @NotEmpty
-    @Size(min = 2, max = 25)
+    @Size(min = 2, max = 50)
     public String getName() {
 		return name;
 	}

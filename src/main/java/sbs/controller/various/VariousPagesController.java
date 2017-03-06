@@ -17,6 +17,7 @@ import sbs.model.users.Role;
 import sbs.model.users.User;
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3Product;
+import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3SalesOrder;
 import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.optima.JdbcAdrOptimaService;
@@ -60,7 +61,8 @@ public class VariousPagesController {
 		
 		//X3Client result = jdbcOracleX3Service.findClientByCode("ATW", "cad40");
 		//X3SalesOrder result = jdbcOracleX3Service.findSalesOrderByNumber("ATW", "yza140099");
-		X3Product result = jdbcOracleX3Service.findProductByCode("ATW", "98e01");
+		//X3Product result = jdbcOracleX3Service.findProductByCode("ATW", "98e01");
+		X3ProductionOrderDetails result = jdbcOracleX3Service.getProductionOrderInfoByNumber("ATW", "X31121400099455");
 		
 		System.out.println(result);
 		

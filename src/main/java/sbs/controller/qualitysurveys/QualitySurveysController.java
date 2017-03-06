@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import sbs.model.hr.HrUserInfo;
+import sbs.model.qualitysurveys.QualitySurvey;
+import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.service.optima.JdbcAdrOptimaService;
 import sbs.service.x3.JdbcOracleX3Service;
 
@@ -73,19 +75,25 @@ public class QualitySurveysController {
 	@RequestMapping(value = "/create", params = {"summaryBeforeStart"}, method = RequestMethod.POST)
 	public String showSummary(@Valid ProductionOrderForm productionOrderForm, BindingResult bindingResult, Model model, Locale locale) {
 		
-		if(bindingResult.hasErrors()){			
+		if(bindingResult.hasErrors()){
 			return "qualitysurveys/surveydetails";
 		}
 		
-		// TODO
-		// check if OK
-		// find details and fill below to show in summary
-		sessionForm.setProductionOrder(productionOrderForm.getNumber());
+		X3ProductionOrderDetails details = x3Service.getProductionOrderInfoByNumber("ATW", productionOrderForm.getNumber());
+		if (details == null){
+			bindingResult.rejectValue("number", "production.order.info.not.found", "ERROR");	
+			return "qualitysurveys/surveydetails";
+		}
+		
+		sessionForm.setProductionOrder(details.getProductionOrderNumber());
+		sessionForm.setClientCode(details.getClientCode());
+		sessionForm.setClientName(details.getClientName());
+		sessionForm.setProductCode(details.getProductCode());
+		sessionForm.setProductDescription(details.getProductDescription());
+		sessionForm.setSalesOrder(details.getSalesOrderNumber());
 		
 		return "qualitysurveys/summarybeforestart";
 	}
-	
-	
 	
 	 // NEXT TIME TODO
 	// find a way to validate etc.
@@ -93,14 +101,25 @@ public class QualitySurveysController {
 	@RequestMapping(value = "/create", params = {"beginSuspensionsSurvey"}, method = RequestMethod.POST)
 	public String beginSuspensionSurvey(Model model, Locale locale) {
 		model.addAttribute("msg", "START SUSPENSIONS SURVEY");
+		System.out.println(QualitySurvey.QUALITY_SURVEY_TYPE_BOM);
 		return "qualitysurveys/summarybeforestart";
 	}
 	@RequestMapping(value = "/create", params = {"beginAxlesSurvey"}, method = RequestMethod.POST)
 	public String beginAxlesSurvey(Model model, Locale locale) {
 		model.addAttribute("msg", "START AXLES SURVEY");
+		System.out.println(QualitySurvey.QUALITY_SURVEY_TYPE_PARAM);
 		return "qualitysurveys/summarybeforestart";
 	}
 	
+	@RequestMapping(value = "/create", params = {"anotherProductionOrder"}, method = RequestMethod.POST)
+	public String changeProductionOrder(ProductionOrderForm productionOrderForm) {
+		
+		QualitySurveySessionForm newSessionForm = new QualitySurveySessionForm();
+		newSessionForm.copyOperatorInfo(sessionForm);
+		sessionForm = newSessionForm;
+		
+		return "qualitysurveys/surveydetails";
+	}
 }
 
 

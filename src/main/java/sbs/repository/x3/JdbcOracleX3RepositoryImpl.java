@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3Product;
+import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3SalesOrder;
 
 
@@ -276,6 +277,48 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         }
         
 		return product;
+	}
+
+	@Override
+	public X3ProductionOrderDetails getProductionOrderInfoByNumber(String company, String number) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT " 
+				+ company + ".MFGITM.MFGNUM_0, "
+				+ company + ".MFGITM.ITMREF_0, "
+				+ company + ".ITMMASTER.ITMDES1_0, "
+				+ company + ".ITMMASTER.ITMDES2_0, "
+				+ company + ".SORDER.SOHNUM_0, "
+				+ company + ".MFGITM.BPCNUM_0, "
+				+ company + ".BPARTNER.BPRNAM_0, "
+				+ company + ".BPARTNER.BPRNAM_1 "
+				+ "FROM (( " 
+				+ company + ".MFGITM INNER JOIN " + company + ".ITMMASTER "
+				+ "ON " 
+				+ company + ".MFGITM.ITMREF_0 = " + company +  ".ITMMASTER.ITMREF_0 ) "
+				+ "INNER JOIN "
+				+ company + ".SORDER "
+				+ "ON "
+				+ company + ".MFGITM.PJT_0 = " + company + ".SORDER.SOHNUM_0) "
+				+ "INNER JOIN "
+				+ company + ".BPARTNER ON "
+				+ company + ".MFGITM.BPCNUM_0 = " + company + ".BPARTNER.BPRNUM_0 "
+				+ "WHERE UPPER("
+				+ company + ".MFGITM.MFGNUM_0) = ? ",
+        new Object[]{number.toUpperCase()});
+
+		X3ProductionOrderDetails order = null;
+	
+		for(Map<String,Object> row: resultSet ){
+			order = new X3ProductionOrderDetails();
+			order.setProductionOrderNumber((String)row.get("MFGNUM_0"));
+			order.setClientCode((String)row.get("BPCNUM_0"));
+			order.setClientName(((String)row.get("BPRNAM_0")) + ((String)row.get("BPRNAM_1")));
+			order.setProductCode((String)row.get("ITMREF_0"));
+			order.setProductDescription(((String)row.get("ITMDES1_0")) + ((String)row.get("ITMDES2_0")));
+			order.setSalesOrderNumber((String)row.get("SOHNUM_0"));
+		}
+
+		return order;
 	}
 
 

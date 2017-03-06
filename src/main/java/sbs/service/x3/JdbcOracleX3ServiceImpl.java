@@ -8,6 +8,7 @@ import org.springframework.cache.annotation.Cacheable;
 
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3Product;
+import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3SalesOrder;
 import sbs.repository.x3.JdbcOracleX3Repository;
 
@@ -65,5 +66,10 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	@Override
 	public X3SalesOrder findSalesOrderByNumber(String company, String number) {
 		return jdbcOracleX3Repository.findSalesOrderByNumber(company, number);
+	}
+
+	@Override
+	public X3ProductionOrderDetails getProductionOrderInfoByNumber(String company, String number) {
+		return jdbcOracleX3Repository.getProductionOrderInfoByNumber(company, number);
 	}
 }
