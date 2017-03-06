@@ -1,5 +1,7 @@
 package sbs.controller.qualitysurveys;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.validation.Valid;
@@ -14,8 +16,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import sbs.model.hr.HrUserInfo;
 import sbs.model.qualitysurveys.QualitySurvey;
+import sbs.model.qualitysurveys.QualitySurveyParameter;
+import sbs.model.qualitysurveys.QualitySurveyParameterAnswer;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.service.optima.JdbcAdrOptimaService;
+import sbs.service.qualitysurveys.QualitySurveyParametersService;
+import sbs.service.qualitysurveys.QualitySurveysService;
 import sbs.service.x3.JdbcOracleX3Service;
 
 @Controller
@@ -27,6 +33,10 @@ public class QualitySurveysController {
 	JdbcAdrOptimaService hrService;
 	@Autowired
 	JdbcOracleX3Service x3Service;
+	@Autowired
+	QualitySurveyParametersService parametersService;
+	@Autowired
+	QualitySurveysService surveysService;
 	
 	@ModelAttribute("surveyInfo")
 	public QualitySurveySessionForm surveyInfo(){
@@ -95,22 +105,6 @@ public class QualitySurveysController {
 		return "qualitysurveys/summarybeforestart";
 	}
 	
-	 // NEXT TIME TODO
-	// find a way to validate etc.
-	 
-	@RequestMapping(value = "/create", params = {"beginSuspensionsSurvey"}, method = RequestMethod.POST)
-	public String beginSuspensionSurvey(Model model, Locale locale) {
-		model.addAttribute("msg", "START SUSPENSIONS SURVEY");
-		System.out.println(QualitySurvey.QUALITY_SURVEY_TYPE_BOM);
-		return "qualitysurveys/summarybeforestart";
-	}
-	@RequestMapping(value = "/create", params = {"beginAxlesSurvey"}, method = RequestMethod.POST)
-	public String beginAxlesSurvey(Model model, Locale locale) {
-		model.addAttribute("msg", "START AXLES SURVEY");
-		System.out.println(QualitySurvey.QUALITY_SURVEY_TYPE_PARAM);
-		return "qualitysurveys/summarybeforestart";
-	}
-	
 	@RequestMapping(value = "/create", params = {"anotherProductionOrder"}, method = RequestMethod.POST)
 	public String changeProductionOrder(ProductionOrderForm productionOrderForm) {
 		
@@ -120,6 +114,44 @@ public class QualitySurveysController {
 		
 		return "qualitysurveys/surveydetails";
 	}
+	
+	@RequestMapping(value = "/create", params = {"beginSuspensionsSurvey"}, method = RequestMethod.POST)
+	public String beginSuspensionSurvey(Model model, Locale locale) {
+		model.addAttribute("msg", "START SUSPENSIONS SURVEY");
+		System.out.println(QualitySurvey.QUALITY_SURVEY_TYPE_BOM);
+		return "qualitysurveys/bomsurvey";
+	}
+	
+	@RequestMapping(value = "/create", params = {"beginAxlesSurvey"}, method = RequestMethod.POST)
+	public String beginAxlesSurvey(Model model, Locale locale) {
+		
+		sessionForm.setType(QualitySurvey.QUALITY_SURVEY_TYPE_PARAM);
+		
+		List<QualitySurveyParameter> parameters = parametersService.findAll();
+		ParameterSurveyForm psf = new ParameterSurveyForm();
+		ParameterSurveyItem psi;
+		for(QualitySurveyParameter param : parameters){
+			if(!param.isActive()){
+				continue;
+			}
+
+			psi = new ParameterSurveyItem();
+			psi.setParameterId(param.getId());
+			psi.setTitle(param.getTitle());
+			psi.setType(param.getType());
+			psf.items.add(psi);
+		}
+		
+		model.addAttribute("parameterSurveyForm", psf);
+		
+		/*
+		TODO
+		wrócić listę i obrabiać po nr ID parametru YEAH YEAH YEAH :)
+		*/
+		
+		return "qualitysurveys/parametersurvey";
+	}
+	
 }
 
 

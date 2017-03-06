@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import sbs.model.qualitysurveys.QualitySurvey;
+import sbs.model.qualitysurveys.QualitySurveyParameter;
 import sbs.model.qualitysurveys.QualitySurveyParameterAnswer;
 import sbs.model.users.Role;
 import sbs.model.users.User;
@@ -21,6 +22,7 @@ import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3SalesOrder;
 import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.optima.JdbcAdrOptimaService;
+import sbs.service.qualitysurveys.QualitySurveyParametersService;
 import sbs.service.qualitysurveys.QualitySurveysService;
 import sbs.service.users.RoleService;
 import sbs.service.users.UserService;
@@ -43,7 +45,9 @@ public class VariousPagesController {
 	JdbcOracleGeodeService jdbcOracleGeodeService;
 	@Autowired
 	QualitySurveysService qualitySurveysService;
-
+	@Autowired
+	QualitySurveyParametersService parametersService;
+	
 	@RequestMapping("/noaccess")
 	public String noAccess() {
 		return "various/noaccess";
@@ -255,6 +259,23 @@ public class VariousPagesController {
 			// save
 			userService.save(user);
 			msg += "[user: " + user.getUsername() + "], ";
+		}
+		
+		if(parametersService.findAll().size()==0){
+			QualitySurveyParameter param;
+			param = new QualitySurveyParameter();
+			param.setActive(true);
+			param.setTitle("Wiek");
+			param.setType(QualitySurveyParameter.PARAMETER_TEXT);
+			parametersService.save(param);
+			msg += "[qs_param: " + param.getTitle() + "], ";
+			
+			param =  new QualitySurveyParameter();
+			param.setActive(true);
+			param.setTitle("Mężczyzna");
+			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
+			parametersService.save(param);
+			msg += "[qs_param: " + param.getTitle() + "], ";
 		}
 
 		model.addAttribute("msg", msg);

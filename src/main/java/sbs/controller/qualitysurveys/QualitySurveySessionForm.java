@@ -1,6 +1,11 @@
 package sbs.controller.qualitysurveys;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import javax.validation.constraints.Size;
+import sbs.model.qualitysurveys.QualitySurveyParameter;
+import sbs.model.qualitysurveys.QualitySurveyParameterAnswer;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -47,6 +52,8 @@ public class QualitySurveySessionForm {
 	private String salesOrder;
 
 	private String type;
+	HashMap<Integer, QualitySurveyParameter> parameters = new HashMap<>();
+	ArrayList<QualitySurveyParameterAnswer> parameterAnswers = new ArrayList<>();
 	
 	public String getOperatorId() {
 		return operatorId;
@@ -148,7 +155,6 @@ public class QualitySurveySessionForm {
 		this.salesOrder = salesOrder;
 	}
 
-
 	public void copyOperatorInfo(QualitySurveySessionForm sessionForm) {
 		this.setOperatorId(sessionForm.getOperatorId());
 		this.setOperatorFirstName(sessionForm.getOperatorFirstName());
@@ -157,7 +163,6 @@ public class QualitySurveySessionForm {
 		this.setOperatorDepartment(sessionForm.getOperatorDepartment());
 		this.setOperatorPosition(sessionForm.getOperatorPosition());
 	}
-
 
 	public String getType() {
 		return type;
@@ -168,7 +173,20 @@ public class QualitySurveySessionForm {
 		this.type = type;
 	}
 	
-	
-	
+	public HashMap<Integer, QualitySurveyParameter> getParameters() {
+		return parameters;
+	}
+
+	public void setParameters(HashMap<Integer, QualitySurveyParameter> parameters) {
+		this.parameters = parameters;
+	}
+
+	public ArrayList<QualitySurveyParameterAnswer> getParameterAnswers() {
+		return parameterAnswers;
+	}
+
+	public void setParameterAnswers(ArrayList<QualitySurveyParameterAnswer> parameterAnswers) {
+		this.parameterAnswers = parameterAnswers;
+	}
 	
 }

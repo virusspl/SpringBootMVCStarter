@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/main">
+<head>
+</head>
+<body>
+	<div layout:fragment="script">
+		<!-- SELECTIZE JS -->
+		<script th:src="@{/selectize/js/selectize.min.js}"
+			type="text/javascript"></script>
+		<script>
+			$('#operator').selectize();
+		</script>
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12 col-xs-offset-0">
+				<h2 th:text="#{quality.surveys.select.user.title}"
+					class="text-primary">Hello on a page</h2>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{quality.surveys.select.user.message}">
+					Welcome message </span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-xs-offset-0">
+			<div th:each="obj,stat : ${parameterSurveyForm.items}">
+				<span th:text="*{obj.parameterId}">parameterId</span>
+				<span th:text="*{obj.title}">title</span>
+				<span th:text="*{obj.type}">type</span>
+				<span th:text="*{obj.modelAnswer}">type</span>
+				<span th:text="*{obj.answer}">type</span>
+				<span th:text="*{obj.yesnoAnswer}">type</span>
+				<span th:text="*{obj.comment}">type</span>
+
+
+				
+			</div>
+					<a th:href="@{/}" class="btn btn-link btn-sm text-danger"> <span
+						class="glyphicon glyphicon-remove"></span> <span
+						th:text="#{quality.surveys.cancel.survey}">back</span>
+					</a>
+					<button class="btn btn-primary btn-sm" type="submit" name="surveyDetails">
+						<span class="glyphicon glyphicon-ok"></span> <span
+							th:text="#{action.submit}">search</span>
+					</button>
+
+				
+				</div>
+			</div>
+		</div>
+</body>
+</html>
