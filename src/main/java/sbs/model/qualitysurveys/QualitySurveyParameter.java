@@ -30,7 +30,7 @@ public class QualitySurveyParameter {
 	@Column(name = "qsp_active", nullable = false)
 	private boolean active;
 	
-	@Column(name = "qsp_title", length = 45, nullable = false)
+	@Column(name = "qsp_title", length = 255, nullable = false)
 	private String title;
 	
 	@Column(name = "qsp_type", nullable = false)

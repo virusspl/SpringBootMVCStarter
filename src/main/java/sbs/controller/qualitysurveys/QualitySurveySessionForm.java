@@ -1,11 +1,6 @@
 package sbs.controller.qualitysurveys;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import javax.validation.constraints.Size;
-import sbs.model.qualitysurveys.QualitySurveyParameter;
-import sbs.model.qualitysurveys.QualitySurveyParameterAnswer;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -52,8 +47,6 @@ public class QualitySurveySessionForm {
 	private String salesOrder;
 
 	private String type;
-	HashMap<Integer, QualitySurveyParameter> parameters = new HashMap<>();
-	ArrayList<QualitySurveyParameterAnswer> parameterAnswers = new ArrayList<>();
 	
 	public String getOperatorId() {
 		return operatorId;
@@ -168,25 +161,41 @@ public class QualitySurveySessionForm {
 		return type;
 	}
 
-
 	public void setType(String type) {
 		this.type = type;
 	}
+
+
+	@Override
+	public String toString() {
+		return "QualitySurveySessionForm [" +
+				System.getProperty("line.separator") 
+				+ ", operatorId=" + operatorId + 
+				System.getProperty("line.separator") +
+				", operatorRcpNo=" + operatorRcpNo +
+				System.getProperty("line.separator") +
+				", operatorLastName=" + operatorLastName + 
+				System.getProperty("line.separator") +
+				", operatorFirstName=" + operatorFirstName + 
+				System.getProperty("line.separator") +
+				", operatorDepartment=" + operatorDepartment + 
+				System.getProperty("line.separator") +
+				", operatorPosition=" + operatorPosition +
+				System.getProperty("line.separator") +
+				", productionOrder=" + productionOrder + 
+				System.getProperty("line.separator") +
+				", productCode=" + productCode + 
+				System.getProperty("line.separator") +
+				", productDescription=" + productDescription + 
+				", clientCode=" + clientCode + 
+				System.getProperty("line.separator") +
+				", clientName=" + clientName + 
+				System.getProperty("line.separator") +
+				", salesOrder=" + salesOrder +
+				System.getProperty("line.separator") +
+				", type=" + type + "]";
+	}
 	
-	public HashMap<Integer, QualitySurveyParameter> getParameters() {
-		return parameters;
-	}
 
-	public void setParameters(HashMap<Integer, QualitySurveyParameter> parameters) {
-		this.parameters = parameters;
-	}
-
-	public ArrayList<QualitySurveyParameterAnswer> getParameterAnswers() {
-		return parameterAnswers;
-	}
-
-	public void setParameterAnswers(ArrayList<QualitySurveyParameterAnswer> parameterAnswers) {
-		this.parameterAnswers = parameterAnswers;
-	}
 	
 }

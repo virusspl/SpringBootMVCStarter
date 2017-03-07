@@ -16,40 +16,94 @@
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-xs-12 col-xs-offset-0">
-				<h2 th:text="#{quality.surveys.select.user.title}"
+				<h2 th:text="#{quality.surveys.parameters.title}"
 					class="text-primary">Hello on a page</h2>
 			</div>
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
-				<span th:text="#{quality.surveys.select.user.message}">
+				<span th:text="#{quality.surveys.parameters.message}">
 					Welcome message </span>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-xs-12 col-xs-offset-0">
-			<div th:each="obj,stat : ${parameterSurveyForm.items}">
-				<span th:text="*{obj.parameterId}">parameterId</span>
-				<span th:text="*{obj.title}">title</span>
-				<span th:text="*{obj.type}">type</span>
-				<span th:text="*{obj.modelAnswer}">type</span>
-				<span th:text="*{obj.answer}">type</span>
-				<span th:text="*{obj.yesnoAnswer}">type</span>
-				<span th:text="*{obj.comment}">type</span>
+				<h3 th:text="#{quality.surveys.parameters.list}"
+					class="text-primary"></h3>
+				<form th:action="@{/qualitysurveys/create}"
+					th:object="${parameterSurveyForm}" method="post">
+					<div class="table-responsive">
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th th:text="#{line.number}">lp</th>
+									<th th:text="#{quality.surveys.parameter.title}">param</th>
+									<th class="text-center"
+										th:utext="|#{quality.surveys.model.answer} /&lt;br /&gt;#{qualitu.survey.confirmation}|">model
+										answer / confirm</th>
+									<th class="text-center" th:text="#{quality.surveys.answer}"></th>
+									<th th:text="#{quality.surveys.comment}">comment</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="item,stat : *{items}">
+									<td style="font-size: 115%;">
+										<!-- SURVIVE DATA --> <input type="hidden"
+										th:field="*{items[__${stat.index}__].title}"></input> <input
+										type="hidden" th:field="*{items[__${stat.index}__].type}"></input>
+										<input type="hidden"
+										th:field="*{items[__${stat.index}__].parameterId}"></input> <!-- LINE NUMBER + ID -->
+										<!-- LINE NUMBER -->
+										<span th:text="${stat.index} + 1">lp</span>
+									</td>
+									<td style="font-size: 115%;">
+										<!-- PARAMETER TITLE --> <span class="text-lg"
+										th:text="*{items[__${stat.index}__].title}"></span>
+									</td>
+									<td>
+										<!-- MODEL ANSWER -->
+										<input
+										th:if="${parameterSurveyForm.booleanType} != *{items[__${stat.index}__].type}"
+										type="text" class="form-control" style="text-align: center;"
+										th:field="*{items[__${stat.index}__].modelAnswer}"></input> <!-- YESNO ANSWER -->
+										<input
+										th:if="${parameterSurveyForm.booleanType} == *{items[__${stat.index}__].type}"
+										type="checkbox" class="form-control"
+										style="text-align: center;"
+										th:field="*{items[__${stat.index}__].yesnoAnswer}"></input>
+									</td>
+									<td>
+										<!-- ANSWER --> 
+										<input
+										th:if="${parameterSurveyForm.booleanType} != *{items[__${stat.index}__].type}"
+										type="text" class="form-control" style="text-align: center;"
+										th:field="*{items[__${stat.index}__].answer}"></input>
+									</td>
+									<td>
+										<!-- COMMENT --> 
+										<input type="text" class="form-control"
+										th:field="*{items[__${stat.index}__].comment}"></input>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 
-
-				
-			</div>
 					<a th:href="@{/}" class="btn btn-link btn-sm text-danger"> <span
 						class="glyphicon glyphicon-remove"></span> <span
 						th:text="#{quality.surveys.cancel.survey}">back</span>
 					</a>
-					<button class="btn btn-primary btn-sm" type="submit" name="surveyDetails">
+					<button class="btn btn-primary btn-sm" type="submit"
+						name="finishParametersSurvey">
 						<span class="glyphicon glyphicon-ok"></span> <span
 							th:text="#{action.submit}">search</span>
 					</button>
 
-				
-				</div>
+				</form>
+
+
+
+
 			</div>
 		</div>
+	</div>
 </body>
 </html>

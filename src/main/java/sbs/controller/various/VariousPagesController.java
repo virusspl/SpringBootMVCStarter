@@ -265,17 +265,74 @@ public class VariousPagesController {
 			QualitySurveyParameter param;
 			param = new QualitySurveyParameter();
 			param.setActive(true);
-			param.setTitle("Wiek");
+			param.setTitle("Roztaw osi");
 			param.setType(QualitySurveyParameter.PARAMETER_TEXT);
 			parametersService.save(param);
 			msg += "[qs_param: " + param.getTitle() + "], ";
 			
 			param =  new QualitySurveyParameter();
 			param.setActive(true);
-			param.setTitle("Mężczyzna");
+			param.setTitle("Podać roztaw osi");
+			param.setType(QualitySurveyParameter.PARAMETER_TEXT);
+			parametersService.save(param);
+			msg += "[qs_param: " + param.getTitle() + "], ";
+			
+			param =  new QualitySurveyParameter();
+			param.setActive(true);
+			param.setTitle("Podać roztaw płytek resorowych");
+			param.setType(QualitySurveyParameter.PARAMETER_TEXT);
+			parametersService.save(param);
+			msg += "[qs_param: " + param.getTitle() + "], ";
+			
+			param =  new QualitySurveyParameter();
+			param.setActive(true);
+			param.setTitle("Podać roztaw wspornikówi");
+			param.setType(QualitySurveyParameter.PARAMETER_TEXT);
+			parametersService.save(param);
+			msg += "[qs_param: " + param.getTitle() + "], ";
+			
+			param =  new QualitySurveyParameter();
+			param.setActive(true);
+			param.setTitle("Moment dokręcenia nakrętki sworznia hamulca");
 			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
 			parametersService.save(param);
 			msg += "[qs_param: " + param.getTitle() + "], ";
+			
+			param =  new QualitySurveyParameter();
+			param.setActive(true);
+			param.setTitle("Poprawność działania ABS");
+			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
+			parametersService.save(param);
+			msg += "[qs_param: " + param.getTitle() + "], ";
+			
+			param =  new QualitySurveyParameter();
+			param.setActive(true);
+			param.setTitle("Dzwignia zgodna z rysunkiem/kat.Prod.");
+			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
+			parametersService.save(param);
+			msg += "[qs_param: " + param.getTitle() + "], ";
+			
+			param =  new QualitySurveyParameter();
+			param.setActive(true);
+			param.setTitle("Sprawdzić poprawność obrotu Piasty / Bębna");
+			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
+			parametersService.save(param);
+			msg += "[qs_param: " + param.getTitle() + "], ";
+			
+			param =  new QualitySurveyParameter();
+			param.setActive(true);
+			param.setTitle("Czy zamontowano i poprawnie zaplombowano  zawlęczkę");
+			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
+			parametersService.save(param);
+			msg += "[qs_param: " + param.getTitle() + "], ";
+			
+			param =  new QualitySurveyParameter();
+			param.setActive(true);
+			param.setTitle("Zgodność Konfiguracji osi z Rysunkiem technicznym");
+			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
+			parametersService.save(param);
+			msg += "[qs_param: " + param.getTitle() + "], ";
+			
 		}
 
 		model.addAttribute("msg", msg);

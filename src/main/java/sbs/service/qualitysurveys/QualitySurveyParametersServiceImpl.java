@@ -1,5 +1,7 @@
 package sbs.service.qualitysurveys;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -12,7 +14,6 @@ import sbs.service.GenericServiceAdapter;
 @Service
 public class QualitySurveyParametersServiceImpl extends GenericServiceAdapter<QualitySurveyParameter, Integer> implements QualitySurveyParametersService{
 	
-	@SuppressWarnings("unused")
 	private QualitySurveyParametersRepository qualitySurveyParametersRepository;
 	
     @Autowired
@@ -21,6 +22,9 @@ public class QualitySurveyParametersServiceImpl extends GenericServiceAdapter<Qu
 			this.qualitySurveyParametersRepository = (QualitySurveyParametersRepository) genericRepository;
 	}
 
+    public List<QualitySurveyParameter> findAllActive(){
+    	return this.qualitySurveyParametersRepository.findAllActive();
+    }
 	
 
 }

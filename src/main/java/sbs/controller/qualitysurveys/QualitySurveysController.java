@@ -118,7 +118,6 @@ public class QualitySurveysController {
 	@RequestMapping(value = "/create", params = {"beginSuspensionsSurvey"}, method = RequestMethod.POST)
 	public String beginSuspensionSurvey(Model model, Locale locale) {
 		model.addAttribute("msg", "START SUSPENSIONS SURVEY");
-		System.out.println(QualitySurvey.QUALITY_SURVEY_TYPE_BOM);
 		return "qualitysurveys/bomsurvey";
 	}
 	
@@ -144,13 +143,21 @@ public class QualitySurveysController {
 		
 		model.addAttribute("parameterSurveyForm", psf);
 		
-		/*
-		TODO
-		wrócić listę i obrabiać po nr ID parametru YEAH YEAH YEAH :)
-		*/
-		
 		return "qualitysurveys/parametersurvey";
 	}
+	
+	@RequestMapping(value = "/create", params = {"finishParametersSurvey"}, method = RequestMethod.POST)
+	public String finishParametersSurvey(ParameterSurveyForm parameterSurveyForm, BindingResult bindingResult, Locale locale, Model model) {
+		
+		System.out.println(sessionForm);
+		System.out.println(parameterSurveyForm);
+		
+		// TODO
+		
+		model.addAttribute("msg", "SAVED!");
+		return "qualitysurveys/parametersurvey";
+	}
+	
 	
 }
 

@@ -11,7 +11,7 @@ public class ParameterSurveyItem {
 	private String comment;
 	
 	public ParameterSurveyItem() {
-		
+
 	}
 
 	public int getParameterId() {
@@ -69,6 +69,14 @@ public class ParameterSurveyItem {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+
+	@Override
+	public String toString() {
+		return System.getProperty("line.separator") + "ParameterSurveyItem [parameterId=" + parameterId + ", title=" + title + ", type=" + type
+				+ ", modelAnswer=" + modelAnswer + ", answer=" + answer + ", yesnoAnswer=" + yesnoAnswer + ", comment="
+				+ comment + "]";
+	}
+
 	
 	
 	
