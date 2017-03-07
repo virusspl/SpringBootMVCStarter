@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import javax.validation.Valid;
 
+import org.junit.experimental.theories.ParametersSuppliedBy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -152,7 +153,12 @@ public class QualitySurveysController {
 		System.out.println(sessionForm);
 		System.out.println(parameterSurveyForm);
 		
+		int min = (int)(parameterSurveyForm.items.size() * 0.3);
+		
 		// TODO
+		// validate
+		// save
+		
 		
 		model.addAttribute("msg", "SAVED!");
 		return "qualitysurveys/parametersurvey";
