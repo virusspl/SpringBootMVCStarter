@@ -1,8 +1,5 @@
 package sbs.controller.various;
 
-import java.sql.Timestamp;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,15 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import sbs.model.qualitysurveys.QualitySurvey;
 import sbs.model.qualitysurveys.QualitySurveyParameter;
-import sbs.model.qualitysurveys.QualitySurveyParameterAnswer;
 import sbs.model.users.Role;
 import sbs.model.users.User;
-import sbs.model.x3.X3Client;
-import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductionOrderDetails;
-import sbs.model.x3.X3SalesOrder;
 import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.optima.JdbcAdrOptimaService;
 import sbs.service.qualitysurveys.QualitySurveyParametersService;
@@ -158,17 +150,17 @@ public class VariousPagesController {
 			userRole.setName("ROLE_USER");
 			msg += "[role: " + userRole.getName() + "], ";
 		}
-		Role qualityManagerRole = roleService.findByName("ROLE_QUALITYMANAGER");
+		Role qualityManagerRole = roleService.findByName("ROLE_QSURVEYMANAGER");
 		if (qualityManagerRole == null) {
 			qualityManagerRole = new Role();
-			qualityManagerRole.setName("ROLE_QUALITYMANAGER");
+			qualityManagerRole.setName("ROLE_QSURVEYMANAGER");
 			roleService.save(qualityManagerRole);
 			msg += "[role: " + qualityManagerRole.getName() + "], ";
 		}
-		Role qualityUserRole = roleService.findByName("ROLE_QUALITYUSER");
+		Role qualityUserRole = roleService.findByName("ROLE_QSURVEYUSER");
 		if (qualityUserRole == null) {
 			qualityUserRole = new Role();
-			qualityUserRole.setName("ROLE_QUALITYUSER");
+			qualityUserRole.setName("ROLE_QSURVEYUSER");
 			roleService.save(qualityUserRole);
 			msg += "[role: " + qualityUserRole.getName() + "], ";
 		}

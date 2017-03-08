@@ -31,10 +31,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 		.formLogin().loginPage("/login").usernameParameter("username").passwordParameter("password")
-		.successHandler(savedRequestAwareAuthenticationSuccessHandler())
-		.and().logout().logoutSuccessUrl("/logout")
-		.and().exceptionHandling().accessDeniedPage("/noaccess")
-		.and().authorizeRequests()
+		.successHandler(savedRequestAwareAuthenticationSuccessHandler()).and()
+		.logout().logoutSuccessUrl("/logout").and()
+		.exceptionHandling().accessDeniedPage("/noaccess").and()
+		.authorizeRequests()
 		.antMatchers("/", "/init",
 				"/bootstrap/**",
 				"/selectize/**",
@@ -50,16 +50,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/geolook/**"
 				)
 		.permitAll()
-		.antMatchers("/qualitysurveys/create")
-		.hasAnyRole("ADMIN","QUALITYUSER")
+		.antMatchers(
+				"/qualitysurveys/create"
+				)
+		.hasAnyRole(
+				"ADMIN",
+				"QSURVEYMANAGER", 
+				"QSURVEYUSER"
+				)
+		.antMatchers(
+				"/qualitysurveys/list",
+				"/qualitysurveys/view"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"QSURVEYMANAGER"
+				)
 		.antMatchers(
 				"/admin", 
 				"/users/**"
 				)
 		.hasRole("ADMIN")
 		.anyRequest().authenticated().and()
-		.csrf()
-		.and()
+		.csrf().and()
 		.rememberMe().tokenRepository(persistentTokenRepository)
 		.tokenValiditySeconds(1209600);
 	}

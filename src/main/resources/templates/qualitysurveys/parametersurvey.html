@@ -23,11 +23,15 @@
 				<span th:text="#{quality.surveys.parameters.message}">
 					Welcome message </span>
 			</div>
+			
 		</div>
 		<div class="row">
 			<div class="col-xs-12 col-xs-offset-0">
 				<h3 th:text="#{quality.surveys.parameters.list}"
 					class="text-primary"></h3>
+				<div th:errors="${parameterSurveyForm}" class="alert alert-warning text-center">
+
+				</div>
 				<form th:action="@{/qualitysurveys/create}"
 					th:object="${parameterSurveyForm}" method="post">
 					<div class="table-responsive">
@@ -46,11 +50,11 @@
 							<tbody>
 								<tr th:each="item,stat : *{items}">
 									<td style="font-size: 115%;">
-										<!-- SURVIVE DATA --> <input type="hidden"
+										<!-- SURVIVE HIDDEN DATA --> <input type="hidden"
 										th:field="*{items[__${stat.index}__].title}"></input> <input
 										type="hidden" th:field="*{items[__${stat.index}__].type}"></input>
 										<input type="hidden"
-										th:field="*{items[__${stat.index}__].parameterId}"></input> <!-- LINE NUMBER + ID -->
+										th:field="*{items[__${stat.index}__].parameterId}"></input> 
 										<!-- LINE NUMBER -->
 										<span th:text="${stat.index} + 1">lp</span>
 									</td>
@@ -63,12 +67,17 @@
 										<input
 										th:if="${parameterSurveyForm.booleanType} != *{items[__${stat.index}__].type}"
 										type="text" class="form-control" style="text-align: center;"
-										th:field="*{items[__${stat.index}__].modelAnswer}"></input> <!-- YESNO ANSWER -->
+										th:field="*{items[__${stat.index}__].modelAnswer}"></input>
+										<div th:errors="*{items[__${stat.index}__].modelAnswer}"
+											class="alert alert-danger margin-top-5">error</div> 
+										<!-- YESNO ANSWER -->
 										<input
 										th:if="${parameterSurveyForm.booleanType} == *{items[__${stat.index}__].type}"
 										type="checkbox" class="form-control"
 										style="text-align: center;"
 										th:field="*{items[__${stat.index}__].yesnoAnswer}"></input>
+										<div th:errors="*{items[__${stat.index}__].yesnoAnswer}"
+											class="alert alert-danger margin-top-5">error</div>
 									</td>
 									<td>
 										<!-- ANSWER --> 
@@ -76,11 +85,15 @@
 										th:if="${parameterSurveyForm.booleanType} != *{items[__${stat.index}__].type}"
 										type="text" class="form-control" style="text-align: center;"
 										th:field="*{items[__${stat.index}__].answer}"></input>
+										<div th:errors="*{items[__${stat.index}__].answer}"
+											class="alert alert-danger margin-top-5">error</div>
 									</td>
 									<td>
 										<!-- COMMENT --> 
 										<input type="text" class="form-control"
 										th:field="*{items[__${stat.index}__].comment}"></input>
+										<div th:errors="*{items[__${stat.index}__].comment}"
+											class="alert alert-danger margin-top-5">error</div>
 									</td>
 								</tr>
 							</tbody>
