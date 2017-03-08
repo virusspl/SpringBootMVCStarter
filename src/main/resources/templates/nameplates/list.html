@@ -18,12 +18,13 @@
 
 	</div>
 	<div layout:fragment="content">
-		<div id="browser"></div>
+		<div id="correct"></div>
 		<div class="row">
 			<div class="col-xs-12 col-xs-offset-0">
 				<h2 th:text="#{nameplates.title}" class="text-primary">Hello on
 					a page</h2>
 			</div>
+			
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-20">
 				<span th:utext="#{nameplates.message}" class="flow-text ">
 					Welcome message </span> <a style="margin-left: 5px; display: none;"
@@ -34,15 +35,14 @@
 
 			</div>
 		</div>
-
+		
 <!-- LITTLE NAVI -->
 		<p class="pull-right">
 			<a href="#correct" th:text="#{nameplates.correct.lines}"></a> | <a
 				href="#error" th:text="#{nameplates.error.lines}"></a>
 		</p>
 <!-- /LITTLE NAVI -->		
-		
-		<div id="correct"></div>
+
 		<div class="row margin-top-20">
 			<div class="col-xs-12 col-xs-offset-0">
 				<div class="table-responsive">
@@ -82,7 +82,6 @@
 				href="#error" th:text="#{nameplates.error.lines}"></a>
 		</p>
 		<!-- /LITTLE NAVI -->	
-
 		<div id="error"></div>
 				<div class="row margin-top-20">
 			<div class="col-xs-12 col-xs-offset-0">
