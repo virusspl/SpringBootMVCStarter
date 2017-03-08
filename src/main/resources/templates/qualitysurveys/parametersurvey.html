@@ -49,7 +49,7 @@
 							</thead>
 							<tbody>
 								<tr th:each="item,stat : *{items}">
-									<td style="font-size: 115%;">
+									<td style="font-size: 120%;">
 										<!-- SURVIVE HIDDEN DATA --> <input type="hidden"
 										th:field="*{items[__${stat.index}__].title}"></input> <input
 										type="hidden" th:field="*{items[__${stat.index}__].type}"></input>
@@ -58,7 +58,7 @@
 										<!-- LINE NUMBER -->
 										<span th:text="${stat.index} + 1">lp</span>
 									</td>
-									<td style="font-size: 115%;">
+									<td style="font-size: 120%;">
 										<!-- PARAMETER TITLE --> <span class="text-lg"
 										th:text="*{items[__${stat.index}__].title}"></span>
 									</td>
