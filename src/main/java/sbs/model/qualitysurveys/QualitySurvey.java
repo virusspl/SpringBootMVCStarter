@@ -27,8 +27,12 @@ public class QualitySurvey {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "qs_user_id", nullable = false)
 	private User user;
+	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "survey")
 	Set<QualitySurveyParameterAnswer> parameterAnswers;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "survey")
+	Set<QualitySurveyBomAnswer> bomAnswers;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -90,6 +94,7 @@ public class QualitySurvey {
 	
 	public QualitySurvey() {
 		 parameterAnswers = new HashSet<>();
+		 bomAnswers = new HashSet<>();
 	}
 
 	public User getUser() {
@@ -226,6 +231,14 @@ public class QualitySurvey {
 
 	public void setParameterAnswers(Set<QualitySurveyParameterAnswer> parameterAnswers) {
 		this.parameterAnswers = parameterAnswers;
+	}
+
+	public Set<QualitySurveyBomAnswer> getBomAnswers() {
+		return bomAnswers;
+	}
+
+	public void setBomAnswers(Set<QualitySurveyBomAnswer> bomAnswers) {
+		this.bomAnswers = bomAnswers;
 	}
 	
 	

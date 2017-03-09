@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.cache.annotation.Cacheable;
 
+import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductionOrderDetails;
@@ -71,5 +72,10 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	@Override
 	public X3ProductionOrderDetails getProductionOrderInfoByNumber(String company, String number) {
 		return jdbcOracleX3Repository.getProductionOrderInfoByNumber(company, number);
+	}
+
+	@Override
+	public List<X3BomItem> findBomPartsByParent(String company, String productCode) {
+		return jdbcOracleX3Repository.findBomPartsByParent(company, productCode);
 	}
 }

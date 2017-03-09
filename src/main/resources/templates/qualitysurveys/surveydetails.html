@@ -100,9 +100,10 @@
 				<div class="col-xs-5">
 						<div class="form-group">
 							<div class="form-group">
+							<!--  autocomplete="off" ? -->
 								<label for="number"
 									th:text="#{quality.surveys.production.order}">number</label> <input
-									type="text" class="form-control" id="number" name="number"
+									 type="text" class="form-control" id="number" name="number"
 									th:placeholder="#{quality.surveys.production.order}" />
 							</div>
 							<div th:errors="*{number}"

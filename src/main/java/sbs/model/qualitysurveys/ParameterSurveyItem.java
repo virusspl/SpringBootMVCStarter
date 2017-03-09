@@ -1,4 +1,4 @@
-package sbs.controller.qualitysurveys;
+package sbs.model.qualitysurveys;
 
 public class ParameterSurveyItem {
 

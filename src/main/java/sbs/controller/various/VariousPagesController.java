@@ -1,5 +1,6 @@
 package sbs.controller.various;
 
+import java.util.List;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import sbs.model.qualitysurveys.QualitySurveyParameter;
 import sbs.model.users.Role;
 import sbs.model.users.User;
+import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.optima.JdbcAdrOptimaService;
@@ -58,11 +60,11 @@ public class VariousPagesController {
 		//X3Client result = jdbcOracleX3Service.findClientByCode("ATW", "cad40");
 		//X3SalesOrder result = jdbcOracleX3Service.findSalesOrderByNumber("ATW", "yza140099");
 		//X3Product result = jdbcOracleX3Service.findProductByCode("ATW", "98e01");
-		X3ProductionOrderDetails result = jdbcOracleX3Service.getProductionOrderInfoByNumber("ATW", "X31121400099455");
+		//X3ProductionOrderDetails result = jdbcOracleX3Service.getProductionOrderInfoByNumber("ATW", "X31121400099455");
+		//System.out.println(result);
 		
-		System.out.println(result);
-		
-		//model.addAttribute("list", list);
+		List<X3BomItem> list = jdbcOracleX3Service.findBomPartsByParent("ATW", "431S1001");
+		model.addAttribute("list", list);
 		
 		/*
 		// CREATE DEMO SURVEY

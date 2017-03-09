@@ -3,6 +3,8 @@ package sbs.controller.qualitysurveys;
 import java.util.ArrayList;
 import java.util.List;
 
+import sbs.model.qualitysurveys.ParameterSurveyItem;
+
 public class ParameterSurveyForm {
 
 	List<ParameterSurveyItem> items;
