@@ -38,6 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.antMatchers("/", "/init",
 				"/bootstrap/**",
 				"/selectize/**",
+				"/datatables/**",
 				"/css/**",
 				"/images/**",
 				"/js/**",
@@ -51,20 +52,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				)
 		.permitAll()
 		.antMatchers(
-				"/qualitysurveys/create"
+				"/qualitysurveys/create",
+				"/qualitysurveys/list",
+				"/qualitysurveys/view"
 				)
 		.hasAnyRole(
 				"ADMIN",
 				"QSURVEYMANAGER", 
 				"QSURVEYUSER"
-				)
-		.antMatchers(
-				"/qualitysurveys/list",
-				"/qualitysurveys/view"
-				)
-		.hasAnyRole(
-				"ADMIN", 
-				"QSURVEYMANAGER"
 				)
 		.antMatchers(
 				"/admin", 

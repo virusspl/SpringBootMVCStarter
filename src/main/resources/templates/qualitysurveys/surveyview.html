@@ -16,15 +16,65 @@
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-xs-12 col-xs-offset-0">
-				<h2 th:text="#{quality.surveys.summary.before.start.title}"
-					class="text-primary">Hello on a page</h2>
+				<h2 th:text="#{quality.surveys.show.title}" class="text-primary">Hello
+					on a page</h2>
 			</div>
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
-				<span th:text="#{quality.surveys.summary.before.start.message}">
-					Welcome message </span>
+				<span th:text="#{quality.surveys.show.message}"> Welcome
+					message </span>
 			</div>
 		</div>
-
+		<div class="row margin-top-10">
+			<div class="col-xs-12">
+				<a th:href="@{/qualitysurveys/list}" class="btn btn-link btn-sm">
+					<span class="glyphicon glyphicon-menu-left"></span> <span
+					th:text="#{action.back}">back</span>
+				</a>
+			</div>
+		</div>
+		<!-- SURVEY INFO -->
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="row">
+					<div class="col-xs-12">
+						<h3 th:text="#{quality.surveys.survey.info}"
+							class="text-primary underline"></h3>
+					</div>
+				</div>
+				<div class="col-xs-12">
+					<div class="row">
+						<div class="col-xs-4 col-md-3 col-lg-2">
+							<span
+								th:text="|Id|">param</span>
+						</div>
+						<div class="col-xs-8 col-md-9 col-lg-10">
+							<strong
+								th:text="|#${surveyInfo.id}|"
+								class="text-primary">value</strong>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4 col-md-3 col-lg-2">
+							<span th:text="#{quality.surveys.login.user}">param</span>
+						</div>
+						<div class="col-xs-8 col-md-9 col-lg-10">
+							<strong th:text="${surveyInfo.user.username}" class="text-primary">value</strong>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4 col-md-3 col-lg-2">
+							<span
+								th:text="#{quality.surveys.creation.time}">param</span>
+						</div>
+						<div class="col-xs-8 col-md-9 col-lg-10">
+							<strong
+								th:text="${surveyInfo.creationDate}"
+								class="text-primary">value</strong>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<!-- USER DETAILS -->
 		<div class="row">
 			<div class="col-xs-12">
@@ -83,13 +133,6 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-xs-12 margin-top-5">
-				<a th:href="@{/qualitysurveys/create}"
-					class="btn btn-link btn-sm text-danger"> <span
-					class="glyphicon glyphicon-refresh"></span> <span
-					th:text="#{quality.surveys.change.user}">back</span>
-				</a>
-			</div>
 		</div>
 		<!-- PRODUCTION ORDER DETAILS -->
 		<div class="row">
@@ -145,73 +188,66 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-xs-12 margin-top-5">
-				<a th:href="@{/qualitysurveys/dispatch}" class="btn btn-link btn-sm text-danger"> <span
-					class="glyphicon glyphicon-remove"></span> <span
-					th:text="#{quality.surveys.cancel.survey}">back</span>
-				</a> <a th:href="@{/qualitysurveys/create}"
-					class="btn btn-link btn-sm text-danger"> <span
-					class="glyphicon glyphicon-refresh"></span> <span
-					th:text="#{action.back.to.start}">back</span>
-				</a>
-				<form th:action="@{/qualitysurveys/create}" method="post"
-					style="display: inline;">
-					<button class="btn btn-link btn-sm" type="submit"
-						name="anotherProductionOrder">
-						<span class="glyphicon glyphicon-refresh"></span> <span
-							th:text="#{quality.surveys.change.production.order}">search</span>
-					</button>
-				</form>
+		</div>
+		<!-- PARAMETER ANSWERS -->
+		<div class="row" th:if="${parameterAnswers}">
+			<div class="col-xs-12">
+				<div class="row">
+					<div class="col-xs-12">
+						<h3 th:text="#{quality.surveys.parameters.list}"
+							class="text-primary underline"></h3>
+					</div>
+				</div>
+				<div class="table-responsive">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th th:text="#{line.number}">lp</th>
+								<th th:text="#{quality.surveys.parameter.title}">param</th>
+								<th class="text-center"
+									th:utext="|#{quality.surveys.model.answer} /&lt;br /&gt;#{qualitu.survey.confirmation}|" >model
+									answer / confirm</th>
+								<th class="text-center" th:text="#{quality.surveys.answer}"></th>
+								<th th:text="#{quality.surveys.comment}">comment</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="item,stat : ${parameterAnswers}">
+								 <td style="font-size: 110%;">
+									<span th:text="${stat.index} + 1">lp</span>
+								</td>
+								
+								<td style="font-size: 110%;">
+									<span class="text-lg"
+									th:text=" *{item.parameter.title}"></span>
+								</td>
+								<td class="text-center">
+									<span 
+									th:if="*{item.parameter.type} == ${textAnswerType}"
+									 style="text-align: center;"
+									th:text=" *{item.modelAnswer}"></span>
+									<input 
+									th:if="*{item.parameter.type} == ${booleanAnswerType}"
+									type="checkbox"
+									disabled="disabled"
+									th:checked="*{item.yesnoAnswer}"></input>
+								</td>
+								<td class="text-center">
+								 <span 
+									th:if="*{item.parameter.type} == ${textAnswerType}"
+									style="text-align: center;"
+									th:text=" *{item.valueAnswer}"></span>
+								</td>
+								<td>
+								<span th:text=" *{item.comment}"></span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 
 			</div>
 		</div>
-
-		<form th:action="@{/qualitysurveys/create}" method="post"
-			style="display: inline;">
-			<!-- AXLES ASSEMBLY SECTION -->
-			<div class="row">
-				<div class="col-xs-12">
-					<div class="row">
-						<div class="col-xs-12">
-							<h3 th:text="#{quality.surveys.type.axles.assembly}"
-								class="text-primary underline"></h3>
-						</div>
-					</div>
-					<div class="col-xs-12">
-						<div class="row">
-							<div class="col-xs-12">
-								<button class="btn btn-info btn-sm" type="submit"
-									name="beginAxlesSurvey">
-									<span class="glyphicon glyphicon-ok"></span> <span
-										th:text="#{quality.surveys.begin.axles.assembly.type}">search</span>
-								</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-xs-12">
-					<div class="row">
-						<div class="col-xs-12">
-							<h3 th:text="#{quality.surveys.type.suspensions}"
-								class="text-primary underline"></h3>
-						</div>
-					</div>
-					<div class="col-xs-12">
-						<div class="row">
-							<div class="col-xs-12">
-								<button class="btn btn-info btn-sm" type="submit"
-									name="beginSuspensionsSurvey">
-									<span class="glyphicon glyphicon-ok"></span> <span
-										th:text="#{quality.surveys.begin.suspensions.type}">search</span>
-								</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</form>
 	</div>
 </body>
 </html>

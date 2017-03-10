@@ -35,9 +35,6 @@ public class QualitySurveyBomAnswer {
 	@Column(name = "qsba_model_unit", length = 10, nullable=false)
 	private String modelUnit;
 	
-	@Column(name = "qsba_model_quantity", nullable=false)
-	private Double modelQuantity;
-	
 	@Column(name = "qsba_answer_quantity", nullable=false)
 	private Double answerQuantity;
 		
@@ -96,14 +93,6 @@ public class QualitySurveyBomAnswer {
 		this.modelUnit = modelUnit;
 	}
 
-	public Double getModelQuantity() {
-		return modelQuantity;
-	}
-
-	public void setModelQuantity(Double modelQuantity) {
-		this.modelQuantity = modelQuantity;
-	}
-
 	public Double getAnswerQuantity() {
 		return answerQuantity;
 	}
@@ -123,8 +112,7 @@ public class QualitySurveyBomAnswer {
 	@Override
 	public String toString() {
 		return "QualitySurveyBomAnswer [survey=" + survey + ", id=" + id + ", sequence=" + sequence + ", partCode="
-				+ partCode + ", partDescription=" + partDescription + ", modelUnit=" + modelUnit + ", modelQuantity="
-				+ modelQuantity + ", answerQuantity=" + answerQuantity + ", comment=" + comment + "]";
+				+ partCode + ", partDescription=" + partDescription + ", modelUnit=" + modelUnit + ", answerQuantity=" + answerQuantity + ", comment=" + comment + "]";
 	}
 
 

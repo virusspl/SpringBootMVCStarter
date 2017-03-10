@@ -8,16 +8,21 @@ import java.util.Locale;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javassist.NotFoundException;
+import sbs.helpers.TextHelper;
 import sbs.model.hr.HrUserInfo;
 import sbs.model.qualitysurveys.ParameterSurveyItem;
 import sbs.model.qualitysurveys.QualitySurvey;
@@ -55,6 +60,8 @@ public class QualitySurveysController {
 	UserService userService;
 	@Autowired
 	MessageSource messageSource;
+	@Autowired
+	TextHelper textHelper;
 
 	@ModelAttribute("surveyInfo")
 	public QualitySurveySessionForm surveyInfo() {
@@ -63,12 +70,54 @@ public class QualitySurveysController {
 
 	/*
 	 * TODO
-	 * 
 	 * @RequestMapping(value = "/list")
-	 * 
+	 * TODO
 	 * @RequestMapping(value = "/view")
 	 */
 
+	 @RequestMapping(value = "/list")
+	 @Transactional
+	 public String listAll(Model model){
+		 model.addAttribute("surveys", surveysService.findAllDesc());
+		 return "qualitysurveys/list";
+		}
+	 
+	
+	@RequestMapping(value = "/dispatch")
+	public String dispatch(){
+		return "qualitysurveys/dispatch";
+	}
+	
+	@RequestMapping("/show/{id}")
+	@Transactional
+	public String showSurvey(@PathVariable("id") int id, Model model, Locale locale) throws NoSuchMessageException, NotFoundException {
+		
+		QualitySurvey survey = surveysService.findById(id);
+		if(survey == null){
+			throw new NotFoundException(messageSource.getMessage("quality.surveys.error.survey.not.found", null, locale));
+		}
+		model.addAttribute("surveyInfo",survey);
+		
+		if(survey.getType().equals(QualitySurvey.QUALITY_SURVEY_TYPE_BOM)){
+			Hibernate.initialize(survey.getBomAnswers());
+			model.addAttribute("bomAnswers", survey.getBomAnswers());
+			return "qualitysurveys/surveyview";
+		}
+		else if(survey.getType().equals(QualitySurvey.QUALITY_SURVEY_TYPE_PARAM)){
+			Hibernate.initialize(survey.getParameterAnswers());
+			Hibernate.initialize(survey.getUser());
+			model.addAttribute("parameterAnswers", survey.getParameterAnswers());
+			model.addAttribute("textAnswerType", QualitySurveyParameter.PARAMETER_TEXT);
+			model.addAttribute("booleanAnswerType", QualitySurveyParameter.PARAMETER_BOOLEAN);
+			return "qualitysurveys/surveyview";
+		}
+		else{
+			model.addAttribute("error", messageSource.getMessage("quality.surveys.error.unknown.survey.type", null, locale));
+			model.addAttribute("surveys", surveysService.findAllDesc());
+			return "qualitysurveys/list";
+		}
+	}
+	
 	@RequestMapping(value = "/create")
 	public String selectUser(Model model, Locale locale) {
 		sessionForm = new QualitySurveySessionForm();
@@ -363,7 +412,6 @@ public class QualitySurveysController {
 				bsa.setPartCode(bsi.getPartCode());
 				bsa.setPartDescription(bsi.getPartDescription());
 				bsa.setModelUnit(bsi.getModelUnit());
-				bsa.setModelQuantity(bsi.getModelQuantity());
 				bsa.setComment(bsi.getComment());
 				bsa.setAnswerQuantity(answer);
 				// survey one-to-many

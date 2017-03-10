@@ -1,5 +1,8 @@
 package sbs.service.qualitysurveys;
 
+import java.util.List;
+
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -12,7 +15,6 @@ import sbs.service.GenericServiceAdapter;
 @Service
 public class QualitySurveysServiceImpl extends GenericServiceAdapter<QualitySurvey, Integer> implements QualitySurveysService{
 	
-	@SuppressWarnings("unused")
 	private QualitySurveysRepository qualitySurveysRepository;
 	
     @Autowired
@@ -20,6 +22,16 @@ public class QualitySurveysServiceImpl extends GenericServiceAdapter<QualitySurv
 			super(genericRepository);
 			this.qualitySurveysRepository = (QualitySurveysRepository) genericRepository;
 	}
+
+	@Override
+	public List<QualitySurvey> findAllDesc() {
+		List<QualitySurvey> list = qualitySurveysRepository.findAllDesc(); 
+		for (QualitySurvey survey: list){
+			Hibernate.initialize(survey.getUser());
+		}
+		return list;
+	}
+
 
 	
 
