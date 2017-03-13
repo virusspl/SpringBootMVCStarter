@@ -13,7 +13,6 @@ import sbs.model.qualitysurveys.QualitySurveyParameter;
 import sbs.model.users.Role;
 import sbs.model.users.User;
 import sbs.model.x3.X3BomItem;
-import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.optima.JdbcAdrOptimaService;
 import sbs.service.qualitysurveys.QualitySurveyParametersService;

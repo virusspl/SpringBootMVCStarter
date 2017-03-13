@@ -8,6 +8,5 @@ import sbs.repository.GenericRepository;
 public interface QualitySurveysRepository extends GenericRepository<QualitySurvey,Integer> {
 	
 	public List<QualitySurvey> findAllDesc();
-	
 }
 

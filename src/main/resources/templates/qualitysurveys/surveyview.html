@@ -224,7 +224,6 @@
 								<td class="text-center">
 									<span 
 									th:if="*{item.parameter.type} == ${textAnswerType}"
-									 style="text-align: center;"
 									th:text=" *{item.modelAnswer}"></span>
 									<input 
 									th:if="*{item.parameter.type} == ${booleanAnswerType}"
@@ -245,7 +244,55 @@
 						</tbody>
 					</table>
 				</div>
-
+			</div>
+		</div>
+		<!-- BOM ANSWERS -->
+		<div class="row" th:if="${bomAnswers}">
+			<div class="col-xs-12">
+				<div class="row">
+					<div class="col-xs-12">
+						<h3 th:text="#{quality.surveys.bom.list}"
+							class="text-primary underline"></h3>
+					</div>
+				</div>
+				<div class="table-responsive">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+									<th th:text="#{quality.surveys.bom.seq}">lp</th>
+									<th th:text="#{quality.surveys.bom.part.code}">part</th>
+									<th th:text="#{quality.surveys.bom.part.description}" >desc</th>
+									<th th:text="#{quality.surveys.bom.model.unit} " class="text-center">unit</th>
+									<th th:text="#{quality.surveys.bom.answer.quantity}" class="text-center">quantity</th>
+									<th th:text="#{quality.surveys.comment}">comment</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="item,stat : ${bomAnswers}">
+								 <td style="font-size: 110%;">
+									<span th:text="*{item.sequence}">value</span>
+								</td>
+								
+								<td style="font-size: 110%;">
+									<span class="text-lg"
+									th:text=" *{item.partCode}">value</span>
+								</td>
+								<td>
+									<span th:text="*{item.partDescription}">value</span>
+								</td>
+								<td class="text-center">
+									<span th:text="*{item.modelUnit}">value</span>
+								</td>
+								<td class="text-center">
+									<span th:text="*{item.answerQuantity}">value</span>
+								</td>
+								<td>
+								<span th:text=" *{item.comment}">value</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>

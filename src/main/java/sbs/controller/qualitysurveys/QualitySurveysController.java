@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javassist.NotFoundException;
+import sbs.helpers.SortHelper;
 import sbs.helpers.TextHelper;
 import sbs.model.hr.HrUserInfo;
 import sbs.model.qualitysurveys.ParameterSurveyItem;
@@ -62,7 +63,9 @@ public class QualitySurveysController {
 	MessageSource messageSource;
 	@Autowired
 	TextHelper textHelper;
-
+	@Autowired
+	SortHelper sortHelper;
+	
 	@ModelAttribute("surveyInfo")
 	public QualitySurveySessionForm surveyInfo() {
 		return sessionForm;
@@ -99,19 +102,19 @@ public class QualitySurveysController {
 		model.addAttribute("surveyInfo",survey);
 		
 		if(survey.getType().equals(QualitySurvey.QUALITY_SURVEY_TYPE_BOM)){
-			Hibernate.initialize(survey.getBomAnswers());
-			model.addAttribute("bomAnswers", survey.getBomAnswers());
+			Hibernate.initialize(survey.getUser());
+			model.addAttribute("bomAnswers", sortHelper.sortSet(survey.getBomAnswers()));
+			
 			return "qualitysurveys/surveyview";
 		}
 		else if(survey.getType().equals(QualitySurvey.QUALITY_SURVEY_TYPE_PARAM)){
-			Hibernate.initialize(survey.getParameterAnswers());
 			Hibernate.initialize(survey.getUser());
-			model.addAttribute("parameterAnswers", survey.getParameterAnswers());
+			model.addAttribute("parameterAnswers", sortHelper.sortSet(survey.getParameterAnswers()));
 			model.addAttribute("textAnswerType", QualitySurveyParameter.PARAMETER_TEXT);
 			model.addAttribute("booleanAnswerType", QualitySurveyParameter.PARAMETER_BOOLEAN);
 			return "qualitysurveys/surveyview";
 		}
-		else{
+		else{			
 			model.addAttribute("error", messageSource.getMessage("quality.surveys.error.unknown.survey.type", null, locale));
 			model.addAttribute("surveys", surveysService.findAllDesc());
 			return "qualitysurveys/list";

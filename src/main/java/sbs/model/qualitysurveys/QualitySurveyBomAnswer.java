@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "quality_survey_bom_answers")
-public class QualitySurveyBomAnswer {
+public class QualitySurveyBomAnswer implements Comparable<QualitySurveyBomAnswer>{
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "qsba_qs_id", nullable = false)
@@ -115,6 +115,10 @@ public class QualitySurveyBomAnswer {
 				+ partCode + ", partDescription=" + partDescription + ", modelUnit=" + modelUnit + ", answerQuantity=" + answerQuantity + ", comment=" + comment + "]";
 	}
 
+	@Override
+	public int compareTo(QualitySurveyBomAnswer o) {
+		return this.sequence.compareTo(o.sequence);
+	}
 
 }
 
