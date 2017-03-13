@@ -15,43 +15,43 @@
 <ehcache>
 	<!-- NATIVE CACHE -->
    <cache name="avatarByUsername"
-   maxBytesLocalHeap="50m"
+   maxBytesLocalHeap="10m"
    timeToLiveSeconds="60">
    </cache>
    <cache name="avatarById"
-   maxBytesLocalHeap="50m"
+   maxBytesLocalHeap="10m"
    timeToLiveSeconds="60">
    </cache>
    
    <!-- OPTIMA CACHE -->
    <cache name="allEmployed"
-   maxBytesLocalHeap="50m"
+   maxBytesLocalHeap="2m"
    timeToLiveSeconds="3600">
    </cache>
    
    <!-- X3 CACHE -->
    <cache name="x3AllUsers"
-   maxBytesLocalHeap="50m"
+   maxBytesLocalHeap="1m"
    timeToLiveSeconds="3600">
    </cache>
    <cache name="x3ItemDescByCode"
-   maxBytesLocalHeap="50m"
+   maxBytesLocalHeap="20m"
    timeToLiveSeconds="604800"> 
    </cache>
    <cache name="x3AllClients"
-   maxBytesLocalHeap="50m"
+   maxBytesLocalHeap="5m"
    timeToLiveSeconds="43200">
    </cache>
    <cache name="x3AllSalesOrders"
-   maxBytesLocalHeap="50m"
+   maxBytesLocalHeap="10m"
    timeToLiveSeconds="3600">
    </cache>
    <cache name="x3OpenedSalesOrders"
-   maxBytesLocalHeap="50m"
+   maxBytesLocalHeap="10m"
    timeToLiveSeconds="3600">
    </cache>
    <cache name="x3AllActiveProducts"
-   maxBytesLocalHeap="50m"
+   maxBytesLocalHeap="20m"
    timeToLiveSeconds="43200">
    </cache>
    
