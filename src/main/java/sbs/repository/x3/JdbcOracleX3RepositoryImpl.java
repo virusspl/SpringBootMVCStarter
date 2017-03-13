@@ -366,7 +366,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		
         for(Map<String,Object> row: resultSet ){
         	item = new X3BomItem();
-        	item.setSequence(""+row.get("BOMSEQ_0"));
+        	item.setSequence(((BigDecimal)row.get("BOMSEQ_0")).intValue());
         	item.setPartCode((String)row.get("CPNITMREF_0"));
         	item.setPartDescription(((String)row.get("ITMDES1_0")) + " " +  ((String)row.get("ITMDES2_0")));
         	item.setModelUnit((String)row.get("BOMUOM_0"));

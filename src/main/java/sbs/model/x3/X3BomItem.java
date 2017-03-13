@@ -1,7 +1,7 @@
 package sbs.model.x3;
 
 public class X3BomItem {
-	private String sequence;
+	private int sequence;
 	private String partCode;
 	private String partDescription;
 	private String modelUnit;
@@ -11,11 +11,11 @@ public class X3BomItem {
 
 	}
 
-	public String getSequence() {
+	public int getSequence() {
 		return sequence;
 	}
 
-	public void setSequence(String sequence) {
+	public void setSequence(int sequence) {
 		this.sequence = sequence;
 	}
 

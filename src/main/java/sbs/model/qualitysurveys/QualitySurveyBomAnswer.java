@@ -24,7 +24,7 @@ public class QualitySurveyBomAnswer implements Comparable<QualitySurveyBomAnswer
 	private int id;
 
 	@Column(name = "qsba_seq", length = 10, nullable=false)
-	private String sequence;
+	private int sequence;
 
 	@Column(name = "qsba_part_code", length = 25, nullable=false)
 	private String partCode;
@@ -61,11 +61,11 @@ public class QualitySurveyBomAnswer implements Comparable<QualitySurveyBomAnswer
 		this.id = id;
 	}
 
-	public String getSequence() {
+	public int getSequence() {
 		return sequence;
 	}
 
-	public void setSequence(String sequence) {
+	public void setSequence(int sequence) {
 		this.sequence = sequence;
 	}
 
@@ -117,7 +117,7 @@ public class QualitySurveyBomAnswer implements Comparable<QualitySurveyBomAnswer
 
 	@Override
 	public int compareTo(QualitySurveyBomAnswer o) {
-		return this.sequence.compareTo(o.sequence);
+		return new Integer(this.getSequence()).compareTo(o.sequence);
 	}
 
 }

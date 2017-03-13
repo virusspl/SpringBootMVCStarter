@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import sbs.model.x3.X3BomItem;
 
 public class BomSurveyFormItem {
-	private String sequence;
+	private int sequence;
 	private String partCode;
 	private String partDescription;
 	private String modelUnit;
@@ -29,11 +29,11 @@ public class BomSurveyFormItem {
 		this.modelQuantity = bomItem.getModelQuantity();
 	}
 
-	public String getSequence() {
+	public int getSequence() {
 		return sequence;
 	}
 
-	public void setSequence(String sequence) {
+	public void setSequence(int sequence) {
 		this.sequence = sequence;
 	}
 
