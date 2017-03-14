@@ -256,12 +256,6 @@ public class VariousPagesController {
 		
 		if(parametersService.findAll().size()==0){
 			QualitySurveyParameter param;
-			param = new QualitySurveyParameter();
-			param.setActive(true);
-			param.setTitle("Roztaw osi");
-			param.setType(QualitySurveyParameter.PARAMETER_TEXT);
-			parametersService.save(param);
-			msg += "[qs_param: " + param.getTitle() + "], ";
 			
 			param =  new QualitySurveyParameter();
 			param.setActive(true);
@@ -280,6 +274,20 @@ public class VariousPagesController {
 			param =  new QualitySurveyParameter();
 			param.setActive(true);
 			param.setTitle("Podać roztaw wspornikówi");
+			param.setType(QualitySurveyParameter.PARAMETER_TEXT);
+			parametersService.save(param);
+			msg += "[qs_param: " + param.getTitle() + "], ";
+			
+			param =  new QualitySurveyParameter();
+			param.setActive(true);
+			param.setTitle("Podać średnicę szczęk po przetaczaniu");
+			param.setType(QualitySurveyParameter.PARAMETER_TEXT);
+			parametersService.save(param);
+			msg += "[qs_param: " + param.getTitle() + "], ";
+			
+			param =  new QualitySurveyParameter();
+			param.setActive(true);
+			param.setTitle("Podać moment skrętu osi (skrętnej)");
 			param.setType(QualitySurveyParameter.PARAMETER_TEXT);
 			parametersService.save(param);
 			msg += "[qs_param: " + param.getTitle() + "], ";
@@ -322,6 +330,20 @@ public class VariousPagesController {
 			param =  new QualitySurveyParameter();
 			param.setActive(true);
 			param.setTitle("Zgodność Konfiguracji osi z Rysunkiem technicznym");
+			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
+			parametersService.save(param);
+			msg += "[qs_param: " + param.getTitle() + "], ";
+
+			param =  new QualitySurveyParameter();
+			param.setActive(true);
+			param.setTitle("Sprawdzić zbieżność");
+			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
+			parametersService.save(param);
+			msg += "[qs_param: " + param.getTitle() + "], ";
+			
+			param =  new QualitySurveyParameter();
+			param.setActive(true);
+			param.setTitle("Smarowanie zgodnie z instrukcją/kartą");
 			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
 			parametersService.save(param);
 			msg += "[qs_param: " + param.getTitle() + "], ";

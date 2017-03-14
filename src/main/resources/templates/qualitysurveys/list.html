@@ -71,6 +71,7 @@
 								<th th:text="#{quality.surveys.product.code}">head</th>
 								<th th:text="#{quality.surveys.client.code}">head</th>
 								<th th:text="#{quality.surveys.client.name}">head</th>
+								<th th:text="#{quality.surveys.sales.order}">head</th>
 								<th th:text="#{quality.surveys.production.order}">head</th>
 								<th th:text="#{quality.surveys.type}">head</th>
 								<th th:text="#{quality.surveys.login.user}">head</th>
@@ -84,6 +85,7 @@
 								<th th:text="#{quality.surveys.product.code}">head</th>
 								<th th:text="#{quality.surveys.client.code}">head</th>
 								<th th:text="#{quality.surveys.client.name}">head</th>
+								<th th:text="#{quality.surveys.sales.order}">head</th>
 								<th th:text="#{quality.surveys.production.order}">head</th>
 								<th th:text="#{quality.surveys.type}">head</th>								
 								<th th:text="#{quality.surveys.login.user}">head</th>
@@ -100,6 +102,7 @@
 								<td><span th:text="${survey.productCode}"></span></td>
 								<td><span th:text="${survey.clientCode}"></span></td>
 								<td><span th:text="${#strings.abbreviate(survey.clientName,18)}"></span></td>
+								<td><span th:text="${survey.salesOrder}"></span></td>
 								<td><span th:text="${survey.productionOrder}"></span></td>
 								<td><span th:text="${survey.type}"></span></td>
 								<td><span th:text="${survey.user.username}"></span></td>
