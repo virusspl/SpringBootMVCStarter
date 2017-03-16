@@ -1,52 +1,3 @@
-var stompClient = null;
-
-function setConnected(connected) {
-	$("#connect").prop("disabled", connected);
-    $("#disconnect").prop("disabled", !connected);
-    if (connected) {
-    	$("#messages").html("");
-    }
-    else {
-    	$("#messages").html("<p>...</p>");
-    }
-    $("#users").html("");
-}
-
-function wsURL(path) {
-    var protocol = (location.protocol === 'https:') ? 'wss://' : 'ws://';
-    var url = protocol + location.host;
-    if(location.hostname === 'localhost') {
-        url += '/' + location.pathname.split('/')[1]; // add context path
-    }
-    return url + path;
-}
-
-
-function connect() {
-	//var path = wsURL('/chat-websocket');
-	var socket = new SockJS('/chat-websocket');
-	stompClient = Stomp.over(socket);
-    stompClient.connect(document.getElementById("name").value,"", function (frame) {
-        setConnected(true);
-        stompClient.subscribe('/topic/messages', function (msg) {
-            showMessage(JSON.parse(msg.body).sender, JSON.parse(msg.body).content);
-        });
-        stompClient.subscribe('/user/topic/priv', function (msg) {
-            showPrivMessage(JSON.parse(msg.body).sender, JSON.parse(msg.body).content);
-        });
-        stompClient.subscribe('/topic/users', function (users) {
-            showUsers(JSON.parse(users.body).users);
-        });
-        stompClient.subscribe('/user/topic/ping', function (msg) {
-        	pong();
-        });
-        stompClient.send("/app/login", {}, "" );
-        pong();
-        
-    });
-   
-}
-
 function pong() {
 	stompClient.send("/app/pong", {}, "" );
 }
@@ -81,22 +32,22 @@ function sendMessage() {
 
 function showMessage(sender, message) {
 	var date = new Date(Date.now()).toLocaleString();
-		$("#messages").append(
+		$("#log").append(
 				"<div class='row'  style='border-bottom: 1px solid #DDDDDD;'><div class='col s1'><img src='/useravatar/" + sender + "' style='width: 35px; height: 35px;'  class='circle'/></div><div class='col s11 orange-text text-darken-3'><b>" +
 				sender + "</b></div><div class='col s11 grey-text text-darken-0'>" + date + "</div><div class='col s12'>" +
 				message + "</div></div>"
 				);
-		$("#messages").animate({scrollTop : $('#messages').prop("scrollHeight")}, 500);
+		$("#log").animate({scrollTop : $('#log').prop("scrollHeight")}, 500);
 }
 
 function showPrivMessage(sender, message) {
 	var date = new Date(Date.now()).toLocaleString();
-	$("#messages").append(
+	$("#log").append(
 			"<div class='row'  style='border-bottom: 1px solid #DDDDDD;'><div class='col s1'><img src='/useravatar/" + sender + "' style='width: 35px; height: 35px;' class='circle'/></div><div class='col s11 orange-text text-darken-3'><b>" +
 			sender + "</b></div><div class='col s11 grey-text text-darken-0'>" + date + "</div><div class='col s12 cyan lighten-4'><b><i>" +
 			message + "</i></b></div></div>"
 			);
-	$("#messages").animate({scrollTop : $('#messages').prop("scrollHeight")}, 500);
+	$("#log").animate({scrollTop : $('#log').prop("scrollHeight")}, 500);
 }
 
 function showUsers(users) {
@@ -125,7 +76,7 @@ $(function () {
 $('#toggle_fullscreen').on('click', function(){
 
 	  element = $('#fullscreen').get(0);
-	  messages = $('#messages').get(0);
+	  messages = $('#log').get(0);
 	  if (
 	    document.fullscreenElement ||
 	    document.webkitFullscreenElement ||
@@ -156,15 +107,7 @@ $('#toggle_fullscreen').on('click', function(){
 
 
 $(document).ready(function() {
-  $(window).on('resize', function(){
-	  if ((!document.mozFullScreen && !document.webkitIsFullScreen)) {
-		  document.getElementById( "messages" ).style.height = "51vh";
-		} else {
-			document.getElementById( "messages" ).style.height = "92vh";
-		}
-	  
-	  
-  });
+	connect();
 });
 
 	

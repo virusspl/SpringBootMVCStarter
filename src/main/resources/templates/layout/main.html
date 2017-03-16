@@ -85,17 +85,36 @@
 	<!--=================================== CONTENT ===============================-->
 	<div class="container">
 	<!-- POPUPS -->
-				<div class="row"><div class="col-xs-12 text-center">	
+		<div class="row">
+			<div class="col-xs-12 text-center">
+				<!-- NO SCRIPT WARNING -->
+				<noscript>
+					<div id="errorMessage" class="alert alert-warning">
+						<span th:text="#{error.javascript.not.enabled}">error</span>
+					</div>
+				</noscript>
+				<!-- /NO SCRIPT WARNING -->
+				<!-- LIVE FEED -->
+				<div id="liveContainer">
+					<div id="live" class="alert alert-info" th:if="${live}">
+						<span th:text="${error}">error</span>
+					</div>
+				</div>
+				<!-- /LIVE FEED -->
+				<!-- ERROR -->
 				<div id="errorMessage" class="alert alert-danger" th:if="${error}">
 					<span th:text="${error}">error</span>
 				</div>
+				<!-- /ERROR -->
+				<!-- MESSAGE -->
 				<div class="alert alert-success alert-dismissable" th:if="${msg}">
-  					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-  					<span th:text="${msg}">ok message</span>
+					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+					<span th:text="${msg}">ok message</span>
 				</div>
-				</div>
-				</div>
-				<!-- /POPUPS -->
+				<!-- /MESSAGE -->
+			</div>
+		</div>
+		<!-- /POPUPS -->
 				<section layout:fragment="content">
 					<p>page content</p>
 				</section>
@@ -121,6 +140,10 @@
     <script th:src="@{/js/tooltip.js}" type="text/javascript"></script>
 	<!-- PREVENT DEFAULT -->
     <script th:src="@{/js/preventDefault.js}" type="text/javascript"></script>
+	<!-- MESSAGING -->
+	<script th:src="@{/js/messaging/sockjs.min.js}" type="text/javascript"></script>
+	<script th:src="@{/js/messaging/stomp.min.js}" type="text/javascript"></script>
+	<script th:src="@{/js/messaging/messaging.js}" type="text/javascript"></script>
 	<!-- ALL SPECIFIC SCRIPTS FROM CHILD VIEWS -->
 	<script type="text/javascript" layout:fragment="script">
 	</script>

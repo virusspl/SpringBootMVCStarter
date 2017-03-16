@@ -229,4 +229,13 @@ public class UserController {
 		return "redirect:/users/edit/" + user.getId();
 	}
 	
+	@RequestMapping("/monitor")
+	@Transactional
+	public String showMonitor(Model model) {
+		
+		model.addAttribute("activeUsers", userService.getLoggedInUsers());
+		
+		return "users/monitor";
+	}
+	
 }

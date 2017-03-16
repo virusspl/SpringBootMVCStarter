@@ -1,6 +1,5 @@
 package sbs.controller.various;
 
-import java.util.List;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,11 +7,11 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import sbs.model.qualitysurveys.QualitySurveyParameter;
 import sbs.model.users.Role;
 import sbs.model.users.User;
-import sbs.model.x3.X3BomItem;
 import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.optima.JdbcAdrOptimaService;
 import sbs.service.qualitysurveys.QualitySurveyParametersService;
@@ -45,16 +44,23 @@ public class VariousPagesController {
 	public String noAccess() {
 		return "various/noaccess";
 	}
+	
+	@RequestMapping("/expired")
+	public String expired(RedirectAttributes redirectAttributes, Locale locale) {
+		redirectAttributes.addFlashAttribute("error", messageSource.getMessage("session.expired", null, locale));
+		return "redirect:/login";
+	}
 
 	@RequestMapping("/underconstruction")
 	public String underConstruction() {
 		return "various/construction";
 	}
 
-	@RequestMapping("/jdbc")
+	@RequestMapping("/test")
 	public String jdbc(Model model) {
-		
-		
+		System.out.println("DA LIST");
+		System.out.println(userService.getLoggedInUsers().size());
+		System.out.println(userService.getLoggedInUsers());
 		
 		//X3Client result = jdbcOracleX3Service.findClientByCode("ATW", "cad40");
 		//X3SalesOrder result = jdbcOracleX3Service.findSalesOrderByNumber("ATW", "yza140099");
@@ -62,8 +68,8 @@ public class VariousPagesController {
 		//X3ProductionOrderDetails result = jdbcOracleX3Service.getProductionOrderInfoByNumber("ATW", "X31121400099455");
 		//System.out.println(result);
 		
-		List<X3BomItem> list = jdbcOracleX3Service.findBomPartsByParent("ATW", "431S1001");
-		model.addAttribute("list", list);
+		//List<X3BomItem> list = jdbcOracleX3Service.findBomPartsByParent("ATW", "431S1001");
+		//model.addAttribute("list", list);
 		
 		/*
 		// CREATE DEMO SURVEY

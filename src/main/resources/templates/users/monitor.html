@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script">
+
+	</div>
+	<div layout:fragment="content">
+			<div class="row">
+			<div class="col-xs-12 col-xs-offset-0">
+				<h2 th:text="#{users.monitor.title}" class="text-primary">Hello
+					on a page</h2>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-20">
+				<span th:text="#{users.monitor.message}">
+					Welcome message </span>
+			</div>
+		</div>
+		<div class="row margin-top-10">
+			<div class="col-xs-12">
+				<a th:href="@{/}" class="btn btn-link btn-sm">
+					<span class="glyphicon glyphicon-menu-left"></span> <span
+					th:text="#{action.back}">back</span>
+				</a>
+			</div>
+		</div>
+		
+		<div class="row margin-top-10">
+			<div class="col-xs-9">
+			<ul>
+				
+			</ul>
+			</div>
+			<div class="col-xs-3">
+					<div>
+						<input autocomplete="off" type="text" id="message"
+							th:placeholder="#{chat.your.message}"
+							style="border-bottom: 1px solid #BDBDBD;" />
+					</div>
+			</div>
+		</div>
+		<!-- /CONTENT -->
+	</div>
+</body>
+</html>

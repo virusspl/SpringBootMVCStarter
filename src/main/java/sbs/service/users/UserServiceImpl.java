@@ -1,5 +1,6 @@
 package sbs.service.users;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Hibernate;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,11 +22,16 @@ import sbs.service.GenericServiceAdapter;
 public class UserServiceImpl extends GenericServiceAdapter<User, Long> implements UserService{
 
     private UserRepository userRepository;
+    private SessionRegistry sessionRegistry;
     
     @Autowired
-	public UserServiceImpl(@Qualifier("userRepositoryImpl") GenericRepository<User, Long> genericRepository) {
+	public UserServiceImpl(
+			@Qualifier("userRepositoryImpl") GenericRepository<User, Long> genericRepository,
+			SessionRegistry sessionRegistry
+			) {
 			super(genericRepository);
 			this.userRepository = (UserRepository) genericRepository;
+			this.sessionRegistry = sessionRegistry;
 	}
 	
     @Override
@@ -84,4 +91,26 @@ public class UserServiceImpl extends GenericServiceAdapter<User, Long> implement
 		}
 		return null;
 		}
+
+	@Override
+	@Transactional
+	public List<User> getLoggedInUsers() {
+
+		List<Object> allPrincipals = sessionRegistry.getAllPrincipals();
+		List<User> list = new ArrayList<>();
+		User modelUser;
+		
+	        for(Object principal : allPrincipals) {
+	            if(principal instanceof org.springframework.security.core.userdetails.User) {
+	            	org.springframework.security.core.userdetails.User user = 
+	            			(org.springframework.security.core.userdetails.User)principal;
+	    			modelUser = findByUsername(user.getUsername());
+	            	
+	    			if(modelUser!=null){
+	    				list.add(modelUser);
+	    			}
+	            }
+	        }
+	        return list;
+	}
 }
