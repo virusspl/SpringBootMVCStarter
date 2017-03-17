@@ -29,23 +29,17 @@ function setConnected(connected) {
 function connect() {
 	var socket = new SockJS(wsUrl('sbs-websocket'));
 	stompClient = Stomp.over(socket);
-    stompClient.connect("User","", function (frame) {
+    stompClient.connect("user","user", function (frame) {
         stompClient.subscribe('/topic/messages', function (msg) {
             showMessage(JSON.parse(msg.body).sender, JSON.parse(msg.body).content);
         });
-        stompClient.subscribe('/user/topic/priv', function (msg) {
-            showPrivMessage(JSON.parse(msg.body).sender, JSON.parse(msg.body).content);
+        stompClient.subscribe('/topic/cancelMessage', function () {
+        	cancelMessages();
         });
         stompClient.send("/app/connect", {}, "" );
         setConnected(true);
     });
 }
-
-$("#message").on('keyup', function (e) {
-    if (e.keyCode == 13) {
-        sendMessage();
-    }
-});
 
 function sendMessage() {
 	if (document.getElementById("message").value.length==0){
@@ -66,9 +60,18 @@ function showMessage(sender, message) {
 						);
 }
 
-function showPrivMessage(sender, message) {
-	// todo
+function requestCancelMessage() {
+	stompClient.send("/app/removemessage", {}, "remove");
 }
 
+function cancelMessages() {
+	$("#liveContainer").html("")
+}
 
-	
+/*
+$("#message").on('keyup', function (e) {
+    if (e.keyCode == 13) {
+        sendMessage();
+    }
+});
+*/

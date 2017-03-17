@@ -10,37 +10,53 @@
 
 	</div>
 	<div layout:fragment="content">
-			<div class="row">
+		<div class="row">
 			<div class="col-xs-12 col-xs-offset-0">
 				<h2 th:text="#{users.monitor.title}" class="text-primary">Hello
 					on a page</h2>
 			</div>
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-20">
-				<span th:text="#{users.monitor.message}">
-					Welcome message </span>
+				<span th:text="#{users.monitor.message}"> Welcome message </span>
 			</div>
 		</div>
 		<div class="row margin-top-10">
 			<div class="col-xs-12">
-				<a th:href="@{/}" class="btn btn-link btn-sm">
-					<span class="glyphicon glyphicon-menu-left"></span> <span
+				<a th:href="@{/}" class="btn btn-link btn-sm"> <span
+					class="glyphicon glyphicon-menu-left"></span> <span
 					th:text="#{action.back}">back</span>
 				</a>
 			</div>
 		</div>
-		
 		<div class="row margin-top-10">
-			<div class="col-xs-9">
-			<ul>
-				
-			</ul>
+			<div class="col-xs-6">
+				<h3 class="text-primary"  th:text="#{users.monitor.active.users}">acrtive users</h3>
 			</div>
-			<div class="col-xs-3">
-					<div>
-						<input autocomplete="off" type="text" id="message"
-							th:placeholder="#{chat.your.message}"
-							style="border-bottom: 1px solid #BDBDBD;" />
-					</div>
+			<div class="col-xs-6">
+				<h3 class="text-primary" th:text="#{users.monitor.send.alert}">send alert</h3>
+			</div>
+
+			<div class="col-xs-6">
+				<ul>
+					<li th:each="user: ${activeUsers}">
+					<h4 th:text="${user.username}"></h4>
+						<ul style="margin: 0px; padding: 0px;">
+								<li style="display: inline;" th:each="role : ${user.roles}">
+									<span th:text="${role.name}" 
+									th:class="${role.name == 'ROLE_ADMIN'}? 'btn btn-danger btn-xs margin-bottom-5' : 'btn btn-info btn-xs margin-bottom-5'"
+									></span>
+								</li>
+								</ul>
+					</li>
+				</ul>
+			</div>
+			<div class="col-xs-6">
+				<input class="form-control" autocomplete="off" type="text"
+					id="message" th:placeholder="#{users.monitor.content}" />
+					
+				<span class="btn btn-primary margin-top-10" th:text="#{action.add}"
+				onclick="sendMessage()">add</span>
+				<span class="btn btn-info margin-top-10" th:text="#{action.remove}"
+				onclick="requestCancelMessage()">remove</span>
 			</div>
 		</div>
 		<!-- /CONTENT -->

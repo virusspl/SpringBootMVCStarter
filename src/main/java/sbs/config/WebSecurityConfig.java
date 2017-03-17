@@ -43,6 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/bootstrap/**",
 				"/selectize/**",
 				"/datatables/**",
+				"/sbs-websocket/**",
 				"/css/**",
 				"/images/**",
 				"/js/**",
