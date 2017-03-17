@@ -3,12 +3,14 @@ package sbs.service.users;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,22 +96,26 @@ public class UserServiceImpl extends GenericServiceAdapter<User, Long> implement
 
 	@Override
 	@Transactional
-	public List<User> getLoggedInUsers() {
+	public List<UserSingleSessionInfo> getSessionsInfo() {
 
-		List<Object> allPrincipals = sessionRegistry.getAllPrincipals();
-		List<User> list = new ArrayList<>();
+		List<UserSingleSessionInfo> list = new ArrayList<>();
+		UserSingleSessionInfo single;
 		User modelUser;
-		
-	        for(Object principal : allPrincipals) {
-	            if(principal instanceof org.springframework.security.core.userdetails.User) {
-	            	org.springframework.security.core.userdetails.User user = 
-	            			(org.springframework.security.core.userdetails.User)principal;
-	    			modelUser = findByUsername(user.getUsername());
-	            	
-	    			if(modelUser!=null){
-	    				list.add(modelUser);
-	    			}
+		    	
+	        for(Object principal : sessionRegistry.getAllPrincipals()) {
+	            if(!(principal instanceof org.springframework.security.core.userdetails.User)) {
+	            	continue;
 	            }
+	            org.springframework.security.core.userdetails.User user = 
+            			(org.springframework.security.core.userdetails.User)principal;
+    			modelUser = findByUsername(user.getUsername());
+    			if (modelUser!=null){
+    				for(SessionInformation singlesession : sessionRegistry.getAllSessions(principal, true)){
+    					single = new UserSingleSessionInfo(modelUser, singlesession);
+    					list.add(single);
+    	            }
+    				
+    			}
 	        }
 	        return list;
 	}

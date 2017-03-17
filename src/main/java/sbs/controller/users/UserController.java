@@ -233,7 +233,7 @@ public class UserController {
 	@Transactional
 	public String showMonitor(Model model) {
 		
-		model.addAttribute("activeUsers", userService.getLoggedInUsers());
+		model.addAttribute("sessions", userService.getSessionsInfo());
 		
 		return "users/monitor";
 	}

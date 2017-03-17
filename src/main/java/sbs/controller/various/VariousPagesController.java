@@ -58,9 +58,7 @@ public class VariousPagesController {
 
 	@RequestMapping("/test")
 	public String jdbc(Model model) {
-		System.out.println("DA LIST");
-		System.out.println(userService.getLoggedInUsers().size());
-		System.out.println(userService.getLoggedInUsers());
+
 		
 		//X3Client result = jdbcOracleX3Service.findClientByCode("ATW", "cad40");
 		//X3SalesOrder result = jdbcOracleX3Service.findSalesOrderByNumber("ATW", "yza140099");
