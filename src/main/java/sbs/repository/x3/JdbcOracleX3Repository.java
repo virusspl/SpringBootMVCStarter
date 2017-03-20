@@ -2,6 +2,7 @@ package sbs.repository.x3;
 // http://www.codesenior.com/en/tutorial/Spring-Generic-DAO-and-Generic-Service-Implementation
 import java.util.List;
 
+import sbs.model.wpslook.WpslookRow;
 import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3Product;
@@ -21,6 +22,7 @@ public interface JdbcOracleX3Repository  {
 	public X3SalesOrder findSalesOrderByNumber(String company, String number);
 	public X3ProductionOrderDetails getProductionOrderInfoByNumber(String company, String number);
 	public List<X3BomItem> findBomPartsByParent(String company, String productCode);
+	public List<WpslookRow> findLocationsOfProduct(String company, String code);
 	
 	
 }

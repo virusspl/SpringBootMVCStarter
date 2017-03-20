@@ -94,6 +94,18 @@
 					th:text="#{geolook.warehouses.lookup}">GEODE Lookup</span>
 				</a>
 			</div>
+			<!-- WAREHOUSE WPS -->
+			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
+				<h3 class="text-info" th:text="#{department.wps.warehouses}">Panel
+					With title</h3>
+			</div>
+			<div class="col-xs-12 margin-top-10">
+				<a th:href="@{/wpslook/search}"
+					class="btn btn-info btn-md margin-top-5"> <span
+					class="glyphicon glyphicon-search"></span> <span
+					th:text="#{wpslook.warehouses.lookup}">WPS Lookup</span>
+				</a>
+			</div>
 		</div>
 	</div>
 </body>

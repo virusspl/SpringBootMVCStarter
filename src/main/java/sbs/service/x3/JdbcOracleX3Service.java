@@ -21,4 +21,5 @@ public interface JdbcOracleX3Service {
 	public X3SalesOrder findSalesOrderByNumber(String company, String number);
 	public X3ProductionOrderDetails getProductionOrderInfoByNumber(String company, String number);
 	public List<X3BomItem> findBomPartsByParent(String company, String productCode);
+	public Object findLocationsOfProduct(String company, String code);
 }

@@ -54,13 +54,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/contact/**",
 				"/users/showcurrent",
 				"/nameplates/list",
-				"/geolook/**"
+				"/geolook/**",
+				"/wpslook/**"
 				)
 		.permitAll()
 		.antMatchers(
-				"/qualitysurveys/create",
-				"/qualitysurveys/list",
-				"/qualitysurveys/view"
+				"/qualitysurveys/**"
 				)
 		.hasAnyRole(
 				"ADMIN",

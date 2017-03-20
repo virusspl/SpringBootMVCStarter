@@ -2,7 +2,11 @@ package sbs.repository.x3;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +16,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import sbs.helpers.DateHelper;
+import sbs.model.wpslook.WpslookRow;
 import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3Product;
@@ -382,5 +387,51 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		return result;
 	}
 
+	@Override
+	public List<WpslookRow> findLocationsOfProduct(String company, String code) {
+		try {
+			String query = "SELECT " + company + ".STOCK.STOCOU_0, " + company + ".STOCK.ITMREF_0, " + company
+					+ ".STOCK.LOC_0, " + company + ".STOCK.QTYSTU_0, " + company + ".STOCK.PCU_0, " + company
+					+ ".STOCK.LASRCPDAT_0, " + company + ".STOCK.LASISSDAT_0 " + "FROM " + company + ".STOCK "
+					+ "WHERE " + company + ".STOCK.ITMREF_0 = ? ";
+
+			List<WpslookRow> result = new ArrayList<>();
+			WpslookRow item = null;
+			Timestamp tmp, date1900;
+			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			Date date;
+
+			date = dateFormat.parse("01/01/1900");
+			long time = date.getTime();
+			date1900 = new Timestamp(time);
+
+			for (Map<String, Object> row : jdbc.queryForList(query, new Object[] { code.toUpperCase() })) {
+				item = new WpslookRow();
+				item.setChronoNumber((BigDecimal) row.get("STOCOU_0"));
+				item.setProduct((String) row.get("ITMREF_0"));
+				item.setAddress((String) row.get("LOC_0"));
+				item.setQuantity((BigDecimal) row.get("QTYSTU_0"));
+				item.setUnit((String) row.get("PCU_0"));
+				tmp = (Timestamp) row.get("LASRCPDAT_0");
+				if(tmp.before(date1900)){
+					item.setLastInputDate(null);
+				}
+				else{
+					item.setLastInputDate(tmp);
+				}
+				tmp = (Timestamp) row.get("LASISSDAT_0");
+				if(tmp.before(date1900)){
+					item.setLastOutputDate(null);
+				}
+				else{
+					item.setLastOutputDate(tmp);
+				}
+				result.add(item);
+			}
+			return result;
+		} catch (ParseException e) {
+			return null;
+		}
+	}
 
 }

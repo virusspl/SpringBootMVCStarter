@@ -11,22 +11,23 @@
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-xs-12 col-xs-offset-0">
-				<h2 th:text="#{geolook.title}" class="text-primary">Hello on a
+				<h2 th:text="#{wpslook.title}" class="text-primary">Hello on a
 					page</h2>
+				
 			</div>
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
-				<span th:text="#{geolook.message}"> Welcome message </span>
+				<span th:text="#{wpslook.message}"> Welcome message </span>
 			</div>
 		</div>
 
-		<form th:action="@{/geolook/search}" method="post"
-			th:object="${geodeSearchForm}">
+		<form th:action="@{/wpslook/search}" method="post"
+			th:object="${wpsSearchForm}">
 			<div class="row margin-top-20">
 				<div class="col-xs-4 col-sm-4">
 					<div class="form-group">
-						<label for="product" th:text="#{geolook.product}">Product</label>
+						<label for="product" th:text="#{wpslook.product}">Product</label>
 						<input type="text" class="form-control" id="product"
-							name="product" th:placeholder="#{geolook.product}"
+							name="product" th:placeholder="#{wpslook.product}"
 							th:field="*{product}" />
 						<div th:errors="*{product}"
 							class="alert alert-danger margin-top-5">error</div>
@@ -57,36 +58,50 @@
 				</div>
 			</div>
 			<!-- NOTHING FOUND -->
-			<div class="row margin-top-20" th:if="${#lists.isEmpty(geodeList)}">
+			<div class="row margin-top-20" th:if="${#lists.isEmpty(wpsList)}">
 			<div class="col-xs-12 col-xs-offset-0 alert alert-warning margin-top-5">
-				<span th:text="#{geolook.product.not.found.in.store}"></span>
+				<span th:text="#{wpslook.product.not.found.in.store}"></span>
 			</div>
 			</div>
 			<!-- LOCATIONS OF PRODUCT(S) -->
-			<div class="row margin-top-20" th:if="${!#lists.isEmpty(geodeList)}">
+			<div class="row margin-top-20" th:if="${!#lists.isEmpty(wpsList)}">
 				<div class="col-xs-12 col-xs-offset-0">
 					<div class="table-responsive">
 						<table class="table table-hover table-striped">
 							<thead>
 								<tr>
-									<th th:text="#{geolook.code}">cell title</th>
-									<th th:text="#{geolook.store}">cell title</th>
-									<th th:text="#{geolook.address}">cell title</th>
-									<th th:text="#{geolook.quantity}">cell title</th>
-									<th th:text="#{geolook.unit}">cell title</th>
-									<th th:text="#{geolook.input.date}">cell title</th>
-									<th th:text="#{geolook.object}">cell title</th>
+									<th th:text="#{wpslook.code}">cell title</th>
+									<th th:text="#{wpslook.address}">cell title</th>
+									<th th:text="#{wpslook.quantity}">cell title</th>
+									<th th:text="#{wpslook.unit}">cell title</th>
+									<!-- <th th:text="#{wpslook.last.input.date}">cell title</th>  -->
+									<!-- <th th:text="#{wpslook.last.output.date}">cell title</th>  -->
+									<th th:text="#{wpslook.chrono.number}">cell title</th>
 									
 								</tr>
 							</thead>
-							<tr th:each="obj : ${geodeList}">
+							<tr th:each="obj : ${wpsList}">							
 								<td style="padding: 5px;" th:text="${obj.product}"></td>
-								<td style="padding: 5px;" th:text="${obj.store}"></td>
 								<td style="padding: 5px;" th:text="${obj.address}"></td>
 								<td style="padding: 5px;" th:text="${obj.quantity}"></td>
 								<td style="padding: 5px;" th:text="${obj.unit}"></td>
-								<td style="padding: 5px;" th:text="${#dates.format(obj.inputDate, 'dd.MM.yyyy')}"></td>
-								<td style="padding: 5px;" th:text="${obj.object}"></td>
+								<!--
+								<td style="padding: 5px;" >
+								<span 
+									th:if="${obj.lastInputDate}" 
+									th:text="${#dates.format(obj.lastInputDate, 'dd.MM.yyyy')}">
+								</span>
+								</td>
+								 -->
+								 <!--
+								<td style="padding: 5px;" >
+								<span 
+									th:if="${obj.lastOutputDate}"
+									th:text="${#dates.format(obj.lastOutputDate, 'dd.MM.yyyy')}" >
+								</span>
+								</td>
+								-->
+								<td style="padding: 5px;" th:text="${obj.chronoNumber}"></td>
 							</tr>
 						</table>
 					</div>
