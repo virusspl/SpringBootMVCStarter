@@ -11,7 +11,7 @@
 
 body {
 	padding-top: 70px;
-	background: url("../images/background/abstract_02.jpg") no-repeat center center fixed; 
+	background: url("../images/background/abstract_08.jpg") no-repeat center center fixed; 
   	-webkit-background-size: cover;
   	-moz-background-size: cover;
   	-o-background-size: cover;
@@ -25,7 +25,7 @@ html {
 }
 
 .blend {
-	background: rgba(255, 255, 255, .5);
+	background: rgba(255, 255, 255, .4);
 	margin-top: -20px;
 	width: parent;
 	margin: 0 auto;
