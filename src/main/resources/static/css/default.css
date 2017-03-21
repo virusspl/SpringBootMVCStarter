@@ -11,11 +11,24 @@
 
 body {
 	padding-top: 70px;
+	background: url("../background/abstract_02.jpg") no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;	
 }
 
 html {
 	position: relative;
 	min-height: 100%;
+
+}
+
+.blend {
+	background: rgba(255, 255, 255, .8);
+	margin-top: -20px;
+	width: parent;
+	margin: 0 auto;
 }
 
 .footer {
