@@ -17,7 +17,6 @@
 </head>
 <body>
 	<!--=================================== NAVI =================================-->
-	
 	 <!-- Fixed navbar -->
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
@@ -29,7 +28,7 @@
             <span class="icon-bar"></span>
           </button>
        <img class="logo pull-left" th:src="@{/images/TinyADR.png}" alt="ADR Polska S.A. logo"/>
-          <a class="navbar-brand right" href="#">
+          <a class="navbar-brand right" th:href="@{/}">
          <span th:text="#{name.company}"></span></a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
