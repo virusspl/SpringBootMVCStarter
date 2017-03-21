@@ -16,9 +16,14 @@
 				<span th:text="#{quality.surveys.dispatch.message}"> Welcome
 					message </span>
 			</div>
+						<!-- BACK TO MAIN PAGE -->
+				<a th:href="@{/}" class="btn btn-link btn-sm"> <span
+					class="glyphicon glyphicon-menu-left"></span> <span
+					th:text="#{action.back}">back</span>
+				</a>
 		</div>
 		<!-- MODULES -->
-		<div class="row margin-top-20">
+		<div class="row">
 			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
 				<h3 class="text-primary" th:text="#{action.choose.action}">Panel With
 					title</h3>
@@ -32,15 +37,6 @@
 					th:href="@{/qualitysurveys/list}"> <span
 					class="glyphicon glyphicon-tasks" style="margin-right: 10px;"></span>
 					<span th:text="#{action.list}">list</span>
-				</a>
-			</div>
-		</div>
-		<div class="row margin-top-20">
-			<div class="col-xs-12">
-			<!-- BACK TO MAIN PAGE -->
-				<a th:href="@{/}" class="btn btn-link btn-sm"> <span
-					class="glyphicon glyphicon-menu-left"></span> <span
-					th:text="#{action.back}">back</span>
 				</a>
 			</div>
 		</div>
