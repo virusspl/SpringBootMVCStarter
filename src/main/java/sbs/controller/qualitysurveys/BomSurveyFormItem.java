@@ -28,6 +28,14 @@ public class BomSurveyFormItem {
 		this.modelUnit = bomItem.getModelUnit();
 		this.modelQuantity = bomItem.getModelQuantity();
 	}
+	
+	public BomSurveyFormItem(X3BomItem bomItem, int multiplier){
+		this.sequence = bomItem.getSequence();
+		this.partCode = bomItem.getPartCode();
+		this.partDescription = bomItem.getPartDescription();
+		this.modelUnit = bomItem.getModelUnit();
+		this.modelQuantity = bomItem.getModelQuantity()*multiplier;
+	}
 
 	public int getSequence() {
 		return sequence;

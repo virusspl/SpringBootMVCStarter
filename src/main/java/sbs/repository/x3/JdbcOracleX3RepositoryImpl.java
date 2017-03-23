@@ -294,6 +294,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				"SELECT " 
 				+ company + ".MFGITM.MFGNUM_0, "
 				+ company + ".MFGITM.ITMREF_0, "
+				+ company + ".MFGITM.EXTQTY_0, "
 				+ company + ".ITMMASTER.ITMDES1_0, "
 				+ company + ".ITMMASTER.ITMDES2_0, "
 				+ company + ".SORDER.SOHNUM_0, "
@@ -325,6 +326,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			order.setProductCode((String)row.get("ITMREF_0"));
 			order.setProductDescription(((String)row.get("ITMDES1_0")) + ((String)row.get("ITMDES2_0")));
 			order.setSalesOrderNumber((String)row.get("SOHNUM_0"));
+			order.setProducedQuantity(((BigDecimal)row.get("EXTQTY_0")).intValue());
 		}
 
 		return order;

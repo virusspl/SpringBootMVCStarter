@@ -77,6 +77,8 @@ public class QualitySurvey {
 	@Column(name = "qs_production_order", length = 20,  nullable = false)
 	private String productionOrder;
 
+	@Column(name = "qs_produced_quantity", length = 20,  nullable = false)
+	private int producedQuantity;
 	
 	@Column(name = "qs_client_code", length = 10, nullable = false)
 	private String clientCode;
@@ -239,6 +241,14 @@ public class QualitySurvey {
 
 	public void setBomAnswers(Set<QualitySurveyBomAnswer> bomAnswers) {
 		this.bomAnswers = bomAnswers;
+	}
+
+	public int getProducedQuantity() {
+		return producedQuantity;
+	}
+
+	public void setProducedQuantity(int producedQuantity) {
+		this.producedQuantity = producedQuantity;
 	}
 	
 	

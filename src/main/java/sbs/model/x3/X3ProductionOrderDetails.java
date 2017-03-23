@@ -8,6 +8,7 @@ public class X3ProductionOrderDetails {
 	private String salesOrderNumber;
 	private String clientCode;
 	private String clientName;
+	private int producedQuantity;
 	
 	public X3ProductionOrderDetails() {
 	
@@ -67,6 +68,16 @@ public class X3ProductionOrderDetails {
 				+ productCode + ", productDescription=" + productDescription + ", salesOrderNumber=" + salesOrderNumber
 				+ ", clientCode=" + clientCode + ", clientName=" + clientName + "]";
 	}
+
+	public int getProducedQuantity() {
+		return producedQuantity;
+	}
+
+	public void setProducedQuantity(int producedQuantity) {
+		this.producedQuantity = producedQuantity;
+	}
+
+
 	
 	
 

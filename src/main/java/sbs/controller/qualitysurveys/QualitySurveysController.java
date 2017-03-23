@@ -71,13 +71,6 @@ public class QualitySurveysController {
 		return sessionForm;
 	}
 
-	/*
-	 * TODO
-	 * @RequestMapping(value = "/list")
-	 * TODO
-	 * @RequestMapping(value = "/view")
-	 */
-
 	 @RequestMapping(value = "/list")
 	 @Transactional
 	 public String listAll(Model model){
@@ -99,6 +92,7 @@ public class QualitySurveysController {
 		if(survey == null){
 			throw new NotFoundException(messageSource.getMessage("quality.surveys.error.survey.not.found", null, locale));
 		}
+		System.out.println(survey.getId() + " =============== " + survey.getProducedQuantity());
 		model.addAttribute("surveyInfo",survey);
 		
 		if(survey.getType().equals(QualitySurvey.QUALITY_SURVEY_TYPE_BOM)){
@@ -182,6 +176,7 @@ public class QualitySurveysController {
 		sessionForm.setProductCode(details.getProductCode());
 		sessionForm.setProductDescription(details.getProductDescription());
 		sessionForm.setSalesOrder(details.getSalesOrderNumber());
+		sessionForm.setProducedQuantity(details.getProducedQuantity());
 
 		return "qualitysurveys/summarybeforestart";
 	}
@@ -211,10 +206,9 @@ public class QualitySurveysController {
 		BomSurveyForm bsf = new BomSurveyForm();
 
 		for (int i = 0; i < items.size(); i++) {
-			bsfi = new BomSurveyFormItem(items.get(i));
+			bsfi = new BomSurveyFormItem(items.get(i), sessionForm.getProducedQuantity());
 			bsf.getItems().add(bsfi);
 		}
-
 		model.addAttribute("bomSurveyForm", bsf);
 
 		return "qualitysurveys/bomsurvey";
@@ -261,6 +255,7 @@ public class QualitySurveysController {
 		survey.setOperatorLastName(sessionForm.getOperatorLastName());
 		survey.setOperatorId(sessionForm.getOperatorId());
 		survey.setOperatorRcpNo(sessionForm.getOperatorRcpNo());
+		survey.setProducedQuantity(sessionForm.getProducedQuantity());
 	}
 
 	@RequestMapping(value = "/create", params = { "finishParametersSurvey" }, method = RequestMethod.POST)

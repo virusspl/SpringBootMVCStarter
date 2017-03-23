@@ -1,5 +1,6 @@
 package sbs.controller.qualitysurveys;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.springframework.context.annotation.Scope;
@@ -47,6 +48,9 @@ public class QualitySurveySessionForm {
 	private String salesOrder;
 
 	private String type;
+	
+	@NotNull
+	private int producedQuantity;
 	
 	public String getOperatorId() {
 		return operatorId;
@@ -147,6 +151,18 @@ public class QualitySurveySessionForm {
 	public void setSalesOrder(String salesOrder) {
 		this.salesOrder = salesOrder;
 	}
+
+	
+	
+	public int getProducedQuantity() {
+		return producedQuantity;
+	}
+
+
+	public void setProducedQuantity(int producedQuantity) {
+		this.producedQuantity = producedQuantity;
+	}
+
 
 	public void copyOperatorInfo(QualitySurveySessionForm sessionForm) {
 		this.setOperatorId(sessionForm.getOperatorId());
