@@ -84,4 +84,13 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	public List<WpslookRow> findLocationsOfProduct(String company, String code) {
 		return jdbcOracleX3Repository.findLocationsOfProduct(company, code);
 	}
+
+	@Override
+	public List<X3BomItem> findProductionPartsByProductionOrderAndOperation(String company, String productionOrder,
+			int operationNumber) {
+		return jdbcOracleX3Repository.findProductionPartsByProductionOrderAndOperation(company, productionOrder, operationNumber);
+	}
+
+
+
 }

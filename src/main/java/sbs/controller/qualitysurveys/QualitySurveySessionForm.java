@@ -46,6 +46,8 @@ public class QualitySurveySessionForm {
 
 	@Size(min = 1, max = 250)
 	private String salesOrder;
+	
+	private int operationNumber;
 
 	private String type;
 	
@@ -182,6 +184,17 @@ public class QualitySurveySessionForm {
 	}
 
 
+	
+	public int getOperationNumber() {
+		return operationNumber;
+	}
+
+
+	public void setOperationNumber(int operationNumber) {
+		this.operationNumber = operationNumber;
+	}
+
+
 	@Override
 	public String toString() {
 		return "QualitySurveySessionForm [" +
@@ -211,6 +224,7 @@ public class QualitySurveySessionForm {
 				System.getProperty("line.separator") +
 				", type=" + type + "]";
 	}
+
 	
 
 	

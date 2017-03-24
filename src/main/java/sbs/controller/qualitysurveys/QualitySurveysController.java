@@ -158,13 +158,29 @@ public class QualitySurveysController {
 	@RequestMapping(value = "/create", params = { "summaryBeforeStart" }, method = RequestMethod.POST)
 	public String showSummary(@Valid ProductionOrderForm productionOrderForm, BindingResult bindingResult, Model model,
 			Locale locale) {
+		
+		String order, rawLine;
+		int operation;
+		
 
 		if (bindingResult.hasErrors()) {
 			return "qualitysurveys/surveydetails";
 		}
-
+		
+		rawLine = productionOrderForm.getNumber();
+		
+		if(rawLine.length()<=15){
+			bindingResult.rejectValue("number", "quality.surveys.combine.number.and.operation", "ERROR");
+			return "qualitysurveys/surveydetails";
+		}
+		
+		order = rawLine.substring(0, 15);
+		operation = Integer.parseInt((rawLine.substring(15, rawLine.length())));
+		check if operation exists?! :/
+		
 		X3ProductionOrderDetails details = x3Service.getProductionOrderInfoByNumber("ATW",
-				productionOrderForm.getNumber());
+				order);
+		
 		if (details == null) {
 			bindingResult.rejectValue("number", "production.order.info.not.found", "ERROR");
 			return "qualitysurveys/surveydetails";
@@ -177,6 +193,7 @@ public class QualitySurveysController {
 		sessionForm.setProductDescription(details.getProductDescription());
 		sessionForm.setSalesOrder(details.getSalesOrderNumber());
 		sessionForm.setProducedQuantity(details.getProducedQuantity());
+		sessionForm.setOperationNumber(operation);
 
 		return "qualitysurveys/summarybeforestart";
 	}
@@ -200,8 +217,10 @@ public class QualitySurveysController {
 	public String beginSuspensionSurvey(Model model, Locale locale) {
 
 		sessionForm.setType(QualitySurvey.QUALITY_SURVEY_TYPE_BOM);
-		List<X3BomItem> items = x3Service.findBomPartsByParent("ATW", sessionForm.getProductCode());
+		List<X3BomItem> items = x3Service.findProductionPartsByProductionOrderAndOperation("ATW", sessionForm.getProductionOrder(), sessionForm.getOperationNumber());
+		//List<X3BomItem> items = x3Service.findBomPartsByParent("ATW", sessionForm.getProductCode());
 
+		
 		BomSurveyFormItem bsfi;
 		BomSurveyForm bsf = new BomSurveyForm();
 
@@ -256,6 +275,7 @@ public class QualitySurveysController {
 		survey.setOperatorId(sessionForm.getOperatorId());
 		survey.setOperatorRcpNo(sessionForm.getOperatorRcpNo());
 		survey.setProducedQuantity(sessionForm.getProducedQuantity());
+		survey.setProductionOperation(sessionForm.getOperationNumber());
 	}
 
 	@RequestMapping(value = "/create", params = { "finishParametersSurvey" }, method = RequestMethod.POST)

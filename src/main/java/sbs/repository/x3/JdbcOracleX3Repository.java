@@ -23,6 +23,7 @@ public interface JdbcOracleX3Repository  {
 	public X3ProductionOrderDetails getProductionOrderInfoByNumber(String company, String number);
 	public List<X3BomItem> findBomPartsByParent(String company, String productCode);
 	public List<WpslookRow> findLocationsOfProduct(String company, String code);
+	public List<X3BomItem> findProductionPartsByProductionOrderAndOperation(String company, String productionOrder, int operationNumber);
 	
 	
 }

@@ -15,6 +15,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import sbs.controller.qualitysurveys.BY;
+import sbs.controller.qualitysurveys.FROM;
+import sbs.controller.qualitysurveys.JOIN;
 import sbs.helpers.DateHelper;
 import sbs.model.wpslook.WpslookRow;
 import sbs.model.x3.X3BomItem;
@@ -436,4 +439,48 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		}
 	}
 
+	@Override
+	public List<X3BomItem> findProductionPartsByProductionOrderAndOperation(String company, String productionOrder,
+			int operationNumber) {
+
+		Timestamp now = dateHelper.getCurrentTime();
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				TODO
+				"SELECT "
+				+ "ATW_MFGMAT.BOMSEQ_0, "
+				+ "ATW_MFGMAT.ITMREF_0, "
+				+ "ATW_ITMMASTER.ITMDES1_0, "
+				+ "ATW_ITMMASTER.ITMDES2_0, "
+				+ "ATW_MFGMAT.LIKQTY_0, "
+				+ "ATW_MFGMAT.STU_0 "
+				+ "FROM "
+				+ "ATW_MFGMAT INNER JOIN ATW_ITMMASTER "
+				+ "ON "
+				+ "ATW_MFGMAT.ITMREF_0 = ATW_ITMMASTER.ITMREF_0 "
+				+ "WHERE "
+				+ "ATW_MFGMAT.MFGNUM_0 = ? AND ATW_MFGMAT.BOMOPE_0 = ? "
+				+ "ORDER BY "
+				+ "ATW_MFGMAT.ITMREF_0",
+                new Object[]{productionOrder.toUpperCase(), operationNumber});
+        
+		List<X3BomItem> result = new ArrayList<>();
+		X3BomItem item = null;
+		
+        for(Map<String,Object> row: resultSet ){
+        	item = new X3BomItem();
+        	item.setSequence(((BigDecimal)row.get("BOMSEQ_0")).intValue());
+        	item.setPartCode((String)row.get("CPNITMREF_0"));
+        	item.setPartDescription(((String)row.get("ITMDES1_0")) + " " +  ((String)row.get("ITMDES2_0")));
+        	item.setModelUnit((String)row.get("BOMUOM_0"));
+        	item.setModelQuantity(((BigDecimal)row.get("LIKQTY_0")).doubleValue());
+        	
+        	System.out.println(item);
+        	
+        	//item.setDescription(((String)row.get("ITMDES1_0")) + " " +  ((String)row.get("ITMDES2_0")));
+        	//item.setCategory((String)row.get("TCLCOD_0"));
+        	result.add(item);
+        }
+		
+		return result;
+	}
 }

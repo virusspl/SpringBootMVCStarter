@@ -93,18 +93,19 @@
 		</div>
 		<div class="row">
 			<div class="col-xs-12">
-				<h3 th:text="#{quality.surveys.production.order}"
+				<h3 th:text="#{quality.surveys.production.order.and.operation}"
 					class="text-primary underline"></h3>
 				<form th:action="@{/qualitysurveys/create}" method="post"
 						th:object="${productionOrderForm}">
 				<div class="col-xs-5">
-						<div class="form-group">
+				<span th:text="#{quality.surveys.combine.number.and.operation}"> enter number and operation</span>
+						<div class="form-group margin-top-10">
 							<div class="form-group">
 							<!--  autocomplete="off" ? -->
-								<label for="number"
-									th:text="#{quality.surveys.production.order}">number</label> <input
-									 type="text" class="form-control" id="number" name="number"
-									th:placeholder="#{quality.surveys.production.order}" />
+								<label for="number" 
+									th:text="#{quality.surveys.production.order.and.operation}">number</label> <input 
+									type="text" class="form-control" id="number" name="number"
+									th:placeholder="#{quality.surveys.production.order.and.operation}" />
 							</div>
 							<div th:errors="*{number}"
 								class="alert alert-danger margin-top-5">error</div>

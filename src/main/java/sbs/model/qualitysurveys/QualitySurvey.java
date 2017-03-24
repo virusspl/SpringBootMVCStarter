@@ -77,6 +77,9 @@ public class QualitySurvey {
 	@Column(name = "qs_production_order", length = 20,  nullable = false)
 	private String productionOrder;
 
+	@Column(name = "qs_production_operation", nullable = false)
+	private int productionOperation;
+
 	@Column(name = "qs_produced_quantity", length = 20,  nullable = false)
 	private int producedQuantity;
 	
@@ -249,6 +252,14 @@ public class QualitySurvey {
 
 	public void setProducedQuantity(int producedQuantity) {
 		this.producedQuantity = producedQuantity;
+	}
+
+	public int getProductionOperation() {
+		return productionOperation;
+	}
+
+	public void setProductionOperation(int productionOperation) {
+		this.productionOperation = productionOperation;
 	}
 	
 	
