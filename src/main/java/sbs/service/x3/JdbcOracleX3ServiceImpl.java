@@ -91,6 +91,11 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 		return jdbcOracleX3Repository.findProductionPartsByProductionOrderAndOperation(company, productionOrder, operationNumber);
 	}
 
+	@Override
+	public String getOperationDescriptionByProductionOrder(String company, String productionOrder, int operationNumber) {
+		return jdbcOracleX3Repository.getOperationDescriptionByProductionOrder(company, productionOrder, operationNumber);
+	}
+
 
 
 }

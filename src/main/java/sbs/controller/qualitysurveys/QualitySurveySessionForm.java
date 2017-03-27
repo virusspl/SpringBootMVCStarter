@@ -47,8 +47,12 @@ public class QualitySurveySessionForm {
 	@Size(min = 1, max = 250)
 	private String salesOrder;
 	
+	@NotNull
 	private int operationNumber;
 
+	private String operationDescription;
+	
+	
 	private String type;
 	
 	@NotNull
@@ -223,6 +227,16 @@ public class QualitySurveySessionForm {
 				", salesOrder=" + salesOrder +
 				System.getProperty("line.separator") +
 				", type=" + type + "]";
+	}
+
+
+	public String getOperationDescription() {
+		return operationDescription;
+	}
+
+
+	public void setOperationDescription(String operationDescription) {
+		this.operationDescription = operationDescription;
 	}
 
 	

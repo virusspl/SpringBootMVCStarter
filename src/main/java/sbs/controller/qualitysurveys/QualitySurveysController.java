@@ -159,7 +159,7 @@ public class QualitySurveysController {
 	public String showSummary(@Valid ProductionOrderForm productionOrderForm, BindingResult bindingResult, Model model,
 			Locale locale) {
 		
-		String order, rawLine;
+		String order, rawLine, operationDescription;
 		int operation;
 		
 
@@ -176,13 +176,17 @@ public class QualitySurveysController {
 		
 		order = rawLine.substring(0, 15);
 		operation = Integer.parseInt((rawLine.substring(15, rawLine.length())));
-		check if operation exists?! :/
-		
 		X3ProductionOrderDetails details = x3Service.getProductionOrderInfoByNumber("ATW",
 				order);
 		
 		if (details == null) {
 			bindingResult.rejectValue("number", "production.order.info.not.found", "ERROR");
+			return "qualitysurveys/surveydetails";
+		}
+
+		operationDescription = x3Service.getOperationDescriptionByProductionOrder("ATW", order, operation);
+		if (operationDescription == null) {
+			bindingResult.rejectValue("number", "production.operation.not.found",new Object[]{operation}, "ERROR");
 			return "qualitysurveys/surveydetails";
 		}
 
@@ -194,7 +198,7 @@ public class QualitySurveysController {
 		sessionForm.setSalesOrder(details.getSalesOrderNumber());
 		sessionForm.setProducedQuantity(details.getProducedQuantity());
 		sessionForm.setOperationNumber(operation);
-
+		sessionForm.setOperationDescription(operationDescription);
 		return "qualitysurveys/summarybeforestart";
 	}
 
@@ -414,11 +418,7 @@ public class QualitySurveysController {
 			try {
 				stringAnswer = bsi.getAnswerQuantity().trim().replace(',', '.');
 				answer = Double.valueOf(stringAnswer);
-				System.out.println("=====================================");
-				System.out.println(answer + " ?= " + bsi.getModelQuantity() );
-				System.out.println(Double.compare(answer, bsi.getModelQuantity()));
-				System.out.println("=====================================");
-
+				
 				// if wrong quantiy
 				if(Double.compare(answer, bsi.getModelQuantity())!=0){
 					bindingResult.rejectValue("items[" + i + "].answerQuantity", "quality.surveys.error.value.not.match.model",

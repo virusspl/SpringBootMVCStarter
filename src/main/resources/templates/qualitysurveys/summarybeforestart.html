@@ -100,9 +100,6 @@
 							class="text-primary underline"></h3>
 					</div>
 				</div>
-				<h1>
-				<strong th:text="${surveyInfo.operationNumber}"
-								class="text-primary">value</strong></h1>
 				<div class="col-xs-12">
 					<div class="row">
 						<div class="col-xs-4 col-md-3 col-lg-2">
@@ -110,6 +107,15 @@
 						</div>
 						<div class="col-xs-8 col-md-9 col-lg-10">
 							<strong th:text="${surveyInfo.productionOrder}"
+								class="text-primary">value</strong>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4 col-md-3 col-lg-2">
+							<span th:text="#{quality.surveys.operation.number}">param</span>
+						</div>
+						<div class="col-xs-8 col-md-9 col-lg-10">
+							<strong th:text="|${surveyInfo.operationNumber} (${surveyInfo.operationDescription})|"
 								class="text-primary">value</strong>
 						</div>
 					</div>
