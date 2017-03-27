@@ -92,7 +92,7 @@ public class QualitySurveysController {
 		if(survey == null){
 			throw new NotFoundException(messageSource.getMessage("quality.surveys.error.survey.not.found", null, locale));
 		}
-		System.out.println(survey.getId() + " =============== " + survey.getProducedQuantity());
+
 		model.addAttribute("surveyInfo",survey);
 		
 		if(survey.getType().equals(QualitySurvey.QUALITY_SURVEY_TYPE_BOM)){
