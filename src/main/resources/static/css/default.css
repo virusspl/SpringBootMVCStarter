@@ -31,6 +31,10 @@ html {
 	margin: 0 auto;
 }
 
+.table {
+	background: rgba(255, 255, 255, .6);
+}
+
 .footer {
 	position: absolute;
 	bottom: 0;
