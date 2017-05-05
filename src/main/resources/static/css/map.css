@@ -114,3 +114,9 @@
 #YL:hover ~ #imageArea {
   	background: url("../images/map/YL.png");
 }
+#YM:hover ~ #imageArea {
+  	background: url("../images/map/YM.png");
+}
+#YN:hover ~ #imageArea {
+  	background: url("../images/map/YN.png");
+}
