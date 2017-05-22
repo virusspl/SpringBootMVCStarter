@@ -1,5 +1,6 @@
 package sbs.controller.various;
 
+import java.util.List;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +10,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import sbs.model.bhptickets.BhpTicketState;
 import sbs.model.qualitysurveys.QualitySurveyParameter;
 import sbs.model.users.Role;
 import sbs.model.users.User;
+import sbs.model.x3.X3BomItem;
+import sbs.service.bhptickets.BhpTicketStateService;
+import sbs.service.bhptickets.BhpTicketsService;
 import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.optima.JdbcAdrOptimaService;
 import sbs.service.qualitysurveys.QualitySurveyParametersService;
@@ -39,7 +44,11 @@ public class VariousPagesController {
 	QualitySurveysService qualitySurveysService;
 	@Autowired
 	QualitySurveyParametersService parametersService;
-	
+	@Autowired
+	BhpTicketsService bhpTicketsService;
+	@Autowired
+	BhpTicketStateService bhpTicketStateService;
+
 	@RequestMapping("/noaccess")
 	public String noAccess() {
 		return "various/noaccess";
@@ -59,6 +68,8 @@ public class VariousPagesController {
 	@RequestMapping("/test")
 	public String jdbc(Model model) {
 
+		List<BhpTicketState> listb = bhpTicketStateService.findAll();
+		System.out.println(listb);
 		
 		//X3Client result = jdbcOracleX3Service.findClientByCode("ATW", "cad40");
 		//X3SalesOrder result = jdbcOracleX3Service.findSalesOrderByNumber("ATW", "yza140099");
@@ -66,8 +77,8 @@ public class VariousPagesController {
 		//X3ProductionOrderDetails result = jdbcOracleX3Service.getProductionOrderInfoByNumber("ATW", "X31121400099455");
 		//System.out.println(result);
 		
-		//List<X3BomItem> list = jdbcOracleX3Service.findBomPartsByParent("ATW", "431S1001");
-		//model.addAttribute("list", list);
+		///List<X3BomItem> list = jdbcOracleX3Service.findBomPartsByParent("ATW", "431S1001");
+		model.addAttribute("list", listb);
 		
 		/*
 		// CREATE DEMO SURVEY
@@ -351,7 +362,39 @@ public class VariousPagesController {
 			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
 			parametersService.save(param);
 			msg += "[qs_param: " + param.getTitle() + "], ";
+		}
+		
+		BhpTicketState bhpState;
+		if(bhpTicketStateService.findAll().size() == 0){
+			bhpState = new BhpTicketState();
+			bhpState.setOrder(10);
+			bhpState.setDescription("Nowy");
+			bhpTicketStateService.save(bhpState);
+			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
 			
+			bhpState = new BhpTicketState();
+			bhpState.setOrder(20);
+			bhpState.setDescription("Odczytany");
+			bhpTicketStateService.save(bhpState);
+			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
+			
+			bhpState = new BhpTicketState();
+			bhpState.setOrder(30);
+			bhpState.setDescription("Przekazany");
+			bhpTicketStateService.save(bhpState);
+			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
+			
+			bhpState = new BhpTicketState();
+			bhpState.setOrder(40);
+			bhpState.setDescription("Zamknięty");
+			bhpTicketStateService.save(bhpState);
+			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
+			
+			bhpState = new BhpTicketState();
+			bhpState.setOrder(90);
+			bhpState.setDescription("Anulowany");
+			bhpTicketStateService.save(bhpState);
+			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
 		}
 
 		model.addAttribute("msg", msg);

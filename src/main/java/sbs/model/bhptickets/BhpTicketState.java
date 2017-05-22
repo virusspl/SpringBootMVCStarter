@@ -24,42 +24,66 @@ public class BhpTicketState {
 	@Column(name = "bhps_id")
 	private int id;
 	
-	@Column(name = "bhps_name", length = 35, nullable = false)
-	private String operatorFirstName;
+	@Column(name = "bhps_description", length = 35, nullable = false)
+	private String description;
+	
+	@Column(name = "bhps_order")
+	private int order;
 
 	
 	public BhpTicketState() {
 		 tickets = new HashSet<>();
 	}
-	
+
+
 	public Set<BhpTicket> getTickets() {
 		return tickets;
 	}
+
 
 	public void setTickets(Set<BhpTicket> tickets) {
 		this.tickets = tickets;
 	}
 
+
 	public int getId() {
 		return id;
 	}
+
 
 	public void setId(int id) {
 		this.id = id;
 	}
 
-	public String getOperatorFirstName() {
-		return operatorFirstName;
+
+	public String getDescription() {
+		return description;
 	}
 
-	public void setOperatorFirstName(String operatorFirstName) {
-		this.operatorFirstName = operatorFirstName;
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
+
+
+	public int getOrder() {
+		return order;
+	}
+
+
+	public void setOrder(int order) {
+		this.order = order;
+	}
+
 
 	@Override
 	public String toString() {
-		return "BhpTicketState [tickets=" + tickets + ", id=" + id + ", operatorFirstName=" + operatorFirstName + "]";
+		return "BhpTicketState [id=" + id + ", description=" + description + ", order=" + order
+				+ "]";
 	}
+	
+	
+	
 
 	
 }
