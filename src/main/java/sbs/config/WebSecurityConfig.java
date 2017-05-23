@@ -58,18 +58,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/wpslook/**"
 				)
 		.permitAll()
-		.antMatchers(
-				"/qualitysurveys/**"
+		.antMatchers("/bhptickets/**")
+		.hasAnyRole(
+				"ADMIN",
+				"BHPMANAGER", 
+				"BHPTICKETSUSER"
 				)
+		.antMatchers("/qualitysurveys/**")
 		.hasAnyRole(
 				"ADMIN",
 				"QSURVEYMANAGER", 
 				"QSURVEYUSER"
 				)
-		.antMatchers(
-				"/admin", 
-				"/users/**"
-				)
+		.antMatchers("/admin", "/users/**")
 		.hasRole("ADMIN")
 		.anyRequest().authenticated().and()
 		.csrf().and()

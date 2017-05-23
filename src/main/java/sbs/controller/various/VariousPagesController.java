@@ -69,7 +69,7 @@ public class VariousPagesController {
 	public String jdbc(Model model) {
 
 		List<BhpTicketState> listb = bhpTicketStateService.findAll();
-		System.out.println(listb);
+		//System.out.println(listb);
 		
 		//X3Client result = jdbcOracleX3Service.findClientByCode("ATW", "cad40");
 		//X3SalesOrder result = jdbcOracleX3Service.findSalesOrderByNumber("ATW", "yza140099");
@@ -179,6 +179,21 @@ public class VariousPagesController {
 			qualityUserRole.setName("ROLE_QSURVEYUSER");
 			roleService.save(qualityUserRole);
 			msg += "[role: " + qualityUserRole.getName() + "], ";
+		}
+		
+		Role bhpManager = roleService.findByName("ROLE_BHPMANAGER");
+		if (bhpManager == null) {
+			bhpManager = new Role();
+			bhpManager.setName("ROLE_BHPMANAGER");
+			roleService.save(bhpManager);
+			msg += "[role: " + bhpManager.getName() + "], ";
+		}
+		Role bhpTicketsUser = roleService.findByName("ROLE_BHPTICKETSUSER");
+		if (bhpTicketsUser == null) {
+			bhpTicketsUser = new Role();
+			bhpTicketsUser.setName("ROLE_BHPTICKETSUSER");
+			roleService.save(bhpTicketsUser);
+			msg += "[role: " + bhpTicketsUser.getName() + "], ";
 		}
 
 		User admin = userService.findByUsername("Admin");
