@@ -14,7 +14,6 @@ import sbs.model.bhptickets.BhpTicketState;
 import sbs.model.qualitysurveys.QualitySurveyParameter;
 import sbs.model.users.Role;
 import sbs.model.users.User;
-import sbs.model.x3.X3BomItem;
 import sbs.service.bhptickets.BhpTicketStateService;
 import sbs.service.bhptickets.BhpTicketsService;
 import sbs.service.geode.JdbcOracleGeodeService;

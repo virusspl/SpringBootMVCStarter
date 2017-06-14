@@ -65,6 +65,17 @@ public class UserServiceImpl extends GenericServiceAdapter<User, Long> implement
 		return user;
 	}
 	
+	
+	@Override
+	@Transactional
+	public List<User> findByRole(String role) {
+		List<User> result = userRepository.findByRole(role);
+		for (User user: result){
+			Hibernate.initialize(user.getRoles());
+		}
+		return result;
+	}
+	
 	@Override
 	@Transactional
 	public List<User> find(String range, String sort) {
@@ -118,4 +129,5 @@ public class UserServiceImpl extends GenericServiceAdapter<User, Long> implement
 	        }
 	        return list;
 	}
+
 }

@@ -8,14 +8,14 @@ import java.util.Locale;
 import org.springframework.format.Formatter;
 
 public class SimpleDateTimeFormatter implements Formatter<Date> {
-    public static final String US_PATTERN = "MM/dd/yyyy HH:mm";
-    public static final String NORMAL_PATTERN = "dd/MM/yyyy HH:mm";
+    public static final String US_PATTERN = "MM.dd.yyyy";
+    public static final String NORMAL_PATTERN = "dd.MM.yyyy";
     private SimpleDateFormat sdf;
     
     public SimpleDateTimeFormatter(){
     	sdf = new SimpleDateFormat();
     }
-    
+
     @Override 
     public Date parse(String text, Locale locale) throws ParseException {
     	sdf.applyPattern(getPattern(locale));

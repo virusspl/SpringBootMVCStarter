@@ -41,6 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.authorizeRequests()
 		.antMatchers("/", "/init",
 				"/bootstrap/**",
+				"/datepicker/**",
 				"/selectize/**",
 				"/datatables/**",
 				"/sbs-websocket/**",

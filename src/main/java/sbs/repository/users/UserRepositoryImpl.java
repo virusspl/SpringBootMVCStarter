@@ -67,4 +67,13 @@ public class UserRepositoryImpl extends GenericRepositoryAdapter<User, Long> imp
 		return crit.list();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> findByRole(String role) {
+		Criteria crit = currentSession().createCriteria(User.class, "user");
+		crit.createAlias("user.roles", "role");
+		crit.add(Restrictions.eq("role.name", role.toUpperCase()));
+		return crit.list();
+	}
+
 }
