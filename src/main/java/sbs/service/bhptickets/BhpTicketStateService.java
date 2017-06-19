@@ -5,4 +5,6 @@ import sbs.service.GenericService;
 
 public interface BhpTicketStateService extends GenericService<BhpTicketState, Integer>{
 
+	public BhpTicketState findByOrder(int stateOrderNo);
+
 }

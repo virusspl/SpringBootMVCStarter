@@ -457,9 +457,10 @@ public class QualitySurveysController {
 		}
 
 		// save
-		  surveysService.save(survey); for (QualitySurveyBomAnswer psts :
-		  answers) { bomAnswersService.save(psts); }
-		 
+		surveysService.save(survey);
+		for (QualitySurveyBomAnswer psts : answers) {
+			bomAnswersService.save(psts);
+		}		 
 
 		// prepare to next one
 		QualitySurveySessionForm newSessionForm = new QualitySurveySessionForm();

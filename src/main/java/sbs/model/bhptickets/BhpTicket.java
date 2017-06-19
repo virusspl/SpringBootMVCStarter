@@ -56,7 +56,7 @@ public class BhpTicket {
 	private Timestamp updateDate;	
 	
 	@Column(name = "bhpt_tosend", nullable=false)
-	private Boolean yesnoAnswer;
+	private Boolean toSend;
 	
 
 	public BhpTicket() {
@@ -172,14 +172,14 @@ public class BhpTicket {
 
 
 
-	public Boolean getYesnoAnswer() {
-		return yesnoAnswer;
+	public Boolean getToSend() {
+		return toSend;
 	}
 
 
 
-	public void setYesnoAnswer(Boolean yesnoAnswer) {
-		this.yesnoAnswer = yesnoAnswer;
+	public void setToSend(Boolean toSend) {
+		this.toSend = toSend;
 	}
 
 
@@ -188,7 +188,7 @@ public class BhpTicket {
 	public String toString() {
 		return "BhpTicket [state=" + state + ", creator=" + creator + ", assignedUser=" + assignedUser + ", id=" + id
 				+ ", title=" + title + ", description=" + description + ", comment=" + comment + ", creationDate="
-				+ creationDate + ", updateDate=" + updateDate + ", yesnoAnswer=" + yesnoAnswer + "]";
+				+ creationDate + ", updateDate=" + updateDate + ", yesnoAnswer=" + toSend + "]";
 	}
 
 	

@@ -1,9 +1,8 @@
 package sbs.controller.bhptickets;
 
-import java.util.List;
+import java.sql.Timestamp;
 import java.util.Locale;
 
-import javax.sound.midi.Soundbank;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
@@ -16,11 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import sbs.controller.qualitysurveys.OperatorForm;
-import sbs.controller.qualitysurveys.ProductionOrderForm;
-import sbs.controller.users.UserEditForm;
 import sbs.helpers.TextHelper;
-import sbs.model.hr.HrUserInfo;
+import sbs.model.bhptickets.BhpTicket;
+import sbs.model.bhptickets.BhpTicketState;
 import sbs.model.users.User;
 import sbs.service.bhptickets.BhpTicketStateService;
 import sbs.service.bhptickets.BhpTicketsService;
@@ -62,31 +59,51 @@ public class BhpTicketsController {
 	
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@Transactional
 	public String create(@Valid TicketCreateForm ticketCreateForm, BindingResult bindingResult,
 			RedirectAttributes redirectAttrs, Locale locale, Model model) {
 		
+		// validate
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("bhpUsers", userService.findByRole("ROLE_BHPTICKETSUSER"));
 			return "bhptickets/create";
 		}
-		// get user
-		User user = userService.findById(ticketCreateForm.getAssignedUser());
-		if (user == null) {
+		
+		BhpTicket ticket = new BhpTicket();
+
+		// fields
+		Timestamp credat = new Timestamp(new java.util.Date().getTime());
+		ticket.setCreationDate(credat);
+		ticket.setUpdateDate(credat);
+		ticket.setTitle(ticketCreateForm.getTitle());
+		ticket.setDescription(ticketCreateForm.getDescription());
+		ticket.setComment("");
+		ticket.setToSend(true);
+
+		// relations
+		// state
+		BhpTicketState state = bhpTicketStateService.findByOrder(10);
+		state.getTickets().add(ticket);
+		ticket.setState(state);
+		// creator
+		User creator = userService.getAuthenticatedUser();
+		creator.getCreatedBhpTickets().add(ticket);
+		ticket.setCreator(creator);
+		//assigned user
+		User assignedUser = userService.findById(ticketCreateForm.getAssignedUser());
+		if (assignedUser == null) {
 			bindingResult.rejectValue("id", "error.user.not.found", "ERROR");
 			model.addAttribute("bhpUsers", userService.findByRole("ROLE_BHPTICKETSUSER"));
 			return "bhptickets/create";
 		}
 		
-		/*
-		 * modelUser.setUsername(userEditForm.getUsername());
-		 * modelUser.setName(userEditForm.getName());
-		 * modelUser.setEmail(userEditForm.getEmail());
-		 * modelUser.setActive(userEditForm.getActive());
-		 * userService.update(modelUser);
-		 */
+		assignedUser.getAssignedBhpTickets().add(ticket);
+		ticket.setAssignedUser(assignedUser);
 		
-		System.out.println(ticketCreateForm);
+		// save
+		bhpTicketsService.save(ticket);
 		
+		// redirect
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/bhptickets/dispatch";
 	}
