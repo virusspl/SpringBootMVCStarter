@@ -23,7 +23,7 @@ public class TicketCreateForm {
 	@NotNull
 	@DateTimeFormat(pattern= "dd.MM.yyyy")
 	private Date toDoDate;
-	
+	int id;
 	public TicketCreateForm() {
 		
 	}
@@ -66,6 +66,15 @@ public class TicketCreateForm {
 
 	public void setToDoDate(Date toDoDate) {
 		this.toDoDate = toDoDate;
+	}
+
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	@Override

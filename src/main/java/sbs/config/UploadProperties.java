@@ -6,15 +6,16 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class UploadProperties {
 	private String uploadPath;
 	private String avatarPath;
+	private String bhpPhotoPath;
 
 	public String getUploadPath() {
 		return uploadPath;
 	}
-
-	public void setPath(String path) {
-		this.uploadPath = path;
+	
+	public void setUploadPath(String uploadPath) {
+		this.uploadPath = uploadPath;
 	}
-
+	
 	public String getAvatarPath() {
 		return avatarPath;
 	}
@@ -23,4 +24,15 @@ public class UploadProperties {
 		this.avatarPath = avatarPath;
 	}
 
+	public String getBhpPhotoPath() {
+		return bhpPhotoPath;
+	}
+
+	public void setBhpPhotoPath(String bhpPhotoPath) {
+		this.bhpPhotoPath = bhpPhotoPath;
+	}
+
+
+	
+	
 }

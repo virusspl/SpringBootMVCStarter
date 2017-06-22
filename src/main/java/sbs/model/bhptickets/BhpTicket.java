@@ -54,7 +54,10 @@ public class BhpTicket {
 
 	@Column(name = "bhpt_lastupddat", nullable = false)
 	private Timestamp updateDate;	
-	
+
+	@Column(name = "bhpt_tododat", nullable = false)
+	private Timestamp toDoDate;
+
 	@Column(name = "bhpt_tosend", nullable=false)
 	private Boolean toSend;
 	
@@ -170,6 +173,15 @@ public class BhpTicket {
 		this.updateDate = updateDate;
 	}
 
+	
+	public Timestamp getToDoDate() {
+		return toDoDate;
+	}
+
+	
+	public void setToDoDate(Timestamp toDoDate) {
+		this.toDoDate = toDoDate;
+	}
 
 
 	public Boolean getToSend() {
@@ -183,14 +195,13 @@ public class BhpTicket {
 	}
 
 
-
 	@Override
 	public String toString() {
 		return "BhpTicket [state=" + state + ", creator=" + creator + ", assignedUser=" + assignedUser + ", id=" + id
 				+ ", title=" + title + ", description=" + description + ", comment=" + comment + ", creationDate="
-				+ creationDate + ", updateDate=" + updateDate + ", yesnoAnswer=" + toSend + "]";
+				+ creationDate + ", updateDate=" + updateDate + ", toDoDate=" + toDoDate + ", toSend=" + toSend + "]";
 	}
 
-	
-	
+
+
 }

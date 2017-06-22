@@ -59,6 +59,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/wpslook/**"
 				)
 		.permitAll()
+		.antMatchers("/bhptickets/edit/**", 
+				"/bhptickets/create/**", 
+				"/upload/bhptickets/**" )
+		.hasAnyRole(
+				"ADMIN",
+				"BHPMANAGER"
+				)
 		.antMatchers("/bhptickets/**")
 		.hasAnyRole(
 				"ADMIN",

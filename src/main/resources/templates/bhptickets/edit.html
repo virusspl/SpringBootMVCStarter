@@ -45,25 +45,19 @@
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-xs-12">
-				<h1 th:text="#{bhp.tickets.create.title}" class="text-primary"></h1>
+				<h1 th:text="#{bhp.tickets.edit.title}" class="text-primary"></h1>
 			</div>
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
-				<span th:text="#{bhp.tickets.create.message}"> Welcome
+				<span th:text="|#{bhp.tickets.edit.message} #${ticketCreateForm.id}|"> Welcome
 					message </span>
 			</div>
 		</div>
 		<!-- BHP TICKET FORM -->
-		<form th:action="@{/bhptickets/create}" method="post"
+		<form th:action="@{/bhptickets/edit}" method="post"
 			th:object="${ticketCreateForm}">
+			<input type="hidden" th:field="*{id}"></input>
 			<div class="row margin-top-10">
 				<div class="col-xs-12 col-sm-7">
-					<!-- 
-	String title;
-	String description;
-	boolean toSend;
-	User assignedUser;
-	private Date toDoDate;
-	 -->
 					<div class="form-group">
 						<label for="title" th:text="#{bhp.tickets.title}">Title</label> <input
 							type="text" class="form-control" id="title" name="title"
@@ -91,26 +85,40 @@
 				</div>
 				<div class="col-xs-6 col-sm-4">
 					<div class="form-group">
-					<label for="assignedUser" th:text="#{bhp.tickets.assigneduser}">User</label>
+						<label for="assignedUser" th:text="#{bhp.tickets.assigneduser}">User</label>
 						<select class="form-control" id="assignedUser" name="assignedUser"
-							th:placeholder="#{bhp.tickets.assigneduser}" th:field="*{assignedUser}">
+							th:placeholder="#{bhp.tickets.assigneduser}"
+							th:field="*{assignedUser}">
 							<option th:each="obj,stat : ${bhpUsers}"
 								th:value="${bhpUsers[__${stat.index}__].id}"
 								th:text="|
 								${bhpUsers[__${stat.index}__].name} /
 								${bhpUsers[__${stat.index}__].username}
-								|"
-								>User</option>
+								|">User</option>
 						</select>
-						<div th:errors="*{assignedUser}" class="alert alert-danger margin-top-5">error</div>
+						<div th:errors="*{assignedUser}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-sm-3">
+					<div class="form-group">
+						<label for="toSend" th:text="#{bhp.tickets.tosend}">to send</label>
+						<div id="toSend" class="checkbox">
+							<label><input type="checkbox" th:field="*{toSend}" /><span
+								th:text="#{bhp.tickets.tosend}"></span></label>
+						</div>
 					</div>
 				</div>
 			</div>
 			<div class="row margin-top-10">
 				<div class="col-xs-12">
-					<a th:href="@{/bhptickets/dispatch}" class="btn btn-link btn-sm">
-						<span class="glyphicon glyphicon-menu-left"></span> <span
+					<a th:href="@{/bhptickets/list}" class="btn btn-link btn-sm"> <span
+						class="glyphicon glyphicon-menu-left"></span> <span
 						th:text="#{action.back}">back</span>
+					</a>
+					<a th:href="@{'/bhptickets/edit/photos/' + ${ticketCreateForm.id}}" class="btn btn-info btn-sm"> <span
+						class="glyphicon glyphicon-film"></span> <span
+						th:text="#{action.manage.photos}">back</span>
 					</a>
 					<button class="btn btn-primary btn-sm" type="submit" name="save">
 						<span class="glyphicon glyphicon-ok"></span> <span

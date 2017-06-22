@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletResponse;
@@ -38,6 +39,7 @@ public class UploadController {
 	@SuppressWarnings("unused")
 	private final String uploadDir;
 	private final String avatarUploadPath;
+	private final String bhpPhotoPath;
 	
 	@Autowired 
 	UserService userService;
@@ -50,8 +52,29 @@ public class UploadController {
     public UploadController(UploadProperties uploadProperties) {
     	uploadDir = uploadProperties.getAvatarPath();
     	avatarUploadPath = uploadProperties.getAvatarPath();
+    	bhpPhotoPath = uploadProperties.getBhpPhotoPath();
     }
 
+	public String getAvatarUploadPath() {
+		return avatarUploadPath;
+	}
+
+	public String getBhpPhotoPath() {
+		return bhpPhotoPath;
+	}
+
+	public ArrayList<String> listFiles(String path){
+		ArrayList<String> files = new ArrayList<>();
+		try {
+			File[] filesList = (new DefaultResourceLoader()).getResource(path).getFile().listFiles();
+			for(File file: filesList){
+				files.add(file.getName());
+			}
+		} catch (IOException e) {
+		}
+		return files;
+	}
+	
 	@RequestMapping(value = "/upload/avatar/{id}",  method = RequestMethod.POST)
 	@Secured("ROLE_ADMIN")
 	public String onUpload(@PathVariable("id") long id, MultipartFile file, RedirectAttributes redirectAttrs,
@@ -106,8 +129,44 @@ public class UploadController {
 		response.setHeader("Content-Type", URLConnection.guessContentTypeFromName(res.getFilename()));
 		IOUtils.copy(res.getInputStream(), response.getOutputStream());
 	}
-
 	
+	@RequestMapping(value="/bhptickets/getphoto/{name:.+}")
+	public void getBhpPhoto(HttpServletResponse response, @PathVariable String name) throws IOException {
+		Resource picture;
+				picture = (new DefaultResourceLoader()).getResource(bhpPhotoPath + "/" + name);
+				response.setHeader("Content-Type", URLConnection.guessContentTypeFromName(picture.getFilename()));
+				IOUtils.copy(picture.getInputStream(), response.getOutputStream());
+	}
+
+	@RequestMapping(value = "/upload/bhptickets/{id}",  method = RequestMethod.POST)
+	@Secured({"ROLE_BHPMANAGER", "ROLE_ADMIN"})
+	public String onBhpTicketPhotoUpload(@PathVariable("id") int id, MultipartFile file, RedirectAttributes redirectAttrs,
+			Locale locale) {
+					
+		// is image?
+		if (file.isEmpty() || !isImage(file)) {
+			redirectAttrs.addFlashAttribute("error", messageSource.getMessage("upload.bad.file.type", null, locale));
+			return "redirect:/bhptickets/edit/photos/" + id;
+		}
+		// copy file
+		try {
+			String fileExtension = getFileExtension(file.getOriginalFilename());
+			File tempFile = File.createTempFile("bhp_" + id + "_", fileExtension,
+					(new DefaultResourceLoader()).getResource(bhpPhotoPath).getFile());
+			try (InputStream in = file.getInputStream(); OutputStream out = new FileOutputStream(tempFile)) {
+				IOUtils.copy(in, out);
+			}
+
+			// say ok
+			redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("upload.success", null, locale));
+		} catch (IOException ioex) {
+			redirectAttrs.addFlashAttribute("error", messageSource.getMessage("upload.io.exception", null, locale));
+			return "redirect:/bhptickets/edit/photos/" + id;
+		}
+		
+		return "redirect:/bhptickets/edit/photos/" + id;
+	}
+		
 	/*
 	 * HELPERS
 	 */
