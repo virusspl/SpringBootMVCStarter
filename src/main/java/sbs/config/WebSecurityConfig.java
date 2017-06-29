@@ -41,6 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.authorizeRequests()
 		.antMatchers("/", "/init",
 				"/bootstrap/**",
+				"/lightbox2/**",
 				"/datepicker/**",
 				"/selectize/**",
 				"/datatables/**",
@@ -56,11 +57,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/users/showcurrent",
 				"/nameplates/list",
 				"/geolook/**",
-				"/wpslook/**"
+				"/wpslook/**",
+				"/bhptickets/show/**",
+				"/bhptickets/getphoto/**"
 				)
 		.permitAll()
 		.antMatchers("/bhptickets/edit/**", 
-				"/bhptickets/create/**", 
+				"/bhptickets/create/**",
+				"/bhptickets/sendemails/**",
 				"/upload/bhptickets/**" )
 		.hasAnyRole(
 				"ADMIN",

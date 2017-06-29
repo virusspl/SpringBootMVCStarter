@@ -22,7 +22,6 @@ public class MailConfig {
 	@Bean
 	public JavaMailSender javaMailSender() {
 		JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
-		
 		javaMailSender.setHost("mail.atwsystem.pl");
 		javaMailSender.setPort(25);
 		javaMailSender.setJavaMailProperties(getMailProperties());
@@ -34,6 +33,7 @@ public class MailConfig {
 		properties.setProperty("mail.transport.protocol", "smtp");
 		properties.setProperty("mail.smtp.auth", "false");
 		properties.setProperty("mail.smtp.debug", "true");
+		properties.setProperty("mail.mime.charset", "utf8");
 		
 		return properties;
 	}

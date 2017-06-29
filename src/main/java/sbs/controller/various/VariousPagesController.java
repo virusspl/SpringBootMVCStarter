@@ -3,6 +3,8 @@ package sbs.controller.various;
 import java.util.List;
 import java.util.Locale;
 
+import javax.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,7 @@ import sbs.model.users.User;
 import sbs.service.bhptickets.BhpTicketStateService;
 import sbs.service.bhptickets.BhpTicketsService;
 import sbs.service.geode.JdbcOracleGeodeService;
+import sbs.service.mail.MailService;
 import sbs.service.optima.JdbcAdrOptimaService;
 import sbs.service.qualitysurveys.QualitySurveyParametersService;
 import sbs.service.qualitysurveys.QualitySurveysService;
@@ -47,6 +50,8 @@ public class VariousPagesController {
 	BhpTicketsService bhpTicketsService;
 	@Autowired
 	BhpTicketStateService bhpTicketStateService;
+	@Autowired
+	MailService mailService;
 
 	@RequestMapping("/noaccess")
 	public String noAccess() {
@@ -64,6 +69,17 @@ public class VariousPagesController {
 		return "various/construction";
 	}
 
+	@RequestMapping("/mail")
+	public String mail(Model model) {
+		try {
+			mailService.sendEmail("spring@spring.pl", new String[]{"michalak.k@atwsystem.pl"},new String[]{} ,"Spring mail", "Little test. Without polish znaków :)");
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "welcome";
+	}
+	
 	@RequestMapping("/test")
 	public String jdbc(Model model) {
 

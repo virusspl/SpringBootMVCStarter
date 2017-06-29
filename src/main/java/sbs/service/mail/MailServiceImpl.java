@@ -14,16 +14,17 @@ public class MailServiceImpl implements MailService {
 	private JavaMailSender javaMailSender;
 	
 	@Override
-	public boolean sendEmail(String from, String to, String subject, String content) throws MessagingException {
+	public void sendEmail(String from, String[] to, String[] bcc, String subject, String content) throws MessagingException {
 		MimeMessage message = javaMailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
 		helper.setTo(to);
 		helper.setFrom(from);
-		helper.setSubject(subject);
-		helper.setText(content, true);
-			javaMailSender.send(message);
-
-		return false;
+		helper.setBcc(bcc);
+		//helper.setSubject(subject);
+		//helper.setText(content, true);
+		message.setSubject(subject, "UTF-8");
+		message.setContent(content, "text/html; charset=utf-8");
+		javaMailSender.send(message);
 	}
 
 }

@@ -101,12 +101,15 @@
 						</tfoot>
 						<tbody>
 							<tr th:each="ticket : ${tickets}">
-								<td><a th:href="|@{/bhptickets/edit/}${ticket.id}|"
+								<td>
+								<a th:if="${ticket.state.order} &lt; 40" th:href="|@{/bhptickets/edit/}${ticket.id}|"
 									data-toggle="tooltip" data-placement="top"
-									th:title="#{action.edit}">#<span th:text="${ticket.id}"></span></a></td>
+									th:title="#{action.edit}">#<span th:text="${ticket.id}"></span></a>
+								<span th:if="${ticket.state.order} &gt;= 40" th:text="|#${ticket.id}|"></span>
+								</td>
 								<td><a th:href="|@{/bhptickets/show/}${ticket.id}|"
 									data-toggle="tooltip" data-placement="top"
-									th:title="#{action.show}">#<span th:text="${#strings.abbreviate(ticket.title,18)}"></span></a></td>
+									th:title="#{action.show}"><span th:text="${#strings.abbreviate(ticket.title,18)}"></span></a></td>
 								<td><span th:text="${ticket.assignedUser.name}"></span></td>
 								<td><span th:text="${ticket.state.description}"></span></td>
 								<td><span th:text="${ticket.creator.name}"></span></td>

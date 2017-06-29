@@ -24,6 +24,9 @@ public class TicketCreateForm {
 	@DateTimeFormat(pattern= "dd.MM.yyyy")
 	private Date toDoDate;
 	int id;
+	String stateDescription;
+	int stateOrder;
+	
 	public TicketCreateForm() {
 		
 	}
@@ -75,6 +78,23 @@ public class TicketCreateForm {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getStateDescription() {
+		return stateDescription;
+	}
+
+	public void setStateDescription(String stateDescription) {
+		this.stateDescription = stateDescription;
+	}
+
+	
+	public int getStateOrder() {
+		return stateOrder;
+	}
+
+	public void setStateOrder(int stateOrder) {
+		this.stateOrder = stateOrder;
 	}
 
 	@Override

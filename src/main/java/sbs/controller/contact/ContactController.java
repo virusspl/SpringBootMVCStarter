@@ -62,7 +62,8 @@ public class ContactController {
 			try {
 				mailService.sendEmail(
 						contactForm.getEmail(), 
-						"michalak.k@atwsystem.pl", 
+						new String[]{"michalak.k@atwsystem.pl"},
+						new String[]{},
 						"SpringBootStarter Contact Form", 
 						content);
 			} catch (MessagingException e) {

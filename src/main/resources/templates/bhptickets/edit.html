@@ -73,7 +73,7 @@
 							class="alert alert-danger margin-top-5">error</div>
 					</div>
 				</div>
-				<div class="col-xs-6 col-sm-3">
+				<div class="col-xs-6 col-sm-5">
 					<div class="form-group">
 						<label for="tododate" th:text="#{bhp.tickets.tododate}">Title</label>
 						<input type="text" class="form-control" id="tododate"
@@ -83,7 +83,7 @@
 							class="alert alert-danger margin-top-5">error</div>
 					</div>
 				</div>
-				<div class="col-xs-6 col-sm-4">
+				<div class="col-xs-6 col-sm-5">
 					<div class="form-group">
 						<label for="assignedUser" th:text="#{bhp.tickets.assigneduser}">User</label>
 						<select class="form-control" id="assignedUser" name="assignedUser"
@@ -102,10 +102,31 @@
 				</div>
 				<div class="col-xs-6 col-sm-3">
 					<div class="form-group">
-						<label for="toSend" th:text="#{bhp.tickets.tosend}">to send</label>
+						<label for="tododate" th:text="#{bhp.tickets.state}">Title</label>
+						<span class="form-control" id="state"
+							th:text="*{stateDescription}">state</span>
+						
+					</div>
+				</div>
+				<div class="col-xs-6 col-sm-2">
+					<div class="form-group">
+						<label for="toSend" th:text="#{bhp.tickets.tosend}">to
+							send</label>
 						<div id="toSend" class="checkbox">
 							<label><input type="checkbox" th:field="*{toSend}" /><span
 								th:text="#{bhp.tickets.tosend}"></span></label>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-sm-3" th:if="${ticketCreateForm.stateOrder} &lt; 40">
+					<div class="form-group">
+						<label for="cancel" th:text="#{bhp.tickets.cancel}">cancel</label>
+						<div>
+							<button class="btn btn-danger btn-sm" type="submit" name="cancel"
+								id="cancel">
+								<span class="glyphicon glyphicon-remove"></span> <span
+									th:text="#{bhp.tickets.cancel}">create</span>
+							</button>
 						</div>
 					</div>
 				</div>
@@ -115,12 +136,13 @@
 					<a th:href="@{/bhptickets/list}" class="btn btn-link btn-sm"> <span
 						class="glyphicon glyphicon-menu-left"></span> <span
 						th:text="#{action.back}">back</span>
-					</a>
-					<a th:href="@{'/bhptickets/edit/photos/' + ${ticketCreateForm.id}}" class="btn btn-info btn-sm"> <span
+					</a> <a
+						th:href="@{'/bhptickets/edit/photos/' + ${ticketCreateForm.id}}"
+						class="btn btn-info btn-sm"> <span
 						class="glyphicon glyphicon-film"></span> <span
 						th:text="#{action.manage.photos}">back</span>
 					</a>
-					<button class="btn btn-primary btn-sm" type="submit" name="save">
+					<button th:if="${ticketCreateForm.stateOrder} &lt; 40" class="btn btn-primary btn-sm" type="submit" name="save">
 						<span class="glyphicon glyphicon-ok"></span> <span
 							th:text="#{action.save}">create</span>
 					</button>
