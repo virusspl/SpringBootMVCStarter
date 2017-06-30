@@ -17,5 +17,6 @@ public interface UserRepository extends GenericRepository<User,Long>{
 	public User findActiveByUsername(String username);
 	public List<User> find(String range, String sort);
 	public List<User> findByRole(String role);
+	public List<User> findByAnyRole(String[] roles);
 	
 }

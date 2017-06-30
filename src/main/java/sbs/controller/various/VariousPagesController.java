@@ -210,6 +210,13 @@ public class VariousPagesController {
 			roleService.save(bhpTicketsUser);
 			msg += "[role: " + bhpTicketsUser.getName() + "], ";
 		}
+		Role bhpSupervisor = roleService.findByName("ROLE_BHPSUPERVISOR");
+		if (bhpSupervisor == null) {
+			bhpSupervisor = new Role();
+			bhpSupervisor.setName("ROLE_BHPSUPERVISOR");
+			roleService.save(bhpSupervisor);
+			msg += "[role: " + bhpSupervisor.getName() + "], ";
+		}
 
 		User admin = userService.findByUsername("Admin");
 		User user = userService.findByUsername("User");

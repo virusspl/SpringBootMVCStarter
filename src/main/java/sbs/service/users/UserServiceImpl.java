@@ -130,4 +130,14 @@ public class UserServiceImpl extends GenericServiceAdapter<User, Long> implement
 	        return list;
 	}
 
+	@Override
+	@Transactional
+	public List<User> findByAnyRole(String[] roles) {
+		List<User> result = userRepository.findByAnyRole(roles);
+		for (User user: result){
+			Hibernate.initialize(user.getRoles());
+		}
+		return result;
+	}
+
 }

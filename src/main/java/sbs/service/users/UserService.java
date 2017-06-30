@@ -19,5 +19,6 @@ public interface UserService extends GenericService<User, Long>{
 	public List<User> find(String range, String sort);
 	public User getAuthenticatedUser();
 	public List<UserSingleSessionInfo> getSessionsInfo();
-	public List<User> findByRole(String string);
+	public List<User> findByRole(String role);
+	public List<User> findByAnyRole(String[] roles);
 }

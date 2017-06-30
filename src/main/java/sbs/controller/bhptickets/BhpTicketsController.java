@@ -2,6 +2,7 @@ package sbs.controller.bhptickets;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -51,32 +52,36 @@ public class BhpTicketsController {
 	MailService mailService;
 	@Autowired TemplateEngine templateEngine;
 	
-
-	
 	@RequestMapping(value = "/dispatch")
 	public String dispatch() {
 		return "bhptickets/dispatch";
-	}
+	 }
 
 	@RequestMapping("/sendemails")
 	@Transactional
 	public String sendEmails(HttpServletRequest request) throws MessagingException, UnknownHostException {
 		Set<User> users = bhpTicketsService.findAllPendingTicketsUsers();
 		ArrayList<UserTicketsHolder> holders = new ArrayList<>();
+		ArrayList<String> mailingList = new ArrayList<>();
 		UserTicketsHolder holder;
 		for(User user: users){
 			holder = new UserTicketsHolder();
 			holder.setUser(user);
 			holder.setTickets(bhpTicketsService.findPendingTicketsByUser(user));
 			holders.add(holder);
+			mailingList.add(user.getEmail());
 		}
 		
+		List<User> supervisors = userService.findByAnyRole(new String[]{"ROLE_BHPMANAGER", "ROLE_BHPSUPERVISOR"});
+		ArrayList<String> supervisorsMailingList = new ArrayList<>();
+		for(User sprv: supervisors){
+			supervisorsMailingList.add(sprv.getEmail());
+		}
 		  	Context context = new Context();
-	        context.setVariable("description", "Tutaj jakis opis...");
 	        context.setVariable("loop", holders);
 			context.setVariable("host", InetAddress.getLocalHost().getHostAddress());
 	        String body = templateEngine.process("bhptickets/mailtemplate", context);
-	        mailService.sendEmail("webapp@atwsystem.pl", new String[]{"michalak.k@atwsystem.pl","michalak.k@atwsystem.pl"}, new String[]{"michalak.k@atwsystem.pl"}, "Compiled template", body);
+	        mailService.sendEmail("webapp@atwsystem.pl", mailingList.toArray(new String[0]), supervisorsMailingList.toArray(new String[0]), "Compiled template", body);
 		return "redirect:/bhptickets/dispatch";
 	}
 	

@@ -6,6 +6,21 @@
 <head lang="pl">
 </head>
 <body>
+
+	<div layout:fragment="script">
+	<!-- for getURL() -->
+	<script th:src="@{/js/url.helper.js}"      type="text/javascript"></script>
+	<script th:src="@{/js/preventDefault.js}" type="text/javascript"></script>
+		<script>
+			function sendEmails() {
+				if (confirm("E-Mail?") == true) {
+					window.open(getAppUrl() + "/bhptickets/sendemails");
+				}
+			}
+		</script>
+	}
+	
+	</div>
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-xs-12 col-xs-offset-0">
@@ -36,7 +51,7 @@
 				</a> 
 				<!-- http://codecouple.pl/2016/09/30/8-spring-boot-email-szablon-i-wysylanie/ -->
 				<a class="btn btn-info btn-md margin-top-5"
-					th:href="@{/bhptickets/sendemails}"> <span
+					onclick="sendEmails()"> <span
 					class="glyphicon glyphicon-envelope" style="margin-right: 10px;"></span>
 					<span th:text="#{bhp.tickets.send.emails}">begin</span>
 				</a> 
