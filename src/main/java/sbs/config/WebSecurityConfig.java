@@ -74,6 +74,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.hasAnyRole(
 				"ADMIN",
 				"BHPMANAGER", 
+				"BHPSUPERVISOR", 
 				"BHPTICKETSUSER"
 				)
 		.antMatchers("/qualitysurveys/**")

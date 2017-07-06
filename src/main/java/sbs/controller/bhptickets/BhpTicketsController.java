@@ -81,7 +81,7 @@ public class BhpTicketsController {
 	        context.setVariable("loop", holders);
 			context.setVariable("host", InetAddress.getLocalHost().getHostAddress());
 	        String body = templateEngine.process("bhptickets/mailtemplate", context);
-	        mailService.sendEmail("webapp@atwsystem.pl", mailingList.toArray(new String[0]), supervisorsMailingList.toArray(new String[0]), "Compiled template", body);
+	        mailService.sendEmail("webapp@atwsystem.pl", mailingList.toArray(new String[0]), supervisorsMailingList.toArray(new String[0]), "ADR Polska S.A. - BHP", body);
 		return "redirect:/bhptickets/dispatch";
 	}
 	
@@ -201,7 +201,6 @@ public class BhpTicketsController {
 		cancelState.getTickets().add(ticket);
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/bhptickets/list";
-		
 	}
 	
 	@RequestMapping(value = "/edit", params = { "save" }, method = RequestMethod.POST)
