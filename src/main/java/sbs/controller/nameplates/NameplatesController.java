@@ -12,6 +12,7 @@ import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +21,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("nameplates")
 public class NameplatesController {
 
+	String rfidPath;
 	@Autowired
 	MessageSource messageSource;
+	
+    @Autowired
+    public NameplatesController(Environment env) {
+    	rfidPath = env.getRequiredProperty("general.nameplatesLogPath");
+    }
 	
 	@RequestMapping("/list")
 	public String list(Model model, Locale locale) throws FileNotFoundException {
@@ -30,8 +37,7 @@ public class NameplatesController {
 		ArrayList<NameplatesLogLine> backlistLog;
 		ArrayList<NameplatesErrorLine> backlistError;
 		try {
-			BufferedReader in = new BufferedReader(new FileReader(
-					"\\\\192.168.1.13\\atwsystem\\User_file\\Produkcja\\RF_ID\\MIFARE_Ultralight_Log.txt"));
+			BufferedReader in = new BufferedReader(new FileReader(rfidPath));
 			
 			String line;
 			List<String> split;

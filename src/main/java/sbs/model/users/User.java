@@ -29,7 +29,7 @@ public class User {
     private String name;
     private String email;
     private String password;
-    private String avatarFileName;
+    private String avatarfilename;
     private Set<Role> roles;
     private Set<QualitySurvey> qualitySurveys;
     private Set<BhpTicket> createdBhpTickets;
@@ -103,12 +103,12 @@ public class User {
 		return "User [id=" + id + ", username=" + username + ", password=" + password + ", roles=" + roles + "]";
 	}
 
-	public String getAvatarFileName() {
-		return avatarFileName;
+	public String getAvatarfilename() {
+		return avatarfilename;
 	}
 
-	public void setAvatarFileName(String avatarFileName) {
-		this.avatarFileName = avatarFileName;
+	public void setAvatarfilename(String avatarFileName) {
+		this.avatarfilename = avatarFileName;
 	}
 
 	public boolean isActive() {

@@ -1,4 +1,4 @@
-/*
+
 DROP TABLE IF EXISTS user_roles;
 CREATE  TABLE users (
   userid LONG NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE user_roles (
   UNIQUE KEY uni_username_role (role,userid),
   CONSTRAINT fk_username FOREIGN KEY (userid) REFERENCES users (userid));
    
-  */
+  
   CREATE TABLE persistent_logins (
     username varchar(64) not null,
     series varchar(64) not null,

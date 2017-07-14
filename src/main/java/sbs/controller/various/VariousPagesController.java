@@ -218,6 +218,7 @@ public class VariousPagesController {
 			msg += "[role: " + bhpSupervisor.getName() + "], ";
 		}
 
+		System.out.println("get users:");
 		User admin = userService.findByUsername("Admin");
 		User user = userService.findByUsername("User");
 		User krzysiek = userService.findByUsername("Krzysiek");

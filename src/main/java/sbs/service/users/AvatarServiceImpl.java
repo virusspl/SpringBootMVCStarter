@@ -50,14 +50,14 @@ public class AvatarServiceImpl implements AvatarService {
 	
 private Resource getUserAvatar(User user){
 	Resource picture;
-	if( user.getAvatarFileName() ==  null || user.getAvatarFileName().isEmpty()){	
+	if( user.getAvatarfilename() ==  null || user.getAvatarfilename().isEmpty()){	
 		picture = anonymousPicture;
 	}else{
 		try{
-			picture = (new DefaultResourceLoader()).getResource(avatarUploadPath + "/" + user.getAvatarFileName());
+			picture = (new DefaultResourceLoader()).getResource(avatarUploadPath + "/" + user.getAvatarfilename());
 			picture.getInputStream().close();
 		} catch (IOException ex){
-			user.setAvatarFileName(null);
+			user.setAvatarfilename(null);
 			userService.update(user);
 			picture = anonymousPicture;				
 		}

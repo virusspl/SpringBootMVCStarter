@@ -95,7 +95,7 @@ public class UploadController {
 
 			// update user info
 			User user = userService.findById(id);
-			user.setAvatarFileName(tempFile.getName());
+			user.setAvatarfilename(tempFile.getName());
 			userService.saveOrUpdate(user);
 			// say ok
 			redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("upload.success", null, locale));

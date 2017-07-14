@@ -107,7 +107,7 @@ public class UserController {
 		userEditForm.setEmail(user.getEmail());
 		userEditForm.setActive(user.isActive());
 		userEditForm.setRoles(user.getRoles());
-		userEditForm.setAvatarFileName(user.getAvatarFileName());
+		userEditForm.setAvatarFileName(user.getAvatarfilename());
 		model.addAttribute("userEditForm",userEditForm);
 		return "users/edit";
 	}
