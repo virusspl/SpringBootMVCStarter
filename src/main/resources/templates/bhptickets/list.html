@@ -109,10 +109,10 @@
 								</td>
 								<td><a th:href="|@{/bhptickets/show/}${ticket.id}|"
 									data-toggle="tooltip" data-placement="top"
-									th:title="#{action.show}"><span th:text="${#strings.abbreviate(ticket.title,18)}"></span></a></td>
+									th:title="#{action.show}"><span th:text="${#strings.abbreviate(ticket.title,60)}"></span></a></td>
 								<td><span th:text="${ticket.assignedUser.name}"></span></td>
 								<td><span th:text="${ticket.state.description}"></span></td>
-								<td><span th:text="${ticket.creator.name}"></span></td>
+								<td><span th:text="${#strings.abbreviate(ticket.creator.name,20)}"></span></td>
 								<td><span th:text="${#dates.format(ticket.creationDate, 'yyyy.MM.dd HH:mm')}"></span></td>
 								<td><span th:text="${#dates.format(ticket.updateDate, 'yyyy.MM.dd HH:mm')}"></span></td>
 								<td><span th:text="${#dates.format(ticket.toDoDate, 'yyyy.MM.dd')}"></span></td>
