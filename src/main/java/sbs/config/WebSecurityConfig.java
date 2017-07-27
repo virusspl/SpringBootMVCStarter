@@ -83,6 +83,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"QSURVEYMANAGER", 
 				"QSURVEYUSER"
 				)
+		.antMatchers("/hrua/**")
+		.hasAnyRole(
+				"ADMIN", 
+				"HRUAMANAGER"
+				)
 		.antMatchers("/admin", "/users/**")
 		.hasRole("ADMIN")
 		.anyRequest().authenticated().and()

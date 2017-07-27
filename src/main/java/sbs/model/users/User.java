@@ -18,6 +18,7 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import sbs.model.bhptickets.BhpTicket;
+import sbs.model.hruafiles.HrUaInfo;
 import sbs.model.qualitysurveys.QualitySurvey;
 
 @Entity
@@ -34,6 +35,7 @@ public class User {
     private Set<QualitySurvey> qualitySurveys;
     private Set<BhpTicket> createdBhpTickets;
     private Set<BhpTicket> assignedBhpTickets;
+    private Set<HrUaInfo> HrUaFilesCreated;
     
     public User() {
 		this.roles = new HashSet<>();
@@ -134,6 +136,10 @@ public class User {
 		return assignedBhpTickets;
 	}
 	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
+	public Set<HrUaInfo> getHrUaFilesCreated() {
+		return HrUaFilesCreated;
+	}
 	
 	public void setCreatedBhpTickets(Set<BhpTicket> createdBhpTickets) {
 		this.createdBhpTickets = createdBhpTickets;
@@ -146,6 +152,12 @@ public class User {
 	public void setQualitySurveys(Set<QualitySurvey> qualitySurveys) {
 		this.qualitySurveys = qualitySurveys;
 	}
+
+	public void setHrUaFilesCreated(Set<HrUaInfo> hrUaFilesCreated) {
+		HrUaFilesCreated = hrUaFilesCreated;
+	}
+	
+	
 	
 	
 

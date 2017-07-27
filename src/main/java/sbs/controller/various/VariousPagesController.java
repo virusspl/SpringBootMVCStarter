@@ -217,6 +217,14 @@ public class VariousPagesController {
 			roleService.save(bhpSupervisor);
 			msg += "[role: " + bhpSupervisor.getName() + "], ";
 		}
+		
+		Role hrUaManager = roleService.findByName("ROLE_HRUAMANAGER");
+		if (hrUaManager == null) {
+			hrUaManager = new Role();
+			hrUaManager.setName("ROLE_HRUAMANAGER");
+			roleService.save(hrUaManager);
+			msg += "[role: " + hrUaManager.getName() + "], ";
+		}
 
 		System.out.println("get users:");
 		User admin = userService.findByUsername("Admin");

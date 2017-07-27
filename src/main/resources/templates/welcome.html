@@ -59,6 +59,19 @@
 					</a>
 				</div>
 			</div>
+			<!-- OFFICE -->
+			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
+				<h3 class="text-info" th:text="#{department.offices}">Panel
+					With title</h3>
+			</div>
+			<div class="col-xs-12 margin-top-10">
+			<!-- HR UA -->
+				<a th:href="@{/hrua/list}"
+					class="btn btn-info btn-md margin-top-5"> <span
+					class="glyphicon glyphicon-user"></span> <span
+					th:text="#{hrua.files}">HR UA Files</span>
+				</a>
+			</div>
 			<!-- PRODUCTION -->
 			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
 				<h3 class="text-info" th:text="#{department.production}">Panel
