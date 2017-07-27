@@ -9,7 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import sbs.controller.upload.UploadController;
-import sbs.service.hrua.HrUaService;
+
 import sbs.service.users.UserService;
 
 @Controller
@@ -22,13 +22,12 @@ public class HrUaController {
 	MessageSource messageSource;
 	@Autowired
 	UploadController uploadController;
-	@Autowired
-	HrUaService hrUaService;
+	
 	
 	@RequestMapping(value = "/list")
 	@Transactional
 	public String listAll(Model model) {
-		model.addAttribute("tickets", hrUaService.findAll());
+	//	model.addAttribute("tickets", hrUaService.findAll());
 		return "bhptickets/list";
 	}
 	
