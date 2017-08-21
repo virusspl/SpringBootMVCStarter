@@ -120,6 +120,9 @@
 #YN:hover ~ #imageArea {
   	background: url("../images/map/YN.png");
 }
+#YO:hover ~ #imageArea {
+  	background: url("../images/map/YO.png");
+}
 #Z:hover ~ #imageArea {
   	background: url("../images/map/_main_map.png");
 }
