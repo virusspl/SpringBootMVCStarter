@@ -2,6 +2,8 @@ package sbs.controller.bhptickets;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -88,7 +90,16 @@ public class BhpTicketsController {
 	@RequestMapping(value = "/list")
 	@Transactional
 	public String listAll(Model model) {
-		model.addAttribute("tickets", bhpTicketsService.findAll());
+		User user = userService.getAuthenticatedUser();
+		if(userService.hasAnyRole(
+				user, 
+				Arrays.asList("ROLE_ADMIN","ROLE_BHPMANAGER","ROLE_BHPSUPERVISOR"))){
+			model.addAttribute("tickets", bhpTicketsService.findAll());
+		}
+		else{
+			model.addAttribute("tickets", bhpTicketsService.findPendingTicketsByUser(user));
+		}
+		
 		return "bhptickets/list";
 	}
 

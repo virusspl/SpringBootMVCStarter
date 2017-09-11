@@ -13,7 +13,6 @@ public interface UserService extends GenericService<User, Long>{
 	public static final String SORT_ORDER_USERNAME="username";
 	
 	
-	
 	public User findByUsername(String username);
 	public String getPrincipalName();
 	public List<User> find(String range, String sort);
@@ -21,4 +20,5 @@ public interface UserService extends GenericService<User, Long>{
 	public List<UserSingleSessionInfo> getSessionsInfo();
 	public List<User> findByRole(String role);
 	public List<User> findByAnyRole(String[] roles);
+	public boolean hasAnyRole(User user, List<String> roles);
 }

@@ -14,6 +14,7 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import sbs.model.users.Role;
 import sbs.model.users.User;
 import sbs.repository.GenericRepository;
 import sbs.repository.users.UserRepository;
@@ -138,6 +139,19 @@ public class UserServiceImpl extends GenericServiceAdapter<User, Long> implement
 			Hibernate.initialize(user.getRoles());
 		}
 		return result;
+	}
+
+	@Override
+	@Transactional
+	public boolean hasAnyRole(User user, List<String> roles) {
+		for(String roleS: roles){
+			for(Role roleO: user.getRoles()){
+				if (roleS.equals(roleO.getName())){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 }

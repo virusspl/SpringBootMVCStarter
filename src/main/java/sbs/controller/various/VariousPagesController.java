@@ -423,6 +423,12 @@ public class VariousPagesController {
 			bhpState.setDescription("Odczytany");
 			bhpTicketStateService.save(bhpState);
 			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
+
+			bhpState = new BhpTicketState();
+			bhpState.setOrder(20);
+			bhpState.setDescription("Ponownie otwarty");
+			bhpTicketStateService.save(bhpState);
+			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
 			
 			bhpState = new BhpTicketState();
 			bhpState.setOrder(30);
@@ -439,6 +445,12 @@ public class VariousPagesController {
 			bhpState = new BhpTicketState();
 			bhpState.setOrder(90);
 			bhpState.setDescription("Anulowany");
+			bhpTicketStateService.save(bhpState);
+			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
+			
+			bhpState = new BhpTicketState();
+			bhpState.setOrder(95);
+			bhpState.setDescription("Archiwum");
 			bhpTicketStateService.save(bhpState);
 			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
 		}
