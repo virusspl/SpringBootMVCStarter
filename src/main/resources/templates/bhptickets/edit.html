@@ -118,14 +118,34 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-xs-6 col-sm-3" th:if="${ticketCreateForm.stateOrder} &lt; 40">
-					<div class="form-group">
+				<div class="col-xs-6 col-sm-3">
+					<div class="form-group" th:if="${ticketCreateForm.stateOrder} &lt; 40">
 						<label for="cancel" th:text="#{bhp.tickets.cancel}">cancel</label>
 						<div>
 							<button class="btn btn-danger btn-sm" type="submit" name="cancel"
 								id="cancel">
 								<span class="glyphicon glyphicon-remove"></span> <span
 									th:text="#{bhp.tickets.cancel}">create</span>
+							</button>
+						</div>
+					</div>
+					<div class="form-group" th:if="${ticketCreateForm.stateOrder} &gt;= 40">
+						<label for="reopen" th:text="#{bhp.tickets.reopen}">reopen</label>
+						<div>
+							<button class="btn btn-success btn-sm" type="submit" name="reopen"
+								id="reopen">
+								<span class="glyphicon glyphicon-retweet"></span> <span
+									th:text="#{bhp.tickets.reopen}">create</span>
+							</button>
+						</div>
+					</div>
+					<div class="form-group" th:if="${ticketCreateForm.stateOrder} &gt;= 40 and ${ticketCreateForm.stateOrder} &lt; 95">
+						<label for="archive" th:text="#{bhp.tickets.archive}">archive</label>
+						<div>
+							<button class="btn btn-info btn-sm" type="submit" name="archive"
+								id="archive">
+								<span class="glyphicon glyphicon-folder-open"></span> <span
+									th:text="#{bhp.tickets.movetoarchive}">create</span>
 							</button>
 						</div>
 					</div>

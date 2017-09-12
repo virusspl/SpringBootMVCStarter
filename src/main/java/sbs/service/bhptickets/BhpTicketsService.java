@@ -11,5 +11,7 @@ public interface BhpTicketsService extends GenericService<BhpTicket, Integer>{
 
 	public Set<User> findAllPendingTicketsUsers();
 	public List<BhpTicket> findPendingTicketsByUser(User user);
+	public List<BhpTicket> findAllNotArchivedTickets();
+	public List<BhpTicket> findArchivedTickets();
 	
 }

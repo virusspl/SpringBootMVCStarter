@@ -126,6 +126,13 @@
 								th:text="${ticket.comment}" style="min-height: 200px;"></span>
 						</div>
 					</div>
+			<div id="bhpAdminOnly" sec:authorize="hasAnyRole('ROLE_BHPMANAGER', 'ROLE_ADMIN')">
+				<div class="col-xs-12">
+					<a th:href="|@{/bhptickets/edit/}${ticket.id}|"
+						data-toggle="tooltip" data-placement="top"
+						th:title="#{action.edit}"><span th:text="|#{action.edit} #${ticket.id}|"></span></a>
+				</div>
+			</div>
 		</div>
 		<!-- PHOTOS -->
 		<div class="row" th:if="${#lists.size(photos)} > 0">

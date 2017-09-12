@@ -411,43 +411,56 @@ public class VariousPagesController {
 		}
 		
 		BhpTicketState bhpState;
-		if(bhpTicketStateService.findAll().size() == 0){
+		
+		if(bhpTicketStateService.findByOrder(10) == null){
 			bhpState = new BhpTicketState();
 			bhpState.setOrder(10);
 			bhpState.setDescription("Nowy");
 			bhpTicketStateService.save(bhpState);
 			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
-			
+		}
+		
+		if(bhpTicketStateService.findByOrder(20) == null){
 			bhpState = new BhpTicketState();
 			bhpState.setOrder(20);
 			bhpState.setDescription("Odczytany");
 			bhpTicketStateService.save(bhpState);
 			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
-
+		}
+		
+		if(bhpTicketStateService.findByOrder(25) == null){
 			bhpState = new BhpTicketState();
-			bhpState.setOrder(20);
+			bhpState.setOrder(25);
 			bhpState.setDescription("Ponownie otwarty");
 			bhpTicketStateService.save(bhpState);
 			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
+		}
 			
+		if(bhpTicketStateService.findByOrder(30) == null){	
 			bhpState = new BhpTicketState();
 			bhpState.setOrder(30);
 			bhpState.setDescription("Przekazany");
 			bhpTicketStateService.save(bhpState);
 			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
+		}
 			
+		if(bhpTicketStateService.findByOrder(40) == null){	
 			bhpState = new BhpTicketState();
 			bhpState.setOrder(40);
 			bhpState.setDescription("Zamknięty");
 			bhpTicketStateService.save(bhpState);
 			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
+		}
 			
+		if(bhpTicketStateService.findByOrder(90) == null){			
 			bhpState = new BhpTicketState();
 			bhpState.setOrder(90);
 			bhpState.setDescription("Anulowany");
 			bhpTicketStateService.save(bhpState);
 			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
-			
+		}	
+		
+		if(bhpTicketStateService.findByOrder(95) == null){			
 			bhpState = new BhpTicketState();
 			bhpState.setOrder(95);
 			bhpState.setDescription("Archiwum");

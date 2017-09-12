@@ -35,4 +35,16 @@ public class BhpTicketsServiceImpl extends GenericServiceAdapter<BhpTicket, Inte
 		return bhpTicketsRepository.findAllPendingTicketsByUser(user);
 	}
 
+	@Override
+	public List<BhpTicket> findAllNotArchivedTickets() {
+		return bhpTicketsRepository.findAllNotArchivedTickets();
+	}
+
+	@Override
+	public List<BhpTicket> findArchivedTickets() {
+		return bhpTicketsRepository.findArchivedTickets();
+	}
+	
+	
+
 }

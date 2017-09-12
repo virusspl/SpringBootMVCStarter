@@ -54,22 +54,30 @@
 				<h3 th:text="#{bhp.tickets.list.title}" class="text-primary underline"></h3>
 			</div>
 		</div>
+		<div id="bhpAdminOnly" class="row"
+				sec:authorize="hasAnyRole('ROLE_BHPMANAGER', 'ROLE_ADMIN')">
+				<div class="col-xs-12">
+				
+				<a class="btn btn-info btn-md margin-top-5"
+					th:href="@{/bhptickets/list}"> <span
+					class="glyphicon glyphicon-tasks" style="margin-right: 10px;"></span>
+					<span th:text="#{action.list}">list</span>
+				</a>
+				<a class="btn btn-success btn-md margin-top-5"
+					th:href="@{/bhptickets/archive}"> <span
+					class="glyphicon glyphicon-tasks" style="margin-right: 10px;"></span>
+					<span th:text="#{bhp.tickets.archive}">list</span>
+				</a>
+				
+				
+				</div>
+				
+		</div>
+		
+		
 		<div class="row margin-top-20">
 			<div class="col-xs-12 col-xs-offset-0">
 				<div class="table-responsive">
-
-
-	<!-- 
-	private int id;
-	private String title;
-	private User assignedUser;
-	private BhpTicketState state;
-	private User creator;
-	private Timestamp creationDate;
-	private Timestamp updateDate;	
-	private Timestamp toDoDate;
-	private Boolean toSend;
- 	-->
 
 
 					<table id="srv" class="display">
@@ -102,10 +110,10 @@
 						<tbody>
 							<tr th:each="ticket : ${tickets}">
 								<td>
-								<a th:if="${ticket.state.order} &lt; 40" th:href="|@{/bhptickets/edit/}${ticket.id}|"
+								<a th:if="${ticket.state.order} &lt; 400" th:href="|@{/bhptickets/edit/}${ticket.id}|"
 									data-toggle="tooltip" data-placement="top"
 									th:title="#{action.edit}">#<span th:text="${ticket.id}"></span></a>
-								<span th:if="${ticket.state.order} &gt;= 40" th:text="|#${ticket.id}|"></span>
+								<span th:if="${ticket.state.order} &gt;= 401" th:text="|#${ticket.id}|"></span>
 								</td>
 								<td><a th:href="|@{/bhptickets/show/}${ticket.id}|"
 									data-toggle="tooltip" data-placement="top"

@@ -1,9 +1,10 @@
 package sbs.controller.bhptickets;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -34,8 +35,6 @@ import sbs.service.bhptickets.BhpTicketStateService;
 import sbs.service.bhptickets.BhpTicketsService;
 import sbs.service.mail.MailService;
 import sbs.service.users.UserService;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 @Controller
 @RequestMapping("bhptickets")
@@ -89,17 +88,24 @@ public class BhpTicketsController {
 	
 	@RequestMapping(value = "/list")
 	@Transactional
-	public String listAll(Model model) {
+	public String listAllPending(Model model) {
 		User user = userService.getAuthenticatedUser();
 		if(userService.hasAnyRole(
 				user, 
 				Arrays.asList("ROLE_ADMIN","ROLE_BHPMANAGER","ROLE_BHPSUPERVISOR"))){
-			model.addAttribute("tickets", bhpTicketsService.findAll());
+			model.addAttribute("tickets", bhpTicketsService.findAllNotArchivedTickets());
 		}
 		else{
 			model.addAttribute("tickets", bhpTicketsService.findPendingTicketsByUser(user));
 		}
 		
+		return "bhptickets/list";
+	}
+	
+	@RequestMapping(value = "/archive")
+	@Transactional
+	public String listAll(Model model) {
+		model.addAttribute("tickets", bhpTicketsService.findArchivedTickets());
 		return "bhptickets/list";
 	}
 
@@ -210,6 +216,31 @@ public class BhpTicketsController {
 		ticket.setState(cancelState);
 		ticket.setToSend(false);
 		cancelState.getTickets().add(ticket);
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/bhptickets/list";
+	}
+	
+	@RequestMapping(value = "/edit", params = { "reopen" }, method = RequestMethod.POST)
+	@Transactional
+	public String reopen(@Valid TicketCreateForm ticketEditForm, BindingResult bindingResult,
+			RedirectAttributes redirectAttrs, Locale locale, Model model) {
+		BhpTicket ticket = bhpTicketsService.findById(ticketEditForm.getId());
+		BhpTicketState reopenState = bhpTicketStateService.findByOrder(25);
+		ticket.setState(reopenState);
+		ticket.setToSend(true);
+		reopenState.getTickets().add(ticket);
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/bhptickets/list";
+	}
+	
+	@RequestMapping(value = "/edit", params = { "archive" }, method = RequestMethod.POST)
+	@Transactional
+	public String archive(@Valid TicketCreateForm ticketEditForm, BindingResult bindingResult,
+			RedirectAttributes redirectAttrs, Locale locale, Model model) {
+		BhpTicket ticket = bhpTicketsService.findById(ticketEditForm.getId());
+		BhpTicketState archiveState = bhpTicketStateService.findByOrder(95);
+		ticket.setState(archiveState);
+		archiveState.getTickets().add(ticket);
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/bhptickets/list";
 	}
