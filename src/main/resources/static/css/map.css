@@ -78,6 +78,9 @@
 #XC:hover ~ #imageArea {
   	background: url("../images/map/XC.png");
 }
+#XD:hover ~ #imageArea {
+  	background: url("../images/map/XD.png");
+}
 #YA:hover ~ #imageArea {
   	background: url("../images/map/YA.png");
 }
