@@ -89,7 +89,8 @@ public class HrUaController {
 		object.fillFromEditForm(hrUaCreateForm);
 		hrUaService.saveOrUpdate(object);
 		
-		return "redirect:/hrua/list";
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/hrua/list/";
 	}
 	
 }
