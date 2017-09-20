@@ -54,8 +54,16 @@
 				<h3 th:text="#{hrua.files}" class="text-primary underline"></h3>
 			</div>
 			<div class="col-xs-12">
-				<a th:href="@{/hrua/create}" class="btn btn-primary btn-sm">
-					<span class="glyphicon glyphicon-add"></span> <span
+				<a th:href="@{/hrua/list}" class="btn btn-info btn-sm">
+					<span class="glyphicon glyphicon-list"></span> <span
+					th:text="#{action.list}">list</span>
+				</a>
+				<a th:href="@{/hrua/archive}" class="btn btn-success btn-sm">
+					<span class="glyphicon glyphicon-list"></span> <span
+					th:text="#{hrua.archive}">archive</span>
+				</a>
+				<a th:href="@{/hrua/user}" class="btn btn-primary btn-sm">
+					<span class="glyphicon glyphicon-plus"></span> <span
 					th:text="#{action.add}">back</span>
 				</a>
 			</div>
@@ -102,14 +110,20 @@
 						<tbody>
 							<tr th:each="user : ${users}">
 								<td>
-								<a th:href="|@{/hrua/edit/}${user.id}|"
+								<a th:href="|@{/hrua/user/}${user.id}|"
 									data-toggle="tooltip" data-placement="top"
 									th:title="#{action.edit}">#<span th:text="${user.id}"></span></a>
 								</td>
-								<td><a th:href="|@{/hrua/show/}${user.id}|"
+								<td>
+								<!-- 
+								<a th:href="|@{/hrua/show/}${user.id}|"
 									data-toggle="tooltip" data-placement="top"
 									th:title="#{action.show}">
-									<span th:text="|${user.lastName} ${user.name}|"></span></a></td>
+									<span th:text="|${user.lastName} ${user.name}|"></span></a>
+									 -->
+									 <span th:text="|${user.lastName} ${user.name}|"></span>
+								</td>
+									
 								
 								<td><span th:text="${user.passportNo}"></span></td>
 								<td><span th:text="${#dates.format(user.visaStartDate, 'yyyy.MM.dd HH:mm')}"></span></td>

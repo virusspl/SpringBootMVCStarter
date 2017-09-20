@@ -13,6 +13,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
 
+import sbs.controller.hrua.HrUaCreateForm;
 import sbs.model.users.User;
 
 @Entity
@@ -202,6 +203,33 @@ public class HrUaInfo {
 
 	public void setTemporaryVisaDate(Timestamp temporaryVisaDate) {
 		this.temporaryVisaDate = temporaryVisaDate;
+	}
+
+	public void fillFromEditForm(HrUaCreateForm createForm){
+		this.setName(createForm.getName());
+		this.setLastName(createForm.getLastName());
+		this.setPassportNo(createForm.getPassportNo());
+		this.setVisaStartDate(new Timestamp(createForm.getVisaStartDate().getTime()));
+		this.setVisaEndDate(new Timestamp(createForm.getVisaEndDate().getTime()));
+		this.setPhone(createForm.getPhone());
+		if(createForm.getTemporaryVisaDate()!=null){
+			this.setTemporaryVisaDate(new Timestamp(createForm.getTemporaryVisaDate().getTime()));
+		}
+		this.setAddress(createForm.getAddress());
+		this.setFatherName(createForm.getFatherName());
+		this.setMotherName(createForm.getMotherName());
+		this.setMotherMaidenName(createForm.getMotherMaidenName());
+		this.setComment(createForm.getComment());
+		this.setArchive(createForm.getArchive());
+	}
+	
+	@Override
+	public String toString() {
+		return "HrUaInfo [creator=" + creator + ", id=" + id + ", name=" + name + ", lastName=" + lastName
+				+ ", passportNo=" + passportNo + ", visaStartDate=" + visaStartDate + ", visaEndDate=" + visaEndDate
+				+ ", phone=" + phone + ", address=" + address + ", comment=" + comment + ", motherName=" + motherName
+				+ ", motherMaidenName=" + motherMaidenName + ", fatherName=" + fatherName + ", creationDate="
+				+ creationDate + ", archive=" + archive + ", temporaryVisaDate=" + temporaryVisaDate + "]";
 	}
 
 	

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script">
+		<!-- DATEPICKER -->
+		<script th:src="@{/datepicker/js/bootstrap-datepicker.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:src="@{/datepicker/locales/bootstrap-datepicker.pl.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script
+			th:src="@{/datepicker/locales/bootstrap-datepicker.en-GB.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:src="@{/datepicker/locales/bootstrap-datepicker.it.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:if="__${#locale}__ == 'pl'">
+			$('#visaStartDate').datepicker({
+				autoclose : true,
+				language : 'pl'
+			});
+			$('#visaEndDate').datepicker({
+				autoclose : true,
+				language : 'pl'
+			});
+			$('#temporaryVisaDate').datepicker({
+				autoclose : true,
+				language : 'pl'
+			});
+		</script>
+		<script th:if="__${#locale}__ == 'en'">
+			$('#visaStartDate').datepicker({
+				autoclose : true,
+				language : 'en-GB'
+			});
+			$('#visaEndDate').datepicker({
+				autoclose : true,
+				language : 'en-GB'
+			});
+			$('#temporaryVisaDate').datepicker({
+				autoclose : true,
+				language : 'en-GB'
+			});
+		</script>
+		<script th:if="__${#locale}__ == 'it'">
+			$('#visaStartDate').datepicker({
+				autoclose : true,
+				language : 'it'
+			});
+			$('#visaEndDate').datepicker({
+				autoclose : true,
+				language : 'it'
+			});
+			$('#temporaryVisaDate').datepicker({
+				autoclose : true,
+				language : 'it'
+			});
+		</script>
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h1 th:text="#{hrua.user.title}" class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{hrua.user.message}"> Welcome message </span>
+			</div>
+			<a th:href="@{/hrua/list}" class="btn btn-link btn-sm"> <span
+						class="glyphicon glyphicon-menu-left"></span> <span
+						th:text="#{action.back}">back</span>
+					</a>
+		</div>
+		<div class="underline"></div>
+		<!-- BHP TICKET FORM -->
+		<form th:action="@{/hrua/user}" method="post"
+			th:object="${hrUaCreateForm}">
+			<input type="hidden" th:field="*{id}"></input>
+			<!-- REQUIRED -->
+			<div class="row">
+				<div class="col-xs-12">
+					<h4 th:text="#{generic.required}" class="text-primary"></h4>
+				</div>
+			</div>
+			<!-- 
+	@NotEmpty
+	private String name;
+	@NotEmpty
+	private String lastName;
+	@NotEmpty
+	private String passportNo;
+	@NotNull
+	@DateTimeFormat(pattern= "dd.MM.yyyy")
+	private Date visaStartDate;
+	@NotNull
+	@DateTimeFormat(pattern= "dd.MM.yyyy")
+	private Date visaEndDate;
+	 -->
+
+			<div class="row">
+				<div class="col-xs-6 col-sm-3">
+					<div class="form-group">
+						<!-- name -->
+						<label for="name" th:text="#{hrua.name}">name</label> <input
+							type="text" class="form-control" id="name" name="name"
+							th:placeholder="#{hrua.name}" th:field="*{name}"
+							autocomplete="off" />
+						<div th:errors="*{name}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-sm-3">
+					<div class="form-group">
+						<!-- last name -->
+						<label for="lastName" th:text="#{hrua.lastName}">lastName</label>
+						<input type="text" class="form-control" id="lastName"
+							name="lastName" th:placeholder="#{hrua.lastName}"
+							th:field="*{lastName}" autocomplete="off" />
+						<div th:errors="*{lastName}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-sm-3">
+					<div class="form-group">
+						<!-- passportNo -->
+						<label for="passportNo" th:text="#{hrua.passportNo}">passportNo</label>
+						<input type="text" class="form-control" id="passportNo"
+							name="passportNo" th:placeholder="#{hrua.passportNo}"
+							th:field="*{passportNo}" autocomplete="off" />
+						<div th:errors="*{passportNo}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-6 col-sm-3">
+					<div class="form-group">
+						<!-- visa start date -->
+						<label for="visaStartDate" th:text="#{hrua.visaStartDate}">visaStartDate</label>
+						<input type="text" class="form-control" id="visaStartDate"
+							name="visaStartDate" th:placeholder="#{hrua.visaStartDate}"
+							th:field="*{visaStartDate}" autocomplete="off"/>
+						<div th:errors="*{visaStartDate}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-sm-3">
+					<div class="form-group">
+						<!-- visa end date -->
+						<label for="visaEndDate" th:text="#{hrua.visaEndDate}">visaEndDate</label>
+						<input type="text" class="form-control" id="visaEndDate"
+							name="visaEndDate" th:placeholder="#{hrua.visaEndDate}"
+							th:field="*{visaEndDate}" autocomplete="off"/>
+						<div th:errors="*{visaEndDate}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- /REQUIRED -->
+			<!-- 	
+	/*
+	 * optional
+	 * 
+	 */
+	private String phone;	
+	private String address;
+	@DateTimeFormat(pattern= "dd.MM.yyyy")
+	private Date temporaryVisaDate;
+	
+	private String fatherName;
+	private String motherName;
+	private String motherMaidenName;
+	
+	private Boolean archive;
+	private String comment;
+	-->
+
+			<!-- OPTIONAL -->
+			<div class="row">
+				<div class="col-xs-12">
+					<h4 th:text="#{generic.optional}" class="text-primary"></h4>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-xs-6 col-sm-3">
+					<div class="form-group">
+						<!-- phone -->
+						<label for="phone" th:text="#{hrua.phone}">phone</label> <input
+							type="text" class="form-control" id="phone" name="phone"
+							th:placeholder="#{hrua.phone}" th:field="*{phone}" autocomplete="off"/>
+						<div th:errors="*{phone}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-sm-3">
+					<div class="form-group">
+						<!-- temporary visa date -->
+						<label for="temporaryVisaDate" th:text="#{hrua.temporaryVisaDate}">temporaryVisaDate</label>
+						<input type="text" class="form-control" id="temporaryVisaDate"
+							name="temporaryVisaDate"
+							th:placeholder="#{hrua.temporaryVisaDate}"
+							th:field="*{temporaryVisaDate}" autocomplete="off"/>
+						<div th:errors="*{temporaryVisaDate}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-9">
+					<div class="form-group">
+						<!-- address -->
+						<label for="address" th:text="#{hrua.address}">address</label> <input
+							type="text" class="form-control" id="address" name="address"
+							th:placeholder="#{hrua.address}" th:field="*{address}" autocomplete="off" />
+						<div th:errors="*{address}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-6 col-sm-3">
+					<div class="form-group">
+						<!-- fatherName -->
+						<label for="fatherName" th:text="#{hrua.fatherName}">fatherName</label>
+						<input type="text" class="form-control" id="fatherName"
+							name="fatherName" th:placeholder="#{hrua.fatherName}"
+							th:field="*{fatherName}" autocomplete="off"/>
+						<div th:errors="*{fatherName}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-sm-3">
+					<div class="form-group">
+						<!-- motherName -->
+						<label for="motherName" th:text="#{hrua.motherName}">motherName</label>
+						<input type="text" class="form-control" id="motherName"
+							name="motherName" th:placeholder="#{hrua.motherName}"
+							th:field="*{motherName}" autocomplete="off"/>
+						<div th:errors="*{motherName}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-sm-3">
+					<div class="form-group">
+						<!-- motherMaidenName -->
+						<label for="motherMaidenName" th:text="#{hrua.motherMaidenName}">motherMaidenName</label>
+						<input type="text" class="form-control" id="motherMaidenName"
+							name="motherMaidenName" th:placeholder="#{hrua.motherMaidenName}"
+							th:field="*{motherMaidenName}" autocomplete="off"/>
+						<div th:errors="*{motherMaidenName}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-9">
+					<div class="form-group">
+						<!-- comment -->
+						<label for="comment" th:text="#{hrua.comment}">comment</label>
+						<textarea class="form-control" id="comment" name="comment"
+							th:placeholder="#{hrua.comment}" th:field="*{comment}"
+							style="min-height: 200px;"></textarea>
+						<div th:errors="*{comment}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="col-xs-6 col-sm-3">
+						<div class="form-group">
+							<!-- archive -->
+							<label for="archive" th:text="#{hrua.archive}">to send</label>
+							<div id="archive" class="checkbox">
+								<label><input type="checkbox" th:field="*{archive}" /><span
+									th:text="#{hrua.archive}"></span></label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- /OPTIONAL -->
+
+			<div class="row margin-top-10">
+				<div class="col-xs-12">
+					<a th:href="@{/hrua/list}" class="btn btn-link btn-sm"> <span
+						class="glyphicon glyphicon-menu-left"></span> <span
+						th:text="#{action.back}">back</span>
+					</a>
+					<button class="btn btn-primary btn-sm" type="submit" name="save">
+						<span class="glyphicon glyphicon-ok"></span> <span
+							th:text="#{action.save}">create</span>
+					</button>
+				</div>
+			</div>
+		</form>
+		<!-- /USER FORM -->
+	</div>
+</body>
+</html>
