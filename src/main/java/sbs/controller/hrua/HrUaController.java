@@ -63,7 +63,6 @@ public class HrUaController {
 		if (object == null) {
 			throw new NotFoundException("User not found");
 		}
-		System.out.println(HrUaCreateForm.hrUaCreateFormFromHrUaInfo(object));
 		model.addAttribute(HrUaCreateForm.hrUaCreateFormFromHrUaInfo(object));
 		return "hrua/user";
 	}
