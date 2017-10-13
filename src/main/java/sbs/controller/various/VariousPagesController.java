@@ -83,7 +83,8 @@ public class VariousPagesController {
 	@RequestMapping("/test")
 	public String jdbc(Model model) {
 
-		List<BhpTicketState> listb = bhpTicketStateService.findAll();
+
+		//List<BhpTicketState> listb = bhpTicketStateService.findAll();
 		//System.out.println(listb);
 		
 		//X3Client result = jdbcOracleX3Service.findClientByCode("ATW", "cad40");
@@ -93,7 +94,7 @@ public class VariousPagesController {
 		//System.out.println(result);
 		
 		///List<X3BomItem> list = jdbcOracleX3Service.findBomPartsByParent("ATW", "431S1001");
-		model.addAttribute("list", listb);
+		//model.addAttribute("list", listb);
 		
 		/*
 		// CREATE DEMO SURVEY
@@ -162,7 +163,8 @@ public class VariousPagesController {
 			System.out.println("no current user HR info found by card no");
 		}
 		*/
-		return "various/jdbc";
+		//return "various/jdbc";
+		return "various/test";
 	}
 
 	@RequestMapping("/init")

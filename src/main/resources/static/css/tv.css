@@ -1,0 +1,119 @@
+/* tmp */
+div{ 
+	border: 0px solid #E2E2E2;
+}
+html{
+	padding: 0;
+	
+}
+
+body{
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;	
+	background: url("../images/background/abstract_08.jpg") no-repeat center center fixed; 
+  	-webkit-background-size: cover;
+  	-moz-background-size: cover;
+  	-o-background-size: cover;
+  	background-size: cover;	
+}
+
+.blend {
+	background: rgba(255, 255, 255, .6);
+	margin-top: -20px;
+	width: parent;
+	margin: 0 auto;
+}
+
+.row {
+	padding: 15px 0 25px 0;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.title{
+	font-size: 3em;
+	text-align: center;
+}
+
+.subtitle{
+	font-size: 2em;
+	text-align: center;
+}
+.header{
+	font-size: 1.3em;
+	text-align: center;
+}
+.subheader{
+	font-size: 0.9em;
+	text-align: center;
+}
+
+.val{
+	font-size: 3em;
+	display: block;
+	border: 1px solid #A2A2A2;
+}
+.ok{
+	background: #CCFFCC;
+}
+.neutral{
+	background: #FFFFCC;
+}
+.negative{
+	background: #FFCCCC;
+}
+
+.border-blue {
+	border: 3px solid #58C2FF;
+}
+.border-green {
+	border: 3px solid #2DF3BE;
+}
+.border-red {
+	border: 3px solid #F55F5F;
+}
+.border-purple {
+	border: 3px solid #AE78FF;
+}
+
+.center {
+	text-align: center;
+}
+
+.underline {
+	padding-bottom: 10px;
+	border-bottom: 2px solid #E0E0E0;
+}
+
+.margin-bottom-5{
+	margin-bottom: 5px;
+}
+.margin-bottom-10{
+	margin-bottom: 10px;
+}
+.margin-bottom-20{
+	margin-bottom: 20px;
+}
+.margin-bottom-30{
+	margin-bottom: 30px;
+}
+.margin-bottom-60{
+	margin-bottom: 60px;
+}
+.margin-top-5{
+	margin-top: 5px;
+}
+.margin-top-5{
+	margin-top: 5px;
+}
+.margin-top-10{
+	margin-top: 10px;
+}
+.margin-top-20{
+	margin-top: 20px;
+}
+.margin-top-30{
+	margin-top: 30px;
+}
+.margin-top-60{
+	margin-top: 60px;
+}
