@@ -20,7 +20,6 @@ import sbs.model.users.User;
 @Table(name = "hrua_files")
 public class HrUaInfo {
 
-	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "hrua_creusr", nullable = false)
 	private User creator;
