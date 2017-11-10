@@ -28,13 +28,12 @@
 					href="http://192.168.1.23/DOCS/phones.pdf" target="_blank"> <span
 					class="glyphicon glyphicon-folder-open" style="margin-right: 10px;"></span>
 					<span th:text="#{phone.numbers}">Phone numbers</span>
-				</a> 
-				<a class="btn btn-link btn-md margin-top-5"
-					href="http://192.168.1.23/DOCS/passchange.pdf" target="_blank"> <span
-					class="glyphicon glyphicon-folder-open" style="margin-right: 10px;"></span>
-					<span th:text="#{password.manual}">Phone numbers</span>
-				</a> 
-				<a class="btn btn-link btn-md margin-top-5"
+				</a> <a class="btn btn-link btn-md margin-top-5"
+					href="http://192.168.1.23/DOCS/passchange.pdf" target="_blank">
+					<span class="glyphicon glyphicon-folder-open"
+					style="margin-right: 10px;"></span> <span
+					th:text="#{password.manual}">Phone numbers</span>
+				</a> <a class="btn btn-link btn-md margin-top-5"
 					href="http://192.168.1.23/CRM/CRM.pdf" target="_blank"> <span
 					class="glyphicon glyphicon-folder-open" style="margin-right: 10px;"></span>
 					<span th:text="#{crm.manual}">CRM Manual</span>
@@ -56,12 +55,10 @@
 						class="btn btn-warning btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-user"></span> <span
 						th:text="#{users.management}">users management</span>
-					</a>
-					
-					<a th:href="@{/users/monitor}"
-						class="btn btn-warning btn-md margin-top-5">
-						<span class="glyphicon glyphicon-globe"></span>
-						<span th:text="#{session.monitor}">users management</span>
+					</a> <a th:href="@{/users/monitor}"
+						class="btn btn-warning btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-globe"></span> <span
+						th:text="#{session.monitor}">users management</span>
 					</a>
 				</div>
 			</div>
@@ -71,10 +68,8 @@
 					With title</h3>
 			</div>
 			<div class="col-xs-12 margin-top-10">
-			<!-- HR UA -->
-				<a th:href="@{/hrua/list}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-user"></span> <span
+				<a th:href="@{/hrua/list}" class="btn btn-info btn-md margin-top-5">
+					<span class="glyphicon glyphicon-user"></span> <span
 					th:text="#{hrua.files}">HR UA Files</span>
 				</a>
 			</div>
@@ -84,21 +79,22 @@
 					With title</h3>
 			</div>
 			<div class="col-xs-12 margin-top-10">
-			<!-- NAMEPLATES -->
 				<a th:href="@{/nameplates/list}"
 					class="btn btn-info btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-list"></span> <span
-					th:text="#{nameplates.rfid.log}">RFID Log</span>
-			<!-- QUALITY SURVEYS -->					
+					th:text="#{nameplates.rfid.log}">RFID Log</span> <!-- QUALITY SURVEYS -->
 				</a> <a th:href="@{/qualitysurveys/dispatch}"
 					class="btn btn-info btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-link"></span> <span
-					th:text="#{quality.surveys}">quality surveys</span>
-			<!-- BHP SURVEYS -->
+					th:text="#{quality.surveys}">quality surveys</span> <!-- BHP SURVEYS -->
 				</a> <a th:href="@{/bhptickets/dispatch}"
 					class="btn btn-info btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-pencil"></span> <span
-					th:text="#{bhp.tickets}">bhp tickets</span>
+					th:text="#{bhp.tickets}">bhp tickets</span> <!-- BHP SURVEYS -->
+				</a> <a th:href="@{/wakesurvey/dosurvey/1}"
+					class="btn btn-info btn-md margin-top-5"> <span
+					class="glyphicon glyphicon-pencil"></span> <span
+					th:text="#{wakesurvey.title}">bhp tickets</span>
 				</a>
 			</div>
 			<!-- WAREHOUSE -->

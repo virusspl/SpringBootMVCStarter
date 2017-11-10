@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script">
+	<script>
+	window.onload = function() {
+		setTimeout(
+				  function() 
+				  {
+					  document.getElementById('yesno').style.display = 'block';
+				  }, 2000);
+		
+	    
+	}
+
+	</script>
+	
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h1 th:text="#{wakesurvey.title}" class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{wakesurvey.message}"> Welcome message </span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 margin-top-10">
+				<a th:href="@{/}" class="btn btn-link btn-sm"> <span
+					class="glyphicon glyphicon-menu-left"></span> <span
+					th:text="#{action.back}">back</span>
+				</a> <a th:href="@{/wakesurvey/edit}" class="btn btn-primary btn-sm"
+					style="float: right; margin-right: 15px;"> <span
+					class="glyphicon glyphicon-edit"></span> <span
+					th:text="#{wakesurvey.manage}">back</span>
+				</a>
+			</div>
+		</div>
+		<div class="underline margin-top-10"></div>
+		<div class="row" th:if="${cnt &gt;= 1 and cnt &lt;= 8}">
+			<div class="col-xs-12 margin-top-30">
+				<h1 th:text="${question.text}" class="text-primary center"
+					style="text-align: center;"></h1>
+			</div>
+			<div id="yesno" class="col-xs-12 margin-top-30" style="text-align: center; display: none;'">
+				<a th:href="|@{/wakesurvey/dosurvey/}${cnt}|"
+					class="btn btn-success btn-lg"> <span
+					class="glyphicon glyphicon-ok"></span> <span
+					th:text="#{action.yes}">back</span>
+				</a> <a th:href="|@{/wakesurvey/dosurvey/}${cnt}|"
+					class="btn btn-danger btn-lg" style="margin-left: 100px;"> <span
+					class="glyphicon glyphicon-remove"></span> <span
+					th:text="#{action.no}">back</span>
+				</a>
+			</div>
+			<div class="col-xs-6 margin-top-30"></div>
+		</div>
+		<div class="row" th:if="${cnt &lt; 1 or cnt &gt; 8}">
+			
+			<div class="col-xs-12 margin-top-30">
+			<h1 th:text="#{wakesurvey.thankyou}" class="text-primary"
+				style="text-align: center;"></h1>
+			</div>
+			<div class="col-xs-12 margin-top-30" style="text-align: center;">
+			<a th:href="@{/wakesurvey/dosurvey/1}" class="btn btn-info btn-md"
+				style="text-align: center;"> <span
+				class="glyphicon glyphicon-pencil"></span> <span
+				th:text="#{wakesurvey.newsurvey}">back</span>
+			</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

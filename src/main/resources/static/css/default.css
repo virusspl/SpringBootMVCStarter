@@ -92,7 +92,9 @@ html {
 .margin-top-30{
 	margin-top: 30px;
 }
-
+.center{
+	style="text-align: center;"
+}
 
 .input-error{
 	background-color: #F3D0D0;

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script"></div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h1 th:text="#{wakesurvey.question.create}" class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{wakesurvey.question.createmessage}"> Welcome
+					message </span>
+			</div>
+		</div>
+		<div class="underline margin-top-10"></div>
+		<!-- WAKE SURVEY QUESTION CREATE FORM -->
+		<form th:action="@{/wakesurvey/create}" method="post"
+			th:object="${wakeQuestionCreateForm}">
+			<div class="row margin-top-20">
+				<div class="col-xs-8">
+					<div class="form-group">
+						<!-- question body -->
+						<label for="name" th:text="#{wakesurvey.question.body}">bodye</label> <input
+							type="text" class="form-control" id="text" name="text"
+							th:placeholder="#{wakesurvey.question.body}" th:field="*{text}"
+							autocomplete="off" />
+						<div th:errors="*{text}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+			<!-- /OPTIONAL -->
+			<div class="row margin-top-10">
+				<div class="col-xs-12">
+					<a th:href="@{/wakesurvey/edit}" class="btn btn-link btn-sm"> <span
+						class="glyphicon glyphicon-menu-left"></span> <span
+						th:text="#{action.back}">back</span>
+					</a>
+					<button class="btn btn-primary btn-sm" type="submit" name="save">
+						<span class="glyphicon glyphicon-ok"></span> <span
+							th:text="#{action.save}">create</span>
+					</button>
+				</div>
+			</div>
+		</form>
+		<!-- /FORM -->
+	</div>
+</body>
+</html>

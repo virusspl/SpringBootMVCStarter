@@ -59,12 +59,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/geolook/**",
 				"/wpslook/**",
 				"/bhptickets/show/**",
-				"/bhptickets/getphoto/**"
+				"/bhptickets/getphoto/**",
+				"/wakesurvey/dosurvey/**"
 				)
 		.permitAll()
 		.antMatchers("/bhptickets/edit/**", 
 				"/bhptickets/create/**",
 				"/bhptickets/sendemails/**",
+				"/wakesurvey/**",
 				"/upload/bhptickets/**" )
 		.hasAnyRole(
 				"ADMIN",

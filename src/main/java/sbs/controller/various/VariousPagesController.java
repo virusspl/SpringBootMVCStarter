@@ -1,5 +1,8 @@
 package sbs.controller.various;
 
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 import java.util.Locale;
 
@@ -83,6 +86,10 @@ public class VariousPagesController {
 	@RequestMapping("/test")
 	public String jdbc(Model model) {
 
+		//URL url = new URL ("ftp://username:password@www.superland.example/server");
+		//URLConnection urlc = url.openConnection();
+		//InputStream is = urlc.getInputStream();
+		
 
 		//List<BhpTicketState> listb = bhpTicketStateService.findAll();
 		//System.out.println(listb);
