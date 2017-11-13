@@ -15,10 +15,18 @@ public class WakeQuestion {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "wq_id")
 	private int id;
-	
+		
 	@Column(name = "wq_text", length = 250, nullable = false)
 	private String text;
 
+	public WakeQuestion() {
+
+	}
+	
+	public WakeQuestion(String text) {
+		this.text = text;
+	}
+	
 	public int getId() {
 		return id;
 	}

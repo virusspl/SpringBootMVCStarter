@@ -34,11 +34,12 @@ public class WakeSurveyController {
 	@Transactional
 	public String doSurvey(@PathVariable("cnt") int cnt, Model model) {
 		List<WakeQuestion> questions = wakeQuestionsService.findAll();
-		Random r = new Random();
-		int idx = r.nextInt(questions.size());
-		model.addAttribute("question", questions.get(idx));
-		model.addAttribute("cnt", cnt+1);
-		
+		if(questions.size()>0){
+			Random r = new Random();
+			int idx = r.nextInt(questions.size());
+			model.addAttribute("question", questions.get(idx));
+			model.addAttribute("cnt", cnt+1);
+		}
 		return "wakesurvey/dosurvey";
 	}
 
