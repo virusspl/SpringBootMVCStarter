@@ -15,7 +15,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>1.5.1.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
 	<properties>
@@ -25,8 +25,8 @@
 	</properties>
 
 	<dependencies>
-	
-			<!-- DEVTOOLS -->
+
+		<!-- DEVTOOLS -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -44,8 +44,8 @@
 		</dependency>
 		<!-- MAIL -->
 		<dependency>
-    		<groupId>org.springframework.boot</groupId>
-    		<artifactId>spring-boot-starter-mail</artifactId>    
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 		<!-- STARTER WEB -->
 		<dependency>
@@ -94,17 +94,17 @@
 		</dependency>
 		<!-- ORACLE -->
 		<dependency>
-		    <groupId>com.oracle</groupId>
-		    <artifactId>ojdbc14</artifactId>
-		    <version>10.2.0.4.0</version>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc14</artifactId>
+			<version>10.2.0.4.0</version>
 		</dependency>
 		<!-- SQLSERVER -->
 		<dependency>
-		  <groupId>com.microsoft.sqlserver</groupId>
-		  <artifactId>sqljdbc4</artifactId>
-		  <version>6.0.8112.100</version>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>sqljdbc4</artifactId>
+			<version>6.0.8112.100</version>
 		</dependency>
-	<!-- CONFIGURATION PROCESSOR -->
+		<!-- CONFIGURATION PROCESSOR -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
@@ -127,7 +127,7 @@
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<!-- WEB -->
 		<!-- WEBJARS START -->
 		<dependency>
@@ -139,13 +139,8 @@
 			<artifactId>materializecss</artifactId>
 			<version>0.96.0</version>
 		</dependency>
-		<!-- 
-		<dependency>
-    		<groupId>org.webjars</groupId>
-    		<artifactId>bootstrap</artifactId>
-    		<version>3.3.5</version>
-		</dependency>
-		 -->
+		<!-- <dependency> <groupId>org.webjars</groupId> <artifactId>bootstrap</artifactId> 
+			<version>3.3.5</version> </dependency> -->
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>jquery</artifactId>
@@ -162,6 +157,12 @@
 			<version>2.3.3</version>
 		</dependency>
 		<!-- WEBJARS END -->
+		<!-- Apache Commons Net + FTP -->
+		<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>3.3</version>
+		</dependency>
 
 		<!-- SWAGGER2 -->
 		<dependency>
@@ -169,7 +170,7 @@
 			<artifactId>springfox-swagger2</artifactId>
 			<version>2.0.1</version>
 		</dependency>
-	
+
 	</dependencies>
 
 	<build>

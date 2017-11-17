@@ -104,6 +104,11 @@
 					<span th:text="${error}">error</span>
 				</div>
 				<!-- /ERROR -->
+				<!-- WARNING -->
+				<div id="warningMessage" class="alert alert-warning" th:if="${warning}">
+					<span th:text="${warning}">error</span>
+				</div>
+				<!-- /WARNING -->
 				<!-- MESSAGE -->
 				<div class="alert alert-success alert-dismissable" th:if="${msg}">
 					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
