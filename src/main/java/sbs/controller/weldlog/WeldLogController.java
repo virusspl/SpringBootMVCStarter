@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -101,24 +102,47 @@ public class WeldLogController {
             // PROCESS FILE
             in = new BufferedReader(new FileReader(destinationFile));
 			
-			String line, result;
+			String line;
 			List<String> split;
-			long i = 1;
+			WeldLogLine weldLine;
+			ArrayList<WeldLogLine> okLines = new ArrayList();
+			List<String> headers;
 			
-			result = "";
-			while ((line = in.readLine()) != null) {
-				//if (line.split(",").length != 7){
-				// out of while: ArrayList<NameplatesErrorLine> errorLines = new ArrayList<>();
-				// errorLines.add(new NameplatesErrorLine(i,line));
-				//}
-				
-				result += line + "<br/>";
-				
-				i++;
+			// titles
+			if((line = in.readLine()) != null){
+				line = line.replace("\"","");
+				if (line.split(",").length != 29){
+					model.addAttribute("error",
+		        			messageSource.getMessage("error.ftp.badfilestructure",null, locale)
+		        			+ " " + server +":"+port + " [" + remoteFile+ "]"
+		        			);
+				}
+				else{
+					headers = Arrays.asList(line.split(","));
+					model.addAttribute("headers", headers);
+				}
 			}
+			
+			// lines
+			while ((line = in.readLine()) != null) {
+				line = line.replace("\"","");
+				if (line.split(",").length != 29){
+					model.addAttribute("warning",
+		        			messageSource.getMessage("error.ftp.badfilestructure",null, locale)
+		        			+ " " + server +":"+port + " [" + remoteFile+ "]"
+		        			);
+				}
+				else{
+					weldLine = new WeldLogLine();
+					weldLine.setFields(Arrays.asList(line.split(",")));
+					okLines.add(weldLine);
+				}
+			}
+			model.addAttribute("okLines", okLines);
 			in.close();
 			downloadFile.delete();
-			model.addAttribute("result", result);
+			
+			
         } catch (IOException ex) {
         	model.addAttribute("error",
         			messageSource.getMessage("error.ftp.exception",null, locale)
