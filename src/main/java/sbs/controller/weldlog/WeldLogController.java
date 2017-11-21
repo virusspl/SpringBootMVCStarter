@@ -21,8 +21,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import sbs.controller.nameplates.NameplatesErrorLine;
-
 // http://www.codejava.net/java-se/networking/ftp/java-ftp-file-download-tutorial-and-example
 // https://www.google.pl/search?client=firefox-b-ab&dcr=0&ei=08kKWuy-Fs3GwALfybqIDg&q=easy+java+get+ftp+file&oq=easy+java+get+ftp+file&gs_l=psy-ab.3..33i22i29i30k1l10.268718.272644.0.272780.22.20.0.0.0.0.161.1552.10j6.16.0....0...1.1.64.psy-ab..6.16.1548...0j35i39k1j0i131k1j0i67k1j0i10k1j0i19k1j0i22i30i19k1j0i22i30k1.0.RQDFEUti8e0
 
@@ -103,12 +101,11 @@ public class WeldLogController {
             in = new BufferedReader(new FileReader(destinationFile));
 			
 			String line;
-			List<String> split;
 			WeldLogLine weldLine;
-			ArrayList<WeldLogLine> okLines = new ArrayList();
+			ArrayList<WeldLogLine> okLines = new ArrayList<WeldLogLine>();
 			List<String> headers;
 			
-			// titles
+			// GET TITLES
 			if((line = in.readLine()) != null){
 				line = line.replace("\"","");
 				if (line.split(",").length != 29){
@@ -123,7 +120,7 @@ public class WeldLogController {
 				}
 			}
 			
-			// lines
+			// GET LINES
 			while ((line = in.readLine()) != null) {
 				line = line.replace("\"","");
 				if (line.split(",").length != 29){
@@ -140,6 +137,7 @@ public class WeldLogController {
 			}
 			model.addAttribute("okLines", okLines);
 			in.close();
+			// DELETE FILE			
 			downloadFile.delete();
 			
 			
@@ -161,72 +159,6 @@ public class WeldLogController {
                 ex.printStackTrace();
             }
         }
-    	
-    	
-    	
-    	
-    	
-    	
-    	
     	return "weldlog/list";
     }
-    /*
-	@RequestMapping("/list")
-	public String list(Model model, Locale locale) throws FileNotFoundException {
-		ArrayList<NameplatesLogLine> logLines = new ArrayList<>();
-		ArrayList<NameplatesErrorLine> errorLines = new ArrayList<>();
-		ArrayList<NameplatesLogLine> backlistLog;
-		ArrayList<NameplatesErrorLine> backlistError;
-		try {
-			BufferedReader in = new BufferedReader(new FileReader(rfidPath));
-			
-			String line;
-			List<String> split;
-			NameplatesLogLine logLine;
-			long i = 1;
-			
-			while ((line = in.readLine()) != null) {
-				if (line.split(",").length != 7){
-					errorLines.add(new NameplatesErrorLine(i,line));
-				}
-				else{
-					logLine= new NameplatesLogLine();
-					logLine.setLineNo(i);
-					line = line.replace("\"","");
-					split = Arrays.asList(line.split(","));
-					logLine.setActionDate(split.get(0));
-					logLine.setAction(split.get(1));
-					logLine.setRfid(split.get(2));
-					logLine.setProduct(split.get(3));
-					logLine.setDate(split.get(4));
-					logLine.setFlag(split.get(5));
-					logLine.setComment(split.get(6));
-					logLines.add(logLine);
-				}
-				i++;
-			}
-			in.close();
-			
-			backlistLog = new ArrayList<>();
-			for (ListIterator<NameplatesLogLine> iterator = logLines.listIterator(logLines.size()); iterator.hasPrevious();) {
-				backlistLog.add(iterator.previous());
-			}
-
-			backlistError = new ArrayList<>();
-			for (ListIterator<NameplatesErrorLine> iterator = errorLines.listIterator(errorLines.size()); iterator.hasPrevious();) {
-				backlistError.add(iterator.previous());
-			}
-			
-			model.addAttribute("logLines", backlistLog);
-			model.addAttribute("errorLines", backlistError);
-		} catch (FileNotFoundException ex) {
-			throw new FileNotFoundException(
-					messageSource.getMessage("error.file.not.found",null, locale)
-					+ " "
-					+ ex.getMessage());
-		} catch (IOException ignore){}
-		return "nameplates/list";
-	}
-	*/
-
 }
