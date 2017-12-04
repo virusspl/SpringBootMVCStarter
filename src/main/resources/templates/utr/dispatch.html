@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script">
+		<!-- DATEPICKER -->
+		<script th:src="@{/datepicker/js/bootstrap-datepicker.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:src="@{/datepicker/locales/bootstrap-datepicker.pl.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script
+			th:src="@{/datepicker/locales/bootstrap-datepicker.en-GB.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:src="@{/datepicker/locales/bootstrap-datepicker.it.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:if="__${#locale}__ == 'pl'">
+			$('#startDate').datepicker({
+				autoclose : true,
+				language : 'pl'
+			});
+			$('#endDate').datepicker({
+				autoclose : true,
+				language : 'pl'
+			});
+		</script>
+		<script th:if="__${#locale}__ == 'en'">
+			$('#startDate').datepicker({
+				autoclose : true,
+				language : 'en-GB'
+			});
+			$('#endDate').datepicker({
+				autoclose : true,
+				language : 'en-GB'
+			});
+		</script>
+		<script th:if="__${#locale}__ == 'it'">
+			$('#startDate').datepicker({
+				autoclose : true,
+				language : 'it'
+			});
+			$('#endDate').datepicker({
+				autoclose : true,
+				language : 'it'
+			});
+		</script>
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12 col-xs-offset-0">
+				<h2 th:text="#{utr.stats.dispatch.title}" class="text-primary">Hello
+					on a page</h2>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{utr.stats.dispatch.message}"> Welcome
+					message </span>
+			</div>
+			<!-- BACK TO MAIN PAGE -->
+			<a th:href="@{/}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+		<div class="underline"></div>
+		<!-- FORM -->
+		<form th:action="@{/utr/process}" method="post"
+			th:object="${utrDispatchForm}">
+			<!-- DATES RANGE -->
+			<div class="row margin-top-10">
+				<div class="col-xs-12">
+					<h3 class="text-primary" th:text="#{utr.date.range}">Panel
+						With title</h3>
+				</div>
+				<div class="col-xs-12 margin-top-10">
+					<span th:text="#{utr.date.setrange}">set date range</span>
+				</div>
+				<div class="col-xs-3 margin-top-10">
+					<div class="form-group">
+						<!-- start date -->
+						<label for="startDate" th:text="#{utr.date.start}">startDate</label>
+						<input type="text" class="form-control" id="startDate"
+							name="startDate" th:placeholder="#{utr.date.start}"
+							th:field="*{startDate}" autocomplete="off" />
+						<div th:errors="*{startDate}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-3 margin-top-10">
+					<div class="form-group">
+						<!-- end date -->
+						<label for="endDate" th:text="#{utr.date.end}">endDate</label> <input
+							type="text" class="form-control" id="endDate" name="endDate"
+							th:placeholder="#{utr.date.end}" th:field="*{endDate}"
+							autocomplete="off" />
+						<div th:errors="*{endDate}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+							<div class="col-xs-12">
+					<h3 class="text-primary" th:text="#{utr.criteria}">Panel
+						With title</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-2">
+					<span th:text="#{utr.machine.type}" class="bold">machine type</span>
+				</div>
+				<div class="col-xs-10">
+						<label class="radio-inline"> <input type="radio"
+							name="crit" th:field="*{critical}" th:value="0" /> <span
+							th:text="#{action.all}">all</span>
+						</label> <label class="radio-inline"> <input type="radio"
+							name="crit" th:field="*{critical}" th:value="1" /> <span
+							th:text="#{utr.machines.normal}">all</span>
+						</label> <label class="radio-inline"> <input type="radio"
+							name="crit" th:field="*{critical}" th:value="2" /> <span
+							th:text="#{utr.machines.critical}">all</span>
+						</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-2">
+					<span th:text="#{utr.emergency.type}" class="bold">machine type</span>
+				</div>
+				<div class="col-xs-10">
+						<label class="radio-inline"> <input type="radio"
+							name="stop" th:field="*{stop}" th:value="0" /> <span
+							th:text="#{action.all}">all</span>
+						</label> <label class="radio-inline"> <input type="radio"
+							name="stop" th:field="*{stop}" th:value="1" /> <span
+							th:text="#{utr.fault}">all</span>
+						</label> <label class="radio-inline"> <input type="radio"
+							name="stop" th:field="*{stop}" th:value="2" /> <span
+							th:text="#{utr.damage}">all</span>
+						</label>
+				</div>
+			</div>
+			<!-- /DATES RANGE -->
+			<!-- PANELS -->
+			<div class="row margin-top-10">
+				<div class="col-xs-12">
+					<h3 class="text-primary" th:text="#{action.choose.action}">Panel
+						With title</h3>
+				</div>
+				<div class="col-xs-12 col-sm-6 margin-top-10">
+					<div class="panel panel-info">
+						<div class="panel-heading">
+							<span th:text="#{utr.machines}"></span>
+						</div>
+						<div class="panel-body"></div>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6 margin-top-10">
+					<div class="panel panel-success">
+						<div class="panel-heading">
+							<span th:text="#{utr.workers}"></span>
+						</div>
+						<div class="panel-body"></div>
+					</div>
+				</div>
+			</div>
+			<!-- /PANELS -->
+		</form>
+	</div>
+</body>
+</html>

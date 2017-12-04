@@ -6,7 +6,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +17,8 @@ import java.util.Locale;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPClientConfig;
+import org.apache.commons.net.ftp.FTPSClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
@@ -33,29 +38,120 @@ public class WeldLogController {
 	
 	String server;
 	int port;
+	int bufferSize;
 	String user;
 	String pass;
 	String remoteFile;
 	String destinationFile;
     File downloadFile;
     BufferedReader in;
+    String ftpUrl;
+    String ftpSecretUrl;
 	
     @Autowired
     public WeldLogController(Environment env) {
     	server = env.getRequiredProperty("general.casarini.ftp.server");
     	port = Integer.parseInt(env.getRequiredProperty("general.casarini.ftp.port"));
+    	bufferSize = Integer.parseInt(env.getRequiredProperty("general.casarini.ftp.buffersize"));
     	user = env.getRequiredProperty("general.casarini.ftp.user");
     	pass = env.getRequiredProperty("general.casarini.ftp.pass"); 
     	remoteFile = env.getRequiredProperty("general.casarini.ftp.remotefile"); 
-    	destinationFile = env.getRequiredProperty("general.casarini.ftp.destinationfile"); 
+    	destinationFile = env.getRequiredProperty("general.casarini.ftp.destinationfile");
+    	ftpUrl = "ftp://" + user + ":" + pass + "@" + server + "/" + remoteFile;
+    	ftpSecretUrl = "ftp://" + user + "@" + server + "/";
     }
 	
+    
     @RequestMapping("/list")
     public String view(Model model, Locale locale){
+		model.addAttribute("ftpSecretUrl", ftpSecretUrl);
+		try{
+			// GET FILE
+			URL url = new URL(ftpUrl) ;
+			URLConnection conn = url.openConnection() ;
+			InputStream inputStream = conn.getInputStream() ;
+			FileOutputStream outputStream = new FileOutputStream(destinationFile);
+			byte[] buffer = new byte[bufferSize];
+			int bytesRead = -1 ;
+			while ((bytesRead = inputStream.read(buffer)) != -1) {
+				outputStream.write(buffer, 0, bytesRead) ;
+			}
+			outputStream.close() ;
+			inputStream.close() ;
+			
+            // PROCESS FILE
+            in = new BufferedReader(new FileReader(destinationFile));
+			String line;
+			int lineNo;
+			String warningLines = "";
+			WeldLogLine weldLine;
+			ArrayList<WeldLogLine> okLines = new ArrayList<WeldLogLine>();
+			List<String> headers;
+			// GET TITLES
+			if((line = in.readLine()) != null){
+				line = line.replace("\"","");
+				if (line.split(",").length != 29){
+					throw new FtpException();
+				}
+				else{
+					headers = Arrays.asList(line.split(","));
+					model.addAttribute("headers", headers);
+				}
+			}
+			// GET LINES
+			lineNo = 0;
+			while ((line = in.readLine()) != null) {
+				lineNo++;
+				line = line.replace("\"","");
+				if (line.split(",").length != 29){
+						warningLines+= lineNo + ", "; 
+				}
+				else{
+					weldLine = new WeldLogLine();
+					weldLine.setFields(Arrays.asList(line.split(",")));
+					okLines.add(weldLine);
+				}
+			}
+			// pass warning if exist
+			if(warningLines.length() > 0){
+				model.addAttribute("warning",
+	        			messageSource.getMessage("error.ftp.badfilestructure",null, locale)
+	        			+ " " + server +":"+port + " [" + remoteFile+ "]: #" + warningLines
+	        			);
+			}
+
+			model.addAttribute("okLines", okLines);
+			in.close();
+			
+			// DELETE FILE		
+			downloadFile = new File(destinationFile);
+			downloadFile.delete();
+			
+		}
+		catch (FtpException ex){
+			model.addAttribute("error",
+        			messageSource.getMessage("error.ftp.badfilestructure",null, locale)
+        			+ " " + server +":"+port + " [" + remoteFile+ "]"
+        			);
+		}
+		catch (Exception ex){
+			model.addAttribute("error",
+        			messageSource.getMessage("error",null, locale)
+        			+ " " + server +":"+port + " [" + remoteFile+ "]: " + ex.getMessage()
+        			);
+		}
+    	
+    	return "weldlog/list";
+    }
+    
+    
+    @RequestMapping("/ftpclient")
+    public String ftpClient(Model model, Locale locale){
     	
         FTPClient ftpClient = new FTPClient();
         try {
- 
+        	//add server address for URL creation
+			model.addAttribute("url", server);
         	ftpClient.setAutodetectUTF8(true);
         	// CONNECT
             ftpClient.connect(server, port);
@@ -66,6 +162,7 @@ public class WeldLogController {
             			);
             	throw new FtpException();
             }
+            
             // LOGIN
             ftpClient.login(user, pass);
             if(ftpClient.getReplyCode()!=230){
@@ -76,6 +173,7 @@ public class WeldLogController {
             			);
             	throw new FtpException();
             }
+            
             ftpClient.enterLocalPassiveMode();
             ftpClient.enterLocalActiveMode();
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
@@ -83,7 +181,7 @@ public class WeldLogController {
             downloadFile = new File(destinationFile);
             OutputStream outputStream1 = new BufferedOutputStream(new FileOutputStream(downloadFile));
             ftpClient.retrieveFile(remoteFile, outputStream1);
-            outputStream1.close();
+            outputStream1.close();            
             if(ftpClient.getReplyCode()!=226){
             	model.addAttribute("error",
             			messageSource.getMessage("error.file.not.found",null, locale)
@@ -121,6 +219,7 @@ public class WeldLogController {
 			}
 			
 			// GET LINES
+			
 			while ((line = in.readLine()) != null) {
 				line = line.replace("\"","");
 				if (line.split(",").length != 29){
@@ -140,13 +239,13 @@ public class WeldLogController {
 			// DELETE FILE			
 			downloadFile.delete();
 			
-			
         } catch (IOException ex) {
         	model.addAttribute("error",
         			messageSource.getMessage("error.ftp.exception",null, locale)
         			+ " " + server +":"+port + " [#" +ftpClient.getReplyCode()+"]"
         			);
             ex.printStackTrace();
+            model.addAttribute("warning",ex.getMessage());
         } catch (FtpException ignore) {
         	
         } finally {

@@ -99,3 +99,7 @@ html {
 .input-error{
 	background-color: #F3D0D0;
 }
+
+.bold {
+	font-weight: bold;
+}

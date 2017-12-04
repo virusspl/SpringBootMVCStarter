@@ -47,7 +47,8 @@
 			</div>
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-20">
 				<span th:utext="#{weldlog.message}" class="flow-text ">
-					Welcome message </span>
+					Welcome message </span> - <a target="_blank" th:href="|${ftpSecretUrl}|" class="flow-right">
+				<span>LINK FTP</span></a>
 			</div>
 			<a th:href="@{/}" class="btn btn-link btn-sm"> <span
 				class="glyphicon glyphicon-menu-left"></span> <span
@@ -56,7 +57,7 @@
 		</div>
 		<div class="underline"></div>
 
-		<div class="row margin-top-20">
+		<div class="row margin-top-20" th:if="!${error}">
 			<div class="col-xs-12 col-xs-offset-0">
 				<div class="table-responsive">
 					<table id="oktable" class="display">
