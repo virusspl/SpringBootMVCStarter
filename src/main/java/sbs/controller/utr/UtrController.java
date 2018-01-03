@@ -41,5 +41,18 @@ public class UtrController {
     	return "utr/dispatch";
     }
     
+    @RequestMapping("/crashes")
+    public String viewActualCrashes(Model model, Locale locale){
+    	UtrDispatchForm utrDispatchForm = new UtrDispatchForm();
+    	Calendar cal = Calendar.getInstance();
+    	utrDispatchForm.setEndDate(new Timestamp(cal.getTimeInMillis()));
+    	cal.add(Calendar.MONTH, -1);
+    	utrDispatchForm.setStartDate(new Timestamp(cal.getTimeInMillis()));
+    	utrDispatchForm.setCritical(0);
+    	utrDispatchForm.setStop(0);
+    	model.addAttribute("utrDispatchForm", utrDispatchForm);
+    	return "utr/crashes";
+    }
+    
     
 }
