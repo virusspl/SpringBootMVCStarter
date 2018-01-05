@@ -18,6 +18,7 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import sbs.model.bhptickets.BhpTicket;
+import sbs.model.buyorders.BuyOrder;
 import sbs.model.hruafiles.HrUaInfo;
 import sbs.model.qualitysurveys.QualitySurvey;
 
@@ -36,6 +37,9 @@ public class User {
     private Set<BhpTicket> createdBhpTickets;
     private Set<BhpTicket> assignedBhpTickets;
     private Set<HrUaInfo> HrUaFilesCreated;
+    private Set<BuyOrder> createdBuyOrders;
+    private Set<BuyOrder> respondedBuyOrders;
+    
     
     public User() {
 		this.roles = new HashSet<>();
@@ -141,6 +145,15 @@ public class User {
 		return HrUaFilesCreated;
 	}
 	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
+	public Set<BuyOrder> getCreatedBuyOrders() {
+		return createdBuyOrders;
+	}
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "responder")
+	public Set<BuyOrder> getRespondedBuyOrders() {
+		return respondedBuyOrders;
+	}
+	
 	public void setCreatedBhpTickets(Set<BhpTicket> createdBhpTickets) {
 		this.createdBhpTickets = createdBhpTickets;
 	}
@@ -155,6 +168,14 @@ public class User {
 
 	public void setHrUaFilesCreated(Set<HrUaInfo> hrUaFilesCreated) {
 		HrUaFilesCreated = hrUaFilesCreated;
+	}
+
+	public void setCreatedBuyOrders(Set<BuyOrder> createdBuyOrders) {
+		this.createdBuyOrders = createdBuyOrders;
+	}
+
+	public void setRespondedBuyOrders(Set<BuyOrder> respondedBuyOrders) {
+		this.respondedBuyOrders = respondedBuyOrders;
 	}
 	
 	

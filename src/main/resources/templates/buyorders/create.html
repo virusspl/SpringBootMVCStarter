@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script">
+		
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h1 th:text="#{buyorders.create.title}" class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{buyorders.create.message}"> Welcome message </span>
+			</div>
+		</div>
+		<div class="underline margin-top-20"></div>
+		<!-- CREATE FORM -->
+		<form th:action="@{/buyorders/create}" method="post"
+			th:object="${buyOrderCreateForm}">
+			<div class="row margin-top-20">
+				<div class="col-xs-6 col-sm-4">
+					<div class="form-group">
+						<!-- name -->
+						<label for="product" th:text="#{buyorders.product.code}">product</label> <input
+							type="text" class="form-control" id="product" name="product"
+							th:placeholder="#{buyorders.product.code}" th:field="*{product}"
+							autocomplete="off" />
+						<div th:errors="*{product}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-sm-3">
+					<div class="form-group">
+						<!-- phone -->
+						<label for="quantity" th:text="#{buyorders.quantity}">quantity</label> <input
+							type="text" class="form-control" id="quantity" name="quantity"
+							th:placeholder="#{buyorders.quantity}" th:field="*{quantity}" autocomplete="off"/>
+						<div th:errors="*{quantity}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				</div>
+				<div class="row">
+				<div class="col-xs-12 col-sm-7">
+					<div class="form-group">
+						<!-- comment -->
+						<label for="comment" th:text="#{buyorders.creatorcomment}">comment</label>
+						<textarea class="form-control" id="comment" name="comment"
+							th:placeholder="#{buyorders.creatorcomment}" th:field="*{comment}"
+							style="min-height: 200px;"></textarea>
+						<div th:errors="*{comment}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- /OPTIONAL -->
+			<div class="row margin-top-10">
+				<div class="col-xs-12">
+					<a th:href="@{/buyorders/list}" class="btn btn-link btn-sm"> <span
+						class="glyphicon glyphicon-menu-left"></span> <span
+						th:text="#{action.back}">back</span>
+					</a>
+					<button class="btn btn-primary btn-sm" type="submit" name="save">
+						<span class="glyphicon glyphicon-ok"></span> <span
+							th:text="#{action.save}">create</span>
+					</button>
+				</div>
+			</div>
+		</form>
+		<!-- /USER FORM -->
+	</div>
+</body>
+</html>

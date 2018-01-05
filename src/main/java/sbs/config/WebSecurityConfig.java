@@ -91,6 +91,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"ADMIN", 
 				"HRUAMANAGER"
 				)
+		.antMatchers("/buyorders/**")
+		.hasAnyRole(
+				"ADMIN", 
+				"BUYORDMANAGER"
+				)
 		.antMatchers("/admin", "/users/**")
 		.hasRole("ADMIN")
 		.anyRequest().authenticated().and()
