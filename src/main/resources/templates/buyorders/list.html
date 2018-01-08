@@ -116,7 +116,7 @@
 						<tbody>
 							<tr th:each="order : ${orders}">
 								<td>
-								<a th:href="|@{/buyorders/view/}${order.id}|"
+								<a th:href="|@{/buyorders/answer/}${order.id}|"
 									data-toggle="tooltip" data-placement="top"
 									th:title="#{action.view}">#<span th:text="${order.id}"></span></a>
 								</td>
@@ -126,7 +126,9 @@
 								<td><span th:text="${order.itemDescription}"></span></td>
 								<td><span th:text="${order.quantity}"></span></td>
 								<td th:if="${order.responseDate} != null"><span th:text="${#dates.format(order.responseDate, 'yyyy.MM.dd HH:mm')}"></span></td>
+								<td th:if="${order.responseDate} == null"></td>
 								<td th:if="${order.responder} != null"><span th:text="${order.responder.name}"></span></td>
+								<td th:if="${order.responder} == null"></td>
 								<td><span th:text="${order.responderComment}"></span></td>
 							</tr>
 						</tbody>

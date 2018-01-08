@@ -82,16 +82,42 @@ public class BuyOrdersController {
 		return "redirect:/buyorders/list/";
 	}
 	
-	@RequestMapping(value = "/view/{id}")
+	@RequestMapping(value = "/answer/{id}")
 	@Transactional
-	public String edit(@PathVariable("id") int id,  Model model) throws NotFoundException {
-		/*HrUaInfo object = hrUaService.findById(id); 
-		if (object == null) {
-			throw new NotFoundException("User not found");
+	public String answer(@PathVariable("id") int id,  ResponseForm responseForm, Model model, Locale locale) throws NotFoundException {
+		BuyOrder order = buyOrdersService.findById(id);
+		if(order == null){
+			throw new NotFoundException(messageSource.getMessage("buyorders.notfound", null, locale));
 		}
-		model.addAttribute(HrUaCreateForm.hrUaCreateFormFromHrUaInfo(object));
-		*/
-		return "hrua/user";
+		model.addAttribute("order", order);
+		model.addAttribute("responseForm", responseForm);
+		return "buyorders/answer";
+	}
+	
+	@RequestMapping(value = "/answer/{id}", params = { "save" }, method = RequestMethod.POST)
+	@Transactional
+	public String commitAnswer(@Valid ResponseForm responseForm, BindingResult bindingResult,
+			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
+		
+		BuyOrder order = buyOrdersService.findById(responseForm.getId());
+		System.out.println(responseForm.getId() + responseForm.getResponderComment());
+		// validate
+		if (bindingResult.hasErrors()) {
+			if(order == null){
+				throw new NotFoundException(messageSource.getMessage("buyorders.notfound", null, locale));
+			}
+			model.addAttribute("order", order);
+			return "buyorders/answer";
+		}
+		
+		order.setResponder(userService.getAuthenticatedUser());
+		order.setResponseDate(new Timestamp(new java.util.Date().getTime()));
+		order.setResponderComment(responseForm.getResponderComment().trim());
+		buyOrdersService.saveOrUpdate(order);
+		
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		
+		return "redirect:/buyorders/list/";
 	}
 	
 
