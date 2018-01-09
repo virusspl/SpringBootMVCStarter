@@ -8,6 +8,12 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 public class BuyOrderCreateForm {
 	@NotEmpty
+	@Size(min = 3, max = 10)
+	String client;
+	@NotEmpty
+	@Size(min = 3, max = 30)
+	String order;
+	@NotEmpty
 	@Size(min = 3, max = 30)
 	String product;
 	String comment;
@@ -43,10 +49,29 @@ public class BuyOrderCreateForm {
 		this.comment = comment;
 	}
 
+	public String getClient() {
+		return client;
+	}
+
+	public void setClient(String client) {
+		this.client = client;
+	}
+
+	public String getOrder() {
+		return order;
+	}
+
+	public void setOrder(String order) {
+		this.order = order;
+	}
+
 	@Override
 	public String toString() {
-		return "BuyOrderCreateForm [product=" + product + ", comment=" + comment + ", quantity=" + quantity + "]";
+		return "BuyOrderCreateForm [client=" + client + ", order=" + order + ", product=" + product + ", comment="
+				+ comment + ", quantity=" + quantity + "]";
 	}
+
+	
 
 
 	

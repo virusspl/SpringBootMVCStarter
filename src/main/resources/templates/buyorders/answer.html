@@ -113,7 +113,24 @@
 			<!-- END IF NO COMMENT -->
 			<!-- COMMENT EXIST -->
 			<div th:if="${order.responderComment != null}" class="col-xs-12">
-				COMMENT ALREADY HERE !!</div>
+				
+
+				<div class="form-group">
+					<!-- comment -->
+					<div class="form-group">
+						<label for="respondercomment" th:text="#{buyorders.respondercomment}">comment</label>
+						<textarea class="form-control" id="respondercomment"
+							th:text="${order.responderComment}"
+							style="min-height: 150px; background-color: white;"
+							readonly="true"></textarea>
+					</div>
+				</div>
+
+											<a th:href="@{/buyorders/list}" class="btn btn-link btn-sm">
+								<span class="glyphicon glyphicon-menu-left"></span> <span
+								th:text="#{action.back}">back</span>
+							</a>
+			</div>
 			<!-- END OF COMMENT EXISTS -->
 		</div>
 		<!-- /FORM -->

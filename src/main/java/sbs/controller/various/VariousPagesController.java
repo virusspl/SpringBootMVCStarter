@@ -238,7 +238,7 @@ public class VariousPagesController {
 		Role buyOrdManager = roleService.findByName("ROLE_BUYORDMANAGER");
 		if (buyOrdManager == null) {
 			buyOrdManager = new Role();
-			buyOrdManager.setName("ROLE_BUYORDMANAGERR");
+			buyOrdManager.setName("ROLE_BUYORDMANAGER");
 			roleService.save(buyOrdManager);
 			msg += "[role: " + buyOrdManager.getName() + "], ";
 		}

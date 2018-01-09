@@ -60,6 +60,15 @@ public class BuyOrder {
 	@Type(type="text")
 	private String otherComment;
 
+	@Column(name = "bo_client_code", length = 10, nullable = false)
+	private String clientCode;
+	
+	@Column(name = "bo_client_name", length = 100, nullable = false)
+	private String clientName;
+	
+	@Column(name = "bo_order_no", length = 30, nullable = false)
+	private String orderNumber;
+	
 	public User getCreator() {
 		return creator;
 	}
@@ -148,13 +157,39 @@ public class BuyOrder {
 		this.otherComment = otherComment;
 	}
 
+	public String getClientCode() {
+		return clientCode;
+	}
+
+	public void setClientCode(String clientCode) {
+		this.clientCode = clientCode;
+	}
+
+	public String getClientName() {
+		return clientName;
+	}
+
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
+	}
+
+	public String getOrderNumber() {
+		return orderNumber;
+	}
+
+	public void setOrderNumber(String orderNumber) {
+		this.orderNumber = orderNumber;
+	}
+
 	@Override
 	public String toString() {
 		return "BuyOrder [creator=" + creator + ", responder=" + responder + ", id=" + id + ", creationDate="
 				+ creationDate + ", responseDate=" + responseDate + ", itemCode=" + itemCode + ", itemDescription="
 				+ itemDescription + ", quantity=" + quantity + ", creatorComment=" + creatorComment
-				+ ", responderComment=" + responderComment + ", otherComment=" + otherComment + "]";
-	}	
+				+ ", responderComment=" + responderComment + ", otherComment=" + otherComment + ", clientCode="
+				+ clientCode + ", clientName=" + clientName + ", orderNumber=" + orderNumber + "]";
+	}
+
 	
 	
 	
