@@ -62,6 +62,27 @@
 						th:text="${order.quantity}">text</span>
 				</div>
 			</div>
+			<div class="col-xs-2">
+				<div class="form-group">
+					<label for="clientcode" th:text="#{buyorders.client.code}">text</label>
+					<span class="form-control" id="clientcode" 
+					th:text="${order.clientCode}">text</span>
+				</div>
+			</div>
+			<div class="col-xs-5">
+				<div class="form-group">
+					<label for="clientname" th:text="#{buyorders.client.name}">text</label>
+					<span class="form-control" id="clientname" 
+					th:text="${order.clientName}">text</span>
+				</div>
+			</div>
+			<div class="col-xs-5">
+				<div class="form-group">
+					<label for="order" th:text="#{buyorders.order}">date</label>
+					<span class="form-control" id="order"
+						th:text="${order.orderNumber}"></span>
+				</div>
+			</div>			
 		</div>
 		<div class="row">
 			<div class="col-xs-12">

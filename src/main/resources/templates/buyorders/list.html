@@ -74,11 +74,11 @@
 								<th th:text="#{buyorders.date.creation}">head</th>
 								<th th:text="#{buyorders.creator}">head</th>
 								<th th:text="#{buyorders.product.code}">head</th>
-								<th th:text="#{buyorders.product.description}">head</th>
+								<th th:text="#{buyorders.client.code}">head</th>
+								<th th:text="#{buyorders.order}">head</th>
 								<th th:text="#{buyorders.quantity}">head</th>
 								<th th:text="#{buyorders.date.response}">head</th>
 								<th th:text="#{buyorders.responder}">head</th>
-								<th th:text="#{buyorders.response}">head</th>
 							</tr>
 						</thead>
 						<tfoot>
@@ -87,11 +87,11 @@
 								<th th:text="#{buyorders.date.creation}">head</th>
 								<th th:text="#{buyorders.creator}">head</th>
 								<th th:text="#{buyorders.product.code}">head</th>
-								<th th:text="#{buyorders.product.description}">head</th>
+								<th th:text="#{buyorders.client.code}">head</th>
+								<th th:text="#{buyorders.order}">head</th>
 								<th th:text="#{buyorders.quantity}">head</th>
 								<th th:text="#{buyorders.date.response}">head</th>
 								<th th:text="#{buyorders.responder}">head</th>
-								<th th:text="#{buyorders.response}">head</th>
 							</tr>
 						</tfoot>
 						<tbody>
@@ -104,13 +104,13 @@
 								<td><span th:text="${#dates.format(order.creationDate, 'yyyy.MM.dd HH:mm')}"></span></td>
 								<td><span th:text="${order.creator.name}"></span></td>
 								<td><span th:text="${order.itemCode}"></span></td>
-								<td><span th:text="${order.itemDescription}"></span></td>
+								<td><span th:text="${order.clientCode}"></span></td>
+								<td><span th:text="${order.orderNumber}"></span></td>
 								<td><span th:text="${order.quantity}"></span></td>
 								<td th:if="${order.responseDate} != null"><span th:text="${#dates.format(order.responseDate, 'yyyy.MM.dd HH:mm')}"></span></td>
 								<td th:if="${order.responseDate} == null"></td>
 								<td th:if="${order.responder} != null"><span th:text="${order.responder.name}"></span></td>
 								<td th:if="${order.responder} == null"></td>
-								<td><span th:text="${order.responderComment}"></span></td>
 							</tr>
 						</tbody>
 					</table>

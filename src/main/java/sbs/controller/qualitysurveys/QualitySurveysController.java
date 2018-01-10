@@ -184,7 +184,7 @@ public class QualitySurveysController {
 			return "qualitysurveys/surveydetails";
 		}
 
-		operationDescription = x3Service.getOperationDescriptionByProductionOrder("ATW", order, operation);
+		operationDescription = x3Service.findOperationDescriptionByProductionOrder("ATW", order, operation);
 		if (operationDescription == null) {
 			bindingResult.rejectValue("number", "production.operation.not.found",new Object[]{operation}, "ERROR");
 			return "qualitysurveys/surveydetails";

@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javassist.NotFoundException;
 import sbs.model.buyorders.BuyOrder;
+import sbs.model.x3.X3Client;
 import sbs.service.buyorders.BuyOrdersService;
 import sbs.service.users.UserService;
 import sbs.service.x3.JdbcOracleX3Service;
@@ -54,19 +55,34 @@ public class BuyOrdersController {
 			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
 
 		String itemDesc;
+		X3Client client;
+		String clientCode;
 		
 		// validate
 		if (bindingResult.hasErrors()) {
 			return "buyorders/create";
 		}
-		
+
+		// product ODBC
 		buyOrderCreateForm.setProduct(buyOrderCreateForm.getProduct().toUpperCase());
 		itemDesc = jdbcOracleX3Service.findItemDescription("ATW", buyOrderCreateForm.getProduct());
-		
 		if(itemDesc == null){
 			bindingResult.rejectValue("product", "error.no.such.product", "ERROR");
 			return "buyorders/create";
 		}
+		
+		// order ODBC
+		buyOrderCreateForm.setOrder(buyOrderCreateForm.getOrder().toUpperCase());
+		clientCode = jdbcOracleX3Service.findFinalClientByOrder("ATW", buyOrderCreateForm.getOrder());
+		
+		if(clientCode == null){
+			bindingResult.rejectValue("order", "error.no.such.order", "ERROR");
+			return "buyorders/create";
+		}
+
+		// client ODBC - always exists if there is code in order - no validation		
+		client = jdbcOracleX3Service.findClientByCode("ATW", clientCode);
+
 		
 		BuyOrder buyOrder = new BuyOrder();
 		buyOrder.setCreationDate(new Timestamp(new java.util.Date().getTime()));
@@ -75,7 +91,9 @@ public class BuyOrdersController {
 		buyOrder.setItemDescription(itemDesc);
 		buyOrder.setQuantity(buyOrderCreateForm.getQuantity());
 		buyOrder.setCreatorComment(buyOrderCreateForm.getComment());
-		
+		buyOrder.setOrderNumber(buyOrderCreateForm.getOrder());
+		buyOrder.setClientCode(clientCode);
+		buyOrder.setClientName(client.getName());
 		buyOrdersService.saveOrUpdate(buyOrder);
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		

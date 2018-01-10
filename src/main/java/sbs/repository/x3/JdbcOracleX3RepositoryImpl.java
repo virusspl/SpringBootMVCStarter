@@ -478,7 +478,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	}
 
 	@Override
-	public String getOperationDescriptionByProductionOrder(String company, String productionOrder,
+	public String findOperationDescriptionByProductionOrder(String company, String productionOrder,
 			int operationNumber) {
 
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
@@ -498,5 +498,23 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         	description = ((String)row.get("ROODES_0"));
         }
 		return description;
+	}
+
+	@Override
+	public String findFinalClientByOrder(String company, String order) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ company + ".SORDER.XCLIORI_0 "
+				+ "FROM "
+				+ company + ".SORDER "
+				+ "WHERE UPPER(" + company + ".SORDER.SOHNUM_0) = ? "
+				,
+                new Object[]{order});
+        
+        String result = null;
+        for(Map<String,Object> row: resultSet ){
+        	result = (String)row.get("XCLIORI_0");
+        }
+		return result;
 	}
 }

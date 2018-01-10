@@ -35,6 +35,16 @@
 				</div>
 				<div class="col-xs-6 col-sm-3">
 					<div class="form-group">
+						<!-- name -->
+						<label for="order" th:text="#{buyorders.order}">order</label> <input
+							type="text" class="form-control" id="order" name="order"
+							th:placeholder="#{buyorders.order}" th:field="*{order}"
+							autocomplete="off" />
+						<div th:errors="*{order}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-sm-2">
+					<div class="form-group">
 						<!-- phone -->
 						<label for="quantity" th:text="#{buyorders.quantity}">quantity</label> <input
 							type="text" class="form-control" id="quantity" name="quantity"
@@ -44,7 +54,7 @@
 				</div>
 				</div>
 				<div class="row">
-				<div class="col-xs-12 col-sm-7">
+				<div class="col-xs-12 col-sm-9">
 					<div class="form-group">
 						<!-- comment -->
 						<label for="comment" th:text="#{buyorders.creatorcomment}">comment</label>
