@@ -65,24 +65,23 @@
 			<div class="col-xs-2">
 				<div class="form-group">
 					<label for="clientcode" th:text="#{buyorders.client.code}">text</label>
-					<span class="form-control" id="clientcode" 
-					th:text="${order.clientCode}">text</span>
+					<span class="form-control" id="clientcode"
+						th:text="${order.clientCode}">text</span>
 				</div>
 			</div>
 			<div class="col-xs-5">
 				<div class="form-group">
 					<label for="clientname" th:text="#{buyorders.client.name}">text</label>
-					<span class="form-control" id="clientname" 
-					th:text="${order.clientName}">text</span>
+					<span class="form-control" id="clientname"
+						th:text="${order.clientName}">text</span>
 				</div>
 			</div>
 			<div class="col-xs-5">
 				<div class="form-group">
-					<label for="order" th:text="#{buyorders.order}">date</label>
-					<span class="form-control" id="order"
-						th:text="${order.orderNumber}"></span>
+					<label for="order" th:text="#{buyorders.order}">date</label> <span
+						class="form-control" id="order" th:text="${order.orderNumber}"></span>
 				</div>
-			</div>			
+			</div>
 		</div>
 		<div class="row">
 			<div class="col-xs-12">
@@ -134,23 +133,23 @@
 			<!-- END IF NO COMMENT -->
 			<!-- COMMENT EXIST -->
 			<div th:if="${order.responderComment != null}" class="col-xs-12">
-				
+
 
 				<div class="form-group">
 					<!-- comment -->
 					<div class="form-group">
-						<label for="respondercomment" th:text="#{buyorders.respondercomment}">comment</label>
+						<label for="respondercomment"
+							th:text="#{buyorders.respondercomment}">comment</label>
 						<textarea class="form-control" id="respondercomment"
 							th:text="${order.responderComment}"
 							style="min-height: 150px; background-color: white;"
 							readonly="true"></textarea>
 					</div>
 				</div>
-
-											<a th:href="@{/buyorders/list}" class="btn btn-link btn-sm">
-								<span class="glyphicon glyphicon-menu-left"></span> <span
-								th:text="#{action.back}">back</span>
-							</a>
+				<a th:href="@{/buyorders/list}" class="btn btn-link btn-sm"> <span
+					class="glyphicon glyphicon-menu-left"></span> <span
+					th:text="#{action.back}">back</span>
+				</a>
 			</div>
 			<!-- END OF COMMENT EXISTS -->
 		</div>

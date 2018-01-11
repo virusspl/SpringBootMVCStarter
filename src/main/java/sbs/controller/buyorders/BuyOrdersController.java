@@ -118,7 +118,6 @@ public class BuyOrdersController {
 			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
 		
 		BuyOrder order = buyOrdersService.findById(responseForm.getId());
-		System.out.println(responseForm.getId() + responseForm.getResponderComment());
 		// validate
 		if (bindingResult.hasErrors()) {
 			if(order == null){
