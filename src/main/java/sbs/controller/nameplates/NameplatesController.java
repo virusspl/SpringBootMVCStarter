@@ -59,7 +59,12 @@ public class NameplatesController {
 					logLine.setProduct(split.get(3));
 					logLine.setDate(split.get(4));
 					logLine.setFlag(split.get(5));
-					logLine.setComment(split.get(6));
+					if(split.size()>6){
+						logLine.setComment(split.get(6));
+					}
+					else{
+						logLine.setComment("");
+					}
 					logLines.add(logLine);
 				}
 				i++;
