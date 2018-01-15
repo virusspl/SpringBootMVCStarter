@@ -1,195 +1,121 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layout/tv">
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
 <head lang="pl">
 </head>
 <body>
+
+	<div layout:fragment="script"></div>
 	<div layout:fragment="content">
 		<div class="row">
-			<div class="col-xs-12">
-				<h1 class="title underline">NAZWA WYDZIAŁU</h1>
+			<div class="col-xs-12 col-xs-offset-0">
+				<h2 th:text="#{proprog.list.title}" class="text-primary">Hello
+					on a page</h2>
 			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{proprog.list.message}"> Welcome message </span>
+			</div>
+			<!-- BACK TO MAIN PAGE -->
+			<a th:href="@{/}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
 		</div>
-		<div class="row margin-top-60">
-			<div class="col-xs-3 center">
-				<div class="row border-purple blend">
-					<!-- TITLE -->
-					<div class="col-xs-12 margin-bottom-30">
-						<span class="subtitle">BEZPIECZEŃSTWO</span>
+		<div class="underline margin-top-10"></div>
+		<!-- MODULES -->
+		<div class="row margin-top-30">
+			<div class="col-xs-1">
+				<a href="#">#1165</a>
+			</div>
+			<div class="col-xs-11">
+				<div class="progress">
+					<div th:class="|progress-bar progress-bar-striped active progress-bar-${type}|" 
+						th:style="|width: ${progress}%|">
+						<span th:text="|${progress}%|"></span>
 					</div>
-					<!-- /TITLE -->
-					<!-- HEAD -->
-					<div class="col-xs-4 center"></div>
-					<div class="col-xs-4 center"><span class="header">2017</span></div>
-					<div class="col-xs-4 center"><span class="header">2016</span></div>
-					<!-- /HEAD -->
-					<!-- SLIP -->
-					<div class="row">
-					<div class="col-xs-4 center">
-						<img th:src="@{/images/tv/sec_slip.png}"></img>
-					</div>
-					<div class="col-xs-4 center"><span class="val neutral">20</span></div>
-					<div class="col-xs-4 center"><span class="val ok">25</span></div>
-					</div>
-					<!-- /SLIP -->
-					<!-- BED -->
-					<div class="row">
-					<div class="col-xs-4 center">
-						<img th:src="@{/images/tv/sec_bed.png}"></img>
-					</div>
-					<div class="col-xs-4 center"><span class="val ok">20</span></div>
-					<div class="col-xs-4 center"><span class="val negative">25</span></div>
-					</div>
-					<!-- /BED -->
-					<!-- NO ACC HEAD -->
-					<div class="col-xs-12 center margin-top-30">
-						<span class="header">ILOŚĆ DNI BEZ WYPADKU</span>
-					</div>
-					<div class="col-xs-12 center">
-						<span class="val neutral">250</span>
-					</div>
-					<!-- /NO ACC HEAD -->
-					<!-- BEST SCORE -->
-					<div class="col-xs-12 center margin-top-30">
-						<span class="header">NAJLEPSZY WYNIK</span>
-					</div>
-					<div class="col-xs-12 center">
-						<span class="val ok">350</span>
-					</div>
-					<!-- /BEST SCORE -->
 				</div>
 			</div>
-			<div class="col-xs-3 center">
-				<div class="row border-red blend">
-					<div class="col-xs-12 margin-bottom-30">
-						<span class="subtitle">JAKOŚĆ</span>
+			<div class="col-xs-1">
+				<a href="#">#1165</a>
+			</div>
+			<div class="col-xs-11">
+				<div class="progress">
+					<div class="progress-bar progress-bar-striped active progress-bar-warning" 
+						style="width: 30%">
+						40% Complete (success)
 					</div>
-					<!-- HEAD -->
-					<div class="col-xs-4 center"></div>
-					<div class="col-xs-4 center"><span class="header">2017</span></div>
-					<div class="col-xs-4 center"><span class="header">2016</span></div>
-					<!-- /HEAD -->
-					<!-- OK -->
-					<div class="col-xs-4 center">
-						<img th:src="@{/images/tv/qual_ok.png}"></img>
-					</div>
-					<div class="col-xs-4 center"><span class="val ok">75</span></div>
-					<div class="col-xs-4 center"><span class="val negative">86</span></div>
-					<!-- /OK -->
-					<!-- MONTH -->
-					<div class="col-xs-12 center margin-top-30">
-						<span class="header">MIESIĄC</span>
-					</div>
-					<!-- MONTHS -->
-					<div class="col-xs-4 center">
-						<span class="subheader">M-2</span>
-					</div>
-					<div class="col-xs-4 center">
-						<span class="subheader">M-3</span>
-					</div>
-					<div class="col-xs-4 center">
-						<span class="subheader">M-4</span>
-					</div>
-					<!-- /MONTHS -->
-					<!-- MTH DATA -->
-					<div class="col-xs-4 center"><span class="val negative">68</span></div>
-					<div class="col-xs-4 center"><span class="val neutral">70</span></div>
-					<div class="col-xs-4 center"><span class="val ok">72</span></div>
-					<!-- /MTH DATA -->					
 				</div>
 			</div>
-			<div class="col-xs-3 center">
-				<div class="row border-blue blend">
-					<div class="col-xs-12 margin-bottom-30">
-						<span class="subtitle">KOMPONENTY</span>
-						</div>
-					<!-- WEEK -->
-					<div class="col-xs-12 center">
-					<span class="header">TYDZIEŃ</span>
+			<div class="col-xs-1">
+				<a href="#">#1165</a>
+			</div>
+			<div class="col-xs-11">
+				<div class="progress">
+					<div class="progress-bar progress-bar-striped active progress-bar-info" 
+						style="width: 60%">
+						40% Complete (success)
 					</div>
-					<div class="col-xs-6 center">
-					<span class="subheader">BIEŻĄCY</span>
-					</div>
-					<div class="col-xs-6 center">
-					<span class="subheader">POPRZEDNI</span>
-					</div>
-					<div class="col-xs-6 center"><span class="val ok">19</span></div>
-					<div class="col-xs-6 center"><span class="val ok">17</span></div>
-					<!-- /WEEK -->
-					<!-- DAY -->
-					<div class="col-xs-12 center margin-top-30">
-					<span class="header">DZIEŃ</span>
-					</div>
-					<div class="col-xs-6 center">
-					<span class="subheader">BIEŻĄCY</span>
-					</div>
-					<div class="col-xs-6 center">
-					<span class="subheader">POPRZEDNI</span>
-					</div>
-					<div class="col-xs-6 center"><span class="val ok">4</span></div>
-					<div class="col-xs-6 center"><span class="val neutral">3</span></div>
-					<!-- /DAY -->
 				</div>
 			</div>
-			<div class="col-xs-3 center">
-				<div class="row border-green blend">
-					<div class="col-xs-12 margin-bottom-30">
-						<span class="subtitle">PRODUKCJA</span>
+			<div class="col-xs-1">
+				<a href="#">#1165</a>
+			</div>
+			<div class="col-xs-11">
+				<div class="progress">
+					<div class="progress-bar progress-bar-striped active progress-bar-success" 
+						style="width: 95%">
+						40% Complete (success)
 					</div>
-					<!-- HEAD -->
-					<div class="col-xs-4 center"></div>
-					<div class="col-xs-4 center"><span class="header">2017</span></div>
-					<div class="col-xs-4 center"><span class="header">2016</span></div>
-					<!-- /HEAD -->
-					<!-- WORKERS -->
-					<div class="col-xs-4 center">
-						<img th:src="@{/images/tv/prod_work.png}"></img>
-					</div>
-					<div class="col-xs-4 center"><span class="val neutral">75</span></div>
-					<div class="col-xs-4 center"><span class="val ok">86</span></div>
-					<!-- /WORKSERS -->
-					<!-- MONTH -->
-					<div class="col-xs-12 center margin-top-30">
-					<span class="header">MIESIĄC</span>
-					</div>
-					<div class="col-xs-6 center">
-					<span class="subheader">BIEŻĄCY</span>
-					</div>
-					<div class="col-xs-6 center">
-					<span class="subheader">POPRZEDNI</span>
-					</div>
-					<div class="col-xs-6 center"><span class="val ok">19</span></div>
-					<div class="col-xs-6 center"><span class="val ok">17</span></div>
-					<!-- /MONTH -->
-					<!-- WEEK -->
-					<div class="col-xs-12 center margin-top-10">
-					<span class="header">TYDZIEŃ</span>
-					</div>
-					<div class="col-xs-6 center">
-					<span class="subheader">BIEŻĄCY</span>
-					</div>
-					<div class="col-xs-6 center">
-					<span class="subheader">POPRZEDNI</span>
-					</div>
-					<div class="col-xs-6 center"><span class="val ok">19</span></div>
-					<div class="col-xs-6 center"><span class="val ok">17</span></div>
-					<!-- /WEEK -->
-					<!-- DAY -->
-					<div class="col-xs-12 center margin-top-10">
-					<span class="header">DZIEŃ</span>
-					</div>
-					<div class="col-xs-6 center">
-					<span class="subheader">BIEŻĄCY</span>
-					</div>
-					<div class="col-xs-6 center">
-					<span class="subheader">POPRZEDNI</span>
-					</div>
-					<div class="col-xs-6 center"><span class="val neutral">4</span></div>
-					<div class="col-xs-6 center"><span class="val negative">3</span></div>
-					<!-- /DAY -->		
 				</div>
 			</div>
+			<div class="col-xs-1">
+				<a href="#">#1165</a>
+			</div>
+			<div class="col-xs-11">
+				<div class="progress">
+					<div class="progress-bar progress-bar-striped active progress-bar-danger" 
+						style="width: 10%">
+						40% Complete (success)
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-1">
+				<a href="#">#1165</a>
+			</div>
+			<div class="col-xs-11">
+				<div class="progress">
+					<div class="progress-bar progress-bar-striped active progress-bar-warning" 
+						style="width: 30%">
+						40% Complete (success)
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-1">
+				<a href="#">#1165</a>
+			</div>
+			<div class="col-xs-11">
+				<div class="progress">
+					<div class="progress-bar progress-bar-striped active progress-bar-info" 
+						style="width: 60%">
+						40% Complete (success)
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-1">
+				<a href="#">#1165</a>
+			</div>
+			<div class="col-xs-11">
+				<div class="progress">
+					<div class="progress-bar progress-bar-striped active progress-bar-success" 
+						style="width: 100%">
+						40% Complete (success)
+					</div>
+				</div>
+			</div>
+
+
 		</div>
 	</div>
 </body>

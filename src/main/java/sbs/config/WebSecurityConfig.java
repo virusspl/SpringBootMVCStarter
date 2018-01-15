@@ -61,7 +61,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/bhptickets/show/**",
 				"/bhptickets/getphoto/**",
 				"/wakesurvey/dosurvey/**",
-				"/weldlog/**"
+				"/weldlog/**",
+				"/test/**"
 				)
 		.permitAll()
 		.antMatchers("/bhptickets/edit/**", 

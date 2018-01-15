@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script"></div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12 col-xs-offset-0">
+				<h1 th:text="#{proprog.list.title}" class="text-primary">Hello
+					on a page</h1>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{proprog.list.message}"> Welcome message </span>
+			</div>
+			<!-- BACK TO MAIN PAGE -->
+			<a th:href="@{/}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+		<!-- MODULES -->
+		<div class="row">
+			<div class="col-xs-12">
+				<h3 th:text="#{proprog.projects}" class="text-primary underline"></h3>
+			</div>
+			<div class="col-xs-12">
+				<a th:href="@{/proprog/create}" class="btn btn-primary btn-sm">
+					<span class="glyphicon glyphicon-plus"></span> <span
+					th:text="#{action.add}">back</span>
+				</a>
+			</div>
+			<div class="col-xs-12 margin-top-30"></div>
+			<div  th:each="item : ${projects}">
+				<div class="col-xs-12">
+					<a th:href="|@{/proprog/view/}${item.project.id}|"
+						data-toggle="tooltip" data-placement="top"
+						th:title="#{action.view}"><span
+						th:text="${item.project.projectNumber}"></span></a>
+				</div>
+				<div class="col-sm-12 margin-top-5">
+					<div class="progress">
+						<div
+							th:class="|progress-bar progress-bar-striped active progress-bar-${item.bootstrapColorTitle}|"
+							th:style="|width: ${item.progress}%|">
+							<span th:text="|#${item.project.id} ${item.progress}%|"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

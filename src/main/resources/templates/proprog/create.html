@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script">
+		
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h1 th:text="#{proprog.create.title}" class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{proprog.create.message}"> Welcome message </span>
+			</div>
+		</div>
+		<div class="underline margin-top-20"></div>
+		<!-- CREATE FORM -->
+		<form th:action="@{/proprog/create}" method="post" th:object="${projectCreateForm}">
+			<div class="row margin-top-20">
+				<div class="col-xs-6 col-sm-4">
+					<div class="form-group">
+						<!-- name -->
+						<label for="projectNumber" th:text="#{proprog.projectnumber}">project</label> <input
+							type="text" class="form-control" id="projectNumber" name="projectNumber"
+							th:placeholder="#{proprog.projectnumber}" th:field="*{projectNumber}"
+							autocomplete="off" />
+						<div th:errors="*{projectNumber}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+			<div class="row margin-top-10">
+				<div class="col-xs-12">
+					<a th:href="@{/proprog/list}" class="btn btn-link btn-sm"> <span
+						class="glyphicon glyphicon-menu-left"></span> <span
+						th:text="#{action.back}">back</span>
+					</a>
+					<button class="btn btn-primary btn-sm" type="submit" name="save">
+						<span class="glyphicon glyphicon-ok"></span> <span
+							th:text="#{action.save}">create</span>
+					</button>
+				</div>
+			</div>
+		</form>
+		<!-- /USER FORM -->
+	</div>
+</body>
+</html>

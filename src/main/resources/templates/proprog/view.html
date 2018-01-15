@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script">
+		<script th:src="@{/lightbox2/js/lightbox.min.js}"
+			type="text/javascript"></script>
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h1 th:text="#{proprog.view.title}" class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{proprog.view.message}"> Welcome message
+				</span>
+			</div>
+			<a th:href="@{/proprog/list/}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-12">
+				<h1 th:text="#{proprog.projectslist}" class="text-primary margin-top-30"></h1>
+		</div>
+		<div class="col-xs-12">
+						<div class="form-group">
+							<label for="title" th:text="|text|">Title</label> <span
+								class="form-control" id="title" th:text="${project.id}">title</span>
+						</div>
+					</div>
+			<div id="bhpAdminOnly" sec:authorize="hasAnyRole('ROLE_BHPMANAGER', 'ROLE_ADMIN')">
+				<div class="col-xs-12">
+					ADMIN ONLY
+				</div>
+			</div>
+		
+	</div>
+	</div>
+</body>
+</html>
