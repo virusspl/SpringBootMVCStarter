@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
@@ -16,11 +17,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javassist.NotFoundException;
-import sbs.controller.buyorders.ResponseForm;
-import sbs.model.buyorders.BuyOrder;
+import sbs.controller.bhptickets.TicketCreateForm;
 import sbs.model.proprog.Project;
 import sbs.service.proprog.ProjectProgressService;
 import sbs.service.users.UserService;
@@ -70,21 +71,100 @@ public class ProjectProgressController {
 		project.setProjectNumberUser(userService.getAuthenticatedUser());
 		project.setProjectNumberDate(new Timestamp(new java.util.Date().getTime()));
 		projectProgressService.saveOrUpdate(project);
-		
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/proprog/view/"+project.getId();
 	}
 	
 	@RequestMapping(value = "/view/{id}")
 	@Transactional
 	public String view(@PathVariable("id") int id, Model model, Locale locale) throws NotFoundException {
-		Project project = projectProgressService.findById(id);
+		Project project = projectProgressService.findByIdEager(id);
 		if(project == null){
 			throw new NotFoundException(messageSource.getMessage("proprog.notfound", null, locale));
 		}
 		model.addAttribute("project", project);
 		model.addAttribute("progress", project.getProgressTotal());
 		model.addAttribute("color", project.getProgressBootstrapTitle());
+		model.addAttribute("drawingNumberForm", new DrawingNumberForm(id));
+		model.addAttribute("orderForm", new OrderForm(id));
 		return "proprog/view";
+	}
+	
+	@RequestMapping(value = "/confirm", params = { "clientAccept" }, method = RequestMethod.POST)
+	@Transactional
+	public String clientAccept(@RequestParam("clientAccept") String id, RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException{
+		Project project = projectProgressService.findByIdEager(Integer.parseInt(id));
+		if(project == null){
+			throw new NotFoundException(messageSource.getMessage("proprog.notfound", null, locale));
+		}
+		project.setClientAcceptUser(userService.getAuthenticatedUser());
+		project.setClientAcceptDate(new Timestamp(new java.util.Date().getTime()));
+		projectProgressService.saveOrUpdate(project);
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/proprog/view/"+id;
+	}
+	
+	@RequestMapping(value = "/confirm", params = { "codification" }, method = RequestMethod.POST)
+	@Transactional
+	public String codificationAccept(@RequestParam("codification") String id, RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException{
+		Project project = projectProgressService.findByIdEager(Integer.parseInt(id));
+		if(project == null){
+			throw new NotFoundException(messageSource.getMessage("proprog.notfound", null, locale));
+		}
+		project.setCodificationUser(userService.getAuthenticatedUser());
+		project.setCodificationDate(new Timestamp(new java.util.Date().getTime()));
+		projectProgressService.saveOrUpdate(project);
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/proprog/view/"+id;
+	}
+	
+	@RequestMapping(value = "/confirm", params = { "drawingValidation" }, method = RequestMethod.POST)
+	@Transactional
+	public String drawingAccept(@Valid DrawingNumberForm drawingNumberForm, BindingResult bindingResult,
+			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
+			// validate
+		
+		Project project = projectProgressService.findByIdEager(drawingNumberForm.getId());
+		if(project == null){
+			throw new NotFoundException(messageSource.getMessage("proprog.notfound", null, locale));
+		}
+		
+		if (bindingResult.hasErrors()) {
+				model.addAttribute("project", project);
+				return "proprog/view";
+			}
+		
+		project.setDrawingValidationUser(userService.getAuthenticatedUser());
+		project.setDrawingValidationDate(new Timestamp(new java.util.Date().getTime()));
+		project.setDrawingNumber(drawingNumberForm.getDrawingNumber());
+		projectProgressService.saveOrUpdate(project);
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/proprog/view/"+project.getId();
+	}
+	
+	@RequestMapping(value = "/confirm", params = { "salesOrder" }, method = RequestMethod.POST)
+	@Transactional
+	public String orderAccept(@Valid OrderForm orderForm, BindingResult bindingResult,
+			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
+		// validate
+		
+		Project project = projectProgressService.findByIdEager(orderForm.getId());
+		if(project == null){
+			throw new NotFoundException(messageSource.getMessage("proprog.notfound", null, locale));
+		}
+		
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("project", project);
+			return "proprog/view";
+		}
+		
+		project.setOrderInputUser(userService.getAuthenticatedUser());
+		project.setOrderInputDate(new Timestamp(new java.util.Date().getTime()));
+		project.setOrderNumber(orderForm.getOrderNumber());
+		project.setOrderQuantity(orderForm.getOrderQuantity());
+		projectProgressService.saveOrUpdate(project);
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/proprog/view/"+project.getId();
 	}
 	
 	

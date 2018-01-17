@@ -8,6 +8,7 @@ import sbs.repository.GenericRepository;
 public interface ProjectProgressRepository extends GenericRepository<Project,Integer> {
 
 	public List<Project> findAllDesc();
+	public Project findByIdEager(int id);
 
 }
 

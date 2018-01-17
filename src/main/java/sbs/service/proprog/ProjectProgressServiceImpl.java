@@ -6,10 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import sbs.model.buyorders.BuyOrder;
 import sbs.model.proprog.Project;
 import sbs.repository.GenericRepository;
-import sbs.repository.buyorders.BuyOrdersRepository;
 import sbs.repository.proprog.ProjectProgressRepository;
 import sbs.service.GenericServiceAdapter;
 
@@ -27,6 +25,11 @@ public class ProjectProgressServiceImpl extends GenericServiceAdapter<Project, I
 	@Override
 	public List<Project> findAllDesc() {
 		return projectProgressRepository.findAllDesc();
+	}
+
+	@Override
+	public Project findByIdEager(int id) {
+		return projectProgressRepository.findByIdEager(id);
 	}	
 	
 
