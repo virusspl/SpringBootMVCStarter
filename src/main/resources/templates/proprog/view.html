@@ -30,185 +30,187 @@
 					class="text-primary margin-top-30"></h1>
 			</div>
 			<div class="col-xs-12">
-				<!-- PANEL -->
-				<div class="panel-group">
-					<div class="panel panel-primary">
-						<div class="panel-heading">
-							<span th:text="#{proprog.part.generalinfo}"></span>
-						</div>
-						<div class="panel-body">
-							<div class="row">
-								<div class="col-xs-2">
-									<div class="form-group">
-										<label for="id">#id</label> <span class="form-control" id="id"
-											th:text="|#${project.id}|">id</span>
+				<form th:action="@{/proprog/confirm}" th:object="${checklistForm}"
+					method="post">
+					<!-- PANEL -->
+					<div class="panel-group">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<span th:text="#{proprog.part.generalinfo}"></span>
+							</div>
+							<div class="panel-body">
+								<div class="row">
+									<div class="col-xs-2">
+										<div class="form-group">
+											<label for="id">#id</label> <span class="form-control"
+												id="id" th:text="|#${project.id}|">id</span>
+										</div>
 									</div>
-								</div>
-								<div class="col-xs-3">
-									<div class="form-group">
-										<label for="projectNumber" th:text="#{proprog.projectnumber}">x</label>
-										<span class="form-control" id="projectnumber"
-											th:text="${project.projectNumber}">y</span>
+									<div class="col-xs-3">
+										<div class="form-group">
+											<label for="projectNumber" th:text="#{proprog.projectnumber}">x</label>
+											<span class="form-control" id="projectnumber"
+												th:text="${project.projectNumber}">y</span>
+										</div>
 									</div>
-								</div>
-								<div class="col-xs-4">
-									<div class="form-group">
-										<label for="creator" th:text="#{proprog.user.projectnumber}">x</label>
-										<span class="form-control" id="creator"
-											th:text="${project.projectNumberUser.name}">y</span>
+									<div class="col-xs-4">
+										<div class="form-group">
+											<label for="creator" th:text="#{proprog.user.projectnumber}">x</label>
+											<span class="form-control" id="creator"
+												th:text="${project.projectNumberUser.name}">y</span>
+										</div>
 									</div>
-								</div>
-								<div class="col-xs-3">
-									<div class="form-group">
-										<label for="projectNumberDate" th:text="#{proprog.date}">x</label>
-										<span class="form-control" id="projectNumberDate"
-											th:text="${#dates.format(project.projectNumberDate, 'yyyy.MM.dd HH:mm')}"></span>
+									<div class="col-xs-3">
+										<div class="form-group">
+											<label for="projectNumberDate" th:text="#{proprog.date}">x</label>
+											<span class="form-control" id="projectNumberDate"
+												th:text="${#dates.format(project.projectNumberDate, 'yyyy.MM.dd HH:mm')}"></span>
+										</div>
+									</div>
+									<div class="col-xs-12">
+										<div class="progress">
+											<div
+												th:class="|progress-bar progress-bar-striped active progress-bar-${color}|"
+												th:style="|width: ${progress}%|">
+												<span th:text="|${progress}%|" id="progbar"></span>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<!-- /PANEL -->
-				<div class="progress">
-					<div
-						th:class="|progress-bar progress-bar-striped active progress-bar-${color}|"
-						th:style="|width: ${progress}%|">
-						<span th:text="|${progress}%|" id="progbar"></span>
-					</div>
-				</div>
-				<!-- SALES PANEL -->
-				<div class="panel-group">
-					<div class="panel panel-info">
-						<div class="panel-heading">
-							<span th:text="#{proprog.part.sales}"></span>
-						</div>
-						<div class="panel-body">
+					<!-- /PANEL -->
 
-							<div class="row">
-								<!-- 1ST ROW -->
-								<div class="col-xs-5">
-									<div class="form-group">
-										<label for="clientacceptuser"
-											th:text="#{proprog.user.clientaccept}">x</label> <span
-											th:if="${project.clientAcceptUser} != null"
-											class="form-control" id="clientacceptuser"
-											th:text="${project.clientAcceptUser.name}">y</span> <span
-											th:if="${project.clientAcceptUser} == null"
-											class="form-control" id="clientacceptuser"></span>
+					<!-- SALES PANEL -->
+					<div class="panel-group">
+						<div class="panel panel-info">
+							<div class="panel-heading">
+								<span th:text="#{proprog.part.sales}"></span>
+							</div>
+							<div class="panel-body">
+
+								<div class="row">
+									<!-- 1ST ROW -->
+									<div class="col-xs-5">
+										<div class="form-group">
+											<label for="clientacceptuser"
+												th:text="#{proprog.user.clientaccept}">x</label> <span
+												th:if="${project.clientAcceptUser} != null"
+												class="form-control" id="clientacceptuser"
+												th:text="${project.clientAcceptUser.name}">y</span> <span
+												th:if="${project.clientAcceptUser} == null"
+												class="form-control" id="clientacceptuser"></span>
+										</div>
 									</div>
-								</div>
-								<div class="col-xs-5">
-									<div class="form-group">
-										<label for="clientaccepdate" th:text="#{proprog.date}">x</label>
-										<span th:if="${project.clientAcceptUser} != null"
-											class="form-control" id="clientaccepdate"
-											th:text="${#dates.format(project.clientAcceptDate, 'yyyy.MM.dd HH:mm')}"></span>
-										<span th:if="${project.clientAcceptUser} == null"
-											class="form-control" id="clientaccepdate"></span>
+									<div class="col-xs-5">
+										<div class="form-group">
+											<label for="clientaccepdate" th:text="#{proprog.date}">x</label>
+											<span th:if="${project.clientAcceptUser} != null"
+												class="form-control" id="clientaccepdate"
+												th:text="${#dates.format(project.clientAcceptDate, 'yyyy.MM.dd HH:mm')}"></span>
+											<span th:if="${project.clientAcceptUser} == null"
+												class="form-control" id="clientaccepdate"></span>
+										</div>
 									</div>
-								</div>
-								<!-- BUTTON COLUMN -->
-								<div class="col-xs-2">
-									<div th:if="${project.clientAcceptUser} == null">
-										<div id="authorizedOnly"
-											sec:authorize="hasAnyRole('ROLE_PROPROG_SALES', 'ROLE_ADMIN')">
-											<form th:action="@{/proprog/confirm}" method="post">
+									<!-- BUTTON COLUMN -->
+									<div class="col-xs-2">
+										<div th:if="${project.clientAcceptUser} == null">
+											<div id="authorizedOnly"
+												sec:authorize="hasAnyRole('ROLE_PROPROG_SALES', 'ROLE_ADMIN')">
 												<label th:text="#{action.confirm}">x</label> <br />
 												<button class="btn btn-primary btn-sm" type="submit"
 													name="clientAccept" th:value="${project.id}">
 													<span class="glyphicon glyphicon-ok"></span> <span
 														th:text="#{action.confirm}">create</span>
 												</button>
-											</form>
+
+											</div>
 										</div>
 									</div>
+									<!-- /BUTTON COLUMN -->
+									<!-- /1ST ROW -->
 								</div>
-								<!-- /BUTTON COLUMN -->
-								<!-- /1ST ROW -->
-							</div>
-							<div class="row">
-								<!-- /2ND ROW -->
-								<div class="col-xs-5">
-									<div class="form-group">
-										<label for="codificationuser"
-											th:text="#{proprog.user.codification}">x</label> <span
-											th:if="${project.codificationUser} != null"
-											class="form-control" id="codificationuser"
-											th:text="${project.codificationUser.name}">y</span> <span
-											th:if="${project.codificationUser} == null"
-											class="form-control" id="codificationuser"></span>
+								<div class="row">
+									<!-- /2ND ROW -->
+									<div class="col-xs-5">
+										<div class="form-group">
+											<label for="codificationuser"
+												th:text="#{proprog.user.codification}">x</label> <span
+												th:if="${project.codificationUser} != null"
+												class="form-control" id="codificationuser"
+												th:text="${project.codificationUser.name}">y</span> <span
+												th:if="${project.codificationUser} == null"
+												class="form-control" id="codificationuser"></span>
+										</div>
 									</div>
-								</div>
-								<div class="col-xs-5">
-									<div class="form-group">
-										<label for="codificationDate" th:text="#{proprog.date}">x</label>
-										<span th:if="${project.codificationUser} != null"
-											class="form-control" id="codificationDate"
-											th:text="${#dates.format(project.codificationDate, 'yyyy.MM.dd HH:mm')}"></span>
-										<span th:if="${project.codificationUser} == null"
-											class="form-control" id="codificationDate"></span>
+									<div class="col-xs-5">
+										<div class="form-group">
+											<label for="codificationDate" th:text="#{proprog.date}">x</label>
+											<span th:if="${project.codificationUser} != null"
+												class="form-control" id="codificationDate"
+												th:text="${#dates.format(project.codificationDate, 'yyyy.MM.dd HH:mm')}"></span>
+											<span th:if="${project.codificationUser} == null"
+												class="form-control" id="codificationDate"></span>
+										</div>
 									</div>
-								</div>
-								<!-- BUTTON COLUMN -->
-								<div class="col-xs-2">
-									<div th:if="${project.codificationUser} == null">
-										<div id="authorizedOnly"
-											sec:authorize="hasAnyRole('ROLE_PROPROG_SALES', 'ROLE_ADMIN')">
-											<form th:action="@{/proprog/confirm}" method="post">
+									<!-- BUTTON COLUMN -->
+									<div class="col-xs-2">
+										<div th:if="${project.codificationUser} == null">
+											<div id="authorizedOnly"
+												sec:authorize="hasAnyRole('ROLE_PROPROG_SALES', 'ROLE_ADMIN')">
 												<label th:text="#{action.confirm}">x</label> <br />
 												<button class="btn btn-primary btn-sm" type="submit"
 													name="codification" th:value="${project.id}">
 													<span class="glyphicon glyphicon-ok"></span> <span
 														th:text="#{action.confirm}">create</span>
 												</button>
-											</form>
+
+											</div>
 										</div>
 									</div>
 								</div>
+								<!-- /2ND ROW -->
+								<!-- /BUTTON COLUMN -->
 							</div>
-							<!-- /2ND ROW -->
-							<!-- /BUTTON COLUMN -->
 						</div>
 					</div>
-				</div>
-				<!-- /SALES PANEL -->
-				<!-- DRAWING PANEL -->
-				<div class="panel-group">
-					<div class="panel panel-info">
-						<div class="panel-heading">
-							<span th:text="#{proprog.part.designeroffice}"></span>
-						</div>
-						<div class="panel-body">
-							<div class="row">
-								<!-- 1ST ROW -->
-								<div class="col-xs-5">
-									<div class="form-group">
-										<label for="drawingValidationUser"
-											th:text="#{proprog.user.drawingvalidation}">x</label> <span
-											th:if="${project.drawingValidationUser} != null"
-											class="form-control" id="drawingValidationUser"
-											th:text="${project.drawingValidationUser.name}">y</span> <span
-											th:if="${project.drawingValidationUser} == null"
-											class="form-control" id="drawingValidationUser"></span>
-									</div>
-								</div>
-								<div class="col-xs-5">
-									<div class="form-group">
-										<label for="drawingValidationDate" th:text="#{proprog.date}">x</label>
-										<span th:if="${project.drawingValidationUser} != null"
-											class="form-control" id="drawingValidationDate"
-											th:text="${#dates.format(project.drawingValidationDate, 'yyyy.MM.dd HH:mm')}"></span>
-										<span th:if="${project.drawingValidationUser} == null"
-											class="form-control" id="drawingValidationDate"></span>
-									</div>
-								</div>
-								<!-- /1ST ROW -->
+					<!-- /SALES PANEL -->
+					<!-- DRAWING PANEL -->
+					<div class="panel-group">
+						<div class="panel panel-info">
+							<div class="panel-heading">
+								<span th:text="#{proprog.part.designeroffice}"></span>
 							</div>
-							<div class="row" th:if="${project.drawingValidationUser} == null">
-								<!-- /2ND ROW -->
-								<form th:action="@{/proprog/confirm}"
-									th:object="${drawingNumberForm}" method="post">
+							<div class="panel-body">
+								<div class="row">
+									<!-- 1ST ROW -->
+									<div class="col-xs-5">
+										<div class="form-group">
+											<label for="drawingValidationUser"
+												th:text="#{proprog.user.drawingvalidation}">x</label> <span
+												th:if="${project.drawingValidationUser} != null"
+												class="form-control" id="drawingValidationUser"
+												th:text="${project.drawingValidationUser.name}">y</span> <span
+												th:if="${project.drawingValidationUser} == null"
+												class="form-control" id="drawingValidationUser"></span>
+										</div>
+									</div>
+									<div class="col-xs-5">
+										<div class="form-group">
+											<label for="drawingValidationDate" th:text="#{proprog.date}">x</label>
+											<span th:if="${project.drawingValidationUser} != null"
+												class="form-control" id="drawingValidationDate"
+												th:text="${#dates.format(project.drawingValidationDate, 'yyyy.MM.dd HH:mm')}"></span>
+											<span th:if="${project.drawingValidationUser} == null"
+												class="form-control" id="drawingValidationDate"></span>
+										</div>
+									</div>
+									<!-- /1ST ROW -->
+								</div>
+								<div class="row"
+									th:if="${project.drawingValidationUser} == null">
+									<!-- /2ND ROW -->
 									<div id="authorizedOnly"
 										sec:authorize="hasAnyRole('ROLE_PROPROG_DRAWINGVALIDATION', 'ROLE_ADMIN')">
 										<input type="hidden" th:field="${project.id}"></input>
@@ -235,71 +237,66 @@
 										</div>
 
 									</div>
-								</form>
-							</div>
-							<div class="row" th:if="${project.drawingValidationUser} != null">
-								<div class="col-xs-5">
-									<div class="form-group">
-										<label for="drawingNumber" th:text="#{proprog.drawingnumber}">x</label>
-										<span class="form-control" id="drawingNumber"
-											th:text="${project.drawingNumber}">y</span>
+
+								</div>
+								<div class="row"
+									th:if="${project.drawingValidationUser} != null">
+									<div class="col-xs-5">
+										<div class="form-group">
+											<label for="drawingNumber" th:text="#{proprog.drawingnumber}">x</label>
+											<span class="form-control" id="drawingNumber"
+												th:text="${project.drawingNumber}">y</span>
+										</div>
 									</div>
 								</div>
+								<!-- /2ND ROW -->
 							</div>
-							<!-- /2ND ROW -->
 						</div>
 					</div>
-				</div>
-				<!-- /DRAWING PANEL -->
+					<!-- /DRAWING PANEL -->
 
-
-
-				<!-- SALES ORDER PANEL -->
-				<div class="panel-group">
-					<div class="panel panel-info">
-						<div class="panel-heading">
-							<span th:text="#{proprog.part.salesorder}"></span>
-						</div>
-						<div class="panel-body">
-							<div class="row">
-								<!-- 1ST ROW -->
-								<div class="col-xs-5">
-									<div class="form-group">
-										<label for="orderInputUser"
-											th:text="#{proprog.user.orderinput}">x</label> <span
-											th:if="${project.orderInputUser} != null"
-											class="form-control" id="orderInputUser"
-											th:text="${project.orderInputUser.name}">y</span> <span
-											th:if="${project.orderInputUser} == null"
-											class="form-control" id="orderInputUser"></span>
-									</div>
-								</div>
-								<div class="col-xs-5">
-									<div class="form-group">
-										<label for="orderInputDate" th:text="#{proprog.date}">x</label>
-										<span th:if="${project.orderInputUser} != null"
-											class="form-control" id="orderInputDate"
-											th:text="${#dates.format(project.orderInputDate, 'yyyy.MM.dd HH:mm')}"></span>
-										<span th:if="${project.orderInputUser} == null"
-											class="form-control" id="orderInputDate"></span>
-									</div>
-								</div>
-								<!-- /1ST ROW -->
+					<!-- SALES ORDER PANEL -->
+					<div class="panel-group">
+						<div class="panel panel-info">
+							<div class="panel-heading">
+								<span th:text="#{proprog.part.salesorder}"></span>
 							</div>
-							<div class="row" th:if="${project.orderInputDate} == null">
-								<!-- /2ND ROW -->
-								<form th:action="@{/proprog/confirm}"
-									th:object="${orderForm}" method="post">
+							<div class="panel-body">
+								<div class="row">
+									<!-- 1ST ROW -->
+									<div class="col-xs-5">
+										<div class="form-group">
+											<label for="orderInputUser"
+												th:text="#{proprog.user.orderinput}">x</label> <span
+												th:if="${project.orderInputUser} != null"
+												class="form-control" id="orderInputUser"
+												th:text="${project.orderInputUser.name}">y</span> <span
+												th:if="${project.orderInputUser} == null"
+												class="form-control" id="orderInputUser"></span>
+										</div>
+									</div>
+									<div class="col-xs-5">
+										<div class="form-group">
+											<label for="orderInputDate" th:text="#{proprog.date}">x</label>
+											<span th:if="${project.orderInputUser} != null"
+												class="form-control" id="orderInputDate"
+												th:text="${#dates.format(project.orderInputDate, 'yyyy.MM.dd HH:mm')}"></span>
+											<span th:if="${project.orderInputUser} == null"
+												class="form-control" id="orderInputDate"></span>
+										</div>
+									</div>
+									<!-- /1ST ROW -->
+								</div>
+								<div class="row" th:if="${project.orderInputDate} == null">
+									<!-- /2ND ROW -->
 									<div id="authorizedOnly"
 										sec:authorize="hasAnyRole('ROLE_PROPROG_SALESORDER', 'ROLE_ADMIN')">
 										<input type="hidden" th:field="${project.id}"></input>
 										<div class="col-xs-5">
 											<div class="form-group">
-												<label for="ordernumber"
-													th:text="#{proprog.orderNumber}">Title</label> <input
-													type="text" class="form-control" id="orderNumber"
-													name="orderNumber"
-													th:placeholder="#{proprog.ordernumber}"
+												<label for="ordernumber" th:text="#{proprog.ordernumber}">Title</label>
+												<input type="text" class="form-control" id="orderNumber"
+													name="orderNumber" th:placeholder="#{proprog.ordernumber}"
 													th:field="*{orderNumber}" />
 												<div th:errors="*{orderNumber}"
 													class="alert alert-danger margin-top-5">error</div>
@@ -327,33 +324,363 @@
 										</div>
 
 									</div>
-								</form>
-							</div>
-							<div class="row" th:if="${project.orderInputDate} != null">
-								<div class="col-xs-5">
-									<div class="form-group">
-										<label for="orderNumber" th:text="#{proprog.ordernumber}">x</label>
-										<span class="form-control" id="orderNumber"
-											th:text="${project.orderNumber}">y</span>
+
+								</div>
+								<div class="row" th:if="${project.orderInputDate} != null">
+									<div class="col-xs-5">
+										<div class="form-group">
+											<label for="orderNumber" th:text="#{proprog.ordernumber}">x</label>
+											<span class="form-control" id="orderNumber"
+												th:text="${project.orderNumber}">y</span>
+										</div>
+									</div>
+									<div class="col-xs-5">
+										<div class="form-group">
+											<label for="orderQuantity" th:text="#{proprog.orderquantity}">x</label>
+											<span class="form-control" id="orderQuantity"
+												th:text="${project.orderQuantity}">y</span>
+										</div>
 									</div>
 								</div>
-								<div class="col-xs-5">
-									<div class="form-group">
-										<label for="orderQuantity" th:text="#{proprog.orderQuantity}">x</label>
-										<span class="form-control" id="orderQuantity"
-											th:text="${project.orderQuantity}">y</span>
-									</div>
-								</div>
+								<!-- /2ND ROW -->
 							</div>
-							<!-- /2ND ROW -->
 						</div>
 					</div>
-				</div>
-				<!-- /SALES RDER PANEL -->
+					<!-- /SALES ORDER PANEL -->
+					<!-- SUPPLY CHAIN PANEL -->
+					<div class="panel-group">
+						<div class="panel panel-info">
+							<div class="panel-heading">
+								<span th:text="#{proprog.part.supplychain}"></span>
+							</div>
+							<div class="panel-body">
+								<div class="row">
+									<!-- 1ST ROW -->
+									<div class="col-xs-5">
+										<div class="form-group">
+											<label for="productionPlanUser"
+												th:text="#{proprog.user.productionplan}">x</label> <span
+												th:if="${project.productionPlanUser} != null"
+												class="form-control" id="productionplanuser"
+												th:text="${project.productionPlanUser.name}">y</span> <span
+												th:if="${project.productionPlanUser} == null"
+												class="form-control" id="productionplanuser"></span>
+										</div>
+									</div>
+									<div class="col-xs-5">
+										<div class="form-group">
+											<label for="productionPlanDate" th:text="#{proprog.date}">x</label>
+											<span th:if="${project.productionPlanUser} != null"
+												class="form-control" id="productionplandate"
+												th:text="${#dates.format(project.productionPlanDate, 'yyyy.MM.dd HH:mm')}"></span>
+											<span th:if="${project.productionPlanUser} == null"
+												class="form-control" id="productionplandate"></span>
+										</div>
+									</div>
+									<!-- BUTTON COLUMN -->
+									<div class="col-xs-2">
+										<div th:if="${project.productionPlanUser} == null">
+											<div id="authorizedOnly"
+												sec:authorize="hasAnyRole('ROLE_PROPROG_PRODUCTIONPLAN', 'ROLE_ADMIN')">
+												<label th:text="#{action.confirm}">x</label> <br />
+												<button class="btn btn-primary btn-sm" type="submit"
+													name="productionPlan" th:value="${project.id}">
+													<span class="glyphicon glyphicon-ok"></span> <span
+														th:text="#{action.confirm}">create</span>
+												</button>
+
+											</div>
+										</div>
+									</div>
+									<!-- /BUTTON COLUMN -->
+									<!-- /1ST ROW -->
+								</div>
+								<div class="row">
+									<!-- /2ND ROW -->
+									<div class="col-xs-5">
+										<div class="form-group">
+											<label for="buypartsuser" th:text="#{proprog.user.buyparts}">x</label>
+											<span th:if="${project.buyPartsUser} != null"
+												class="form-control" id="buypartsuser"
+												th:text="${project.buyPartsUser.name}">y</span> <span
+												th:if="${project.buyPartsUser} == null" class="form-control"
+												id="buypartsuser"></span>
+										</div>
+									</div>
+									<div class="col-xs-5">
+										<div class="form-group">
+											<label for="buypartsdate" th:text="#{proprog.date}">x</label>
+											<span th:if="${project.buyPartsUser} != null"
+												class="form-control" id="buypartsdate"
+												th:text="${#dates.format(project.buyPartsDate, 'yyyy.MM.dd HH:mm')}"></span>
+											<span th:if="${project.buyPartsUser} == null"
+												class="form-control" id="buypartsdate"></span>
+										</div>
+									</div>
+									<!-- BUTTON COLUMN -->
+									<div class="col-xs-2">
+										<div th:if="${project.buyPartsUser} == null">
+											<div id="authorizedOnly"
+												sec:authorize="hasAnyRole('ROLE_PROPROG_PURCHASE', 'ROLE_ADMIN')">
+												<label th:text="#{action.confirm}">x</label> <br />
+												<button class="btn btn-primary btn-sm" type="submit"
+													name="buyParts" th:value="${project.id}">
+													<span class="glyphicon glyphicon-ok"></span> <span
+														th:text="#{action.confirm}">create</span>
+												</button>
+
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- /2ND ROW -->
+								<!-- /BUTTON COLUMN -->
+							</div>
+						</div>
+					</div>
+					<!-- /SUPPLY CHAIN PANEL -->
+					<!-- TECHNOLOGY PANEL -->
+					<div class="panel-group">
+						<div class="panel panel-info">
+							<div class="panel-heading">
+								<span th:text="#{proprog.part.technology}"></span>
+							</div>
+							<div class="panel-body">
+								<div class="row">
+									<!-- 1ST ROW -->
+									<div class="col-xs-5">
+										<div class="form-group">
+											<label for="technologyuser"
+												th:text="#{proprog.user.technology}">x</label> <span
+												th:if="${project.technologyUser} != null"
+												class="form-control" id="technologyuser"
+												th:text="${project.technologyUser.name}">y</span> <span
+												th:if="${project.technologyUser} == null"
+												class="form-control" id="technologyuser"></span>
+										</div>
+									</div>
+									<div class="col-xs-5">
+										<div class="form-group">
+											<label for="technologydate" th:text="#{proprog.date}">x</label>
+											<span th:if="${project.technologyUser} != null"
+												class="form-control" id="technologydate"
+												th:text="${#dates.format(project.technologyDate, 'yyyy.MM.dd HH:mm')}"></span>
+											<span th:if="${project.technologyUser} == null"
+												class="form-control" id="technologydate"></span>
+										</div>
+									</div>
+									<!-- BUTTON COLUMN -->
+									<div class="col-xs-2">
+										<div th:if="${project.technologyUser} == null">
+											<div id="authorizedOnly"
+												sec:authorize="hasAnyRole('ROLE_PROPROG_TECHNOLOGY', 'ROLE_ADMIN')">
+												<label th:text="#{action.confirm}">x</label> <br />
+												<button class="btn btn-primary btn-sm" type="submit"
+													name="technology" th:value="${project.id}">
+													<span class="glyphicon glyphicon-ok"></span> <span
+														th:text="#{action.confirm}">create</span>
+												</button>
+
+											</div>
+										</div>
+									</div>
+									<!-- /BUTTON COLUMN -->
+									<!-- /1ST ROW -->
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- /TECHNOLOGY PANEL -->
+					<!-- TOOL drawing PANEL -->
+					<div class="panel-group">
+						<div class="panel panel-info">
+							<div class="panel-heading">
+								<span th:text="#{proprog.part.tooldrawing}"></span>
+							</div>
+							<div class="panel-body">
+								<div class="row">
+									<!-- 1ST ROW -->
+									<div class="col-xs-5">
+										<div class="form-group">
+											<label for="tooldrawinguser"
+												th:text="#{proprog.user.tooldrawing}">x</label> <span
+												th:if="${project.toolDrawingUser} != null"
+												class="form-control" id="tooldrawinguser"
+												th:text="${project.toolDrawingUser.name}">y</span> <span
+												th:if="${project.toolDrawingUser} == null"
+												class="form-control" id="tooldrawinguser"></span>
+										</div>
+									</div>
+									<div class="col-xs-5">
+										<div class="form-group">
+											<label for="tooldrawingdate" th:text="#{proprog.date}">x</label>
+											<span th:if="${project.toolDrawingUser} != null"
+												class="form-control" id="tooldrawingdate"
+												th:text="${#dates.format(project.toolDrawingDate, 'yyyy.MM.dd HH:mm')}"></span>
+											<span th:if="${project.toolDrawingUser} == null"
+												class="form-control" id="tooldrawingate"></span>
+										</div>
+									</div>
+									<!-- BUTTON COLUMN -->
+									<div class="col-xs-2">
+										<div th:if="${project.toolDrawingUser} == null">
+											<div id="authorizedOnly"
+												sec:authorize="hasAnyRole('ROLE_PROPROG_TOOLDRAWING', 'ROLE_ADMIN')">
+												<label th:text="#{proprog.tooldrawingready}">x</label> <br />
+												<button class="btn btn-primary btn-sm" type="submit"
+													name="toolDrawed" th:value="${project.id}">
+													<span class="glyphicon glyphicon-ok"></span> <span
+														th:text="#{action.yes}">create</span>
+												</button>
+											</div>
+										</div>
+									</div>
+									<!-- /BUTTON COLUMN -->
+									<!-- /1ST ROW -->
+								</div>
+								<div class="row">
+									<!-- /2ND ROW -->
+									<div class="col-xs-5">
+										<div class="form-group">
+											<label for="tooldrawingneeded"
+												th:text="#{proprog.tooldrawingneeded}">to send</label>
+											<div id="tooldrawingneeded" class="checkbox">
+												<label><input onclick="return false;"
+													type="checkbox" th:checked="${project.toolDrawingNeeded}" /><span
+													th:text="#{proprog.tooldrawingneeded}"></span></label>
+											</div>
+										</div>
+									</div>
+									<div class="col-xs-5"></div>
+									<!-- BUTTON COLUMN -->
+									<div class="col-xs-2">
+										<div th:if="${project.toolDrawingUser} == null">
+											<div id="authorizedOnly"
+												sec:authorize="hasAnyRole('PROPROG_TOOLDRAWING', 'ROLE_ADMIN')">
+												<label th:text="#{proprog.notneeded}">x</label> <br />
+												<button class="btn btn-primary btn-sm" type="submit"
+													name="toolNotNeeded" th:value="${project.id}">
+													<span class="glyphicon glyphicon-ok"></span> <span
+														th:text="#{proprog.notneeded}">create</span>
+												</button>
+
+											</div>
+										</div>
+									</div>
+									<!-- /BUTTON COLUMN -->
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- /TOOL PANEL PANEL -->
+					<!-- TOOL CREATION PANEL -->
+					<div class="panel-group">
+						<div class="panel panel-info">
+							<div class="panel-heading">
+								<span th:text="#{proprog.part.toolready}"></span>
+							</div>
+							<div class="panel-body">
+								<div class="row">
+									<!-- 1ST ROW -->
+									<div class="col-xs-5">
+										<div class="form-group">
+											<label for="toolcreationuser"
+												th:text="#{proprog.user.toolcreation}">x</label> <span
+												th:if="${project.toolCreationUser} != null"
+												class="form-control" id="toolcreationuser"
+												th:text="${project.toolCreationUser.name}">y</span> <span
+												th:if="${project.toolCreationUser} == null"
+												class="form-control" id="toolcreationuser"></span>
+										</div>
+									</div>
+									<div class="col-xs-5">
+										<div class="form-group">
+											<label for="toolcreationdate" th:text="#{proprog.date}">x</label>
+											<span th:if="${project.toolCreationUser} != null"
+												class="form-control" id="toolcreationdate"
+												th:text="${#dates.format(project.toolCreationDate, 'yyyy.MM.dd HH:mm')}"></span>
+											<span th:if="${project.toolCreationUser} == null"
+												class="form-control" id="toolcreationdate"></span>
+										</div>
+									</div>
+									<!-- BUTTON COLUMN -->
+									<div class="col-xs-2">
+										<div th:if="${project.toolCreationUser} == null">
+											<div id="authorizedOnly"
+												sec:authorize="hasAnyRole(' ROLE_PROPROG_TOOLCREATION ', 'ROLE_ADMIN')">
+												<label th:text="#{action.confirm}">x</label> <br />
+												<button class="btn btn-primary btn-sm" type="submit"
+													name="toolCreation" th:value="${project.id}">
+													<span class="glyphicon glyphicon-ok"></span> <span
+														th:text="#{action.confirm}">create</span>
+												</button>
+
+											</div>
+										</div>
+									</div>
+									<!-- /BUTTON COLUMN -->
+									<!-- /1ST ROW -->
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- /TOOL CREATION PANEL -->
+					<!-- QUALITY  PANEL -->
+					<div class="panel-group">
+						<div class="panel panel-info">
+							<div class="panel-heading">
+								<span th:text="#{proprog.part.quality}"></span>
+							</div>
+							<div class="panel-body">
+								<div class="row">
+									<!-- 1ST ROW -->
+									<div class="col-xs-5">
+										<div class="form-group">
+											<label for="firstitemuser"
+												th:text="#{proprog.user.firstitem}">x</label> <span
+												th:if="${project.firstItemUser} != null"
+												class="form-control" id="firstitemuser"
+												th:text="${project.firstItemUser.name}">y</span> <span
+												th:if="${project.firstItemUser} == null"
+												class="form-control" id="firstitemuser"></span>
+										</div>
+									</div>
+									<div class="col-xs-5">
+										<div class="form-group">
+											<label for="firstitemdate" th:text="#{proprog.date}">x</label>
+											<span th:if="${project.firstItemUser} != null"
+												class="form-control" id="firstitemdate"
+												th:text="${#dates.format(project.firstItemDate, 'yyyy.MM.dd HH:mm')}"></span>
+											<span th:if="${project.firstItemUser} == null"
+												class="form-control" id="firstitemdate"></span>
+										</div>
+									</div>
+									<!-- BUTTON COLUMN -->
+									<div class="col-xs-2">
+										<div th:if="${project.firstItemUser} == null">
+											<div id="authorizedOnly"
+												sec:authorize="hasAnyRole(' ROLE_PROPROG_QUALITYCHECK ', 'ROLE_ADMIN')">
+												<label th:text="#{action.confirm}">x</label> <br />
+												<button class="btn btn-primary btn-sm" type="submit"
+													name="firstItem" th:value="${project.id}">
+													<span class="glyphicon glyphicon-ok"></span> <span
+														th:text="#{action.confirm}">create</span>
+												</button>
+
+											</div>
+										</div>
+									</div>
+									<!-- /BUTTON COLUMN -->
+									<!-- /1ST ROW -->
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- /QUALITY PANEL -->
 
 
 
-
+				</form>
 			</div>
 		</div>
 	</div>

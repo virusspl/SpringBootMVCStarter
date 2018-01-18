@@ -1,26 +1,17 @@
 package sbs.controller.proprog;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.NotEmpty;
-
-public class OrderForm {
+public class ChecklistForm {
 	
 	int id;
-	@NotEmpty
-	@Size(min = 3, max = 30)
 	String orderNumber;
-	@NotNull 
-	@Min(1)
 	Integer orderQuantity;
-	
-	public OrderForm(int id) {
+	String drawingNumber;
+
+	public ChecklistForm(int id) {
 		this.id = id;
 	}
 	
-	public OrderForm() {
+	public ChecklistForm() {
 	
 	}
 
@@ -48,15 +39,14 @@ public class OrderForm {
 		this.orderQuantity = orderQuantity;
 	}
 
-	@Override
-	public String toString() {
-		return "OrderForm [id=" + id + ", orderNumber=" + orderNumber + ", orderQuantity=" + orderQuantity + "]";
+	public String getDrawingNumber() {
+		return drawingNumber;
+	}
+
+	public void setDrawingNumber(String drawingNumber) {
+		this.drawingNumber = drawingNumber;
 	}
 	
 	
 	
-	
-	
-
-
 }

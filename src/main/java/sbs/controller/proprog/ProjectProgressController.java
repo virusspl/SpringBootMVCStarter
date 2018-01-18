@@ -85,8 +85,7 @@ public class ProjectProgressController {
 		model.addAttribute("project", project);
 		model.addAttribute("progress", project.getProgressTotal());
 		model.addAttribute("color", project.getProgressBootstrapTitle());
-		model.addAttribute("drawingNumberForm", new DrawingNumberForm(id));
-		model.addAttribute("orderForm", new OrderForm(id));
+		model.addAttribute("checklistForm", new ChecklistForm(id));
 		return "proprog/view";
 	}
 	
@@ -120,23 +119,24 @@ public class ProjectProgressController {
 	
 	@RequestMapping(value = "/confirm", params = { "drawingValidation" }, method = RequestMethod.POST)
 	@Transactional
-	public String drawingAccept(@Valid DrawingNumberForm drawingNumberForm, BindingResult bindingResult,
+	public String drawingAccept(@Valid ChecklistForm checklistForm, BindingResult bindingResult,
 			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
 			// validate
 		
-		Project project = projectProgressService.findByIdEager(drawingNumberForm.getId());
+		Project project = projectProgressService.findByIdEager(checklistForm.getId());
 		if(project == null){
 			throw new NotFoundException(messageSource.getMessage("proprog.notfound", null, locale));
 		}
 		
-		if (bindingResult.hasErrors()) {
-				model.addAttribute("project", project);
-				return "proprog/view";
-			}
+		if (checklistForm.getDrawingNumber()==null || checklistForm.getDrawingNumber().length() < 3 || checklistForm.getDrawingNumber().length() > 30 ) {
+			bindingResult.rejectValue("drawingNumber", "error.proprog.drawingnumber", "ERROR");
+			model.addAttribute("project", project);
+			return "proprog/view";
+		}
 		
 		project.setDrawingValidationUser(userService.getAuthenticatedUser());
 		project.setDrawingValidationDate(new Timestamp(new java.util.Date().getTime()));
-		project.setDrawingNumber(drawingNumberForm.getDrawingNumber());
+		project.setDrawingNumber(checklistForm.getDrawingNumber());
 		projectProgressService.saveOrUpdate(project);
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/proprog/view/"+project.getId();
@@ -144,27 +144,134 @@ public class ProjectProgressController {
 	
 	@RequestMapping(value = "/confirm", params = { "salesOrder" }, method = RequestMethod.POST)
 	@Transactional
-	public String orderAccept(@Valid OrderForm orderForm, BindingResult bindingResult,
+	public String orderAccept(@Valid ChecklistForm checklistForm, BindingResult bindingResult,
 			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
-		// validate
+		// 
 		
-		Project project = projectProgressService.findByIdEager(orderForm.getId());
+		Project project = projectProgressService.findByIdEager(checklistForm.getId());
 		if(project == null){
 			throw new NotFoundException(messageSource.getMessage("proprog.notfound", null, locale));
 		}
 		
-		if (bindingResult.hasErrors()) {
+		if (checklistForm.getOrderNumber()==null || checklistForm.getOrderNumber().length() < 3 || checklistForm.getOrderNumber().length() > 30 ) {
+			bindingResult.rejectValue("orderNumber", "error.proprog.ordernumber", "ERROR");
+			model.addAttribute("project", project);
+			return "proprog/view";
+		}
+		
+		if (checklistForm.getOrderQuantity()==null || checklistForm.getOrderQuantity() < 1 ) {
+			bindingResult.rejectValue("orderQuantity", "error.proprog.orderquantity", "ERROR");
 			model.addAttribute("project", project);
 			return "proprog/view";
 		}
 		
 		project.setOrderInputUser(userService.getAuthenticatedUser());
 		project.setOrderInputDate(new Timestamp(new java.util.Date().getTime()));
-		project.setOrderNumber(orderForm.getOrderNumber());
-		project.setOrderQuantity(orderForm.getOrderQuantity());
+		project.setOrderNumber(checklistForm.getOrderNumber());
+		project.setOrderQuantity(checklistForm.getOrderQuantity());
 		projectProgressService.saveOrUpdate(project);
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/proprog/view/"+project.getId();
+	}
+	
+	@RequestMapping(value = "/confirm", params = { "productionPlan" }, method = RequestMethod.POST)
+	@Transactional
+	public String productionPlanAccept(@RequestParam("productionPlan") String id, RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException{
+		Project project = projectProgressService.findByIdEager(Integer.parseInt(id));
+		if(project == null){
+			throw new NotFoundException(messageSource.getMessage("proprog.notfound", null, locale));
+		}
+		project.setProductionPlanUser(userService.getAuthenticatedUser());
+		project.setProductionPlanDate(new Timestamp(new java.util.Date().getTime()));
+		projectProgressService.saveOrUpdate(project);
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/proprog/view/"+id;
+	}
+	
+	@RequestMapping(value = "/confirm", params = { "buyParts" }, method = RequestMethod.POST)
+	@Transactional
+	public String buyPartsAccept(@RequestParam("buyParts") String id, RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException{
+		Project project = projectProgressService.findByIdEager(Integer.parseInt(id));
+		if(project == null){
+			throw new NotFoundException(messageSource.getMessage("proprog.notfound", null, locale));
+		}
+		project.setBuyPartsUser(userService.getAuthenticatedUser());
+		project.setBuyPartsDate(new Timestamp(new java.util.Date().getTime()));
+		projectProgressService.saveOrUpdate(project);
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/proprog/view/"+id;
+	}
+	
+	@RequestMapping(value = "/confirm", params = { "technology" }, method = RequestMethod.POST)
+	@Transactional
+	public String technologyAccept(@RequestParam("technology") String id, RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException{
+		Project project = projectProgressService.findByIdEager(Integer.parseInt(id));
+		if(project == null){
+			throw new NotFoundException(messageSource.getMessage("proprog.notfound", null, locale));
+		}
+		project.setTechnologyUser(userService.getAuthenticatedUser());
+		project.setTechnologyDate(new Timestamp(new java.util.Date().getTime()));
+		projectProgressService.saveOrUpdate(project);
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/proprog/view/"+id;
+	}
+	
+	@RequestMapping(value = "/confirm", params = { "toolDrawed" }, method = RequestMethod.POST)
+	@Transactional
+	public String toolDrawedAccept(@RequestParam("toolDrawed") String id, RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException{
+		Project project = projectProgressService.findByIdEager(Integer.parseInt(id));
+		if(project == null){
+			throw new NotFoundException(messageSource.getMessage("proprog.notfound", null, locale));
+		}
+		project.setToolDrawingUser(userService.getAuthenticatedUser());
+		project.setToolDrawingDate(new Timestamp(new java.util.Date().getTime()));
+		project.setToolDrawingNeeded(true);
+		projectProgressService.saveOrUpdate(project);
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/proprog/view/"+id;
+	}
+		
+	@RequestMapping(value = "/confirm", params = { "toolNotNeeded" }, method = RequestMethod.POST)
+	@Transactional
+	public String toolNotNeeded(@RequestParam("toolNotNeeded") String id, RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException{
+		Project project = projectProgressService.findByIdEager(Integer.parseInt(id));
+		if(project == null){
+			throw new NotFoundException(messageSource.getMessage("proprog.notfound", null, locale));
+		}
+		project.setToolDrawingUser(userService.getAuthenticatedUser());
+		project.setToolDrawingDate(new Timestamp(new java.util.Date().getTime()));
+		project.setToolDrawingNeeded(false);
+		projectProgressService.saveOrUpdate(project);
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/proprog/view/"+id;
+	}
+	
+	@RequestMapping(value = "/confirm", params = { "toolCreation" }, method = RequestMethod.POST)
+	@Transactional
+	public String toolCreationAccept(@RequestParam("toolCreation") String id, RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException{
+		Project project = projectProgressService.findByIdEager(Integer.parseInt(id));
+		if(project == null){
+			throw new NotFoundException(messageSource.getMessage("proprog.notfound", null, locale));
+		}
+		project.setToolCreationUser(userService.getAuthenticatedUser());
+		project.setToolCreationDate(new Timestamp(new java.util.Date().getTime()));
+		projectProgressService.saveOrUpdate(project);
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/proprog/view/"+id;
+	}
+	
+	@RequestMapping(value = "/confirm", params = { "firstItem" }, method = RequestMethod.POST)
+	@Transactional
+	public String firstItemAccept(@RequestParam("firstItem") String id, RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException{
+		Project project = projectProgressService.findByIdEager(Integer.parseInt(id));
+		if(project == null){
+			throw new NotFoundException(messageSource.getMessage("proprog.notfound", null, locale));
+		}
+		project.setFirstItemUser(userService.getAuthenticatedUser());
+		project.setFirstItemDate(new Timestamp(new java.util.Date().getTime()));
+		projectProgressService.saveOrUpdate(project);
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/proprog/view/"+id;
 	}
 	
 	
