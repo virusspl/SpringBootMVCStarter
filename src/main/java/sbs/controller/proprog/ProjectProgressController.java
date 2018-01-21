@@ -131,6 +131,8 @@ public class ProjectProgressController {
 		if (checklistForm.getDrawingNumber()==null || checklistForm.getDrawingNumber().length() < 3 || checklistForm.getDrawingNumber().length() > 30 ) {
 			bindingResult.rejectValue("drawingNumber", "error.proprog.drawingnumber", "ERROR");
 			model.addAttribute("project", project);
+			model.addAttribute("progress", project.getProgressTotal());
+			model.addAttribute("color", project.getProgressBootstrapTitle());
 			return "proprog/view";
 		}
 		
@@ -156,12 +158,16 @@ public class ProjectProgressController {
 		if (checklistForm.getOrderNumber()==null || checklistForm.getOrderNumber().length() < 3 || checklistForm.getOrderNumber().length() > 30 ) {
 			bindingResult.rejectValue("orderNumber", "error.proprog.ordernumber", "ERROR");
 			model.addAttribute("project", project);
+			model.addAttribute("progress", project.getProgressTotal());
+			model.addAttribute("color", project.getProgressBootstrapTitle());
 			return "proprog/view";
 		}
 		
 		if (checklistForm.getOrderQuantity()==null || checklistForm.getOrderQuantity() < 1 ) {
 			bindingResult.rejectValue("orderQuantity", "error.proprog.orderquantity", "ERROR");
 			model.addAttribute("project", project);
+			model.addAttribute("progress", project.getProgressTotal());
+			model.addAttribute("color", project.getProgressBootstrapTitle());
 			return "proprog/view";
 		}
 		

@@ -33,13 +33,15 @@
 					th:text="#{action.add}">back</span>
 				</a>
 			</div>
-			<div class="col-xs-12 margin-top-30"></div>
-			<div  th:each="item : ${projects}" class="col-xs-12">
-					<a th:href="|@{/proprog/view/}${item.project.id}|"
-						data-toggle="tooltip" data-placement="top"
-						th:title="#{action.view}"><span
-						th:text="${item.project.projectNumber}"></span></a>
-				!!!!!!!
+		</div>
+		<div class="row margin-top-20"></div>
+		<div class="row" th:each="item : ${projects}">
+			<div class="col-xs-12">
+				<a th:href="|@{/proprog/view/}${item.project.id}|"
+					data-toggle="tooltip" data-placement="top"
+					th:title="#{action.view}"><span
+					th:text="${item.project.projectNumber}"></span></a>
+			</div>
 				<div class="col-sm-12 margin-top-5">
 					<div class="progress">
 						<div
@@ -49,8 +51,9 @@
 						</div>
 					</div>
 				</div>
-			</div>
+		
 		</div>
+
 	</div>
 </body>
 </html>
