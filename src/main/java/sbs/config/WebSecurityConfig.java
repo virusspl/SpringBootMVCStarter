@@ -97,6 +97,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"ADMIN", 
 				"BUYORDMANAGER"
 				)
+		.antMatchers("/proprog/create/**")
+		.hasAnyRole(
+				"ADMIN", 
+				"PROPROG_SALES"
+				)
+		.antMatchers("/proprog/**")
+		.hasAnyRole(
+				"ADMIN", 
+				"PROPROG_SALES",
+				"PROPROG_DRAWINGVALIDATION",
+				"PROPROG_SALESORDER",
+				"PROPROG_PRODUCTIONPLAN",
+				"PROPROG_PURCHASE",
+				"PROPROG_TECHNOLOGY",
+				"PROPROG_TOOLDRAWING",
+				"PROPROG_TOOLCREATION",
+				"PROPROG_QUALITYCHECK"
+				)
 		.antMatchers("/admin", "/users/**")
 		.hasRole("ADMIN")
 		.anyRequest().authenticated().and()
