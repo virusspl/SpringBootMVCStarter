@@ -316,6 +316,14 @@ public class VariousPagesController {
 			roleService.save(ppQualityCheck);
 			msg += "[role: " + ppQualityCheck.getName() + "], ";
 		}
+		
+		Role movementsUser = roleService.findByName("ROLE_MOVEMENTSUSER");
+		if (movementsUser == null) {
+			movementsUser = new Role();
+			movementsUser.setName("ROLE_MOVEMENTSUSER");
+			roleService.save(movementsUser);
+			msg += "[role: " + movementsUser.getName() + "], ";
+		}
 				
 
 		System.out.println("get users:");

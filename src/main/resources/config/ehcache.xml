@@ -54,5 +54,13 @@
    maxBytesLocalHeap="20m"
    timeToLiveSeconds="43200">
    </cache>
+   <cache name="x3AllUtrMachines"
+   maxBytesLocalHeap="1m"
+   timeToLiveSeconds="10800">
+   </cache>
+   <cache name="x3HistoryPriceMap"
+   maxBytesLocalHeap="5m"
+   timeToLiveSeconds="604800">
+   </cache>
    
 </ehcache>

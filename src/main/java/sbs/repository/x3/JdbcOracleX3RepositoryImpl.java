@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,9 @@ import sbs.model.x3.X3Client;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3SalesOrder;
+import sbs.model.x3.X3ShipmentMovement;
+import sbs.model.x3.X3UtrMachine;
+import sbs.model.x3.X3UtrWorker;
 
 
 @Repository
@@ -378,9 +382,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         	item.setPartDescription(((String)row.get("ITMDES1_0")) + " " +  ((String)row.get("ITMDES2_0")));
         	item.setModelUnit((String)row.get("BOMUOM_0"));
         	item.setModelQuantity(((BigDecimal)row.get("LIKQTY_0")).doubleValue());
-        	
-        	//item.setDescription(((String)row.get("ITMDES1_0")) + " " +  ((String)row.get("ITMDES2_0")));
-        	//item.setCategory((String)row.get("TCLCOD_0"));
         	result.add(item);
         }
 		
@@ -468,9 +469,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         	item.setPartDescription(((String)row.get("ITMDES1_0")) + " " +  ((String)row.get("ITMDES2_0")));
         	item.setModelUnit((String)row.get("STU_0"));
         	item.setModelQuantity(((BigDecimal)row.get("LIKQTY_0")).doubleValue());
-        	
-        	//item.setDescription(((String)row.get("ITMDES1_0")) + " " +  ((String)row.get("ITMDES2_0")));
-        	//item.setCategory((String)row.get("TCLCOD_0"));
         	result.add(item);
         }
 		
@@ -515,6 +513,118 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         for(Map<String,Object> row: resultSet ){
         	result = (String)row.get("XCLIORI_0");
         }
+		return result;
+	}
+
+	@Override
+	public Map<String, X3UtrMachine> findAllUtrMachines(String company) {
+
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ company + ".YMANUPREVE.YCESPITE_0, "
+				+ company + ".YMANUPREVE.YCESPDESCR_0, "
+				+ company + ".YMANUPREVE.YFLAG_0  "
+				+ "FROM "
+				+ company + ".YMANUPREVE "
+				,
+                new Object[]{});
+        
+        Map <String, X3UtrMachine> map = new HashMap<>();
+        X3UtrMachine machine;
+        for(Map<String,Object> row: resultSet ){
+        	machine = new X3UtrMachine();
+        	machine.setCode((String)row.get("YCESPITE_0"));
+        	machine.setName((String)row.get("YCESPDESCR_0"));
+        	if(((BigDecimal)row.get("YFLAG_0")).intValue() == 2){
+        		machine.setCritical(true);
+        	}
+        	else{
+        		machine.setCritical(false);
+        	}
+        	map.put(machine.getCode(), machine);
+        }
+		return map;
+	}
+
+	@Override
+	public Map<String, X3UtrWorker> findAllUtrWorkers(String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				  
+				"SELECT "
+				+ company + ".ATEXTRA.IDENT2_0, "
+				+ company + ".ATEXTRA.TEXTE_0 "
+				+ "FROM "
+				+ company + ".ATEXTRA "
+				+ "WHERE " 
+				+ company + ".ATEXTRA.CODFIC_0 = ? AND "
+				+ company + ".ATEXTRA.ZONE_0 = ? AND "
+				+ company + ".ATEXTRA.LANGUE_0 = ? AND "
+				+ company + ".ATEXTRA.IDENT1_0 = ? "
+				,
+                new Object[]{"ATABDIV","LNGDES","POL","6001"});
+        
+        Map <String, X3UtrWorker> map = new HashMap<>();
+        X3UtrWorker worker;
+        for(Map<String,Object> row: resultSet ){
+        	worker = new X3UtrWorker();
+        	worker.setCode((String)row.get("IDENT2_0"));
+        	worker.setName((String)row.get("TEXTE_0"));
+        	map.put(worker.getCode(), worker);
+        }
+		return map;
+	}
+
+	@Override
+	public List<X3ShipmentMovement> findAdrShipmentMovementsInPeriod(Date startDate, Date endDate) {
+		String company = "ATW";
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				
+				"SELECT "
+				+ company + ".YCHGSTKGX.CREDAT_0, "
+				+ company + ".YCHGSTKGX.ITMREF_0, "
+				+ company + ".ITMMASTER.ITMDES1_0, "
+				+ company + ".YCHGSTKGX.QTYSTU_0, "
+				+ company + ".ITMMVT.AVC_0 "
+				+ "FROM "
+				+ company + ".ITMMVT "
+				+ "INNER JOIN (" + company + ".YCHGSTKGX INNER JOIN " + company + ".ITMMASTER "
+				+ "ON "
+				+ company + ".YCHGSTKGX.ITMREF_0 = " + company + ".ITMMASTER.ITMREF_0) "
+				+ "ON "
+				+ company + ".ITMMVT.ITMREF_0 = " + company + ".YCHGSTKGX.ITMREF_0 "
+				+ "WHERE "
+				+ company + ".YCHGSTKGX.CREDAT_0 >= ? "
+				+ "AND "
+				+ company + ".YCHGSTKGX.CREDAT_0 <= ? "
+				+ "AND "
+				+ company + ".YCHGSTKGX.LOCDES_0 = ? "
+				+ "AND "
+				+ company + ".ITMMASTER.TCLCOD_0 = ? "
+				+ "ORDER BY " 
+				+ company + ".YCHGSTKGX.CREDAT_0, " 
+				+ company + ".YCHGSTKGX.ITMREF_0",
+                new Object[]{
+                		dateHelper.getTime(startDate), 
+                		dateHelper.getTime(endDate), 
+                		"WGX01", 
+                		"AFV"
+                		}
+				);
+        
+		List<X3ShipmentMovement> result = new ArrayList<>();
+		X3ShipmentMovement item = null;
+		
+        for(Map<String,Object> row: resultSet ){
+        	item = new X3ShipmentMovement();
+        	item.setItemCode((String)row.get("ITMREF_0"));
+        	item.setItemDescription(((String)row.get("ITMDES1_0")));
+        	item.setQuantity(((BigDecimal)row.get("QTYSTU_0")).doubleValue());
+        	item.setEmergencyAveragePrice(((BigDecimal)row.get("AVC_0")).doubleValue());
+        	item.setDate((Timestamp)row.get("CREDAT_0"));
+        	
+        	result.add(item);
+        }
+		
 		return result;
 	}
 }

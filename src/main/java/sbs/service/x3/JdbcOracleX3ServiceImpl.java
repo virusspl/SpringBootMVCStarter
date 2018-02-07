@@ -1,6 +1,8 @@
 package sbs.service.x3;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,9 @@ import sbs.model.x3.X3Client;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3SalesOrder;
+import sbs.model.x3.X3ShipmentMovement;
+import sbs.model.x3.X3UtrMachine;
+import sbs.model.x3.X3UtrWorker;
 import sbs.repository.x3.JdbcOracleX3Repository;
 
 @Service
@@ -101,6 +106,21 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 		return jdbcOracleX3Repository.findFinalClientByOrder(company, order);
 	}
 
+	@Override
+	@Cacheable(value="x3AllUtrMachines")
+	public Map<String, X3UtrMachine> findAllUtrMachines(String company) {
+		return jdbcOracleX3Repository.findAllUtrMachines(company);
+	}
+
+	@Override
+	public Map<String, X3UtrWorker> findAllUtrWorkers(String company) {
+		return jdbcOracleX3Repository.findAllUtrWorkers(company);
+	}
+
+	@Override
+	public List<X3ShipmentMovement> findAdrShipmentMovementsInPeriod(Date startDate, Date endDate) {
+		return jdbcOracleX3Repository.findAdrShipmentMovementsInPeriod(startDate, endDate);
+	}
 
 
 }
