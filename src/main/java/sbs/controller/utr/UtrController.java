@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import sbs.controller.geolook.GeodeSearchForm;
+import sbs.helpers.X3OrmHelper;
+import sbs.model.x3.X3UtrFault;
+import sbs.model.x3.X3UtrFaultLine;
 import sbs.model.x3.X3UtrMachine;
 import sbs.model.x3.X3UtrWorker;
 import sbs.service.x3.JdbcOracleX3Service;
@@ -34,6 +37,8 @@ public class UtrController {
 	MessageSource messageSource;
 	@Autowired 
 	JdbcOracleX3Service x3Service;
+	@Autowired
+	X3OrmHelper x3OrmHelper;
 	
 	List<String> excludedMachines;
 	
@@ -52,30 +57,50 @@ public class UtrController {
     	utrDispatchForm.setCritical(0);
     	utrDispatchForm.setStop(0);
     	model.addAttribute("utrDispatchForm", utrDispatchForm);
-    	Map<String, X3UtrMachine> machines = x3Service.findAllUtrMachines("ATW");
-    	Map<String, X3UtrWorker> workers = x3Service.findAllUtrWorkers("ATW");
-    	for (Map.Entry<String, X3UtrMachine> entry : machines.entrySet()) {
-    	  //System.out.println("key: " + entry.getKey() + " object: " + entry.getValue());
-    	}
-    	for (Map.Entry<String, X3UtrWorker> entry : workers.entrySet()) {
-      	  System.out.println("key: " + entry.getKey() + " object: " + entry.getValue());
-      	}
     	return "utr/stats";
     }
     
     
 	@RequestMapping(value = "/stats", method = RequestMethod.POST)
 	public String performSearch(@Valid UtrDispatchForm utrDispatchForm, BindingResult bindingResult,  RedirectAttributes redirectAttrs, Locale locale){
+		
 		if(bindingResult.hasErrors()){
 			return "utr/stats";
 		}
-		Date date = null;
-		if(date == null){
-			bindingResult.rejectValue("startDate", "error.date", "ERROR");
-			return "geolook/search";
-		}
-		//redirectAttrs.addFlashAttribute("geodeList", jdbcOracleGeodeService.findLocationsOfProduct(geodeSearchForm.getProduct()));
-		return "redirect:/utr/stats";
+		
+		Date startDate = utrDispatchForm.getStartDate();
+		Date endDate = utrDispatchForm.getEndDate();
+		
+		Map<String, X3UtrMachine> machines = x3Service.findAllUtrMachines("ATW");
+    	Map<String, X3UtrWorker> workers = x3Service.findAllUtrWorkers("ATW");
+    	Map<String, X3UtrFault> faults = x3Service.findUtrFaultsInPeriod(startDate, endDate);
+    	List<X3UtrFaultLine> lines = x3Service.findUtrFaultLinesAfterDate(startDate);
+    	x3OrmHelper.fillUtrFaultsLinks(faults, lines, workers, machines);
+    	
+    	int machinesCnt = 0;
+    	int workersCnt = 0; 
+    	int faultsCnt = 0;
+    	
+    	for (Map.Entry<String, X3UtrMachine> entry : machines.entrySet()) {
+    		machinesCnt++;
+    		//System.out.println("key: " + entry.getKey() + " object: " + entry.getValue());
+    	}
+    	for (Map.Entry<String, X3UtrWorker> entry : workers.entrySet()) {
+    		workersCnt++;
+    		//System.out.println("key: " + entry.getKey() + " object: " + entry.getValue());
+      	}
+    	for (Map.Entry<String, X3UtrFault> entry : faults.entrySet()) {
+    		faultsCnt++;
+    		//System.out.println("key: " + entry.getKey() + " object: " + entry.getValue());
+    		System.out.println(entry.getValue());
+      	}
+    	
+    	
+    	
+    	System.out.println("period: " + startDate + " - " + endDate);
+    	System.out.println("workers: " + workersCnt + "; machines: " + machinesCnt +"; faults: " + faultsCnt);
+		
+    	return "utr/stats";
 	}
     
     

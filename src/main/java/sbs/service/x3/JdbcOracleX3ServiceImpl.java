@@ -15,6 +15,8 @@ import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3SalesOrder;
 import sbs.model.x3.X3ShipmentMovement;
+import sbs.model.x3.X3UtrFault;
+import sbs.model.x3.X3UtrFaultLine;
 import sbs.model.x3.X3UtrMachine;
 import sbs.model.x3.X3UtrWorker;
 import sbs.repository.x3.JdbcOracleX3Repository;
@@ -120,6 +122,16 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	@Override
 	public List<X3ShipmentMovement> findAdrShipmentMovementsInPeriod(Date startDate, Date endDate) {
 		return jdbcOracleX3Repository.findAdrShipmentMovementsInPeriod(startDate, endDate);
+	}
+
+	@Override
+	public Map<String, X3UtrFault> findUtrFaultsInPeriod(Date startDate, Date endDate) {
+		return jdbcOracleX3Repository.findUtrFaultsInPeriod(startDate, endDate);
+	}
+
+	@Override
+	public List<X3UtrFaultLine> findUtrFaultLinesAfterDate(Date startDate) {
+		return jdbcOracleX3Repository.findUtrFaultLinesAfterDate(startDate);
 	}
 
 

@@ -1,6 +1,5 @@
 package sbs.service.x3;
 
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +10,8 @@ import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3SalesOrder;
 import sbs.model.x3.X3ShipmentMovement;
+import sbs.model.x3.X3UtrFault;
+import sbs.model.x3.X3UtrFaultLine;
 import sbs.model.x3.X3UtrMachine;
 import sbs.model.x3.X3UtrWorker;
 
@@ -31,7 +32,9 @@ public interface JdbcOracleX3Service {
 	public List<X3BomItem> findProductionPartsByProductionOrderAndOperation(String company, String productionOrder, int operationNumber);
 	public String findOperationDescriptionByProductionOrder(String company, String order, int operation);
 	public String findFinalClientByOrder(String company, String order);
+	public List<X3ShipmentMovement> findAdrShipmentMovementsInPeriod(Date startDate, Date endDate);
 	public Map<String, X3UtrMachine> findAllUtrMachines(String company);
 	public Map<String, X3UtrWorker> findAllUtrWorkers(String company);
-	public List<X3ShipmentMovement> findAdrShipmentMovementsInPeriod(Date startDate, Date endDate);
+	public Map<String, X3UtrFault> findUtrFaultsInPeriod(Date startDate, Date endDate);
+	public List<X3UtrFaultLine> findUtrFaultLinesAfterDate(Date startDate);
 }

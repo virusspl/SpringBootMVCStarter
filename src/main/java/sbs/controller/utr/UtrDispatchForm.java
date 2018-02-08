@@ -1,10 +1,18 @@
 package sbs.controller.utr;
 
-import java.sql.Timestamp;
+import java.util.Date;
+
+import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class UtrDispatchForm {
-	Timestamp startDate;
-	Timestamp endDate;
+	@NotNull
+	@DateTimeFormat(pattern= "dd.MM.yyyy")
+	private Date startDate;
+	@NotNull
+	@DateTimeFormat(pattern= "dd.MM.yyyy")
+	private Date endDate;
 	int critical;
 	int stop;
 	
@@ -13,22 +21,22 @@ public class UtrDispatchForm {
 	}
 
 
-	public Timestamp getStartDate() {
+	public Date getStartDate() {
 		return startDate;
 	}
 
 
-	public void setStartDate(Timestamp startDate) {
+	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
 
 
-	public Timestamp getEndDate() {
+	public Date getEndDate() {
 		return endDate;
 	}
 
 
-	public void setEndDate(Timestamp endDate) {
+	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
 
