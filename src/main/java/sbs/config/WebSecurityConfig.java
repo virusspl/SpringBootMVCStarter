@@ -120,6 +120,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"PROPROG_TOOLCREATION",
 				"PROPROG_QUALITYCHECK"
 				)
+		.antMatchers("/utr/**")
+		.hasAnyRole(
+				"ADMIN", 
+				"UTR_NORMALUSER"
+				)
 		.antMatchers("/admin", "/users/**")
 		.hasRole("ADMIN")
 		.anyRequest().authenticated().and()

@@ -324,6 +324,14 @@ public class VariousPagesController {
 			roleService.save(movementsUser);
 			msg += "[role: " + movementsUser.getName() + "], ";
 		}
+		
+		Role utrNormalUser = roleService.findByName("ROLE_UTR_NORMALUSER");
+		if (utrNormalUser == null) {
+			utrNormalUser = new Role();
+			utrNormalUser.setName("ROLE_UTR_NORMALUSER");
+			roleService.save(utrNormalUser);
+			msg += "[role: " + utrNormalUser.getName() + "], ";
+		}
 				
 
 		System.out.println("get users:");

@@ -24,6 +24,10 @@ html {
 
 }
 
+.border {
+	border: 1px solid black;	
+}
+
 .blend {
 	background: rgba(255, 255, 255, .4);
 	margin-top: -20px;

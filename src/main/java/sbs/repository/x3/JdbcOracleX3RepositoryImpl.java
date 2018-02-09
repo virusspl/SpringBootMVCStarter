@@ -641,6 +641,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ company + ".AUTILIS.NOMUSR_0, "
 				+ company + ".XMANUTGUA.XDATACRE_0, "
 				+ company + ".XMANUTGUA.XCESPITE_0, "
+				+ company + ".XMANUTGUA.YTBLOCCO_0, "
 				+ company + ".XMANUTGUA.YUBICA_0 "
 				+ "FROM "
 				+ company + ".XMANUTGUA INNER JOIN " + company + ".AUTILIS "
@@ -667,6 +668,13 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         	fault.setCreationDate((Timestamp)row.get("XDATACRE_0"));
         	fault.setMachineCode((String)row.get("XCESPITE_0"));
         	fault.setLocationName((String)row.get("YUBICA_0"));
+        	if(((BigDecimal)row.get("YTBLOCCO_0")).intValue() == 2){
+        		fault.setFaultType(X3UtrFault.STOP_TYPE);
+        		
+        	}
+        	else{
+        		fault.setFaultType(X3UtrFault.NOSTOP_TYPE);
+        	}
         	map.put(fault.getFaultNumber(), fault);
         }
 		return map;

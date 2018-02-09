@@ -11,6 +11,11 @@ public class X3UtrFaultLine {
 	private Timestamp endDateTime;
 	private int state;
 	
+	public static final int INPUT_STATE = 1;
+	public static final int CURRENT_STATE = 2;
+	public static final int SUSPENDED_STATE = 3;
+	public static final int CLOSED_STATE = 4;
+
 	public X3UtrFaultLine() {
 		
 	}
@@ -47,6 +52,10 @@ public class X3UtrFaultLine {
 		this.endDateTime = endDateTime;
 	}
 
+	/**
+	 * status of fault line
+	 * @return integer: 1 input, 2 current, 3 suspended, 4 closed
+	 */
 	public int getState() {
 		return state;
 	}
