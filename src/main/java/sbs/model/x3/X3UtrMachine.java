@@ -5,9 +5,10 @@ public class X3UtrMachine {
 	private String code;
 	private String name;
 	private boolean critical;
+	public static final boolean CRITICAL = true;
+	public static final boolean NONCRITICAL = false;
 	
 	public X3UtrMachine() {
-		
 	}
 
 	public X3UtrMachine(String code, String name, boolean critical) {
@@ -46,9 +47,4 @@ public class X3UtrMachine {
 	public String toString() {
 		return "X3UtrMachine [code=" + code + ", name=" + name + ", critical=" + critical + "]";
 	}
-
-
-	
-	
-	
 }

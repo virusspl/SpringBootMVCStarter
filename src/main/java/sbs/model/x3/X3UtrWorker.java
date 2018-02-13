@@ -4,10 +4,10 @@ public class X3UtrWorker {
 
 	private String code;
 	private String name;
-	
+	private String workTimeInHours;
 	
 	public X3UtrWorker() {
-		
+
 	}
 
 	public X3UtrWorker(String code, String name) {
@@ -37,7 +37,13 @@ public class X3UtrWorker {
 		return "X3UtrWorker [code=" + code + ", name=" + name + "]";
 	}
 
+	public String getWorkTimeInHours() {
+		return workTimeInHours;
+	}
 
+	public void setWorkTimeInHours(String workTimeInHours) {
+		this.workTimeInHours = workTimeInHours;
+	}
 	
 	
 	

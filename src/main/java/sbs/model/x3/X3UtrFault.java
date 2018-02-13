@@ -133,6 +133,9 @@ public class X3UtrFault {
 		Timestamp result = null;
 		for(X3UtrFaultLine line: lines){
 			if(line.getState() == 4){
+				if(line.getEndDateTime() == null){
+					continue;
+				}
 				if(result==null){
 					result = line.getEndDateTime();
 				}

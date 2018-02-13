@@ -78,7 +78,17 @@ public class X3UtrFaultLine {
 		this.worker = worker;
 	}
 
-	
+	/**
+	 * time in minutes between start and end 
+	 * @return time in minutes or 0 if missing dates
+	 */
+	public int getClosedLineDurationInMinutes(){
+		long millis = 0;
+		if(getStartDateTime() != null && getEndDateTime() != null){
+			millis = getEndDateTime().getTime() - getStartDateTime().getTime();
+		}
+		return (int)millis/1000/60;
+	}
 	
 	
 }

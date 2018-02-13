@@ -157,7 +157,8 @@
 		</form>
 		<!-- /DATES RANGE -->
 		<!-- PANELS -->
-		<div class="row margin-top-10" th:if="(${faultsCounter} != null) and (${faultsCounter} > 0) ">
+		<div class="row margin-top-10"
+			th:if="(${faultsCounter} != null) and (${faultsCounter} > 0) ">
 			<div class="col-xs-12">
 				<h3 class="text-primary" th:text="|#{utr.result}">Panel With
 					title</h3>
@@ -165,7 +166,8 @@
 			<div class="col-xs-12 col-sm-6 margin-top-10">
 				<div class="panel panel-info">
 					<div class="panel-heading">
-						<span th:text="#{utr.machines}"></span>
+						<span class=" 	glyphicon glyphicon-compressed"></span> <span
+							th:text="#{utr.machines}"></span>
 					</div>
 					<div class="panel-body">
 						<!-- COUNTER -->
@@ -187,6 +189,29 @@
 						</div>
 						<div class="underline margin-top-10"></div>
 						<!-- /COUNTER -->
+						<!-- DAYS -->
+						<div class="row margin-top-10">
+							<div class="col-xs-1">
+								<span class="glyphicon glyphicon-calendar"></span>
+							</div>
+							<div class="col-xs-2">
+								<span>DAY</span>
+							</div>
+							<div class="col-xs-8">
+								<span th:text="|${daysInPeriod}|">day</span>
+							</div>
+						</div>
+						<div class="row margin-top-5">
+							<div class="col-xs-12">
+								<span th:text="#{utr.description.days}"></span>
+								<span th:text="|(
+								${#dates.format(utrDispatchForm.startDate, 'yyyy.MM.dd')} - 
+								${#dates.format(utrDispatchForm.endDate, 'yyyy.MM.dd')}
+								)|"></span>
+							</div>
+						</div>
+						<div class="underline margin-top-10"></div>
+						<!-- /DAYS -->
 						<!-- MTTR -->
 						<div class="row margin-top-10">
 							<div class="col-xs-1">
@@ -242,17 +267,53 @@
 								<span th:text="#{utr.description.mwt}"></span>
 							</div>
 						</div>
+						<div class="underline margin-top-10"></div>
 						<!-- /MWT -->
+						<!-- MTBF -->
+						<div class="row margin-top-10">
+							<div class="col-xs-1">
+								<span class="glyphicon glyphicon-resize-horizontal"></span>
+							</div>
+							<div class="col-xs-2">
+								<span>MTBF</span>
+							</div>
+							<div class="col-xs-8">
+								<span th:text="|${mtbf} [h]|">day</span>
+							</div>
+						</div>
+						<div class="row margin-top-5">
+							<div class="col-xs-12">
+								<span th:text="#{utr.description.mtbf}"></span>
+							</div>
+						</div>
+						<!-- /MTBF -->
 					</div>
 				</div>
 			</div>
 			<div class="col-xs-12 col-sm-6 margin-top-10">
 				<div class="panel panel-success">
 					<div class="panel-heading">
-						<span th:text="#{utr.workers}"></span>
+						<span class=" 	glyphicon glyphicon-user"></span> <span
+							th:text="#{utr.workers}"></span>
 					</div>
 					<div class="panel-body">
-					glyphicon glyphicon-wrench
+						<div class="row margin-bottom-10" th:each="worker : ${workers}"
+							th:if="${worker.workTimeInHours} != '0:0' and ${#strings.length(worker.code)}> 0">
+							<div class="col-xs-2">
+								<span th:text="${worker.code}"></span>
+							</div>
+							<div class="col-xs-7">
+								<span th:text="${worker.name}"></span>
+							</div>
+							<div class="col-xs-3">
+								<span th:text="${worker.workTimeInHours}"></span>
+							</div>
+							<div class="col-xs-12">
+							<div class="underline margin-top-10"></div>
+							</div>
+							
+						</div>
+
 					</div>
 				</div>
 			</div>
