@@ -91,6 +91,7 @@ public class UtrController {
 		Map<String, X3UtrFault> faults = x3Service.findUtrFaultsInPeriod(startDate, endDate);
 		List<X3UtrFaultLine> lines = x3Service.findUtrFaultLinesAfterDate(startDate);
 		Map<String, Integer> workersTimeInMinutes = new HashMap<>();
+		ArrayList<X3UtrMachine> criticalMachines = new ArrayList<>();
 
 		// initialize workers time table
 		for (X3UtrWorker worker : workers.values()) {
@@ -105,6 +106,13 @@ public class UtrController {
 			machines.remove(machine);
 		}
 
+		// make critical machines list
+		for(X3UtrMachine machine: machines.values()){
+			if(machine.isCritical()){
+				criticalMachines.add(machine);
+			}
+		}
+		
 		// initialize counters
 		int minutesDurationTotal = 0;
 		int minutesReactionTotal = 0;
@@ -162,6 +170,7 @@ public class UtrController {
 		model.addAttribute("nonCriticalCnt", nonCriticalMachinesCnt);
 		model.addAttribute("mtbf", mtbf);
 		model.addAttribute("workers", workers.values());
+		model.addAttribute("criticalMachines", criticalMachines);
 		
 		return "utr/stats";
 	}

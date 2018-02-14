@@ -1,9 +1,7 @@
 package sbs.controller.movements;
 
 import java.sql.Timestamp;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -20,11 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import sbs.controller.geolook.GeodeSearchForm;
-import sbs.model.x3.X3HistoryPrice;
 import sbs.model.x3.X3ShipmentMovement;
-import sbs.model.x3.X3UtrMachine;
-import sbs.model.x3.X3UtrWorker;
 import sbs.service.dictionary.X3HistoryPriceService;
 import sbs.service.x3.JdbcOracleX3Service;
 
@@ -90,7 +84,6 @@ public class MovementsController {
 		model.addAttribute("totalValue", totalValue);
 		model.addAttribute("movements", movements);
 		
-		System.out.println(counter + " " + totalValue);
 		return "movements/shipment";
 	}
     
