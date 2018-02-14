@@ -111,6 +111,12 @@ public class GeolookRow {
 	public void setInputDate(Timestamp inputDate) {
 		this.inputDate = inputDate;
 	}
+
+	@Override
+	public String toString() {
+		return "GeolookRow [store=" + store + ", address=" + address + ", object=" + object + ", product=" + product
+				+ ", quantity=" + quantity + ", unit=" + unit + ", inputDate=" + inputDate + "]";
+	}
 	
 	
 

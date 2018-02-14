@@ -35,26 +35,31 @@ public class JdbcOracleGeodeRepositoryImpl implements JdbcOracleGeodeRepository 
                 + "ORDER BY "
                 + "GEOATW.SLOT.STO_0, GEOATW.SLOT.ADD_0";
 		
-		//"SELECT ATW.AUTILIS.NOMUSR_0 FROM ATW.AUTILIS WHERE ATW.AUTILIS.USR_0 = ?"
 		return jdbc.queryForList(query, new Object[]{product.toUpperCase()});
 	}
 
-}
 
-/*
+	@Override
+	public List<Map<String, Object>> findAllLocationsOfProducts() {
 		String query = "SELECT "
                 + "GEOATW.SLOT.STO_0, "
                 + "GEOATW.SLOT.ADD_0, "
                 + "GEOATW.STOCKOBJ.SKONUM_0, "
                 + "GEOATW.STOCKOBJ.ITM_0, "
-                + "GEOATW.STOCKOBJ.CSUQTY_0,"
-                + "GEOATW.STOCKOBJ.INPDAT_0 "
+                + "GEOATW.STOCKOBJ.CSUQTY_0, "
+                + "GEOATW.STOCKOBJ.INPDAT_0, "
+                + "GEOATW.ITEM.STU_0 "
                 + "FROM "
-                + "GEOATW.SLOT LEFT JOIN GEOATW.STOCKOBJ "
-                + "ON GEOATW.SLOT.ADD_0 = GEOATW.STOCKOBJ.ADD_0 "
-                + "AND GEOATW.SLOT.STO_0 = GEOATW.STOCKOBJ.STO_0 "
-                + "WHERE UPPER(GEOATW.STOCKOBJ.ITM_0) = ? "
+                + "(GEOATW.SLOT INNER JOIN GEOATW.STOCKOBJ "
+                + "ON (GEOATW.SLOT.ADD_0 = GEOATW.STOCKOBJ.ADD_0) "
+                + "AND (GEOATW.SLOT.STO_0 = GEOATW.STOCKOBJ.STO_0)) "
+                + "INNER JOIN GEOATW.ITEM "
+                + "ON GEOATW.STOCKOBJ.ITM_0 = GEOATW.ITEM.ITM_0 "
+                + "WHERE GEOATW.STOCKOBJ.ITM_0 != 'TMP' "
                 + "ORDER BY "
                 + "GEOATW.SLOT.STO_0, GEOATW.SLOT.ADD_0";
- 
-*/
+		
+		return jdbc.queryForList(query, new Object[]{});
+	}
+
+}

@@ -166,8 +166,14 @@
 			<div class="col-xs-12 col-sm-6 margin-top-10">
 				<div class="panel panel-info">
 					<div class="panel-heading">
-						<span class=" 	glyphicon glyphicon-compressed"></span> <span
-							th:text="#{utr.machines}"></span>
+					<div class="row">
+							<div class="col-xs-1">
+								<span class="glyphicon glyphicon-compressed"></span>
+							</div>
+							<div class="col-xs-11">
+								<span th:text="#{utr.machines}"></span>
+							</div>
+						</div>
 					</div>
 					<div class="panel-body">
 						<!-- COUNTER -->
@@ -178,7 +184,7 @@
 							<div class="col-xs-2">
 								<span>CTR</span>
 							</div>
-							<div class="col-xs-8">
+							<div class="col-xs-9">
 								<span th:text="|${faultsCounter}|">ctr</span>
 							</div>
 						</div>
@@ -197,14 +203,14 @@
 							<div class="col-xs-2">
 								<span>DAY</span>
 							</div>
-							<div class="col-xs-8">
+							<div class="col-xs-9">
 								<span th:text="|${daysInPeriod}|">day</span>
 							</div>
 						</div>
 						<div class="row margin-top-5">
 							<div class="col-xs-12">
-								<span th:text="#{utr.description.days}"></span>
-								<span th:text="|(
+								<span th:text="#{utr.description.days}"></span> <span
+									th:text="|(
 								${#dates.format(utrDispatchForm.startDate, 'yyyy.MM.dd')} - 
 								${#dates.format(utrDispatchForm.endDate, 'yyyy.MM.dd')}
 								)|"></span>
@@ -220,7 +226,7 @@
 							<div class="col-xs-2">
 								<span>MTTR</span>
 							</div>
-							<div class="col-xs-8">
+							<div class="col-xs-9">
 								<span th:text="|${mttr} [hh:mm]|">mttr</span>
 							</div>
 						</div>
@@ -239,7 +245,7 @@
 							<div class="col-xs-2">
 								<span>MRT</span>
 							</div>
-							<div class="col-xs-8">
+							<div class="col-xs-9">
 								<span th:text="|${mrt} [hh:mm]|">mrt</span>
 							</div>
 						</div>
@@ -258,7 +264,7 @@
 							<div class="col-xs-2">
 								<span>MWT</span>
 							</div>
-							<div class="col-xs-8">
+							<div class="col-xs-9">
 								<span th:text="|${mwt} [hh:mm]|">mrt</span>
 							</div>
 						</div>
@@ -277,7 +283,7 @@
 							<div class="col-xs-2">
 								<span>MTBF</span>
 							</div>
-							<div class="col-xs-8">
+							<div class="col-xs-9">
 								<span th:text="|${mtbf} [h]|">day</span>
 							</div>
 						</div>
@@ -293,19 +299,17 @@
 			<div class="col-xs-12 col-sm-6 margin-top-10">
 				<div class="panel panel-success">
 					<div class="panel-heading">
-					<div class="row">
-					<div class="col-xs-2">
-								<span class="glyphicon glyphicon-user"></span> 
+						<div class="row">
+							<div class="col-xs-2">
+								<span class="glyphicon glyphicon-user"></span>
 							</div>
 							<div class="col-xs-7">
-								<span
-							th:text="#{utr.workers}"></span>
+								<span th:text="#{utr.workers}"></span>
 							</div>
 							<div class="col-xs-3">
 								<span>[hh:mm]</span>
 							</div>
-					</div>
-						
+						</div>
 					</div>
 					<div class="panel-body">
 						<div class="row margin-bottom-10" th:each="worker : ${workers}"
@@ -320,9 +324,9 @@
 								<span th:text="${worker.workTimeInHours}"></span>
 							</div>
 							<div class="col-xs-12">
-							<div class="underline margin-top-10"></div>
+								<div class="underline margin-top-10"></div>
 							</div>
-							
+
 						</div>
 
 					</div>

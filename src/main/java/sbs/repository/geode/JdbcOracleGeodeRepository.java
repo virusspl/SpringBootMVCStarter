@@ -5,4 +5,5 @@ import java.util.Map;
 
 public interface JdbcOracleGeodeRepository  {
     public List<Map<String,Object>> findLocationsOfProduct(String product);
+	public List<Map<String, Object>> findAllLocationsOfProducts();
 }
