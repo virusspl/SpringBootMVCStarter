@@ -243,13 +243,13 @@
 									<div class="col-xs-12 margin-top-10">
 										<ul>
 										<li>
-										<span th:text="|d1 - |"></span>
+										<span th:text="|d1 - #{utr.param.time.input}|"></span>
 										</li>
 										<li>
-										<span th:text="|d2 - |"></span>
+										<span th:text="|d2 - #{utr.param.time.close}|"></span>
 										</li>
 										<li>
-										<span th:text="|x - |"></span>
+										<span th:text="|x - #{utr.param.faultsCount}|"></span>
 										</li>
 										</ul>
 									</div>
@@ -316,16 +316,16 @@
 									<div class="col-xs-12 margin-top-10">
 										<ul>
 										<li>
-										<span th:text="|d - |"></span>
+										<span th:text="|d - #{utr.param.daysInPeriod}|"></span>
 										</li>
 										<li>
-										<span th:text="|x - |"></span>
+										<span th:text="|x - #{utr.param.faultsCount}|"></span>
 										</li>
 										<li>
-										<span th:text="|y - |"></span>
+										<span th:text="|y - #{utr.param.hoursInShift}|"></span>
 										</li>
 										<li>
-										<span th:text="|m - |"></span>
+										<span th:text="|m - #{utr.param.machinesOfTypeCount}|"></span>
 										</li>
 										</ul>
 									</div>

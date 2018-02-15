@@ -49,12 +49,14 @@ public class UtrController {
 	List<String> excludedMachines;
 	int criticalMachinesCnt;
 	int nonCriticalMachinesCnt;
+	int hoursInShift;
 
 	@Autowired
 	public UtrController(Environment env) {
 		excludedMachines = Arrays.asList(env.getRequiredProperty("utr.machines.mtbfexcluded").split(";"));
 		criticalMachinesCnt = Integer.parseInt(env.getRequiredProperty("utr.machines.criticalCnt"));
 		nonCriticalMachinesCnt = Integer.parseInt(env.getRequiredProperty("utr.machines.nonCriticalCnt"));
+		hoursInShift = Integer.parseInt(env.getRequiredProperty("utr.hoursInShift"));
 	}
 
 	@RequestMapping("/stats")
@@ -220,7 +222,7 @@ public class UtrController {
 			break;
 		}
 
-		return (int) ((daysInPeriod * 1.0 / faultsCnt) * 12 * machinesCnt);
+		return (int) ((daysInPeriod * 1.0 / faultsCnt) * hoursInShift * machinesCnt);
 	}
 
 	/**
