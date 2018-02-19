@@ -237,20 +237,18 @@
 									<div class="col-xs-12">
 										<span th:text="#{utr.description.mttr}"></span>
 									</div>
-									<div class="col-xs-12 margin-top-10" style="text-align:center;">
-										<img th:src="@{/images/utrstats/mttr.png}" alt="mttr"/>
+									<div class="col-xs-12 margin-top-10"
+										style="text-align: center;">
+										<img th:src="@{/images/utrstats/mttr.png}" alt="mttr" />
 									</div>
 									<div class="col-xs-12 margin-top-10">
 										<ul>
-										<li>
-										<span th:text="|d1 - #{utr.param.time.input}|"></span>
-										</li>
-										<li>
-										<span th:text="|d2 - #{utr.param.time.close}|"></span>
-										</li>
-										<li>
-										<span th:text="|x - #{utr.param.faultsCount}|"></span>
-										</li>
+											<li><span th:text="|d1 - #{utr.param.time.input}|"></span>
+											</li>
+											<li><span th:text="|d2 - #{utr.param.time.close}|"></span>
+											</li>
+											<li><span th:text="|x - #{utr.param.faultsCount}|"></span>
+											</li>
 										</ul>
 									</div>
 								</div>
@@ -310,23 +308,20 @@
 									<div class="col-xs-12">
 										<span th:text="#{utr.description.mtbf}"></span>
 									</div>
-									<div class="col-xs-12 margin-top-10" style="text-align:center;">
-										<img th:src="@{/images/utrstats/mtbf.png}" alt="mtbf"/>
+									<div class="col-xs-12 margin-top-10"
+										style="text-align: center;">
+										<img th:src="@{/images/utrstats/mtbf.png}" alt="mtbf" />
 									</div>
 									<div class="col-xs-12 margin-top-10">
 										<ul>
-										<li>
-										<span th:text="|d - #{utr.param.daysInPeriod}|"></span>
-										</li>
-										<li>
-										<span th:text="|x - #{utr.param.faultsCount}|"></span>
-										</li>
-										<li>
-										<span th:text="|y - #{utr.param.hoursInShift}|"></span>
-										</li>
-										<li>
-										<span th:text="|m - #{utr.param.machinesOfTypeCount}|"></span>
-										</li>
+											<li><span th:text="|d - #{utr.param.daysInPeriod}|"></span>
+											</li>
+											<li><span th:text="|x - #{utr.param.faultsCount}|"></span>
+											</li>
+											<li><span th:text="|y - #{utr.param.hoursInShift}|"></span>
+											</li>
+											<li><span
+												th:text="|m - #{utr.param.machinesOfTypeCount}|"></span></li>
 										</ul>
 									</div>
 								</div>
@@ -349,7 +344,8 @@
 								</div>
 							</div>
 							<div class="panel-body">
-								<div class="row margin-bottom-10" th:each="machine : ${criticalMachines}">
+								<div class="row margin-bottom-10"
+									th:each="machine : ${criticalMachines}">
 									<div class="col-xs-3">
 										<span th:text="${machine.code}"></span>
 									</div>
