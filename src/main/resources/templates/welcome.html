@@ -20,8 +20,7 @@
 		<div class="row margin-top-20">
 			<!-- HANDY LINKS -->
 			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
-				<h3 class="text-primary" th:text="#{handy.links}">Panel With
-					title</h3>
+				<h3 class="text-primary" th:text="#{handy.links}">tickets</h3>
 			</div>
 			<div class="col-xs-12 margin-top-10">
 				<a class="btn btn-link btn-md margin-top-5"
@@ -34,29 +33,41 @@
 					style="margin-right: 10px;"></span> <span
 					th:text="#{password.manual}">Phone numbers</span>
 				</a> <a class="btn btn-link btn-md margin-top-5"
-					href="http://192.168.1.23/CRM/CRM.pdf" target="_blank"> <span
-					class="glyphicon glyphicon-folder-open" style="margin-right: 10px;"></span>
-					<span th:text="#{crm.manual}">CRM Manual</span>
-				</a> <a class="btn btn-link btn-md margin-top-5"
 					href="http://192.168.1.23/DOCS/codifica.pdf" target="_blank"> <span
 					class="glyphicon glyphicon-folder-open" style="margin-right: 10px;"></span>
 					<span th:text="#{clients.codification}">Codification</span>
+				</a>
+			</div>
+			<!-- REPORT A PROBLEM -->
+			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
+				<h3 class="text-warning" th:text="#{it.maketicket}">Panel With
+					title</h3>
+			</div>
+			<div class="col-xs-12 margin-top-10">
+				<a class="btn btn-warning btn-md margin-top-5"
+					href="http://10.1.1.226/redmine/" target="_blank"> <span
+					class="glyphicon glyphicon-star" style="margin-right: 5px;"></span>
+					<span th:text="#{it.tickets}">CRM Manual</span>
+				</a> <a class="btn btn-warning btn-md margin-top-5"
+					href="http://192.168.1.23/DOCS/tickets.pdf" target="_blank"> <span
+					class="glyphicon glyphicon-folder-open" style="margin-right: 10px;"></span>
+					<span th:text="#{tickets.manual}">CRM Manual</span>
 				</a>
 			</div>
 			<!-- ADMIN -->
 			<div id="adminOnly"
 				sec:authorize="hasAnyRole('ROLE_OWNER', 'ROLE_ADMIN')">
 				<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
-					<h3 class="text-warning" th:text="#{department.it}">Panel With
+					<h3 class="text-danger" th:text="#{department.it}">Panel With
 						title</h3>
 				</div>
 				<div class="col-xs-12 margin-top-10">
 					<a th:href="@{/users/list/active}"
-						class="btn btn-warning btn-md margin-top-5"> <span
+						class="btn btn-danger btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-user"></span> <span
 						th:text="#{users.management}">users management</span>
 					</a> <a th:href="@{/users/monitor}"
-						class="btn btn-warning btn-md margin-top-5"> <span
+						class="btn btn-danger btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-globe"></span> <span
 						th:text="#{session.monitor}">users management</span>
 					</a>
@@ -71,13 +82,13 @@
 				<a th:href="@{/hrua/list}" class="btn btn-info btn-md margin-top-5">
 					<span class="glyphicon glyphicon-user"></span> <span
 					th:text="#{hrua.files}">HR UA Files</span>
-				</a>
-				<a th:href="@{/proprog/list}" class="btn btn-info btn-md margin-top-5">
-					<span class="glyphicon glyphicon-user"></span> <span
+				</a> <a th:href="@{/proprog/list}"
+					class="btn btn-info btn-md margin-top-5"> <span
+					class="glyphicon glyphicon-user"></span> <span
 					th:text="#{proprog.proprog}">Project progress</span>
-				</a>
-				<a th:href="@{/buyorders/list}" class="btn btn-info btn-md margin-top-5">
-					<span class="glyphicon glyphicon-user"></span> <span
+				</a> <a th:href="@{/buyorders/list}"
+					class="btn btn-info btn-md margin-top-5"> <span
+					class="glyphicon glyphicon-user"></span> <span
 					th:text="#{buyorders.buyorders}">HR UA Files</span>
 				</a>
 			</div>
@@ -99,9 +110,8 @@
 					class="btn btn-info btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-pencil"></span> <span
 					th:text="#{bhp.tickets}">bhp tickets</span> <!-- BHP SURVEYS -->
-				</a> <a th:href="@{/utr/stats}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-stats"></span> <span
+				</a> <a th:href="@{/utr/stats}" class="btn btn-info btn-md margin-top-5">
+					<span class="glyphicon glyphicon-stats"></span> <span
 					th:text="#{utr.stats}">bhp tickets</span> <!-- BHP SURVEYS -->
 				</a> <a th:href="@{/qualitysurveys/dispatch}"
 					class="btn btn-info btn-md margin-top-5"> <span
