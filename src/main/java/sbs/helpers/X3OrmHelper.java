@@ -34,4 +34,16 @@ public class X3OrmHelper {
 			}
 		}
 	}
+	
+	public void assignUtrFaultsLines(Map<String, X3UtrFault> faults, List<X3UtrFaultLine> lines, Map<String, X3UtrMachine> machines) {
+		for (X3UtrFault fault : faults.values()) {
+			// set fault machine
+			fault.setMachine(machines.get(fault.getMachineCode()));
+		}
+		for (X3UtrFaultLine line : lines) {
+			if (faults.get(line.getFaultNumber()) != null){
+				faults.get(line.getFaultNumber()).getLines().add(line);
+			}
+		}
+	}
 }

@@ -43,11 +43,11 @@
    timeToLiveSeconds="43200">
    </cache>
    <cache name="x3AllSalesOrders"
-   maxBytesLocalHeap="10m"
+   maxBytesLocalHeap="12m"
    timeToLiveSeconds="3600">
    </cache>
    <cache name="x3OpenedSalesOrders"
-   maxBytesLocalHeap="10m"
+   maxBytesLocalHeap="12m"
    timeToLiveSeconds="3600">
    </cache>
    <cache name="x3AllActiveProducts"
@@ -56,6 +56,18 @@
    </cache>
    <cache name="x3AllUtrMachines"
    maxBytesLocalHeap="1m"
+   timeToLiveSeconds="10800">
+   </cache>
+   <cache name="x3AllUtrWorkers"
+   maxBytesLocalHeap="1m"
+   timeToLiveSeconds="10800">
+   </cache>
+   <cache name="x3AllUtrFaults"
+   maxBytesLocalHeap="16m"
+   timeToLiveSeconds="10800">
+   </cache>
+   <cache name="x3AllUtrFaultLines"
+   maxBytesLocalHeap="32m"
    timeToLiveSeconds="10800">
    </cache>
    <cache name="x3HistoryPriceMap"

@@ -9,9 +9,12 @@ import org.springframework.stereotype.Component;
 public class DateHelper {
 	
 	private SimpleDateFormat ddMmYyyyFormat;
+	private SimpleDateFormat ddMmYyFormat;
+	
 	
 	public DateHelper(){
 		ddMmYyyyFormat = new SimpleDateFormat("dd/MM/yyyy");
+		ddMmYyFormat = new SimpleDateFormat("dd/MM/yy");
 	}
 	
 	public Timestamp getCurrentTime(){
@@ -23,7 +26,7 @@ public class DateHelper {
 	}
 	
 	public String convertMinutesToHours(int minutes){
-		return (minutes/60) + ":" + (minutes%60); 
+		return String.format("%02d", minutes/60) + ":" + String.format("%02d", minutes%60); 
 	}
 	
 	public String formatDdMmYyyy(Date date){
@@ -32,6 +35,14 @@ public class DateHelper {
 	
 	public String formatDdMmYyyy(Timestamp date){
 		return ddMmYyyyFormat.format(date);
+	}
+	
+	public String formatDdMmYy(Date date){
+		return ddMmYyFormat.format(date);
+	}
+	
+	public String formatDdMmYy(Timestamp date){
+		return ddMmYyFormat.format(date);
 	}
 	
 }

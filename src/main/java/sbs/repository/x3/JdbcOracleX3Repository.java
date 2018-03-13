@@ -37,6 +37,8 @@ public interface JdbcOracleX3Repository  {
 	public Map<String, X3UtrWorker> findAllUtrWorkers(String company);
 	public List<X3ShipmentMovement> findAdrShipmentMovementsInPeriod(Date startDate, Date endDate);
 	public Map<String, X3UtrFault> findUtrFaultsInPeriod(Date startDate, Date endDate);
+	public Map<String, X3UtrFault> findAllUtrFaults();
 	public List<X3UtrFaultLine> findUtrFaultLinesAfterDate(Date startDate);
+	public List<X3UtrFaultLine> findAllUtrFaultLines();
 	
 }

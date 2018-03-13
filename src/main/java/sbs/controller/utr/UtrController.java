@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.validation.Valid;
 
+import org.h2.engine.SysProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
@@ -74,7 +75,7 @@ public class UtrController {
 		return "utr/stats";
 	}
 
-	@RequestMapping(value = "/stats", method = RequestMethod.POST)
+	@RequestMapping(value = "/stats", params = { "stats" }, method = RequestMethod.POST)
 	public String performSearch(@Valid UtrDispatchForm utrDispatchForm, BindingResult bindingResult,
 			RedirectAttributes redirectAttrs, Model model, Locale locale) {
 
@@ -109,12 +110,12 @@ public class UtrController {
 		}
 
 		// make critical machines list
-		for(X3UtrMachine machine: machines.values()){
-			if(machine.isCritical()){
+		for (X3UtrMachine machine : machines.values()) {
+			if (machine.isCritical()) {
 				criticalMachines.add(machine);
 			}
 		}
-		
+
 		// initialize counters
 		int minutesDurationTotal = 0;
 		int minutesReactionTotal = 0;
@@ -140,15 +141,15 @@ public class UtrController {
 			// workers time
 			countWorkersTime(workersTimeInMinutes, fault.getLines());
 		}
-		
+
 		// if no faults - exit
 		if (faults.size() == 0) {
 			return "utr/stats";
 		}
-		
+
 		// fill workers map with work time
 		for (Map.Entry<String, Integer> entry : workersTimeInMinutes.entrySet()) {
-			if(!workers.containsKey(entry.getKey())){
+			if (!workers.containsKey(entry.getKey())) {
 				continue;
 			}
 			workers.get(entry.getKey()).setWorkTimeInHours(dateHelper.convertMinutesToHours(entry.getValue()));
@@ -173,12 +174,212 @@ public class UtrController {
 		model.addAttribute("mtbf", mtbf);
 		model.addAttribute("workers", workers.values());
 		model.addAttribute("criticalMachines", criticalMachines);
-		
+
 		return "utr/stats";
+	}
+
+	@RequestMapping(value = "/stats", params = { "machines" }, method = RequestMethod.POST)
+	public String machinesState(@Valid UtrDispatchForm utrDispatchForm, BindingResult bindingResult,
+			RedirectAttributes redirectAttrs, Model model, Locale locale) {
+		long starttime = System.currentTimeMillis();
+		if (bindingResult.hasErrors()) {
+			return "utr/stats";
+		}
+
+		final String NORMAL_COLOR = "#ffffff";
+		final String SATURDAY_COLOR = "#ffffcc";
+		final String SUNDAY_COLOR = "#ffdddd";
+
+		// get dictionaries
+		Map<String, X3UtrMachine> machines = x3Service.findAllUtrMachines("ATW");
+		Map<String, X3UtrFault> faults = x3Service.findAllUtrFaults();
+		List<X3UtrFaultLine> lines = x3Service.findAllUtrFaultLines();
+
+		// link maps
+		x3OrmHelper.assignUtrFaultsLines(faults, lines, machines);
+
+		// dates range
+		Calendar start = Calendar.getInstance();
+		start.setTime(utrDispatchForm.getStartDate());
+		Calendar end = Calendar.getInstance();
+		end.setTime(utrDispatchForm.getEndDate());
+
+		// count period
+		int periodLength = countDaysInPeriod(utrDispatchForm.getStartDate(), utrDispatchForm.getEndDate());
+
+		// create titles
+		String[] datesInPeriod = new String[periodLength];
+		String[] colorsInPeriod = new String[periodLength];
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(utrDispatchForm.getStartDate());
+		for (int i = 0; i < periodLength; i++) {
+			datesInPeriod[i] = dateHelper.formatDdMmYy(cal.getTime());
+			if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+				colorsInPeriod[i] = SATURDAY_COLOR;
+			} else if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+				colorsInPeriod[i] = SUNDAY_COLOR;
+			} else {
+				colorsInPeriod[i] = NORMAL_COLOR;
+			}
+			cal.add(Calendar.DAY_OF_YEAR, 1);
+		}
+
+		// create faults list in period
+		ArrayList<X3UtrFault> periodFaults = getFaultsInPeriod(faults, start, end);
+
+		// create empty lines
+		ArrayList<ChartLine> chartLines = new ArrayList<>();
+		ChartLine line;
+		for (X3UtrMachine m : machines.values()) {
+			// link with fixed assets code NICIM - modify "find all" in
+			// repository
+			if (m.getCode().contains("XXXXXX") || m.getCode().contains("417-")) {
+				line = new ChartLine(m, periodLength);
+				calculateTimeAvailable(line, periodFaults, start, end);
+				chartLines.add(line);
+			}
+		}
+
+		model.addAttribute("titleDates", datesInPeriod);
+		model.addAttribute("titleColors", colorsInPeriod);
+		model.addAttribute("chartLines", chartLines);
+		model.addAttribute("periodLength", periodLength);
+
+		return "utr/stats";
+	}
+
+	private ArrayList<X3UtrFault> getFaultsInPeriod(Map<String, X3UtrFault> list, Calendar start, Calendar end) {
+		ArrayList<X3UtrFault> faults = new ArrayList<>();
+		Calendar inputDate = Calendar.getInstance();
+		Calendar closeDate = Calendar.getInstance();
+		for (X3UtrFault ft : list.values()) {
+			if (ft.getInputDateTime() == null) {
+				// no start date - skip
+				continue;
+			}
+			// get start date
+			inputDate.setTime(new Date(ft.getInputDateTime().getTime()));
+			if (ft.getCloseDateTime() == null) {
+				// no close date - set future +100 years
+				closeDate = Calendar.getInstance();
+				closeDate.add(Calendar.YEAR, 100);
+			}
+			// get close date
+			closeDate.setTime(new Date(ft.getCloseDateTime().getTime()));
+			
+			// if fault is in range:
+			if (dateInRange(inputDate, start, end) || dateInRange(closeDate, start, end)) {
+				faults.add(ft);
+			}
+			// is range inside faults period:
+			if(dateBeforeOrEqual(inputDate, start) && dateAfterOrEqual(closeDate, end)){
+				faults.add(ft);
+			}
+		}
+		return faults;
+
+	}
+
+	private void calculateTimeAvailable(ChartLine line, ArrayList<X3UtrFault> faults, Calendar start, Calendar end) {
+
+		Calendar inputDate = Calendar.getInstance();
+		Calendar closeDate = Calendar.getInstance();
+		int periodLength = countDaysInPeriod(start.getTime(), end.getTime());
+		ArrayList<Integer> minutesInDays = new ArrayList<>();
+		for(int i = 0; i<periodLength; i++){
+			minutesInDays.add(0);
+		}
+		
+		// find current machine's faults
+		for (X3UtrFault ft : faults) {
+			// no machine / wrong machine - skip
+			if (ft.getMachineCode().equals(null) || !ft.getMachineCode().equals(line.getMachine().getCode())) {
+				continue;
+			}
+			// no input date - skip
+			if (ft.getInputDateTime() == null) {
+				continue;
+			}
+			// INPUT AND CLOSE DATE
+			inputDate.setTime(new Date(ft.getInputDateTime().getTime()));
+			if (ft.getCloseDateTime() == null) {
+				// no close date - set future +100 years
+				closeDate = Calendar.getInstance();
+				closeDate.add(Calendar.YEAR, 100);
+			}
+			// get close date
+			closeDate.setTime(new Date(ft.getCloseDateTime().getTime()));
+
+			// for each day decrease quantity
+			Calendar currentDay = Calendar.getInstance();
+			currentDay.setTime(start.getTime());
+			for(int i = 0; i<periodLength; i++){
+				minutesInDays.set(i, minutesInDays.get(i)+calculateStopMinutesInDay(currentDay, inputDate, closeDate));
+				currentDay.add(Calendar.DAY_OF_YEAR, 1);
+			}
+			
+		}
+		
+		// format result
+		for (int i = 0; i < line.getValues().length; i++) {
+			// 1440 min = 24 hours
+			if(minutesInDays.get(i)>1440){
+				minutesInDays.set(i, 1440);
+			}
+			line.setValueAt(i, dateHelper.convertMinutesToHours(1440-minutesInDays.get(i)));
+		}
+
+	}
+
+	private int calculateStopMinutesInDay(Calendar currentDay, Calendar inputDate, Calendar closeDate) {
+		// day range
+		Calendar currStart = Calendar.getInstance();
+		currStart.setTime(currentDay.getTime());
+		currStart.set(Calendar.HOUR_OF_DAY, 0);
+		currStart.set(Calendar.MINUTE, 0);
+		Calendar currEnd = Calendar.getInstance();
+		currEnd.setTime(currStart.getTime());
+		currEnd.set(Calendar.HOUR_OF_DAY, 24);
+		currEnd.set(Calendar.MINUTE, 0);
+		
+		long diff;
+		
+		if(dateBeforeOrEqual(inputDate, currStart) && dateAfterOrEqual(closeDate, currEnd)){
+			return 1440;
+		}
+		else if (inputDate.before(currStart) && dateInRange(closeDate, currStart, currEnd)){
+			diff = closeDate.getTime().getTime() - currStart.getTime().getTime();
+			return (int)diff/1000/60;
+		}
+		else if (closeDate.after(currEnd) && dateInRange(inputDate, currStart, currEnd)){
+			diff = currEnd.getTime().getTime() - inputDate.getTime().getTime();
+			return (int)diff/1000/60;			
+		}
+		else if (dateInRange(inputDate, currStart, currEnd) && dateInRange(closeDate, currStart, currEnd)){
+			diff = closeDate.getTime().getTime() - inputDate.getTime().getTime();
+			return (int)diff/1000/60;
+		}
+		
+		return 0;
+		
+	}
+
+	private boolean dateBeforeOrEqual(Calendar date, Calendar reference){
+		return (date.before(reference) || date.equals(reference));
+	}
+	private boolean dateAfterOrEqual(Calendar date, Calendar reference){
+		return (date.after(reference) || date.equals(reference));
+	}
+	private boolean dateInRange(Calendar date, Calendar start, Calendar end) {
+		if ((date.after(start) || date.equals(start)) && (date.before(end) || date.equals(end))) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
 	 * count workers time into a map, based on fault lines
+	 * 
 	 * @param workersTimeInMinutes
 	 * @param lines
 	 */
@@ -192,7 +393,7 @@ public class UtrController {
 				if (workersTimeInMinutes.containsKey(code)) {
 					value = workersTimeInMinutes.get(code);
 					value += line.getClosedLineDurationInMinutes();
-				} 
+				}
 				workersTimeInMinutes.put(line.getUtrWorkerCode(), value);
 			}
 		}
@@ -200,6 +401,7 @@ public class UtrController {
 
 	/**
 	 * calculate MTBF for parameters
+	 * 
 	 * @param daysInPeriod
 	 * @param faultsCnt
 	 * @param criticalCriteria
@@ -227,6 +429,7 @@ public class UtrController {
 
 	/**
 	 * count number of days in period
+	 * 
 	 * @param startDate
 	 * @param endDate
 	 * @return difference in days
@@ -237,9 +440,13 @@ public class UtrController {
 
 	/**
 	 * remove faults in given map by criteria
-	 * @param critical based on maintenance form, 0 all, 1 normal, 2 critical
-	 * @param stop base on maintenance form, 0 all, 1 faults, 2 crashes
-	 * @param faults map
+	 * 
+	 * @param critical
+	 *            based on maintenance form, 0 all, 1 normal, 2 critical
+	 * @param stop
+	 *            base on maintenance form, 0 all, 1 faults, 2 crashes
+	 * @param faults
+	 *            map
 	 */
 	private void removeFaultsByCriteria(int critical, int stop, Map<String, X3UtrFault> faults) {
 		ArrayList<String> toDelete = new ArrayList<>();
@@ -280,6 +487,7 @@ public class UtrController {
 
 	/**
 	 * count machines by type
+	 * 
 	 * @param machines
 	 * @param type
 	 * @return integer quantity

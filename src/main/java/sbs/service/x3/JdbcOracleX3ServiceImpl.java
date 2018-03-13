@@ -115,6 +115,7 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	}
 
 	@Override
+	@Cacheable(value="x3AllUtrWorkers")
 	public Map<String, X3UtrWorker> findAllUtrWorkers(String company) {
 		return jdbcOracleX3Repository.findAllUtrWorkers(company);
 	}
@@ -128,10 +129,22 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	public Map<String, X3UtrFault> findUtrFaultsInPeriod(Date startDate, Date endDate) {
 		return jdbcOracleX3Repository.findUtrFaultsInPeriod(startDate, endDate);
 	}
+	
+	@Override
+	@Cacheable(value="x3AllUtrFaults")
+	public Map<String, X3UtrFault> findAllUtrFaults() {
+		return jdbcOracleX3Repository.findAllUtrFaults();
+	}
 
 	@Override
 	public List<X3UtrFaultLine> findUtrFaultLinesAfterDate(Date startDate) {
 		return jdbcOracleX3Repository.findUtrFaultLinesAfterDate(startDate);
+	}
+
+	@Override
+	@Cacheable(value="x3AllUtrFaultLines")
+	public List<X3UtrFaultLine> findAllUtrFaultLines() {
+		return jdbcOracleX3Repository.findAllUtrFaultLines();
 	}
 
 

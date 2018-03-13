@@ -565,7 +565,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ company + ".ATEXTRA.IDENT1_0 = ? "
 				,
                 new Object[]{"ATABDIV","LNGDES","POL","6001"});
-        
         Map <String, X3UtrWorker> map = new HashMap<>();
         X3UtrWorker worker;
         for(Map<String,Object> row: resultSet ){
@@ -679,6 +678,48 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         }
 		return map;
 	}
+	
+	@Override
+	public Map<String, X3UtrFault> findAllUtrFaults() {
+		String company = "ATW";
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ company + ".XMANUTGUA.XNUMMOD_0, "
+				+ company + ".XMANUTGUA.XPROP_0, "
+				+ company + ".AUTILIS.NOMUSR_0, "
+				+ company + ".XMANUTGUA.XDATACRE_0, "
+				+ company + ".XMANUTGUA.XCESPITE_0, "
+				+ company + ".XMANUTGUA.YTBLOCCO_0, "
+				+ company + ".XMANUTGUA.YUBICA_0 "
+				+ "FROM "
+				+ company + ".XMANUTGUA INNER JOIN " + company + ".AUTILIS "
+				+ "ON "
+				+ company + ".XMANUTGUA.XPROP_0 = " + company + ".AUTILIS.USR_0 ",
+                new Object[]{}
+				);
+        
+		Map <String, X3UtrFault> map = new HashMap<>();
+		X3UtrFault fault;
+		
+        for(Map<String,Object> row: resultSet ){
+        	fault = new X3UtrFault();
+        	fault.setFaultNumber((String)row.get("XNUMMOD_0"));
+        	fault.setCreatorCode((String)row.get("XPROP_0"));
+        	fault.setCreatorName((String)row.get("NOMUSR_0"));
+        	fault.setCreationDate((Timestamp)row.get("XDATACRE_0"));
+        	fault.setMachineCode((String)row.get("XCESPITE_0"));
+        	fault.setLocationName((String)row.get("YUBICA_0"));
+        	if(((BigDecimal)row.get("YTBLOCCO_0")).intValue() == 2){
+        		fault.setFaultType(X3UtrFault.STOP_TYPE);
+        		
+        	}
+        	else{
+        		fault.setFaultType(X3UtrFault.NOSTOP_TYPE);
+        	}
+        	map.put(fault.getFaultNumber(), fault);
+        }
+		return map;
+	}
 
 	@Override
 	public List<X3UtrFaultLine> findUtrFaultLinesAfterDate(Date startDate) {
@@ -698,6 +739,41 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ company + ".XMANSTGUA.XDATAIN_0 > ?"
 				,
                 new Object[]{dateHelper.getTime(startDate)}
+				);
+        
+		List<X3UtrFaultLine> result = new ArrayList<>();
+		X3UtrFaultLine item = null;
+		
+
+        for(Map<String,Object> row: resultSet ){
+        	item = new X3UtrFaultLine();
+        	item.setFaultNumber((String)row.get("XNUMMOD_0"));
+        	item.setUtrWorkerCode((String)row.get("XMANUTENTO_0"));
+        	item.setState(((BigDecimal)row.get("XSTATO_0")).intValue());
+        	item.setStartDateTime(x3UtrFaultLineDateConvert((Timestamp) row.get("XDATAIN_0"),(String)row.get("XORAIN_0")));
+        	item.setEndDateTime(x3UtrFaultLineDateConvert((Timestamp) row.get("XDATAFIN_0"),(String)row.get("XORAFIN_0")));
+        	
+        	result.add(item);
+        }
+		return result;
+	}
+	
+	@Override
+	public List<X3UtrFaultLine> findAllUtrFaultLines() {
+		String company = "ATW";
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ company + ".XMANSTGUA.XNUMMOD_0, "
+				+ company + ".XMANSTGUA.XMANUTENTO_0, "
+				+ company + ".XMANSTGUA.XDATAIN_0, "
+				+ company + ".XMANSTGUA.XORAIN_0, "
+				+ company + ".XMANSTGUA.XDATAFIN_0, "
+				+ company + ".XMANSTGUA.XORAFIN_0, "
+				+ company + ".XMANSTGUA.XSTATO_0 "
+				+ "FROM "
+				+ company + ".XMANSTGUA "
+				,
+                new Object[]{}
 				);
         
 		List<X3UtrFaultLine> result = new ArrayList<>();
