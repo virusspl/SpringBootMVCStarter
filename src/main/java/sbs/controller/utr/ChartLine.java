@@ -7,12 +7,14 @@ public class ChartLine {
 	private int length;
 	private X3UtrMachine machine;
 	private String[] values;
+	private String[] faults;
 
 	
 	public ChartLine(X3UtrMachine machine, int days) {
 		this.machine = machine;
 		this.length = days;
 		this.values = new String[this.length];
+		this.faults = new String[this.length];
 	}
 
 
@@ -48,6 +50,21 @@ public class ChartLine {
 	public void setValueAt(int index, String value) {
 		this.values[index] = value;
 	}
+
+
+	public String[] getFaults() {
+		return faults;
+	}
+
+
+	public void setFaults(String[] faults) {
+		this.faults = faults;
+	}
+	
+	public void setFaultAt(int index, String fault) {
+		this.faults[index] = fault;
+	}
+	
 
 	
 }

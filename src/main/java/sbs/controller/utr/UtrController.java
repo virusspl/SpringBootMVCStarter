@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.validation.Valid;
 
-import org.h2.engine.SysProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
@@ -181,12 +180,11 @@ public class UtrController {
 	@RequestMapping(value = "/stats", params = { "machines" }, method = RequestMethod.POST)
 	public String machinesState(@Valid UtrDispatchForm utrDispatchForm, BindingResult bindingResult,
 			RedirectAttributes redirectAttrs, Model model, Locale locale) {
-		long starttime = System.currentTimeMillis();
 		if (bindingResult.hasErrors()) {
 			return "utr/stats";
 		}
 
-		final String NORMAL_COLOR = "#ffffff";
+		final String NORMAL_COLOR = "#f5f5f5";
 		final String SATURDAY_COLOR = "#ffffcc";
 		final String SUNDAY_COLOR = "#ffdddd";
 
@@ -231,9 +229,11 @@ public class UtrController {
 		ArrayList<ChartLine> chartLines = new ArrayList<>();
 		ChartLine line;
 		for (X3UtrMachine m : machines.values()) {
-			// link with fixed assets code NICIM - modify "find all" in
-			// repository
-			if (m.getCode().contains("XXXXXX") || m.getCode().contains("417-")) {
+			if(m.getCodeNicim()==null){
+				// if Nicim code empty - skip
+				continue;
+			}
+			if (m.getCodeNicim().startsWith("ZGT") || m.getCodeNicim().startsWith("ROB")) {
 				line = new ChartLine(m, periodLength);
 				calculateTimeAvailable(line, periodFaults, start, end);
 				chartLines.add(line);
@@ -314,6 +314,15 @@ public class UtrController {
 			Calendar currentDay = Calendar.getInstance();
 			currentDay.setTime(start.getTime());
 			for(int i = 0; i<periodLength; i++){
+				if(calculateStopMinutesInDay(currentDay, inputDate, closeDate)>0){
+					if(line.getFaults()[i]!=null){
+						line.setFaultAt(i, line.getFaults()[i]+"; " +ft.getFaultNumber());
+					}
+					else{
+						line.setFaultAt(i, ft.getFaultNumber());
+					}
+					
+				}
 				minutesInDays.set(i, minutesInDays.get(i)+calculateStopMinutesInDay(currentDay, inputDate, closeDate));
 				currentDay.add(Calendar.DAY_OF_YEAR, 1);
 			}

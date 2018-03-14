@@ -521,7 +521,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public Map<String, X3UtrMachine> findAllUtrMachines(String company) {
-
+/*
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ company + ".YMANUPREVE.YCESPITE_0, "
@@ -531,6 +531,28 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ company + ".YMANUPREVE "
 				,
                 new Object[]{});
+*/        
+
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "ym.YCESPITE_0, "
+				+ "ym.YCESPDESCR_0, "
+				+ "ym.YFLAG_0, "
+				+ "fx.NICCOD_0 "
+				+ "FROM "
+				+ company + ".YMANUPREVE ym LEFT JOIN "
+				+ "(SELECT "
+				+ company + ".FXDASSETS.AASREF_0, "
+				+ company + ".FXDASSETS.AASDES2_0, "
+				+ company + ".VFXDASSETINF.NICCOD_0 "
+				+ "FROM "
+				+ company + ".FXDASSETS LEFT JOIN "
+				+ company + ".VFXDASSETINF "
+				+ "ON "
+				+ company + ".FXDASSETS.AASREF_0 = " + company + ".VFXDASSETINF.AASREF_0) fx "
+				+ "ON ym.YCESPITE_0 = fx.AASDES2_0"
+				,
+                new Object[]{});
         
         Map <String, X3UtrMachine> map = new HashMap<>();
         X3UtrMachine machine;
@@ -538,6 +560,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         	machine = new X3UtrMachine();
         	machine.setCode((String)row.get("YCESPITE_0"));
         	machine.setName((String)row.get("YCESPDESCR_0"));
+        	machine.setCodeNicim((String)row.get("NICCOD_0"));
         	if(((BigDecimal)row.get("YFLAG_0")).intValue() == 2){
         		machine.setCritical(true);
         	}
