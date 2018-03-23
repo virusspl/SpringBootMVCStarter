@@ -39,8 +39,10 @@
 					<div class="col-xs-12">
 						<div class="form-group">
 							<label for="description" th:text="#{bhp.tickets.description}">Description</label>
-							<span class="form-control" id="description"
-								th:text="${ticket.description}" style="min-height: 200px;"></span>
+							<textarea class="form-control" id="description"
+								th:text="${ticket.description}"
+								style="min-height: 200px; background-color: white;"
+								readonly="true"></textarea>
 						</div>
 					</div>
 					<div class="col-xs-12">
@@ -120,17 +122,19 @@
 				class="col-xs-12 col-sm-6">
 				<h1 th:text="#{bhp.tickets.show.response}"
 					class="text-primary margin-top-30"></h1>
-						<div class="form-group">
-							<label for="comment" th:text="#{bhp.tickets.comment}">Comment</label>
-							<span class="form-control" id="comment"
-								th:text="${ticket.comment}" style="min-height: 200px;"></span>
-						</div>
-					</div>
-			<div id="bhpAdminOnly" sec:authorize="hasAnyRole('ROLE_BHPMANAGER', 'ROLE_ADMIN')">
+				<div class="form-group">
+					<label for="comment" th:text="#{bhp.tickets.comment}">Comment</label>
+					<span class="form-control" id="comment" th:text="${ticket.comment}"
+						style="min-height: 200px;"></span>
+				</div>
+			</div>
+			<div id="bhpAdminOnly"
+				sec:authorize="hasAnyRole('ROLE_BHPMANAGER', 'ROLE_ADMIN')">
 				<div class="col-xs-12">
 					<a th:href="|@{/bhptickets/edit/}${ticket.id}|"
 						data-toggle="tooltip" data-placement="top"
-						th:title="#{action.edit}"><span th:text="|#{action.edit} #${ticket.id}|"></span></a>
+						th:title="#{action.edit}"><span
+						th:text="|#{action.edit} #${ticket.id}|"></span></a>
 				</div>
 			</div>
 		</div>
