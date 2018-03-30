@@ -5,13 +5,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
 
 import sbs.model.wpslook.WpslookRow;
 import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3Product;
+import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3SalesOrder;
 import sbs.model.x3.X3ShipmentMovement;
@@ -145,6 +146,12 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	@Cacheable(value="x3AllUtrFaultLines")
 	public List<X3UtrFaultLine> findAllUtrFaultLines() {
 		return jdbcOracleX3Repository.findAllUtrFaultLines();
+	}
+
+	@Override
+	@Cacheable(value="x3productFinalMachines")
+	public Map<String, X3ProductFinalMachine> findX3ProductFinalMachines(String company) {
+		return jdbcOracleX3Repository.findX3ProductFinalMachines(company);
 	}
 
 

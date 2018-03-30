@@ -8,6 +8,7 @@ import sbs.model.wpslook.WpslookRow;
 import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3Product;
+import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3SalesOrder;
 import sbs.model.x3.X3ShipmentMovement;
@@ -40,5 +41,6 @@ public interface JdbcOracleX3Repository  {
 	public Map<String, X3UtrFault> findAllUtrFaults();
 	public List<X3UtrFaultLine> findUtrFaultLinesAfterDate(Date startDate);
 	public List<X3UtrFaultLine> findAllUtrFaultLines();
+	public Map<String, X3ProductFinalMachine> findX3ProductFinalMachines(String company);
 	
 }

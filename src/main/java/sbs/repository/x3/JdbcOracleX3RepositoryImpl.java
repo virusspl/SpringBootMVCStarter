@@ -22,6 +22,7 @@ import sbs.model.wpslook.WpslookRow;
 import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3Product;
+import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3SalesOrder;
 import sbs.model.x3.X3ShipmentMovement;
@@ -833,6 +834,40 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			return null;
 		}
 
+	}
+
+	@Override
+	public Map<String, X3ProductFinalMachine> findX3ProductFinalMachines(String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ company + ".ROUOPE.ITMREF_0 AS ITM, "
+				+ company + ".ROUOPE.OPENUM_0 AS OPE, "
+				+ company + ".ROUOPE.WST_0 AS WST, "
+				+ company + ".WORKSTATIO.WSTDES_0 AS WSTDES, "
+				+ company + ".WORKSTATIO.WCR_0 AS WCR "
+				+ "FROM "
+				+ company + ".ROUOPE INNER JOIN " + company + ".WORKSTATIO "
+				+ "ON "
+				+ company + ".ROUOPE.WST_0 = "+ company + ".WORKSTATIO.WST_0 "
+				+ "ORDER BY ITM ASC, OPE ASC"
+				,
+                new Object[]{}
+				);
+        
+		Map<String, X3ProductFinalMachine> result = new HashMap<>();
+		X3ProductFinalMachine item = null;
+		
+        for(Map<String,Object> row: resultSet ){
+        	item = new X3ProductFinalMachine();
+        	item.setProductCode((String)row.get("ITM"));
+        	item.setMachineCode((String)row.get("WST"));
+        	item.setMachineName((String)row.get("WSTDES"));
+        	item.setMachineGroup((String)row.get("WCR"));
+        	item.setOperation(((BigDecimal)row.get("OPE")).intValue());
+        	result.put(item.getProductCode(), item);
+        }
+        
+		return result;
 	}
 
 }

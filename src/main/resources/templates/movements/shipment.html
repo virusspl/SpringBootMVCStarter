@@ -165,11 +165,51 @@
 						class="bold">period</span>
 				</div>
 				<div class="col-xs-2">
-					<span th:text="#{movements.value}">value</span>
+					<span th:text="#{movements.value.total}">value</span>
 				</div>
 				<div class="col-xs-10">
 					<span
 						th:text="${#numbers.formatDecimal(totalValue, 0, 'DEFAULT', 2, 'DEFAULT')}"
+						class="bold">value</span>
+				</div>
+				<div class="col-xs-2">
+					<span th:text="#{movements.value.assembly}">value</span>
+				</div>
+				<div class="col-xs-10">
+					<span
+						th:text="${#numbers.formatDecimal(assemblyValue, 0, 'DEFAULT', 2, 'DEFAULT')}"
+						class="bold">value</span>
+				</div>
+				<div class="col-xs-2">
+					<span th:text="#{movements.value.welding}">value</span>
+				</div>
+				<div class="col-xs-10">
+					<span
+						th:text="${#numbers.formatDecimal(weldingValue, 0, 'DEFAULT', 2, 'DEFAULT')}"
+						class="bold">value</span>
+				</div>
+				<div class="col-xs-2">
+					<span th:text="#{movements.value.mechanical}">value</span>
+				</div>
+				<div class="col-xs-10">
+					<span
+						th:text="${#numbers.formatDecimal(mechanicalValue, 0, 'DEFAULT', 2, 'DEFAULT')}"
+						class="bold">value</span>
+				</div>
+				<div class="col-xs-2">
+					<span th:text="#{movements.value.other}">value</span>
+				</div>
+				<div class="col-xs-10">
+					<span
+						th:text="${#numbers.formatDecimal(otherValue, 0, 'DEFAULT', 2, 'DEFAULT')}"
+						class="bold">value</span>
+				</div>
+				<div class="col-xs-2">
+					<span th:text="#{movements.unassignedMachines}">value</span>
+				</div>
+				<div class="col-xs-10">
+					<span
+						th:text="${unassignedMachines}"
 						class="bold">value</span>
 				</div>
 			</div>

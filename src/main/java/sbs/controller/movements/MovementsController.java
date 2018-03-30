@@ -2,6 +2,7 @@ package sbs.controller.movements;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ShipmentMovement;
 import sbs.service.dictionary.X3HistoryPriceService;
 import sbs.service.x3.JdbcOracleX3Service;
@@ -65,6 +67,14 @@ public class MovementsController {
 		List<X3ShipmentMovement> movements = x3Service.findAdrShipmentMovementsInPeriod(movementsForm.getStartDate(), movementsForm.getEndDate());
 		int counter = 0;
 		double totalValue = 0;
+		double mechanicalValue = 0;
+		double weldingValue = 0;
+		double assemblyValue = 0;
+		double otherValue = 0;
+		LinkedHashSet<String> unassignedMachinesSet = new LinkedHashSet<>();
+		String unassignedMachines = "";
+		
+		Map<String, X3ProductFinalMachine> machinesIndex = x3Service.findX3ProductFinalMachines("ATW");
 		
 		for(X3ShipmentMovement mvt: movements){
 			if(prices.get(mvt.getItemCode())!=null){
@@ -74,6 +84,28 @@ public class MovementsController {
 				mvt.setPrice(mvt.getEmergencyAveragePrice());
 			}
 			mvt.setValue(mvt.getQuantity()*mvt.getPrice());
+			
+			if(machinesIndex.containsKey(mvt.getItemCode())){
+				switch(machinesIndex.get(mvt.getItemCode()).getMachineDepartment()){
+				case X3ProductFinalMachine.MECHANICAL:
+					mechanicalValue += mvt.getValue();
+					break;
+				case X3ProductFinalMachine.WELDING:
+					weldingValue += mvt.getValue();
+					break;
+				case X3ProductFinalMachine.ASSEMBLY:
+					assemblyValue += mvt.getValue();
+					break;
+				default:
+					otherValue += mvt.getValue();
+					unassignedMachinesSet.add(machinesIndex.get(mvt.getItemCode()).getMachineCode()); 
+					break;
+				}
+			}
+			else{
+				otherValue += mvt.getValue();
+			}
+			
 			totalValue += mvt.getValue();
 			counter++;
 		}
@@ -82,7 +114,15 @@ public class MovementsController {
 		model.addAttribute("endDate", movementsForm.getEndDate());
 		model.addAttribute("counter", counter);
 		model.addAttribute("totalValue", totalValue);
+		model.addAttribute("mechanicalValue", mechanicalValue);
+		model.addAttribute("weldingValue", weldingValue);
+		model.addAttribute("assemblyValue", assemblyValue);
+		model.addAttribute("otherValue", otherValue);
 		model.addAttribute("movements", movements);
+		for (String str: unassignedMachinesSet){
+			unassignedMachines += str + "; ";
+		}
+		model.addAttribute("unassignedMachines", unassignedMachines);
 		
 		return "movements/shipment";
 	}
