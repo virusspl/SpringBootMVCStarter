@@ -229,7 +229,7 @@ public class UtrController {
 		ArrayList<ChartLine> chartLines = new ArrayList<>();
 		ChartLine line;
 		for (X3UtrMachine m : machines.values()) {
-			if(m.getCodeNicim()==null){
+			if (m.getCodeNicim() == null) {
 				// if Nicim code empty - skip
 				continue;
 			}
@@ -246,6 +246,60 @@ public class UtrController {
 		model.addAttribute("periodLength", periodLength);
 
 		return "utr/stats";
+	}
+
+	@RequestMapping(value = "/current", method = RequestMethod.GET)
+	public String currentFaultsMonitor(Model model, Locale locale) {
+
+		// dates
+		Calendar cal = Calendar.getInstance();
+		Date endDate = cal.getTime();
+		cal.add(Calendar.YEAR, -1);
+		Date startDate = cal.getTime();
+
+		// get dictionaries
+		Map<String, X3UtrMachine> machines = x3Service.findAllUtrMachines("ATW");
+		Map<String, X3UtrFault> faults = x3Service.findUtrFaultsInPeriod(startDate, endDate);
+		List<X3UtrFaultLine> lines = x3Service.findUtrFaultLinesAfterDate(startDate);
+
+		// link maps
+		x3OrmHelper.assignUtrFaultsLines(faults, lines, machines);
+
+		// date
+		Calendar today = Calendar.getInstance();
+		Map<String, CurrentFaultsLine> list = new TreeMap<>();
+
+		CurrentFaultsLine cfl;
+		for(X3UtrFault fault: faults.values()){
+			// only critical machines
+			if(fault.getMachine() == null || !fault.getMachine().isCritical()){
+				continue;
+			}
+			if(fault.getInputDateTime() == null){
+				continue;
+			}
+			if(dateHelper.isDateInRange(new Timestamp(today.getTime().getTime()), fault.getInputDateTime(), fault.getCloseDateTime())){
+				if(!list.containsKey(fault.getMachineCode())){
+					cfl = new CurrentFaultsLine();
+					cfl.setInputDate(fault.getInputDateTime());
+					cfl.setMachine(fault.getMachine());
+					cfl.setFaults(fault.getFaultNumber());
+					list.put(fault.getMachineCode(), cfl);
+				}
+				else{
+					list.get(fault.getMachineCode()).setFaults(fault.getFaultNumber());
+				}				
+			}
+		}
+		
+		for(CurrentFaultsLine line: list.values()){
+			System.out.println(line);
+		}
+		
+		model.addAttribute("list", list.values());
+		model.addAttribute("refreshTime", dateHelper.formatDdMmYyyyHhMm(dateHelper.getCurrentTime()));
+
+		return "utr/current";
 	}
 
 	private ArrayList<X3UtrFault> getFaultsInPeriod(Map<String, X3UtrFault> list, Calendar start, Calendar end) {
@@ -266,13 +320,13 @@ public class UtrController {
 			}
 			// get close date
 			closeDate.setTime(new Date(ft.getCloseDateTime().getTime()));
-			
+
 			// if fault is in range:
-			if (dateInRange(inputDate, start, end) || dateInRange(closeDate, start, end)) {
+			if (dateHelper.dateInRange(inputDate, start, end) || dateHelper.dateInRange(closeDate, start, end)) {
 				faults.add(ft);
 			}
 			// is range inside faults period:
-			if(dateBeforeOrEqual(inputDate, start) && dateAfterOrEqual(closeDate, end)){
+			if (dateHelper.dateBeforeOrEqual(inputDate, start) && dateHelper.dateAfterOrEqual(closeDate, end)) {
 				faults.add(ft);
 			}
 		}
@@ -286,10 +340,10 @@ public class UtrController {
 		Calendar closeDate = Calendar.getInstance();
 		int periodLength = countDaysInPeriod(start.getTime(), end.getTime());
 		ArrayList<Integer> minutesInDays = new ArrayList<>();
-		for(int i = 0; i<periodLength; i++){
+		for (int i = 0; i < periodLength; i++) {
 			minutesInDays.add(0);
 		}
-		
+
 		// find current machine's faults
 		for (X3UtrFault ft : faults) {
 			// no machine / wrong machine - skip
@@ -313,29 +367,27 @@ public class UtrController {
 			// for each day decrease quantity
 			Calendar currentDay = Calendar.getInstance();
 			currentDay.setTime(start.getTime());
-			for(int i = 0; i<periodLength; i++){
-				if(calculateStopMinutesInDay(currentDay, inputDate, closeDate)>0){
-					if(line.getFaults()[i]!=null){
-						line.setFaultAt(i, line.getFaults()[i]+"; " +ft.getFaultNumber());
-					}
-					else{
+			for (int i = 0; i < periodLength; i++) {
+				if (calculateStopMinutesInDay(currentDay, inputDate, closeDate) > 0) {
+					if (line.getFaults()[i] != null) {
+						line.setFaultAt(i, line.getFaults()[i] + "; " + ft.getFaultNumber());
+					} else {
 						line.setFaultAt(i, ft.getFaultNumber());
 					}
-					
 				}
-				minutesInDays.set(i, minutesInDays.get(i)+calculateStopMinutesInDay(currentDay, inputDate, closeDate));
+				minutesInDays.set(i,
+						minutesInDays.get(i) + calculateStopMinutesInDay(currentDay, inputDate, closeDate));
 				currentDay.add(Calendar.DAY_OF_YEAR, 1);
 			}
-			
 		}
-		
+
 		// format result
 		for (int i = 0; i < line.getValues().length; i++) {
 			// 1440 min = 24 hours
-			if(minutesInDays.get(i)>1440){
+			if (minutesInDays.get(i) > 1440) {
 				minutesInDays.set(i, 1440);
 			}
-			line.setValueAt(i, dateHelper.convertMinutesToHours(1440-minutesInDays.get(i)));
+			line.setValueAt(i, dateHelper.convertMinutesToHours(1440 - minutesInDays.get(i)));
 		}
 
 	}
@@ -350,41 +402,27 @@ public class UtrController {
 		currEnd.setTime(currStart.getTime());
 		currEnd.set(Calendar.HOUR_OF_DAY, 24);
 		currEnd.set(Calendar.MINUTE, 0);
-		
+
 		long diff;
-		
-		if(dateBeforeOrEqual(inputDate, currStart) && dateAfterOrEqual(closeDate, currEnd)){
+
+		if (dateHelper.dateBeforeOrEqual(inputDate, currStart) && dateHelper.dateAfterOrEqual(closeDate, currEnd)) {
 			return 1440;
-		}
-		else if (inputDate.before(currStart) && dateInRange(closeDate, currStart, currEnd)){
+		} else if (inputDate.before(currStart) && dateHelper.dateInRange(closeDate, currStart, currEnd)) {
 			diff = closeDate.getTime().getTime() - currStart.getTime().getTime();
-			return (int)diff/1000/60;
-		}
-		else if (closeDate.after(currEnd) && dateInRange(inputDate, currStart, currEnd)){
+			return (int) diff / 1000 / 60;
+		} else if (closeDate.after(currEnd) && dateHelper.dateInRange(inputDate, currStart, currEnd)) {
 			diff = currEnd.getTime().getTime() - inputDate.getTime().getTime();
-			return (int)diff/1000/60;			
-		}
-		else if (dateInRange(inputDate, currStart, currEnd) && dateInRange(closeDate, currStart, currEnd)){
+			return (int) diff / 1000 / 60;
+		} else if (dateHelper.dateInRange(inputDate, currStart, currEnd) && dateHelper.dateInRange(closeDate, currStart, currEnd)) {
 			diff = closeDate.getTime().getTime() - inputDate.getTime().getTime();
-			return (int)diff/1000/60;
+			return (int) diff / 1000 / 60;
 		}
-		
+
 		return 0;
-		
+
 	}
 
-	private boolean dateBeforeOrEqual(Calendar date, Calendar reference){
-		return (date.before(reference) || date.equals(reference));
-	}
-	private boolean dateAfterOrEqual(Calendar date, Calendar reference){
-		return (date.after(reference) || date.equals(reference));
-	}
-	private boolean dateInRange(Calendar date, Calendar start, Calendar end) {
-		if ((date.after(start) || date.equals(start)) && (date.before(end) || date.equals(end))) {
-			return true;
-		}
-		return false;
-	}
+
 
 	/**
 	 * count workers time into a map, based on fault lines

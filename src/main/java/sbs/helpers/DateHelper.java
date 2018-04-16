@@ -2,6 +2,7 @@ package sbs.helpers;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.springframework.stereotype.Component;
@@ -10,11 +11,13 @@ public class DateHelper {
 	
 	private SimpleDateFormat ddMmYyyyFormat;
 	private SimpleDateFormat ddMmYyFormat;
+	private SimpleDateFormat ddMmYyyyHhMmFormat;
 	
 	
 	public DateHelper(){
 		ddMmYyyyFormat = new SimpleDateFormat("dd/MM/yyyy");
 		ddMmYyFormat = new SimpleDateFormat("dd/MM/yy");
+		ddMmYyyyHhMmFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 	}
 	
 	public Timestamp getCurrentTime(){
@@ -43,6 +46,40 @@ public class DateHelper {
 	
 	public String formatDdMmYy(Timestamp date){
 		return ddMmYyFormat.format(date);
+	}
+	
+	public String formatDdMmYyyyHhMm(Timestamp date){
+		return ddMmYyyyHhMmFormat.format(date);
+	}
+	
+	public boolean dateBeforeOrEqual(Calendar date, Calendar reference) {
+		return (date.before(reference) || date.equals(reference));
+	}
+
+	public boolean dateAfterOrEqual(Calendar date, Calendar reference) {
+		return (date.after(reference) || date.equals(reference));
+	}
+
+	public boolean dateInRange(Calendar date, Calendar start, Calendar end) {
+		if ((date.after(start) || date.equals(start)) && (date.before(end) || date.equals(end))) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean dateBeforeOrEqual(Timestamp date, Timestamp reference) {
+		return (date.before(reference) || date.equals(reference));
+	}
+
+	public boolean dateAfterOrEqual(Timestamp date, Timestamp reference) {
+		return (date.after(reference) || date.equals(reference));
+	}
+	
+	public boolean isDateInRange(Timestamp date, Timestamp start, Timestamp end ){
+		if ((date.after(start) || date.equals(start)) && (date.before(end) || date.equals(end))) {
+			return true;
+		}
+		return false;
 	}
 	
 }
