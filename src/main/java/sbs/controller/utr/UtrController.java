@@ -292,10 +292,6 @@ public class UtrController {
 			}
 		}
 		
-		for(CurrentFaultsLine line: list.values()){
-			System.out.println(line);
-		}
-		
 		model.addAttribute("list", list.values());
 		model.addAttribute("refreshTime", dateHelper.formatDdMmYyyyHhMm(dateHelper.getCurrentTime()));
 
@@ -354,7 +350,7 @@ public class UtrController {
 			if (ft.getInputDateTime() == null) {
 				continue;
 			}
-			// INPUT AND CLOSE DATE
+			// INPUT AND CLOSE DATE 
 			inputDate.setTime(new Date(ft.getInputDateTime().getTime()));
 			if (ft.getCloseDateTime() == null) {
 				// no close date - set future +100 years

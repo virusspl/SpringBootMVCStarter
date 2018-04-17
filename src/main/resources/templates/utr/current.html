@@ -77,7 +77,7 @@
 			</div>
 			<div class="col-xs-12">
 				<div class="table-responsive margin-top-10">
-					<table class="table table-hover" id="srv">
+					<table class="table table-hover" id="srv" style="font-size: 120%;">
 						<thead>
 							<tr>
 								<th th:text="#{utr.machine.code}"></th>
@@ -86,21 +86,12 @@
 								<th th:text="#{utr.current.faults}"></th>
 							</tr>
 						</thead>
-						<tfoot>
-							<tr>
-								<th th:text="#{utr.machine.code}"></th>
-								<th th:text="#{utr.machine.name}"></th>
-								<th th:text="#{utr.current.inputDate}"></th>
-								<th th:text="#{utr.current.faults}"></th>
-							</tr>
-						</tfoot>
 						<tbody>
 							<tr th:each="line : ${list}">
 								<td><span th:text="${line.machine.code}"></span></td>
 								<td><span th:text="${line.machine.name}"></span></td>
 								<td><span th:text="${#dates.format(line.inputDate, 'yyyy.MM.dd HH:mm')}"></span></td>
 								<td><span th:text="${line.faults}"></span></td>
-								
 							</tr>
 						</tbody>
 					</table>
@@ -109,7 +100,15 @@
 		</div>
 		
 		<div class="row margin-top-10" th:if="(${list} != null) and (${#lists.size(list)} == 0) ">
-			BRAK MASZYN KRYTYCZNYCH NA AWARII
+			<div class="col-xs-12">
+				<h3 class="text-primary" th:text="|#{utr.current.lastUpdate}: ${refreshTime}|">results</h3>
+			</div>
+			<div class="col-xs-12">
+				<h3 class="text-success">
+				<span class="glyphicon glyphicon-ok"></span>
+				<span th:text="|#{utr.current.nofailures}|"></span>
+				</h3>
+			</div>
 		</div>
 
 		<!-- /CHART -->
