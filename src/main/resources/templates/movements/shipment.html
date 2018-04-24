@@ -213,7 +213,7 @@
 						class="bold">value</span>
 				</div>
 			</div>
-			<div class="DETAILS" th:if="${neverExistingVariable} != null">
+			<div class="DETAILS" sec:authorize="hasAnyRole('ROLE_OWNER', 'ROLE_ADMIN', 'ROLE_MOVEMENTSSUPERUSER')">
 				<div class="row margin-top-10">
 					<div class="col-xs-12">
 						<h3 class="text-primary" th:text="#{movements.list}">list</h3>
