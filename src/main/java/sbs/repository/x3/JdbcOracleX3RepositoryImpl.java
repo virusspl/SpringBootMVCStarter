@@ -609,6 +609,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ company + ".YCHGSTKGX.CREDAT_0, "
 				+ company + ".YCHGSTKGX.ITMREF_0, "
 				+ company + ".ITMMASTER.ITMDES1_0, "
+				+ company + ".ITMMASTER.TCLCOD_0, "
 				+ company + ".YCHGSTKGX.QTYSTU_0, "
 				+ company + ".ITMMVT.AVC_0 "
 				+ "FROM "
@@ -624,8 +625,11 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ company + ".YCHGSTKGX.CREDAT_0 <= ? "
 				+ "AND "
 				+ company + ".YCHGSTKGX.LOCDES_0 = ? "
-				+ "AND "
+				+ "AND ("
 				+ company + ".ITMMASTER.TCLCOD_0 = ? "
+				+ "OR "
+				+ company + ".ITMMASTER.TCLCOD_0 = ? "
+				+ ") "
 				+ "ORDER BY " 
 				+ company + ".YCHGSTKGX.CREDAT_0, " 
 				+ company + ".YCHGSTKGX.ITMREF_0",
@@ -633,7 +637,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
                 		dateHelper.getTime(startDate), 
                 		dateHelper.getTime(endDate), 
                 		"WGX01", 
-                		"AFV"
+                		"AFV", "ACV"
                 		}
 				);
         
@@ -644,6 +648,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         	item = new X3ShipmentMovement();
         	item.setItemCode((String)row.get("ITMREF_0"));
         	item.setItemDescription(((String)row.get("ITMDES1_0")));
+        	item.setItemCategory(((String)row.get("TCLCOD_0")));
         	item.setQuantity(((BigDecimal)row.get("QTYSTU_0")).doubleValue());
         	item.setEmergencyAveragePrice(((BigDecimal)row.get("AVC_0")).doubleValue());
         	item.setDate((Timestamp)row.get("CREDAT_0"));

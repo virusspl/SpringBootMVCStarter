@@ -197,6 +197,14 @@
 						class="bold">value</span>
 				</div>
 				<div class="col-xs-2">
+					<span th:text="#{movements.value.warehouse}">value</span>
+				</div>
+				<div class="col-xs-10">
+					<span
+						th:text="${#numbers.formatDecimal(warehouseValue, 0, 'DEFAULT', 2, 'DEFAULT')}"
+						class="bold">value</span>
+				</div>
+				<div class="col-xs-2">
 					<span th:text="#{movements.value.other}">value</span>
 				</div>
 				<div class="col-xs-10">
@@ -228,6 +236,7 @@
 										<th th:text="#{movements.date}">head</th>
 										<th th:text="#{movements.code}">head</th>
 										<th th:text="#{movements.description}">head</th>
+										<th th:text="#{movements.category}">head</th>
 										<th th:text="#{movements.quantity}">head</th>
 										<th th:text="#{movements.price}">head</th>
 										<th th:text="#{movements.value}">head</th>
@@ -238,6 +247,7 @@
 										<th th:text="#{movements.date}">head</th>
 										<th th:text="#{movements.code}">head</th>
 										<th th:text="#{movements.description}">head</th>
+										<th th:text="#{movements.category}">head</th>
 										<th th:text="#{movements.quantity}">head</th>
 										<th th:text="#{movements.price}">head</th>
 										<th th:text="#{movements.value}">head</th>
@@ -250,6 +260,7 @@
 											th:text="${#dates.format(mvt.date, 'dd.MM.yyyy')}"></span></td>
 										<td><span th:text="${mvt.itemCode}"></span></td>
 										<td><span th:text="${mvt.itemDescription}"></span></td>
+										<td><span th:text="${mvt.itemCategory}"></span></td>
 										<td><span
 											th:text="${#numbers.formatDecimal(mvt.quantity, 0, 'DEFAULT', 2, 'DEFAULT')}"></span></td>
 										<td><span

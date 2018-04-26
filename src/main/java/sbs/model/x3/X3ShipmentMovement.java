@@ -6,6 +6,7 @@ public class X3ShipmentMovement {
 
 	private String itemCode;
 	private String itemDescription;
+	private String itemCategory;
 	private Timestamp date;
 	private double quantity;
 	private double emergencyAveragePrice;
@@ -17,14 +18,16 @@ public class X3ShipmentMovement {
 		
 	}
 
-	public X3ShipmentMovement(String itemCode, String itemDescription, Timestamp date, int quantity,
+	public X3ShipmentMovement(String itemCode, String itemDescription, String itemCategory, Timestamp date, int quantity,
 			double emergencyAveragePrice) {
 		super();
 		this.itemCode = itemCode;
 		this.itemDescription = itemDescription;
+		this.itemCategory = itemCategory;
 		this.date = date;
 		this.quantity = quantity;
 		this.emergencyAveragePrice = emergencyAveragePrice;
+		
 	}
 
 	public String getItemCode() {
@@ -41,6 +44,14 @@ public class X3ShipmentMovement {
 
 	public void setItemDescription(String itemDescription) {
 		this.itemDescription = itemDescription;
+	}
+	
+	public String getItemCategory() {
+		return itemCategory;
+	}
+
+	public void setItemCategory(String itemCategory) {
+		this.itemCategory = itemCategory;
 	}
 
 	public Timestamp getDate() {
@@ -85,8 +96,11 @@ public class X3ShipmentMovement {
 
 	@Override
 	public String toString() {
-		return "X3ShipmentMovement [itemCode=" + itemCode + ", itemDescription=" + itemDescription + ", date=" + date
-				+ ", quantity=" + quantity + ", emergencyAveragePrice=" + emergencyAveragePrice + "]";
+		return "X3ShipmentMovement [itemCode=" + itemCode + ", itemDescription=" + itemDescription + ", itemCategory="
+				+ itemCategory + ", date=" + date + ", quantity=" + quantity + ", emergencyAveragePrice="
+				+ emergencyAveragePrice + ", price=" + price + ", value=" + value + "]";
 	}
+
+
 	
 }

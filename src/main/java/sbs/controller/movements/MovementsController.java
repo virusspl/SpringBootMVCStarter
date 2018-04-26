@@ -71,6 +71,7 @@ public class MovementsController {
 		double weldingValue = 0;
 		double assemblyValue = 0;
 		double otherValue = 0;
+		double warehouseValue = 0;
 		LinkedHashSet<String> unassignedMachinesSet = new LinkedHashSet<>();
 		String unassignedMachines = "";
 		
@@ -84,8 +85,10 @@ public class MovementsController {
 				mvt.setPrice(mvt.getEmergencyAveragePrice());
 			}
 			mvt.setValue(mvt.getQuantity()*mvt.getPrice());
-			
-			if(machinesIndex.containsKey(mvt.getItemCode())){
+			if(mvt.getItemCategory().equals("ACV")){
+				warehouseValue += mvt.getValue();
+			}
+			else if(machinesIndex.containsKey(mvt.getItemCode())){
 				switch(machinesIndex.get(mvt.getItemCode()).getMachineDepartment()){
 				case X3ProductFinalMachine.MECHANICAL:
 					mechanicalValue += mvt.getValue();
@@ -117,6 +120,7 @@ public class MovementsController {
 		model.addAttribute("mechanicalValue", mechanicalValue);
 		model.addAttribute("weldingValue", weldingValue);
 		model.addAttribute("assemblyValue", assemblyValue);
+		model.addAttribute("warehouseValue", warehouseValue);
 		model.addAttribute("otherValue", otherValue);
 		model.addAttribute("movements", movements);
 		for (String str: unassignedMachinesSet){
