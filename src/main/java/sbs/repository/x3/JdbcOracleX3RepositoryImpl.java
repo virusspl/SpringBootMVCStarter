@@ -18,6 +18,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import sbs.helpers.DateHelper;
+import sbs.model.proprog.Project;
 import sbs.model.wpslook.WpslookRow;
 import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3Client;
@@ -873,6 +874,29 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         }
         
 		return result;
+	}
+
+	@Override
+	public List<Project> findAllProjectsProgressDesc() {
+			
+		// return treemap? comparator in Project (by number desc), 
+		
+		//         	item.setStartDateTime(x3UtrFaultLineDateConvert((Timestamp) row.get("XDATAIN_0"),(String)row.get("XORAIN_0")));
+		
+		/*
+		 * FOR STATE 1 = new, 2 = in progress, 3 = finished
+		 * if(((BigDecimal)row.get("YTBLOCCO_0")).intValue() == 2){
+    		fault.setFaultType(X3UtrFault.STOP_TYPE);
+    		
+    	}*/
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Project findProjectProgressById(int id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

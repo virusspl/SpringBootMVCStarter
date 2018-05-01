@@ -10,16 +10,17 @@ import org.hibernate.criterion.Order;
 import org.springframework.stereotype.Repository;
 
 import sbs.model.proprog.Project;
+import sbs.model.proprog.ProjectEntity;
 import sbs.repository.GenericRepositoryAdapter;
 
 @Repository
 @Transactional
-public class ProjectProgressRepositoryImpl extends GenericRepositoryAdapter<Project, Integer>
+public class ProjectProgressRepositoryImpl extends GenericRepositoryAdapter<ProjectEntity, Integer>
 		implements ProjectProgressRepository {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Project> findAllDesc() {
+	public List<ProjectEntity> findAllDesc() {
 		Criteria crit = currentSession().createCriteria(Project.class);
 		crit.addOrder(Order.desc("id"));
 		return crit.list();
@@ -27,8 +28,8 @@ public class ProjectProgressRepositoryImpl extends GenericRepositoryAdapter<Proj
 	
 	@Override
 	@Transactional
-	public Project findByIdEager(int id){
-		Project project = currentSession().get(Project.class, id);
+	public ProjectEntity findByIdEager(int id){
+		ProjectEntity project = currentSession().get(ProjectEntity.class, id);
 		if (project != null){
 			Hibernate.initialize(project.getBuyPartsUser());
 			Hibernate.initialize(project.getClientAcceptUser());

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import sbs.model.proprog.Project;
 import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3Product;
@@ -41,4 +42,6 @@ public interface JdbcOracleX3Service {
 	public List<X3UtrFaultLine> findUtrFaultLinesAfterDate(Date startDate);
 	public List<X3UtrFaultLine> findAllUtrFaultLines();
 	public Map<String, X3ProductFinalMachine> findX3ProductFinalMachines(String company);
+	public List<Project> findAllProjectsProgressDesc();
+	public Project findProjectProgressById(int id);
 }
