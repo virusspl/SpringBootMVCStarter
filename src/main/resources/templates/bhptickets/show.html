@@ -82,52 +82,107 @@
 					</div>
 				</div>
 			</div>
-			<div th:if="${ticketResponseForm.modificationAllowed}"
-				class="col-xs-12 col-sm-6">
-				<h1 th:text="#{bhp.tickets.show.response}"
-					class="text-primary margin-top-30"></h1>
+			<!-- BHP TICKET FORM -->
+			<form th:action="@{/bhptickets/response}" method="post"
+				th:object="${ticketResponseForm}">
+				<!-- FORM PARAMS -->
+				<input type="hidden" name="id" th:value="*{id}" /> <input
+					type="hidden" name="ticketsUserModificationAllowed"
+					th:value="*{ticketsUserModificationAllowed}" />	<input
+					type="hidden" name="utrUserModificationAllowed"
+					th:value="*{utrUserModificationAllowed}" />
+					<input type="hidden" name="utrCommentNeeded"
+					th:value="*{utrCommentNeeded}" />
+				<!-- /FORM PARAMS -->
+				<!-- TICKETS USER PART -->
+				<div class="col-xs-12 col-sm-6">
+					<h1 th:text="#{bhp.tickets.show.response}"
+						class="text-primary margin-top-30"></h1>
 
-				<!-- BHP TICKET FORM -->
-				<form th:action="@{/bhptickets/response}" method="post"
-					th:object="${ticketResponseForm}">
-					<input type="hidden" name="id" th:value="*{id}" /> <input
-						type="hidden" name="modificationAllowed"
-						th:value="*{modificationAllowed}" />
-					<div class="form-group">
-						<label for="comment" th:text="#{bhp.tickets.comment}">Comment</label>
-						<textarea class="form-control" id="comment" name="comment"
-							th:placeholder="#{bhp.tickets.comment}" th:field="*{comment}"
-							style="min-height: 200px;"></textarea>
-						<div th:errors="*{comment}"
-							class="alert alert-danger margin-top-5">error</div>
-					</div>
-					<div class="form-group">
-						<label for="controls" th:text="#{action.choose.action}">Title</label>
-						<div id="controls">
-							<button class="btn btn-info btn-sm" type="submit"
-								name="passticket">
-								<span class="glyphicon glyphicon-forward"></span> <span
-									th:text="#{bhp.tickets.confirm.pass}">pass</span>
-							</button>
-							<button class="btn btn-primary btn-sm" type="submit"
-								name="closeticket">
-								<span class="glyphicon glyphicon-ok"></span> <span
-									th:text="#{bhp.tickets.confirm.success}">success</span>
-							</button>
+					<!-- IF MODIFY -->
+					<div th:if="${ticketResponseForm.ticketsUserModificationAllowed}">
+						<div class="form-group">
+							<label for="comment" th:text="#{bhp.tickets.comment}">Comment</label>
+							<textarea class="form-control" id="comment" name="comment"
+								th:placeholder="#{bhp.tickets.comment}" th:field="*{comment}"
+								style="min-height: 200px;"></textarea>
+							<div th:errors="*{comment}"
+								class="alert alert-danger margin-top-5">error</div>
+						</div>
+						<div class="form-group">
+							<label for="controls" th:text="#{action.choose.action}">Title</label>
+							<div id="controls">
+								<button class="btn btn-info btn-sm" type="submit"
+									name="passticket">
+									<span class="glyphicon glyphicon-forward"></span> <span
+										th:text="#{bhp.tickets.confirm.pass}">pass</span>
+								</button>
+								<button class="btn btn-primary btn-sm" type="submit"
+									name="closeticket">
+									<span class="glyphicon glyphicon-ok"></span> <span
+										th:text="#{bhp.tickets.confirm.success}">success</span>
+								</button>
+							</div>
 						</div>
 					</div>
-				</form>
-			</div>
-			<div th:if="!${ticketResponseForm.modificationAllowed}"
-				class="col-xs-12 col-sm-6">
-				<h1 th:text="#{bhp.tickets.show.response}"
-					class="text-primary margin-top-30"></h1>
-				<div class="form-group">
-					<label for="comment" th:text="#{bhp.tickets.comment}">Comment</label>
-					<span class="form-control" id="comment" th:text="${ticket.comment}"
-						style="min-height: 200px;"></span>
+					<!-- /IF MODIFY -->
+					<!-- IF NOT MODIFY -->
+					<div th:if="!${ticketResponseForm.ticketsUserModificationAllowed}">
+						<div class="form-group">
+							<label for="comment" th:text="#{bhp.tickets.comment}">Comment</label>
+							<textarea class="form-control" id="comment"
+								th:text="${ticket.comment}"
+								style="min-height: 200px; background-color: white;"
+								readonly="true"></textarea>
+						</div>
+					</div>
+					<!-- /IF NOT MODIFY USER RESPONSE -->
+					<!-- / BHP TICKETS USER RESPONSE -->
 				</div>
-			</div>
+				<!-- /TICKETS USER PART -->
+				<!-- UTR PART -->
+				<div class="col-xs-12 col-sm-6" th:if="${ticketResponseForm.utrCommentNeeded}">
+					<h1 th:text="#{bhp.tickets.show.utrresponse}"
+						class="text-primary"></h1>
+					<!-- IF MODIFY  -->
+					<div th:if="${ticketResponseForm.utrUserModificationAllowed}">
+						<div class="form-group">
+							<label for="utrComment" th:text="#{bhp.tickets.utrComment}">Comment</label>
+							<textarea class="form-control" id="utrComment" name="utrComment"
+								th:placeholder="#{bhp.tickets.utrComment}" th:field="*{utrComment}"
+								style="min-height: 200px;"></textarea>
+							<div th:errors="*{utrComment}"
+								class="alert alert-danger margin-top-5">error</div>
+						</div>
+						<div class="form-group">
+							<label for="controls" th:text="#{action.choose.action}">Title</label>
+							<div id="controls">
+								<button class="btn btn-info btn-sm" type="submit"
+									name="commentutr">
+									<span class="glyphicon glyphicon-ok"></span> <span
+										th:text="#{action.save}">pass</span>
+								</button>
+							</div>
+						</div>
+					</div>
+					<!-- /IF MODIFY -->
+					<!-- IF NOT MODIFY -->
+						<div th:if="!${ticketResponseForm.utrUserModificationAllowed}">
+						<div class="form-group">
+							<label for="utrComment" th:text="#{bhp.tickets.utrComment}">Comment</label>
+							<textarea class="form-control" id="utrComment"
+								th:text="${ticket.utrComment}"
+								style="min-height: 200px; background-color: white;"
+								readonly="true"></textarea>
+						</div>
+					</div>
+					<!-- /IF NOT MODIFY -->
+				</div>
+				<!-- /UTR PART -->
+			</form>
+			<!-- /BHP TICKET FORM -->
+
+			<!-- EDIT LINK -->
 			<div id="bhpAdminOnly"
 				sec:authorize="hasAnyRole('ROLE_BHPMANAGER', 'ROLE_ADMIN')">
 				<div class="col-xs-12">
@@ -137,6 +192,7 @@
 						th:text="|#{action.edit} #${ticket.id}|"></span></a>
 				</div>
 			</div>
+			<!-- EDIT LINK -->
 		</div>
 		<!-- PHOTOS -->
 		<div class="row" th:if="${#lists.size(photos)} > 0">

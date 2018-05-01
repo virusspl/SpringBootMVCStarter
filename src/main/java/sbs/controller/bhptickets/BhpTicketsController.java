@@ -28,6 +28,7 @@ import org.thymeleaf.context.Context;
 
 import javassist.NotFoundException;
 import sbs.controller.upload.UploadController;
+import sbs.helpers.TextHelper;
 import sbs.model.bhptickets.BhpTicket;
 import sbs.model.bhptickets.BhpTicketState;
 import sbs.model.users.User;
@@ -51,7 +52,10 @@ public class BhpTicketsController {
 	UploadController uploadController;
 	@Autowired 
 	MailService mailService;
-	@Autowired TemplateEngine templateEngine;
+	@Autowired 
+	TemplateEngine templateEngine;
+	@Autowired 
+	TextHelper textHelper;
 	
 	@RequestMapping(value = "/dispatch")
 	public String dispatch() {
@@ -94,6 +98,9 @@ public class BhpTicketsController {
 				user, 
 				Arrays.asList("ROLE_ADMIN","ROLE_BHPMANAGER","ROLE_BHPSUPERVISOR"))){
 			model.addAttribute("tickets", bhpTicketsService.findAllNotArchivedTickets());
+		}
+		else if (userService.hasAnyRole(user, Arrays.asList("ROLE_BHPTICKETSUTRUSER"))){
+			model.addAttribute("tickets", bhpTicketsService.findPendingUtrTickets());
 		}
 		else{
 			model.addAttribute("tickets", bhpTicketsService.findPendingTicketsByUser(user));
@@ -178,6 +185,7 @@ public class BhpTicketsController {
 		ticket.setTitle(ticketCreateForm.getTitle());
 		ticket.setDescription(ticketCreateForm.getDescription());
 		ticket.setComment("");
+		ticket.setUtrComment("");
 		ticket.setToSend(true);
 		// relations
 		// state
@@ -285,21 +293,28 @@ public class BhpTicketsController {
 	@RequestMapping("/show/{id}")
 	@Transactional
 	public String showBhpTicket(@PathVariable("id") int id, Model model) throws NotFoundException {
-		TicketResponseForm responseForm = new TicketResponseForm();
+		
 		// get ticket
 		BhpTicket ticket = bhpTicketsService.findById(id);
 		if (ticket == null) {
 			throw new NotFoundException("Ticket not found");
 		}
-		// set viewed state and view date + decide of modification
+
+		// create response form
+		TicketResponseForm responseForm = new TicketResponseForm();
+		responseForm.setId(ticket.getId());
+		responseForm.setComment(ticket.getComment());
+		responseForm.setUtrComment(ticket.getUtrComment());
+		responseForm.setUtrCommentNeeded(ticket.isUtrCommentNeeded());
+		
+		// get user
 		User authUser = userService.getAuthenticatedUser();
+		// set viewed state and view date + decide of modification for user response part
 		if (authUser == null || (authUser.getId() != ticket.getAssignedUser().getId())
 				|| (ticket.getState().getOrder() >= 40)) {
-			responseForm.setModificationAllowed(false);
+			responseForm.setTicketsUserModificationAllowed(false);
 		} else {
-			responseForm.setId(ticket.getId());
-			responseForm.setModificationAllowed(true);
-			responseForm.setComment(ticket.getComment());
+			responseForm.setTicketsUserModificationAllowed(true);
 			if (ticket.getState().getOrder() < 20) {
 				BhpTicketState stateViewed = bhpTicketStateService.findByOrder(20);
 				ticket.setState(stateViewed);
@@ -307,6 +322,15 @@ public class BhpTicketsController {
 				stateViewed.getTickets().add(ticket);
 			}
 		}
+		// set modification for utr user response part
+		if (authUser == null || (!authUser.hasRole("ROLE_BHPTICKETSUTRUSER")) 
+				|| (ticket.getState().getOrder() != 30)) {
+			responseForm.setUtrUserModificationAllowed(false);
+		} else {
+			responseForm.setUtrUserModificationAllowed(true);
+			
+		}
+		
 		// get photos list
 		ArrayList<String> fileList = uploadController.listFiles(uploadController.getBhpPhotoPath());
 		for (int i = fileList.size() - 1; i >= 0; i--) {
@@ -324,6 +348,9 @@ public class BhpTicketsController {
 	@Transactional
 	public String passTicket(@Valid TicketResponseForm ticketResponseForm, BindingResult bindingResult, Model model,
 			RedirectAttributes redirectAttrs, Locale locale) {
+		if(ticketResponseForm.getComment().trim().length() == 0){
+			bindingResult.rejectValue("comment", "NotEmpty.ticketResponseForm.comment", "ERROR");
+		}
 		// get ticket
 		BhpTicket ticket = bhpTicketsService.findById(ticketResponseForm.getId());
 		// validate
@@ -351,6 +378,9 @@ public class BhpTicketsController {
 	@Transactional
 	public String closeTicket(@Valid TicketResponseForm ticketResponseForm, BindingResult bindingResult, Model model,
 			RedirectAttributes redirectAttrs, Locale locale) {
+		if(ticketResponseForm.getComment().trim().length() == 0){
+			bindingResult.rejectValue("comment", "NotEmpty.ticketResponseForm.comment", "ERROR");
+		}
 		// get ticket
 		BhpTicket ticket = bhpTicketsService.findById(ticketResponseForm.getId());
 		// validate
@@ -371,6 +401,36 @@ public class BhpTicketsController {
 		ticket.setUpdateDate(new Timestamp(new java.util.Date().getTime()));
 		ticket.setToSend(false);
 		ticket.setComment(ticketResponseForm.getComment().trim());
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("bhp.tickets.confirm.success", null, locale));
+		return "redirect:/bhptickets/list";
+	}
+	
+	@RequestMapping(value = "/response", params = { "commentutr" }, method = RequestMethod.POST)
+	@Transactional
+	public String commentUtr(@Valid TicketResponseForm ticketResponseForm, BindingResult bindingResult, Model model,
+			RedirectAttributes redirectAttrs, Locale locale) {
+		if(ticketResponseForm.getUtrComment().trim().length() == 0){
+			bindingResult.rejectValue("utrComment", "NotEmpty.ticketResponseForm.utrComment", "ERROR");
+		}
+		// get ticket
+		BhpTicket ticket = bhpTicketsService.findById(ticketResponseForm.getId());
+		// validate
+		if (bindingResult.hasErrors()) {
+			ArrayList<String> fileList = uploadController.listFiles(uploadController.getBhpPhotoPath());
+			for (int i = fileList.size() - 1; i >= 0; i--) {
+				if (!fileList.get(i).startsWith("bhp_" + ticketResponseForm.getId() + "_")) {
+					fileList.remove(i);
+				}
+			}
+			model.addAttribute("photos", fileList);
+			model.addAttribute("ticket", ticket);
+			return "bhptickets/show";
+		}
+		BhpTicketState utrComment = bhpTicketStateService.findByOrder(35);
+		utrComment.getTickets().add(ticket);
+		ticket.setState(utrComment);
+		ticket.setUpdateDate(new Timestamp(new java.util.Date().getTime()));
+		ticket.setUtrComment(ticketResponseForm.getUtrComment().trim() + textHelper.newLine() + "(" + userService.getAuthenticatedUser().getName() + ")");
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("bhp.tickets.confirm.success", null, locale));
 		return "redirect:/bhptickets/list";
 	}

@@ -178,6 +178,14 @@ public class User {
 		this.respondedBuyOrders = respondedBuyOrders;
 	}
 	
+	public boolean hasRole(String role_roletocheck){
+		for(Role role: getRoles()){
+			if(role.getName().equals(role_roletocheck)){
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	
 	

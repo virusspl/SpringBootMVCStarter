@@ -1,7 +1,10 @@
 package sbs.service.bhptickets;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -43,6 +46,19 @@ public class BhpTicketsServiceImpl extends GenericServiceAdapter<BhpTicket, Inte
 	@Override
 	public List<BhpTicket> findArchivedTickets() {
 		return bhpTicketsRepository.findArchivedTickets();
+	}
+
+	@Override
+	@Transactional
+	public List<BhpTicket> findPendingUtrTickets() {
+		List<BhpTicket> all = bhpTicketsRepository.findAllNotArchivedTickets();
+		List<BhpTicket> result = new ArrayList<>();
+		for(BhpTicket ticket: all){
+			if(ticket.getAssignedUser().hasRole("ROLE_BHPTICKETSUTRUSER") || ticket.getState().getOrder()==30){
+				result.add(ticket);
+			} 
+		}
+		return result;
 	}
 	
 	

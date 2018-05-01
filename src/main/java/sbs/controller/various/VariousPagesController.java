@@ -221,6 +221,13 @@ public class VariousPagesController {
 			roleService.save(bhpTicketsUser);
 			msg += "[role: " + bhpTicketsUser.getName() + "], ";
 		}
+		Role bhpTicketsUtrUser = roleService.findByName("ROLE_BHPTICKETSUTRUSER");
+		if (bhpTicketsUtrUser == null) {
+			bhpTicketsUtrUser = new Role();
+			bhpTicketsUtrUser.setName("ROLE_BHPTICKETSUTRUSER");
+			roleService.save(bhpTicketsUtrUser);
+			msg += "[role: " + bhpTicketsUtrUser.getName() + "], ";
+		}
 		Role bhpSupervisor = roleService.findByName("ROLE_BHPSUPERVISOR");
 		if (bhpSupervisor == null) {
 			bhpSupervisor = new Role();
@@ -556,6 +563,14 @@ public class VariousPagesController {
 			bhpState = new BhpTicketState();
 			bhpState.setOrder(30);
 			bhpState.setDescription("Przekazany");
+			bhpTicketStateService.save(bhpState);
+			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
+		}
+		
+		if(bhpTicketStateService.findByOrder(35) == null){	
+			bhpState = new BhpTicketState();
+			bhpState.setOrder(35);
+			bhpState.setDescription("Komentarz UTR");
 			bhpTicketStateService.save(bhpState);
 			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
 		}

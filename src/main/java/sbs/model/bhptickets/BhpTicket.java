@@ -49,6 +49,10 @@ public class BhpTicket {
 	@Type(type="text")
 	private String comment;
 	
+	@Column(name = "bhpt_utr_comment")
+	@Type(type="text")
+	private String utrComment;
+	
 	@Column(name = "bhpt_credat", nullable = false)
 	private Timestamp creationDate;
 
@@ -149,6 +153,15 @@ public class BhpTicket {
 		this.comment = comment;
 	}
 
+	
+	public String getUtrComment() {
+		return utrComment;
+	}
+
+
+	public void setUtrComment(String utrComment) {
+		this.utrComment = utrComment;
+	}
 
 
 	public Timestamp getCreationDate() {
@@ -194,14 +207,25 @@ public class BhpTicket {
 		this.toSend = toSend;
 	}
 
-
 	@Override
 	public String toString() {
 		return "BhpTicket [state=" + state + ", creator=" + creator + ", assignedUser=" + assignedUser + ", id=" + id
-				+ ", title=" + title + ", description=" + description + ", comment=" + comment + ", creationDate="
-				+ creationDate + ", updateDate=" + updateDate + ", toDoDate=" + toDoDate + ", toSend=" + toSend + "]";
+				+ ", title=" + title + ", description=" + description + ", comment=" + comment + ", utrComment="
+				+ utrComment + ", creationDate=" + creationDate + ", updateDate=" + updateDate + ", toDoDate="
+				+ toDoDate + ", toSend=" + toSend + "]";
 	}
-
+	
+	/**
+	 * if UTR has to respond or already responded - show it
+	 * @return boolean
+	 */
+	public boolean isUtrCommentNeeded(){
+		if(getState().getOrder() == 30 || !getUtrComment().equals("")){
+			return true;
+		}
+		return false;
+	}
+	
 
 
 }

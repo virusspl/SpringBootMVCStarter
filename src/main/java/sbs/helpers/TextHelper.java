@@ -24,4 +24,8 @@ public class TextHelper {
 		return text;
 	}
 	
+	public String newLine(){
+		return System.getProperty("line.separator");
+	}
+	
 }

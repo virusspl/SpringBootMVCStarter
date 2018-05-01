@@ -2,14 +2,14 @@ package sbs.controller.bhptickets;
 
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 
 public class TicketResponseForm {
 	
-	boolean modificationAllowed;
-	@NotEmpty
+	boolean ticketsUserModificationAllowed;
+	boolean utrCommentNeeded;
+	boolean utrUserModificationAllowed;
 	String comment;
+	String utrComment;
 	@NotNull
 	int newState;
 	@NotNull
@@ -27,6 +27,14 @@ public class TicketResponseForm {
 		this.comment = comment;
 	}
 
+	public String getUtrComment() {
+		return utrComment;
+	}
+
+	public void setUtrComment(String utrComment) {
+		this.utrComment = utrComment;
+	}
+
 	public int getNewState() {
 		return newState;
 	}
@@ -36,15 +44,30 @@ public class TicketResponseForm {
 	}
 
 	
-	
-	public boolean isModificationAllowed() {
-		return modificationAllowed;
+	public boolean isUtrCommentNeeded() {
+		return utrCommentNeeded;
 	}
 
-	public void setModificationAllowed(boolean modificationAllowed) {
-		this.modificationAllowed = modificationAllowed;
+	public void setUtrCommentNeeded(boolean isUtrCommentNeeded) {
+		this.utrCommentNeeded = isUtrCommentNeeded;
 	}
-	
+
+	public boolean isTicketsUserModificationAllowed() {
+		return ticketsUserModificationAllowed;
+	}
+
+	public void setTicketsUserModificationAllowed(boolean ticketsUserModificationAllowed) {
+		this.ticketsUserModificationAllowed = ticketsUserModificationAllowed;
+	}
+
+	public boolean isUtrUserModificationAllowed() {
+		return utrUserModificationAllowed;
+	}
+
+	public void setUtrUserModificationAllowed(boolean utrUserModificationAllowed) {
+		this.utrUserModificationAllowed = utrUserModificationAllowed;
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -55,10 +78,10 @@ public class TicketResponseForm {
 
 	@Override
 	public String toString() {
-		return "TicketResponseForm [comment=" + comment + ", newState=" + newState + "]";
+		return "TicketResponseForm [ticketsUserModificationAllowed=" + ticketsUserModificationAllowed
+				+ ", utrUserModificationAllowed=" + utrUserModificationAllowed + ", comment=" + comment
+				+ ", utrComment=" + utrComment + ", newState=" + newState + ", id=" + id + "]";
 	}
-
-	
 	
 }
 
