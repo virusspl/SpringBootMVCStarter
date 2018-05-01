@@ -51,7 +51,7 @@ public class BhpTicketsServiceImpl extends GenericServiceAdapter<BhpTicket, Inte
 	@Override
 	@Transactional
 	public List<BhpTicket> findPendingUtrTickets() {
-		List<BhpTicket> all = bhpTicketsRepository.findAllNotArchivedTickets();
+		List<BhpTicket> all = bhpTicketsRepository.findAllPendingTickets();
 		List<BhpTicket> result = new ArrayList<>();
 		for(BhpTicket ticket: all){
 			if(ticket.getAssignedUser().hasRole("ROLE_BHPTICKETSUTRUSER") || ticket.getState().getOrder()==30){

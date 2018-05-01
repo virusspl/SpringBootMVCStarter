@@ -50,6 +50,17 @@ public class BhpTicketsRepositoryImpl extends GenericRepositoryAdapter<BhpTicket
 	@Override
 	@SuppressWarnings("unchecked")
 	@Transactional
+	public List<BhpTicket> findAllPendingTickets() {
+		Criteria crit = currentSession().createCriteria(BhpTicket.class, "ticket");
+		crit.createAlias("ticket.state", "state");
+		crit.add(Restrictions.lt("state.order", 40));
+		return crit.list();
+	}
+	
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	@Transactional
 	public List<BhpTicket> findAllNotArchivedTickets() {
 		Criteria crit = currentSession().createCriteria(BhpTicket.class, "ticket");
 		crit.createAlias("ticket.state", "state");
@@ -66,5 +77,7 @@ public class BhpTicketsRepositoryImpl extends GenericRepositoryAdapter<BhpTicket
 		crit.add(Restrictions.ge("state.order", 90));
 		return crit.list();
 	}
+
+
 
 }

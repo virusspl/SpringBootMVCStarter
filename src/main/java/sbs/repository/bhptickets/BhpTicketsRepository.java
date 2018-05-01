@@ -13,6 +13,7 @@ public interface BhpTicketsRepository extends GenericRepository<BhpTicket,Intege
 	List<BhpTicket> findAllPendingTicketsByUser(User user);
 	List<BhpTicket> findAllNotArchivedTickets();
 	List<BhpTicket> findArchivedTickets();
+	List<BhpTicket> findAllPendingTickets();
 	
 }
 

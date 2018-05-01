@@ -430,8 +430,8 @@ public class BhpTicketsController {
 		utrComment.getTickets().add(ticket);
 		ticket.setState(utrComment);
 		ticket.setUpdateDate(new Timestamp(new java.util.Date().getTime()));
-		ticket.setUtrComment(ticketResponseForm.getUtrComment().trim() + textHelper.newLine() + "(" + userService.getAuthenticatedUser().getName() + ")");
-		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("bhp.tickets.confirm.success", null, locale));
+		ticket.setUtrComment(ticketResponseForm.getUtrComment().trim() + textHelper.newLine() + "[" + userService.getAuthenticatedUser().getName() + "]");
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/bhptickets/list";
 	}
 
