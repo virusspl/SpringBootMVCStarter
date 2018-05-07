@@ -42,6 +42,6 @@ public interface JdbcOracleX3Service {
 	public List<X3UtrFaultLine> findUtrFaultLinesAfterDate(Date startDate);
 	public List<X3UtrFaultLine> findAllUtrFaultLines();
 	public Map<String, X3ProductFinalMachine> findX3ProductFinalMachines(String company);
-	public List<Project> findAllProjectsProgressDesc();
-	public Project findProjectProgressById(int id);
+	public List<Project> findPendingProjectsProgress();
+	public Project findProjectProgressByNumber(String number);
 }

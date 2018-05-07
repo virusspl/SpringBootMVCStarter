@@ -252,76 +252,20 @@ public class VariousPagesController {
 			msg += "[role: " + buyOrdManager.getName() + "], ";
 		}
 		
-		Role ppSales = roleService.findByName("ROLE_PROPROG_SALES");
-		if (ppSales == null) {
-			ppSales = new Role();
-			ppSales.setName("ROLE_PROPROG_SALES");
-			roleService.save(ppSales);
-			msg += "[role: " + ppSales.getName() + "], ";
+		Role pprog = roleService.findByName("ROLE_PROPROG");
+		if (pprog == null) {
+			pprog = new Role();
+			pprog.setName("ROLE_PROPROG");
+			roleService.save(pprog);
+			msg += "[role: " + pprog.getName() + "], ";
 		}
 		
-		Role ppDrawingValidation = roleService.findByName("ROLE_PROPROG_DRAWINGVALIDATION");
-		if (ppDrawingValidation == null) {
-			ppDrawingValidation = new Role();
-			ppDrawingValidation.setName("ROLE_PROPROG_DRAWINGVALIDATION");
-			roleService.save(ppDrawingValidation);
-			msg += "[role: " + ppDrawingValidation.getName() + "], ";
-		}
-		
-		Role ppSalesOrder = roleService.findByName("ROLE_PROPROG_SALESORDER");
-		if (ppSalesOrder == null) {
-			ppSalesOrder = new Role();
-			ppSalesOrder.setName("ROLE_PROPROG_SALESORDER");
-			roleService.save(ppSalesOrder);
-			msg += "[role: " + ppSalesOrder.getName() + "], ";
-		}
-		
-		Role ppProductionPlan = roleService.findByName("ROLE_PROPROG_PRODUCTIONPLAN");
-		if (ppProductionPlan == null) {
-			ppProductionPlan = new Role();
-			ppProductionPlan.setName("ROLE_PROPROG_PRODUCTIONPLAN");
-			roleService.save(ppProductionPlan);
-			msg += "[role: " + ppProductionPlan.getName() + "], ";
-		}
-		
-		Role ppPurchase = roleService.findByName("ROLE_PROPROG_PURCHASE");
-		if (ppPurchase == null) {
-			ppPurchase = new Role();
-			ppPurchase.setName("ROLE_PROPROG_PURCHASE");
-			roleService.save(ppPurchase);
-			msg += "[role: " + ppPurchase.getName() + "], ";
-		}
-		
-		Role ppTechnology = roleService.findByName("ROLE_PROPROG_TECHNOLOGY");
-		if (ppTechnology == null) {
-			ppTechnology = new Role();
-			ppTechnology.setName("ROLE_PROPROG_TECHNOLOGY");
-			roleService.save(ppTechnology);
-			msg += "[role: " + ppTechnology.getName() + "], ";
-		}
-		
-		Role ppToolDrawing = roleService.findByName("ROLE_PROPROG_TOOLDRAWING");
-		if (ppToolDrawing == null) {
-			ppToolDrawing = new Role();
-			ppToolDrawing.setName("ROLE_PROPROG_TOOLDRAWING");
-			roleService.save(ppToolDrawing);
-			msg += "[role: " + ppToolDrawing.getName() + "], ";
-		}
-		
-		Role ppToolCreation = roleService.findByName("ROLE_PROPROG_TOOLCREATION");
-		if (ppToolCreation == null) {
-			ppToolCreation = new Role();
-			ppToolCreation.setName("ROLE_PROPROG_TOOLCREATION");
-			roleService.save(ppToolCreation);
-			msg += "[role: " + ppToolCreation.getName() + "], ";
-		}
-		
-		Role ppQualityCheck = roleService.findByName("ROLE_PROPROG_QUALITYCHECK");
-		if (ppQualityCheck == null) {
-			ppQualityCheck = new Role();
-			ppQualityCheck.setName("ROLE_PROPROG_QUALITYCHECK");
-			roleService.save(ppQualityCheck);
-			msg += "[role: " + ppQualityCheck.getName() + "], ";
+		Role pprogsuper = roleService.findByName("ROLE_PROPROGSUPERVISOR");
+		if (pprogsuper == null) {
+			pprogsuper = new Role();
+			pprogsuper.setName("ROLE_PROPROGSUPERVISOR");
+			roleService.save(pprogsuper);
+			msg += "[role: " + pprogsuper.getName() + "], ";
 		}
 		
 		Role movementsUser = roleService.findByName("ROLE_MOVEMENTSUSER");

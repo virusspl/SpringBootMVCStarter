@@ -877,26 +877,139 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	}
 
 	@Override
-	public List<Project> findAllProjectsProgressDesc() {
-			
-		// return treemap? comparator in Project (by number desc), 
-		
-		//         	item.setStartDateTime(x3UtrFaultLineDateConvert((Timestamp) row.get("XDATAIN_0"),(String)row.get("XORAIN_0")));
-		
-		/*
-		 * FOR STATE 1 = new, 2 = in progress, 3 = finished
-		 * if(((BigDecimal)row.get("YTBLOCCO_0")).intValue() == 2){
-    		fault.setFaultType(X3UtrFault.STOP_TYPE);
-    		
-    	}*/
-		// TODO Auto-generated method stub
-		return null;
+	public List<Project> findPendingProjectsProgress() {
+		String company = "ATW";
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				// main project info
+				+ "CAC.YCODPROG_0, " + "CAC.YDESCPROG_0, " + "CAC.YDTPROG_0, " + "CAC.YORAPROG_0, "
+				// client accept
+				+ "CAC.YACCCLI_0, " + "CAC.YDTACCCLI_0, " + "CAC.YORAACCCLI_0, "
+				// codification 
+				+ "CAC.YCODADR_0, " + "CAC.YDTCODADR_0, " + "CAC.YORACODADR_0, "
+				// drawing verified
+				+ "CAC.YDISVER_0, " + "CAC.YCODICE_0, " + "CAC.YDTUFFTEC_0, " + "CAC.YORAUFFTEC_0, "
+				// sales order
+				+ "CAC.YORDINE_0, " + "CAC.YPEZZIORD_0, " + "CAC.YDTORDINE_0, " + "CAC.YORAORDINE_0, "
+				// purchase plan
+				+ "CAC.YPREVISTO_0, " + "CAC.YDTPREVISTO_0, " + "CAC.YORAPREVISTO_0, "
+				// purchase
+				+ "CAC.YACQNEW_0, " + "CAC.YDTACQNEW_0, " + "CAC.YORAACQNEW_0, "
+				// tool drawing
+				+ "CAC.YATTREZ_0, " + "CAC.YDTATTREZ_0, " + "CAC.YORAATTREZ_0, "
+				// tool creation
+				+ "CAC.YATTROK_0, " + "CAC.YDTATTROK_0, " + "CAC.YORAATTROK_0, "
+				// technology
+				+ "CAC.YTECNOL_0, " + "CAC.YDTTECNOL_0, " + "CAC.YORATECNOL_0, "
+				// quality
+				+ "CAC.YQUALIT_0, " + "CAC.YDTQUALIT_0, " + "CAC.YORAQUALIT_0, "
+				// general project state
+				+ "CAC.YSTATOCA_0, "
+				// additional description (SIC)
+				+ "CAC.YDESCRIZIONE_0 "
+				// table
+				+ "FROM " + company + ".YCACANA CAC "
+				+ "WHERE CAC.YSTATOCA_0 < ?"
+				,
+                new Object[]{Project.STATE_FINISHED}
+				);
+        
+		List<Project> result = new ArrayList<>();
+
+        for(Map<String,Object> row: resultSet ){
+        	result.add(mapRowToProject(row));
+        }
+		return result;
+
 	}
 
 	@Override
-	public Project findProjectProgressById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Project findProjectProgressByNumber(String number) {
+		String company = "ATW";
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				// main project info
+				+ "CAC.YCODPROG_0, " + "CAC.YDESCPROG_0, " + "CAC.YDTPROG_0, " + "CAC.YORAPROG_0, "
+				// client accept
+				+ "CAC.YACCCLI_0, " + "CAC.YDTACCCLI_0, " + "CAC.YORAACCCLI_0, "
+				// codification 
+				+ "CAC.YCODADR_0, " + "CAC.YDTCODADR_0, " + "CAC.YORACODADR_0, "
+				// drawing verified
+				+ "CAC.YDISVER_0, " + "CAC.YCODICE_0, " + "CAC.YDTUFFTEC_0, " + "CAC.YORAUFFTEC_0, "
+				// sales order
+				+ "CAC.YORDINE_0, " + "CAC.YPEZZIORD_0, " + "CAC.YDTORDINE_0, " + "CAC.YORAORDINE_0, "
+				// purchase plan
+				+ "CAC.YPREVISTO_0, " + "CAC.YDTPREVISTO_0, " + "CAC.YORAPREVISTO_0, "
+				// purchase
+				+ "CAC.YACQNEW_0, " + "CAC.YDTACQNEW_0, " + "CAC.YORAACQNEW_0, "
+				// tool drawing
+				+ "CAC.YATTREZ_0, " + "CAC.YDTATTREZ_0, " + "CAC.YORAATTREZ_0, "
+				// tool creation
+				+ "CAC.YATTROK_0, " + "CAC.YDTATTROK_0, " + "CAC.YORAATTROK_0, "
+				// technology
+				+ "CAC.YTECNOL_0, " + "CAC.YDTTECNOL_0, " + "CAC.YORATECNOL_0, "
+				// quality
+				+ "CAC.YQUALIT_0, " + "CAC.YDTQUALIT_0, " + "CAC.YORAQUALIT_0, "
+				// general project state
+				+ "CAC.YSTATOCA_0, "
+				// additional description (SIC)
+				+ "CAC.YDESCRIZIONE_0 "
+				// table
+				+ "FROM " + company + ".YCACANA CAC "
+				+ "WHERE CAC.YCODPROG_0 = ?"
+				,
+                new Object[]{number}
+				);
+        
+		Project result = new Project();
+        for(Map<String,Object> row: resultSet ){
+        	result = mapRowToProject(row);
+        }
+		return result;
+	}
+	
+	private Project mapRowToProject(Map<String,Object> row){
+		boolean tmpBoolean;
+		
+		Project item = new Project();
+		item.setProjectNumber((String)row.get("YCODPROG_0"));
+    	item.setProjectDescription((String)row.get("YDESCPROG_0"));
+    	item.setProjectCreationDate(x3UtrFaultLineDateConvert((Timestamp) row.get("YDTPROG_0"),(String)row.get("YORAPROG_0")));
+    	tmpBoolean = ((BigDecimal)row.get("YACCCLI_0")).intValue() == 2 ? true : false;
+    	item.setClientAccept(tmpBoolean);
+    	item.setClientAcceptDate(x3UtrFaultLineDateConvert((Timestamp) row.get("YDTACCCLI_0"),(String)row.get("YORAACCCLI_0")));
+    	tmpBoolean = ((BigDecimal)row.get("YCODADR_0")).intValue() == 2 ? true : false;
+    	item.setCodification(tmpBoolean);
+    	item.setCodificationDate(x3UtrFaultLineDateConvert((Timestamp) row.get("YDTCODADR_0"),(String)row.get("YORACODADR_0")));
+    	tmpBoolean = ((BigDecimal)row.get("YDISVER_0")).intValue() == 2 ? true : false;
+    	item.setDrawingsVerified(tmpBoolean);
+    	item.setDrawingsVerifiedCode((String)row.get("YCODICE_0"));
+    	item.setDrawingsVerifiedDate(x3UtrFaultLineDateConvert((Timestamp) row.get("YDTUFFTEC_0"),(String)row.get("YORAUFFTEC_0")));
+    	tmpBoolean = ((BigDecimal)row.get("YORDINE_0")).intValue() == 2 ? true : false;
+    	item.setSalesOrder(tmpBoolean);
+    	item.setSalesOrderQuantity(((BigDecimal)row.get("YPEZZIORD_0")).intValue());
+    	item.setSalesOrderDate(x3UtrFaultLineDateConvert((Timestamp) row.get("YDTORDINE_0"),(String)row.get("YORAORDINE_0")));
+    	tmpBoolean = ((BigDecimal)row.get("YPREVISTO_0")).intValue() == 2 ? true : false;
+    	item.setPurchasePlan(tmpBoolean);
+    	item.setPurchasePlanDate(x3UtrFaultLineDateConvert((Timestamp) row.get("YDTPREVISTO_0"),(String)row.get("YORAPREVISTO_0")));
+    	tmpBoolean = ((BigDecimal)row.get("YACQNEW_0")).intValue() == 2 ? true : false;
+    	item.setNewPurchase(tmpBoolean);
+    	item.setNewPurchaseDate(x3UtrFaultLineDateConvert((Timestamp) row.get("YDTACQNEW_0"),(String)row.get("YORAACQNEW_0")));        	
+		item.setToolDrawing(((BigDecimal)row.get("YATTREZ_0")).intValue());
+		item.setToolDrawingDate(x3UtrFaultLineDateConvert((Timestamp) row.get("YDTATTREZ_0"),(String)row.get("YORAATTREZ_0")));
+		tmpBoolean = ((BigDecimal)row.get("YATTROK_0")).intValue() == 2 ? true : false;
+    	item.setToolCreation(tmpBoolean);
+    	item.setToolCreationDate(x3UtrFaultLineDateConvert((Timestamp) row.get("YDTATTROK_0"),(String)row.get("YORAATTROK_0")));			
+		tmpBoolean = ((BigDecimal)row.get("YTECNOL_0")).intValue() == 2 ? true : false;
+    	item.setTechnology(tmpBoolean);
+    	item.setTechnologyDate(x3UtrFaultLineDateConvert((Timestamp) row.get("YDTTECNOL_0"),(String)row.get("YORATECNOL_0")));
+		tmpBoolean = ((BigDecimal)row.get("YQUALIT_0")).intValue() == 2 ? true : false;
+    	item.setQuality(tmpBoolean);
+    	item.setQualityDate(x3UtrFaultLineDateConvert((Timestamp) row.get("YDTQUALIT_0"),(String)row.get("YORAQUALIT_0")));
+		item.setProjectState(((BigDecimal)row.get("YSTATOCA_0")).intValue());
+    	item.setAddidionalDescription((String)row.get("YDESCRIZIONE_0"));
+
+    	return item;
 	}
 
 }

@@ -156,13 +156,13 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	}
 
 	@Override
-	public List<Project> findAllProjectsProgressDesc() {
-		return jdbcOracleX3Repository.findAllProjectsProgressDesc();
+	public List<Project> findPendingProjectsProgress() {
+		return jdbcOracleX3Repository.findPendingProjectsProgress();
 	}
 
 	@Override
-	public Project findProjectProgressById(int id) {
-		return jdbcOracleX3Repository.findProjectProgressById(id);
+	public Project findProjectProgressByNumber(String number) {
+		return jdbcOracleX3Repository.findProjectProgressByNumber(number);
 	}
 
 

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"></meta>
+<style>
+table {
+	width: 100%;
+}
+
+.color {
+	background: #5AC4F2;
+	color: #F3FBFE;
+	font-weight: bold;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+a {
+	color: #3AA4D2;
+}
+
+td {
+	padding: 5px 10px 5px 10px;
+	border: 1px solid gray;
+}
+
+.desccell {
+	width: 70%;
+}
+
+.progresscell {
+	width: 7%;
+}
+
+.datecell {
+	width: 15%;
+}
+
+.buttoncell {
+	width: 8%;
+}
+
+.missingborder {
+	border: 2px solid #cc3300;
+}
+
+#footer {
+	font-size: 80%;
+}
+</style>
+</head>
+<body>
+	<table>
+		<!-- PAGE TITLE -->
+		<tr class="color">
+			<td>
+				<h1>Oczekujące projekty</h1>
+			</td>
+		</tr>
+		<tr>
+			<td><span> Poniżej znajduje się lista projektów
+					oczekujących na podjęcie dalszych kroków. Po kliknięciu w
+					odpowiedni link, w przeglądarce internetowej zostanie otwarty
+					szczegółowy opis projektu </span></td>
+		</tr>
+	</table>
+	<!-- USERS LOOP -->
+	<table th:each="item : ${projects}">
+		<tr>
+			<td class="color" colspan="4"><span
+				th:text="${item.project.projectNumber}">title</span></td>
+		</tr>
+		<tr>
+			<td class="desccell"><span
+				th:text="${item.project.projectDescription}"></span></td>
+			<td class="progresscell"><span th:text="|${item.progress}%|"></span>
+			</td>
+			<td class="datecell"><span
+				th:text="${#dates.format(item.project.projectCreationDate, 'yyyy.MM.dd')}"></span>
+			</td>
+			<td class="buttoncell"><a
+				th:href="|${host}:8080/@{'~/adr/proprog/view/' + ${item.project.projectNumber}}|">
+					<span>Zobacz</span>
+			</a></td>
+		</tr>
+		<tr>
+			<td colspan="4">
+				<span 
+					th:if="!${item.project.clientAccept}"
+					th:text="#{proprog.view.step.clientaccept}" 
+				class="missingborder">text</span>
+				<span 
+					th:if="!${item.project.codification}"
+					th:text="#{proprog.view.step.codification}" 
+				class="missingborder">text</span>
+				<span 
+					th:if="!${item.project.drawingsVerified}"
+					th:text="#{proprog.view.step.drawingsverified}" 
+				class="missingborder">text</span>
+				<span
+					th:if="!${item.project.salesOrder}" 
+					th:text="#{proprog.view.step.salesorder}" 
+				class="missingborder">text</span>
+				todo
+			</td>
+		</tr>
+
+	</table>
+	<!-- FOOTER -->
+	<table>
+		<tr id="footer">
+			<td class="color"><span>Mail został wygenerowany
+					automatycznie przez aplikację webową ADR Polska S.A., moduł
+					podglądu postępu projektów. Proszę nie odpowiadać na tę wiadomość.</span></td>
+		</tr>
+	</table>
+</body>
+</html>

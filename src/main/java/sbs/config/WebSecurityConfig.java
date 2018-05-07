@@ -102,23 +102,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"ADMIN", 
 				"MOVEMENTSUSER"
 				)
-		.antMatchers("/proprog/create/**")
+		.antMatchers("/proprog/sendemails/**")
 		.hasAnyRole(
 				"ADMIN", 
-				"PROPROG_SALES"
+				"PROPROGSUPERVISOR"
 				)
 		.antMatchers("/proprog/**")
 		.hasAnyRole(
 				"ADMIN", 
-				"PROPROG_SALES",
-				"PROPROG_DRAWINGVALIDATION",
-				"PROPROG_SALESORDER",
-				"PROPROG_PRODUCTIONPLAN",
-				"PROPROG_PURCHASE",
-				"PROPROG_TECHNOLOGY",
-				"PROPROG_TOOLDRAWING",
-				"PROPROG_TOOLCREATION",
-				"PROPROG_QUALITYCHECK"
+				"PROPROG",
+				"PROPROGSUPERVISOR"
 				)
 		.antMatchers("/utr/**")
 		.hasAnyRole(

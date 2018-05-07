@@ -64,7 +64,7 @@ public class BhpTicketsController {
 
 	@RequestMapping("/sendemails")
 	@Transactional
-	public String sendEmails(HttpServletRequest request) throws MessagingException, UnknownHostException {
+	public String sendEmails(HttpServletRequest request, RedirectAttributes redirectAttrs, Locale locale) throws MessagingException, UnknownHostException {
 		Set<User> users = bhpTicketsService.findAllPendingTicketsUsers();
 		ArrayList<UserTicketsHolder> holders = new ArrayList<>();
 		ArrayList<String> mailingList = new ArrayList<>();
@@ -87,6 +87,9 @@ public class BhpTicketsController {
 			context.setVariable("host", InetAddress.getLocalHost().getHostAddress());
 	        String body = templateEngine.process("bhptickets/mailtemplate", context);
 	        mailService.sendEmail("webapp@atwsystem.pl", mailingList.toArray(new String[0]), supervisorsMailingList.toArray(new String[0]), "ADR Polska S.A. - BHP", body);
+	        
+	        redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("email.sent", null, locale));
+	        
 		return "redirect:/bhptickets/dispatch";
 	}
 	

@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,6 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class TicketCreateForm {
 	
 	@NotEmpty
+	@Size(min = 3, max = 100)
 	String title;
 	@NotEmpty
 	String description;
