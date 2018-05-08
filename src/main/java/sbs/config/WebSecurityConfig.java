@@ -62,7 +62,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/bhptickets/getphoto/**",
 				"/wakesurvey/dosurvey/**",
 				"/weldlog/**",
-				"/test/**"
+				"/test/**",
+				"/proprog/**"
 				)
 		.permitAll()
 		.antMatchers("/bhptickets/edit/**", 
@@ -105,12 +106,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.antMatchers("/proprog/sendemails/**")
 		.hasAnyRole(
 				"ADMIN", 
-				"PROPROGSUPERVISOR"
-				)
-		.antMatchers("/proprog/**")
-		.hasAnyRole(
-				"ADMIN", 
-				"PROPROG",
 				"PROPROGSUPERVISOR"
 				)
 		.antMatchers("/utr/**")

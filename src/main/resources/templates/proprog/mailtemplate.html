@@ -43,7 +43,7 @@ td {
 }
 
 .missingborder {
-	border: 2px solid #cc3300;
+	border: 2px solid #3AA4D2;
 }
 
 #footer {
@@ -61,9 +61,11 @@ td {
 		</tr>
 		<tr>
 			<td><span> Poniżej znajduje się lista projektów
-					oczekujących na podjęcie dalszych kroków. Po kliknięciu w
+					oczekujących na podjęcie dalszych kroków. Niezatwierdzone etapy są wypisane
+					kolejno w ramkach, bezpośrednio pod każdym z projektów. Po kliknięciu w
 					odpowiedni link, w przeglądarce internetowej zostanie otwarty
-					szczegółowy opis projektu </span></td>
+					szczegółowy opis projektu. Aby potwierdzić wykonanie swojego zadania, 
+					proszę zalogować się w X3 do odpowiedniego modułu</span></td>
 		</tr>
 	</table>
 	<!-- USERS LOOP -->
@@ -103,7 +105,30 @@ td {
 					th:if="!${item.project.salesOrder}" 
 					th:text="#{proprog.view.step.salesorder}" 
 				class="missingborder">text</span>
-				todo
+				<span
+					th:if="!${item.project.purchasePlan}" 
+					th:text="#{proprog.view.step.purchaseplan}" 
+				class="missingborder">text</span>
+				<span
+					th:if="!${item.project.newPurchase}" 
+					th:text="#{proprog.view.step.newpurchase}" 
+				class="missingborder">text</span>
+				<span
+					th:if="${item.project.toolDrawing} &lt; 2" 
+					th:text="#{proprog.view.step.tooldrawing}" 
+				class="missingborder">text</span>
+				<span
+					th:if="(${item.project.toolDrawing} == 2) and !${item.project.toolCreation}" 
+					th:text="#{proprog.view.step.toolcreation}" 
+				class="missingborder">text</span>
+				<span
+					th:if="!${item.project.technology}" 
+					th:text="#{proprog.view.step.technology}" 
+				class="missingborder">text</span>
+				<span
+					th:if="!${item.project.quality}" 
+					th:text="#{proprog.view.step.quality}" 
+				class="missingborder">text</span>
 			</td>
 		</tr>
 

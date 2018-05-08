@@ -78,5 +78,9 @@
    maxBytesLocalHeap="23m"
    timeToLiveSeconds="86400">
    </cache>
+   <cache name="x3PendingProjectsProgress"
+   maxBytesLocalHeap="1m"
+   timeToLiveSeconds="86400">
+   </cache>
    
 </ehcache>
