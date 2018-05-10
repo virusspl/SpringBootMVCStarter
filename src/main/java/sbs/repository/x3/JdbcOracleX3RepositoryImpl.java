@@ -631,6 +631,10 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "OR "
 				+ company + ".ITMMASTER.TCLCOD_0 = ? "
 				+ ") "
+				+ "AND "
+				+ company + ".YCHGSTKGX.YFLGTRS_0 = 1 "
+				+ "AND "
+				+ company + ".YCHGSTKGX.YVCRTYP_0 > 0 "
 				+ "ORDER BY " 
 				+ company + ".YCHGSTKGX.CREDAT_0, " 
 				+ company + ".YCHGSTKGX.ITMREF_0",
