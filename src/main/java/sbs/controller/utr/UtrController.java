@@ -46,7 +46,15 @@ public class UtrController {
 	@Autowired
 	DateHelper dateHelper;
 
+	public static final int MACHINE_BODIES = 1;
+	public static final int MACHINE_ARMS = 2;
+	public static final int MACHINE_EXPANDERS = 3;
+	
 	List<String> excludedMachines;
+	List<String> bodiesMachines;
+	List<String> armsMachines;
+
+	
 	int criticalMachinesCnt;
 	int nonCriticalMachinesCnt;
 	int hoursInShift;
@@ -54,6 +62,8 @@ public class UtrController {
 	@Autowired
 	public UtrController(Environment env) {
 		excludedMachines = Arrays.asList(env.getRequiredProperty("utr.machines.mtbfexcluded").split(";"));
+		bodiesMachines = Arrays.asList(env.getRequiredProperty("utr.machineschart.bodies").split(";"));
+		armsMachines = Arrays.asList(env.getRequiredProperty("utr.machineschart.arms").split(";"));
 		criticalMachinesCnt = Integer.parseInt(env.getRequiredProperty("utr.machines.criticalCnt"));
 		nonCriticalMachinesCnt = Integer.parseInt(env.getRequiredProperty("utr.machines.nonCriticalCnt"));
 		hoursInShift = Integer.parseInt(env.getRequiredProperty("utr.hoursInShift"));
@@ -226,28 +236,74 @@ public class UtrController {
 		ArrayList<X3UtrFault> periodFaults = getFaultsInPeriod(faults, start, end);
 
 		// create empty lines
-		ArrayList<ChartLine> chartLines = new ArrayList<>();
+		int linesCount = 0;
+		ArrayList<ChartLine> bodiesLines = new ArrayList<>();
+		ArrayList<ChartLine> armsLines = new ArrayList<>();
+		ArrayList<ChartLine> expandersLines = new ArrayList<>();
 		ChartLine line;
+		
 		for (X3UtrMachine m : machines.values()) {
 			if (m.getCodeNicim() == null) {
-				// if Nicim code empty - skip
+				// if NICIM code empty - skip
 				continue;
 			}
-			if (m.getCodeNicim().startsWith("ZGT") || m.getCodeNicim().startsWith("ROB")) {
+			switch (getMachineTypeByNicimCode(m.getCodeNicim())){
+			case MACHINE_BODIES:
+				line = new ChartLine(m, periodLength);
+				calculateTimeAvailable(line, periodFaults, start, end);
+				linesCount++;
+				bodiesLines.add(line);
+				break;
+			case MACHINE_ARMS:
+				line = new ChartLine(m, periodLength);
+				calculateTimeAvailable(line, periodFaults, start, end);
+				linesCount++;
+				armsLines.add(line);
+				break;
+			case MACHINE_EXPANDERS:
+				line = new ChartLine(m, periodLength);
+				calculateTimeAvailable(line, periodFaults, start, end);
+				linesCount++;
+				expandersLines.add(line);
+				break;
+			default:
+				break;
+			}
+			
+			//ArrayList<ChartLine> chartLines = new ArrayList<>();			
+			/*if (m.getCodeNicim().startsWith("ZGT") || m.getCodeNicim().startsWith("ROB")) {
 				line = new ChartLine(m, periodLength);
 				calculateTimeAvailable(line, periodFaults, start, end);
 				chartLines.add(line);
 			}
+			*/
 		}
 
 		model.addAttribute("titleDates", datesInPeriod);
 		model.addAttribute("titleColors", colorsInPeriod);
-		model.addAttribute("chartLines", chartLines);
 		model.addAttribute("periodLength", periodLength);
+		model.addAttribute("linesCount", linesCount);
+		model.addAttribute("bodiesLines", bodiesLines);
+		model.addAttribute("armsLines", armsLines);
+		model.addAttribute("expandersLines", expandersLines);
 
 		return "utr/stats";
 	}
 
+	private int getMachineTypeByNicimCode(String machineCode){
+		if(machineCode.startsWith("ZGT")){
+			return MACHINE_EXPANDERS;
+		}
+		if(bodiesMachines.contains(machineCode)){
+			return MACHINE_BODIES;
+		}
+		if(armsMachines.contains(machineCode)){
+			return MACHINE_ARMS;
+		}
+		
+		return 0;
+	}
+	
 	@RequestMapping(value = "/current", method = RequestMethod.GET)
 	public String currentFaultsMonitor(Model model, Locale locale) {
 

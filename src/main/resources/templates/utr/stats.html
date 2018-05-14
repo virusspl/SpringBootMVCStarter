@@ -441,10 +441,10 @@
 			</div>
 		</div>
 		<!-- /PANELS -->
-		<!-- CHART -->
 
-		<div class="row margin-top-10"
-			th:if="(${chartLines} != null) and (${#lists.size(chartLines)} > 0) ">
+
+		<!-- CHART -->
+		<div class="row margin-top-10" th:if="${linesCount}">
 			<div class="col-xs-12">
 				<h3 class="text-primary" th:text="|#{utr.machineschart}|">results</h3>
 			</div>
@@ -469,7 +469,13 @@
 							</tr>
 						</tfoot>
 						<tbody>
-							<tr th:each="line : ${chartLines}">
+						<!-- BODIES -->
+							<tr>
+								<td th:colspan="${#lists.size(titleColors)+1}"
+									style="font-weight: bold; background-color: #E6E6E6;"><span
+									th:text="#{utr.machineschart.bodies}"></span></td>
+							</tr>
+							<tr th:each="line : ${bodiesLines}">
 								<td><span th:text="${line.machine.codeNicim}"></span></td>
 								<td th:each="val,iter: ${line.values}"><span
 									th:if="${val=='24:00'}" th:text="${val}"
@@ -481,6 +487,45 @@
 									data-placement="top" th:title="${line.faults[iter.index]}"></span>
 								</td>
 							</tr>
+						<!-- /BODIES -->
+						<!-- ARMS -->
+							<tr>
+								<td th:colspan="${#lists.size(titleColors)+1}"
+									style="font-weight: bold; background-color: #E6E6E6;"><span
+									th:text="#{utr.machineschart.arms}"></span></td>
+							</tr>
+							<tr th:each="line : ${armsLines}">
+								<td><span th:text="${line.machine.codeNicim}"></span></td>
+								<td th:each="val,iter: ${line.values}"><span
+									th:if="${val=='24:00'}" th:text="${val}"
+									style="color: #00dd00;"></span> <span th:if="${val=='00:00'}"
+									th:text="${val}" style="color: #dd0000" data-toggle="tooltip"
+									data-placement="top" th:title="${line.faults[iter.index]}"></span>
+									<span th:if="${val!='00:00' and val!='24:00'}" th:text="${val}"
+									style="color: #0000dd" data-toggle="tooltip"
+									data-placement="top" th:title="${line.faults[iter.index]}"></span>
+								</td>
+							</tr>
+						<!-- /ARMS -->							
+						<!-- EXPANDERS -->							
+							<tr>
+								<td th:colspan="${#lists.size(titleColors)+1}"
+									style="font-weight: bold; background-color: #E6E6E6;"><span
+									th:text="#{utr.machineschart.expanders}"></span></td>
+							</tr>
+							<tr th:each="line : ${expandersLines}">
+								<td><span th:text="${line.machine.codeNicim}"></span></td>
+								<td th:each="val,iter: ${line.values}"><span
+									th:if="${val=='24:00'}" th:text="${val}"
+									style="color: #00dd00;"></span> <span th:if="${val=='00:00'}"
+									th:text="${val}" style="color: #dd0000" data-toggle="tooltip"
+									data-placement="top" th:title="${line.faults[iter.index]}"></span>
+									<span th:if="${val!='00:00' and val!='24:00'}" th:text="${val}"
+									style="color: #0000dd" data-toggle="tooltip"
+									data-placement="top" th:title="${line.faults[iter.index]}"></span>
+								</td>
+							</tr>
+						<!-- EXPANDERS -->							
 						</tbody>
 					</table>
 				</div>
