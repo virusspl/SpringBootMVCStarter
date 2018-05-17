@@ -79,11 +79,11 @@
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-xs-12 col-xs-offset-0">
-				<h2 th:text="#{movements.ship.title}" class="text-primary">Hello
+				<h2 th:text="#{movements.main.title}" class="text-primary">Hello
 					on a page</h2>
 			</div>
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
-				<span th:text="#{movements.ship.message}"> Welcome message </span>
+				<span th:text="#{movements.main.message}"> Welcome message </span>
 			</div>
 			<!-- BACK TO MAIN PAGE -->
 			<a th:href="@{/}" class="btn btn-link btn-sm"> <span
@@ -93,7 +93,7 @@
 		</div>
 		<div class="underline"></div>
 		<!-- FORM -->
-		<form th:action="@{/movements/shipment}" method="post"
+		<form th:action="@{/movements/calculate}" method="post"
 			th:object="${movementsForm}">
 			<!-- DATES RANGE -->
 			<div class="row margin-top-10">
@@ -134,18 +134,53 @@
 						class="glyphicon glyphicon-menu-left"></span> <span
 						th:text="#{action.back}">back</span>
 					</a>
-					<button class="btn btn-primary btn-sm" type="submit" name="save">
-						<span class="glyphicon glyphicon-search"></span> <span
-							th:text="#{action.search}">search</span>
-					</button>
+					<div class="shipment_buttons margin-top-5"
+						sec:authorize="hasAnyRole(
+				'ROLE_ADMIN',  
+				'ROLE_MOVEMENTSSUPERUSER', 
+				'ROLE_MOVEMENTSSHIPUSER'
+				)">
+						<button class="btn btn-primary btn-sm" type="submit"
+							name="shipmov">
+							<span class="glyphicon glyphicon-sort"></span> <span
+								th:text="#{movements.shipment}">search</span>
+						</button>
+						<button class="btn btn-primary btn-sm" type="submit"
+							name="shipweightstats">
+							<span class="glyphicon glyphicon-arrow-up"></span> <span
+								th:text="#{movements.shipweightstats}">search</span>
+						</button>
+						<button class="btn btn-primary btn-sm" type="submit"
+							name="shipweightdetails">
+							<span class="glyphicon glyphicon-resize-full"></span> <span
+								th:text="#{movements.shipweightdetails}">search</span>
+						</button>
+					</div>
+					<div class="reception_buttons margin-top-5"
+						sec:authorize="hasAnyRole(
+				'ROLE_ADMIN',  
+				'ROLE_MOVEMENTSSUPERUSER', 
+				'ROLE_MOVEMENTSRCPUSER'
+				)">
+						<button class="btn btn-primary btn-sm" type="submit"
+							name="rcpweightstats">
+							<span class="glyphicon glyphicon-arrow-down"></span> <span
+								th:text="#{movements.rcpweightstats}">search</span>
+						</button>
+						<button class="btn btn-primary btn-sm" type="submit"
+							name="rcpweightdetails">
+							<span class="glyphicon glyphicon-resize-small"></span> <span
+								th:text="#{movements.rcpweightdetails}">search</span>
+						</button>
+					</div>
 				</div>
 			</div>
 		</form>
-		<!-- RESULTS -->
+		<!-- RESULTS FOR SHIPMENT MOVEMENTS -->
 		<div th:if="${movements}">
 			<div class="row margin-top-10">
 				<div class="col-xs-12">
-					<h3 class="text-primary" th:text="#{movements.result}">result</h3>
+					<h3 class="text-primary" th:text="#{movements.shipment}">result</h3>
 				</div>
 			</div>
 			<div class="underline"></div>
@@ -216,12 +251,11 @@
 					<span th:text="#{movements.unassignedMachines}">value</span>
 				</div>
 				<div class="col-xs-10">
-					<span
-						th:text="${unassignedMachines}"
-						class="bold">value</span>
+					<span th:text="${unassignedMachines}" class="bold">value</span>
 				</div>
 			</div>
-			<div class="DETAILS" sec:authorize="hasAnyRole('ROLE_OWNER', 'ROLE_ADMIN', 'ROLE_MOVEMENTSSUPERUSER')">
+			<div class="DETAILS"
+				sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MOVEMENTSSUPERUSER')">
 				<div class="row margin-top-10">
 					<div class="col-xs-12">
 						<h3 class="text-primary" th:text="#{movements.list}">list</h3>
@@ -275,6 +309,47 @@
 				</div>
 			</div>
 		</div>
-	</div>
+		<!-- /RESULTS FOR SHIPMENT MOVEMENTS -->
+		<!-- RESULTS WEIGHT -->
+			<!-- for rcp weight -->
+			<div th:if="${weight}">
+			<div class="row margin-top-10">
+				<div class="col-xs-12">
+					<h3 class="text-primary" th:text="#{movements.list}">result</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="table-responsive">
+						<table id="srv" class="display">
+							<thead>
+								<tr>
+									<th th:text="#{movements.date}">head</th>
+									<th th:text="#{movements.worker}">head</th>
+									<th th:text="#{movements.quantity}">head</th>
+								</tr>
+							</thead>
+							<tfoot>
+								<tr>
+									<th th:text="#{movements.date}">head</th>
+									<th th:text="#{movements.worker}">head</th>
+									<th th:text="#{movements.quantity}">head</th>
+								</tr>
+							</tfoot>
+							<tbody>
+								<tr th:each="wei : ${weight}">
+									<td><span
+										th:text="${#dates.format(wei.date, 'dd.MM.yyyy')}"></span></td>
+									<td><span th:text="${wei.userName}"></span></td>
+									<td><span th:text="${wei.numberOfLabels}"></span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			</div>
+		</div>
+		<!-- /RESULTS WEIGHT -->
 </body>
 </html>

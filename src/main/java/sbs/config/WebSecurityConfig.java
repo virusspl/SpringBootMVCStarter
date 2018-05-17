@@ -101,7 +101,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.antMatchers("/movements/**")
 		.hasAnyRole(
 				"ADMIN", 
-				"MOVEMENTSUSER"
+				"MOVEMENTSSUPERUSER",
+				"MOVEMENTSSHIPUSER",
+				"MOVEMENTSRCPUSER"
 				)
 		.antMatchers("/proprog/sendemails/**")
 		.hasAnyRole(

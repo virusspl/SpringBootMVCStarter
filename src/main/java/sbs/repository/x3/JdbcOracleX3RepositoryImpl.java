@@ -31,7 +31,8 @@ import sbs.model.x3.X3UtrFault;
 import sbs.model.x3.X3UtrFaultLine;
 import sbs.model.x3.X3UtrMachine;
 import sbs.model.x3.X3UtrWorker;
-
+import sbs.model.x3.X3WarehouseWeightLine;
+import sbs.service.x3.JdbcOracleX3Service;
 
 @Repository
 public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
@@ -41,7 +42,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	 protected JdbcTemplate jdbc;
 	 @Autowired
 	 private DateHelper dateHelper; 
-
+	 
 	@Override
 	public List<String> findAllUsers(String company) {
         List<Map<String,Object>> resultSet = jdbc.queryForList(
@@ -1015,5 +1016,101 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
     	return item;
 	}
+	
+	@Override
+	public List<X3WarehouseWeightLine> findWeightSumLine(Date startDate, Date endDate, int weightQueryType) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				getWeightQuery(startDate, endDate, weightQueryType)
+				,
+                new Object[]{
+                		"ATABDIV", 
+                		"LNGDES", "POL", "6285",
+                		dateHelper.getTime(startDate), 
+                		dateHelper.getTime(endDate) 
+                		}
+				);
+		List<X3WarehouseWeightLine> result = new ArrayList<>();
+		X3WarehouseWeightLine item = null;
+        for(Map<String,Object> row: resultSet ){
+        	item = new X3WarehouseWeightLine();
+        	item.setDate((Timestamp)row.get("CREDAT_0"));
+        	item.setCardNumber(((String)row.get("CARDNR_0")));
+        	item.setUserName(((String)row.get("TEXTE_0")));
+        	item.setNumberOfLabels(((BigDecimal)row.get("QUANTITY")).intValue());
+        	
+        	result.add(item);
+        }
+		return result;
+	}
+
+	private String getWeightQuery(Date startDate, Date endDate, int weightQueryType){
+		String query = "";
+		String company = "ATW";
+		
+		if(weightQueryType == JdbcOracleX3Service.WEIGHT_QUERY_RECEPTION){
+			// 1 = reception
+			query =
+					"SELECT "
+					+ "PRC.CREDAT_0, "
+					+ "TXT.TEXTE_0, "
+					+ "Count(PRC.YPRCNUM_0) AS QUANTITY, "
+					+ "PRC.CARDNR_0 "
+					+ "FROM "
+					+ company + ".YPARCELA PRC INNER JOIN " + company + ".ATEXTRA TXT "
+					+ "ON "
+					+ "PRC.CARDNR_0 = TXT.IDENT2_0 "
+					+ "WHERE "
+					+ "TXT.CODFIC_0 = ? "
+					+ "AND "
+					+ "TXT.ZONE_0 = ? "
+					+ "AND "
+					+ "TXT.LANGUE_0 = ? "
+					+ "AND "
+					+ "TXT.IDENT1_0 = ? "
+					+ "GROUP BY "
+					+ "PRC.CREDAT_0, "
+					+ "TXT.TEXTE_0, "
+					+ "PRC.CARDNR_0 "
+					+ "HAVING "
+					+ "PRC.CREDAT_0 >= ? AND PRC.CREDAT_0 <= ? "
+					+ "ORDER BY "
+					+ "PRC.CREDAT_0"
+					;
+		}
+		else if (weightQueryType == JdbcOracleX3Service.WEIGHT_QUERY_SHIPMENT){
+			// 2 = reception details	
+			query =
+					"SELECT "
+					+ "PRC.CREDAT_0, "
+					+ "TXT.TEXTE_0, "
+					+ "Count(PRC.YPRCNUM_0) AS QUANTITY, "
+					+ "PRC.CARDNR_0 "
+					+ "FROM "
+					+ company + ".YPARCEL PRC INNER JOIN " + company + ".ATEXTRA TXT "
+					+ "ON "
+					+ "PRC.CARDNR_0 = TXT.IDENT2_0 "
+					+ "WHERE "
+					+ "TXT.CODFIC_0 = ? "
+					+ "AND "
+					+ "TXT.ZONE_0 = ? "
+					+ "AND "
+					+ "TXT.LANGUE_0 = ? "
+					+ "AND "
+					+ "TXT.IDENT1_0 = ? "
+					+ "GROUP BY "
+					+ "PRC.CREDAT_0, "
+					+ "TXT.TEXTE_0, "
+					+ "PRC.CARDNR_0 "
+					+ "HAVING "
+					+ "PRC.CREDAT_0 >= ? AND PRC.CREDAT_0 <= ? "
+					+ "ORDER BY "
+					+ "PRC.CREDAT_0"
+					;
+		}
+		
+		return query;
+	}
+		
+	
 
 }

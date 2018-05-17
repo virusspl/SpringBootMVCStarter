@@ -21,6 +21,7 @@ import sbs.model.x3.X3UtrFault;
 import sbs.model.x3.X3UtrFaultLine;
 import sbs.model.x3.X3UtrMachine;
 import sbs.model.x3.X3UtrWorker;
+import sbs.model.x3.X3WarehouseWeightLine;
 import sbs.repository.x3.JdbcOracleX3Repository;
 
 @Service
@@ -166,5 +167,9 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 		return jdbcOracleX3Repository.findProjectProgressByNumber(number);
 	}
 
+	@Override
+	public List<X3WarehouseWeightLine> findWeightSumLine(Date startDate, Date endDate, int weightQueryType) {
+		return jdbcOracleX3Repository.findWeightSumLine(startDate, endDate, weightQueryType);
+	}
 
 }

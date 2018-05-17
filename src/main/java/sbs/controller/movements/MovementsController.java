@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ShipmentMovement;
+import sbs.model.x3.X3WarehouseWeightLine;
 import sbs.service.dictionary.X3HistoryPriceService;
 import sbs.service.x3.JdbcOracleX3Service;
 
@@ -41,7 +42,7 @@ public class MovementsController {
     	
     }
 	
-    @RequestMapping("/shipment")
+    @RequestMapping("/main")
     public String view(Model model, Locale locale){
     	MovementsForm movementsForm = new MovementsForm();
     	Calendar cal = Calendar.getInstance();
@@ -52,15 +53,15 @@ public class MovementsController {
     	movementsForm.setStartDate(new Timestamp(cal.getTimeInMillis()));
     	model.addAttribute("movementsForm", movementsForm);
     	
-    	return "movements/shipment";
+    	return "movements/main";
     }
     
     
-	@RequestMapping(value = "/shipment", method = RequestMethod.POST)
+	@RequestMapping(value = "/calculate", params = { "shipmov" }, method = RequestMethod.POST)
 	public String performSearch(@Valid MovementsForm movementsForm, BindingResult bindingResult, Model model, RedirectAttributes redirectAttrs, Locale locale){
 		
 		if(bindingResult.hasErrors()){
-			return "movements/shipment";
+			return "movements/main";
 		}
 		
 		Map<String, Double> prices = x3HistoryPriceService.findAllX3HistoryPrices();
@@ -128,7 +129,34 @@ public class MovementsController {
 		}
 		model.addAttribute("unassignedMachines", unassignedMachines);
 		
-		return "movements/shipment";
+		return "movements/main";
+	}
+	
+	
+	@RequestMapping(value = "/calculate", params = { "rcpweightstats" }, method = RequestMethod.POST)
+	public String performRcpWeightStats(@Valid MovementsForm movementsForm, BindingResult bindingResult, Model model, RedirectAttributes redirectAttrs, Locale locale){
+		if(bindingResult.hasErrors()){
+			return "movements/main";
+		}
+		List<X3WarehouseWeightLine> lines = x3Service.findWeightSumLine(movementsForm.getStartDate(), movementsForm.getEndDate(), JdbcOracleX3Service.WEIGHT_QUERY_RECEPTION);
+		model.addAttribute("startDate", movementsForm.getStartDate());
+		model.addAttribute("endDate", movementsForm.getEndDate());
+		model.addAttribute("counter", lines.size());
+		model.addAttribute("weight", lines);
+		return "movements/main";
+	}
+	
+	@RequestMapping(value = "/calculate", params = { "shipweightstats" }, method = RequestMethod.POST)
+	public String performShipWeightStats(@Valid MovementsForm movementsForm, BindingResult bindingResult, Model model, RedirectAttributes redirectAttrs, Locale locale){
+		if(bindingResult.hasErrors()){
+			return "movements/main";
+		}
+		List<X3WarehouseWeightLine> lines = x3Service.findWeightSumLine(movementsForm.getStartDate(), movementsForm.getEndDate(), JdbcOracleX3Service.WEIGHT_QUERY_SHIPMENT);
+		model.addAttribute("startDate", movementsForm.getStartDate());
+		model.addAttribute("endDate", movementsForm.getEndDate());
+		model.addAttribute("counter", lines.size());
+		model.addAttribute("weight", lines);
+		return "movements/main";
 	}
     
     

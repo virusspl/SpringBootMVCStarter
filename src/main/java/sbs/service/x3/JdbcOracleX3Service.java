@@ -16,8 +16,14 @@ import sbs.model.x3.X3UtrFault;
 import sbs.model.x3.X3UtrFaultLine;
 import sbs.model.x3.X3UtrMachine;
 import sbs.model.x3.X3UtrWorker;
+import sbs.model.x3.X3WarehouseWeightLine;
 
 public interface JdbcOracleX3Service {
+	
+	public static final int WEIGHT_QUERY_RECEPTION = 1;
+	public static final int WEIGHT_QUERY_RECEPTION_DETAIL = 2;
+	public static final int WEIGHT_QUERY_SHIPMENT = 3;
+	public static final int WEIGHT_QUERY_SHIPMENT_DETAIL = 4;
 	
     public List<String> findAllUsers(String company);
     public List<X3Product> findAllActiveProducts(String company);
@@ -44,4 +50,5 @@ public interface JdbcOracleX3Service {
 	public Map<String, X3ProductFinalMachine> findX3ProductFinalMachines(String company);
 	public List<Project> findPendingProjectsProgress();
 	public Project findProjectProgressByNumber(String number);
+	public List<X3WarehouseWeightLine> findWeightSumLine(Date startDate, Date endDate, int weightQueryType);
 }
