@@ -311,8 +311,8 @@
 		</div>
 		<!-- /RESULTS FOR SHIPMENT MOVEMENTS -->
 		<!-- RESULTS WEIGHT -->
-			<!-- for rcp weight -->
-			<div th:if="${weight}">
+		<!-- for rcp weight -->
+		<div th:if="${weight}">
 			<div class="row margin-top-10">
 				<div class="col-xs-12">
 					<h3 class="text-primary" th:text="#{movements.list}">result</h3>
@@ -348,8 +348,52 @@
 					</div>
 				</div>
 			</div>
-			</div>
 		</div>
 		<!-- /RESULTS WEIGHT -->
+		<!-- RESULTS WEIGHT DETAILS -->
+		<!-- for rcp weight -->
+		<div th:if="${weightdetails}">
+			<div class="row margin-top-10">
+				<div class="col-xs-12">
+					<h3 class="text-primary" th:text="#{movements.list}">result</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="table-responsive">
+						<table id="srv" class="display">
+							<thead>
+								<tr>
+									<th th:text="#{movements.date}">head</th>
+									<th th:text="#{movements.time}">head</th>
+									<th th:text="#{movements.worker}">head</th>
+									<th th:text="#{movements.label}">head</th>
+								</tr>
+							</thead>
+							<tfoot>
+								<tr>
+									<th th:text="#{movements.date}">head</th>
+									<th th:text="#{movements.time}">head</th>
+									<th th:text="#{movements.worker}">head</th>
+									<th th:text="#{movements.label}">head</th>
+								</tr>
+							</tfoot>
+							<tbody>
+								<tr th:each="wei : ${weightdetails}">
+									<td><span
+										th:text="${#dates.format(wei.dateTime, 'dd.MM.yyyy')}"></span></td>
+									<td><span
+										th:text="${#dates.format(wei.dateTime, 'HH:mm')}"></span></td>
+									<td><span th:text="${wei.userName}"></span></td>
+									<td><span th:text="${wei.parcelNumber}"></span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /RESULTS WEIGHT DETAILS -->
+	</div>
 </body>
 </html>

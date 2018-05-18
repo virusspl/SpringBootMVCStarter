@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ShipmentMovement;
+import sbs.model.x3.X3WarehouseWeightDetailLine;
 import sbs.model.x3.X3WarehouseWeightLine;
 import sbs.service.dictionary.X3HistoryPriceService;
 import sbs.service.x3.JdbcOracleX3Service;
@@ -156,6 +157,33 @@ public class MovementsController {
 		model.addAttribute("endDate", movementsForm.getEndDate());
 		model.addAttribute("counter", lines.size());
 		model.addAttribute("weight", lines);
+		return "movements/main";
+	}
+	
+	
+	@RequestMapping(value = "/calculate", params = { "rcpweightdetails" }, method = RequestMethod.POST)
+	public String performRcpWeightDetails(@Valid MovementsForm movementsForm, BindingResult bindingResult, Model model, RedirectAttributes redirectAttrs, Locale locale){
+		if(bindingResult.hasErrors()){
+			return "movements/main";
+		}
+		List<X3WarehouseWeightDetailLine> lines = x3Service.findWeightDetailLine(movementsForm.getStartDate(), movementsForm.getEndDate(), JdbcOracleX3Service.WEIGHT_QUERY_RECEPTION_DETAIL);
+		model.addAttribute("startDate", movementsForm.getStartDate());
+		model.addAttribute("endDate", movementsForm.getEndDate());
+		model.addAttribute("counter", lines.size());
+		model.addAttribute("weightdetails", lines);
+		return "movements/main";
+	}
+	
+	@RequestMapping(value = "/calculate", params = { "shipweightdetails" }, method = RequestMethod.POST)
+	public String performShipWeightDetails(@Valid MovementsForm movementsForm, BindingResult bindingResult, Model model, RedirectAttributes redirectAttrs, Locale locale){
+		if(bindingResult.hasErrors()){
+			return "movements/main";
+		}
+		List<X3WarehouseWeightDetailLine> lines = x3Service.findWeightDetailLine(movementsForm.getStartDate(), movementsForm.getEndDate(), JdbcOracleX3Service.WEIGHT_QUERY_SHIPMENT_DETAIL);
+		model.addAttribute("startDate", movementsForm.getStartDate());
+		model.addAttribute("endDate", movementsForm.getEndDate());
+		model.addAttribute("counter", lines.size());
+		model.addAttribute("weightdetails", lines);
 		return "movements/main";
 	}
     

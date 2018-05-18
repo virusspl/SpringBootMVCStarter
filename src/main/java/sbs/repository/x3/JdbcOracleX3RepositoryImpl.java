@@ -31,6 +31,7 @@ import sbs.model.x3.X3UtrFault;
 import sbs.model.x3.X3UtrFaultLine;
 import sbs.model.x3.X3UtrMachine;
 import sbs.model.x3.X3UtrWorker;
+import sbs.model.x3.X3WarehouseWeightDetailLine;
 import sbs.model.x3.X3WarehouseWeightLine;
 import sbs.service.x3.JdbcOracleX3Service;
 
@@ -844,7 +845,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		} catch (ParseException e) {
 			return null;
 		}
-
 	}
 
 	@Override
@@ -1043,6 +1043,34 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		return result;
 	}
 
+	@Override
+	public List<X3WarehouseWeightDetailLine> findWeightDetailLine(Date startDate, Date endDate, int weightQueryType) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				getWeightQuery(startDate, endDate, weightQueryType)
+				,
+				new Object[]{
+						"ATABDIV", 
+						"LNGDES", "POL", "6285",
+						dateHelper.getTime(startDate), 
+						dateHelper.getTime(endDate) 
+				}
+				);
+		
+
+		List<X3WarehouseWeightDetailLine> result = new ArrayList<>();
+		X3WarehouseWeightDetailLine item = null;
+		for(Map<String,Object> row: resultSet ){
+			item = new X3WarehouseWeightDetailLine();
+			item.setDateTime(x3WeightDateTimeConvert((Timestamp)row.get("CREDAT_0"), (String)row.get("CREHH_0")));
+			item.setCardNumber(((String)row.get("CARDNR_0")));
+			item.setUserName(((String)row.get("TEXTE_0")));
+			item.setParcelNumber((String)row.get("YPRCNUM_0"));
+			
+			result.add(item);
+		}
+		return result;
+	}
+
 	private String getWeightQuery(Date startDate, Date endDate, int weightQueryType){
 		String query = "";
 		String company = "ATW";
@@ -1106,9 +1134,69 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 					+ "ORDER BY "
 					+ "PRC.CREDAT_0"
 					;
+		} else if (weightQueryType == JdbcOracleX3Service.WEIGHT_QUERY_RECEPTION_DETAIL){
+			query = "SELECT "
+					+ "PRC.CREDAT_0, "
+					+ "PRC.CREHH_0, "
+					+ "TXT.TEXTE_0, "
+					+ "PRC.YPRCNUM_0, "
+					+ "PRC.CARDNR_0 "
+					+ "FROM "
+					+ company + ".YPARCELA PRC INNER JOIN " + company + ".ATEXTRA TXT "
+					+ "ON "
+					+ "PRC.CARDNR_0 = TXT.IDENT2_0 "
+					+ "WHERE "
+					+ "TXT.CODFIC_0 = ? "
+					+ "AND "
+					+ "TXT.ZONE_0 = ? "
+					+ "AND "
+					+ "TXT.LANGUE_0 = ? "
+					+ "AND "
+					+ "TXT.IDENT1_0 = ? "
+					+ "AND "
+					+ "PRC.CREDAT_0 >= ? "
+					+ "AND "
+					+ "PRC.CREDAT_0 <= ? "
+					+ "ORDER BY "
+					+ "PRC.CREDAT_0"
+					;
+		} else if (weightQueryType == JdbcOracleX3Service.WEIGHT_QUERY_SHIPMENT_DETAIL){
+			query = "SELECT "
+					+ "PRC.CREDAT_0, "
+					+ "PRC.CREHH_0, "
+					+ "TXT.TEXTE_0, "
+					+ "PRC.YPRCNUM_0, "
+					+ "PRC.CARDNR_0 "
+					+ "FROM "
+					+ company + ".YPARCEL PRC INNER JOIN " + company + ".ATEXTRA TXT "
+					+ "ON "
+					+ "PRC.CARDNR_0 = TXT.IDENT2_0 "
+					+ "WHERE "
+					+ "TXT.CODFIC_0 = ? "
+					+ "AND "
+					+ "TXT.ZONE_0 = ? "
+					+ "AND "
+					+ "TXT.LANGUE_0 = ? "
+					+ "AND "
+					+ "TXT.IDENT1_0 = ? "
+					+ "AND "
+					+ "PRC.CREDAT_0 >= ? "
+					+ "AND "
+					+ "PRC.CREDAT_0 <= ? "
+					+ "ORDER BY "
+					+ "PRC.CREDAT_0"
+					;
 		}
 		
 		return query;
+	}
+	
+	private Timestamp x3WeightDateTimeConvert(Timestamp date, String hour) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(date.getTime());
+		cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour.substring(0, 2)));
+		cal.set(Calendar.MINUTE, Integer.parseInt(hour.substring(3, 5)));
+		return new Timestamp(cal.getTimeInMillis());
 	}
 		
 	
