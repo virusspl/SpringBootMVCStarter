@@ -14,6 +14,7 @@ import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductFinalMachine;
+import sbs.model.x3.X3ProductSellDemand;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3SalesOrder;
 import sbs.model.x3.X3ShipmentMovement;
@@ -176,6 +177,27 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	@Override
 	public List<X3WarehouseWeightDetailLine> findWeightDetailLine(Date startDate, Date endDate, int weightQueryType) {
 		return jdbcOracleX3Repository.findWeightDetailLine(startDate, endDate, weightQueryType);
+	}
+
+
+	@Override
+	public Map<String, Integer> findAcvMagStock(String company) {
+		return jdbcOracleX3Repository.findAcvMagStock(company);
+	}
+
+	@Override
+	public List<String> findAcvNonProductionCodes(String company) {
+		return jdbcOracleX3Repository.findAcvNonProductionCodes(company);
+	}
+
+	@Override
+	public Map<String, X3ProductSellDemand> findAcvProductSellDemand(Date startDate, Date endDate, String company) {
+		return jdbcOracleX3Repository.findAcvProductSellDemand(startDate, endDate, company);
+	}
+
+	@Override
+	public Map<String, Integer> findAcvAverageUsageInPeriod(String startPeriod, String endPeriod, String company) {
+		return jdbcOracleX3Repository.findAcvAverageUsageInPeriod(startPeriod, endPeriod, company);
 	}
 
 }

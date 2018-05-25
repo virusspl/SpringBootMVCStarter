@@ -24,6 +24,7 @@ import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductFinalMachine;
+import sbs.model.x3.X3ProductSellDemand;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3SalesOrder;
 import sbs.model.x3.X3ShipmentMovement;
@@ -1197,6 +1198,56 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour.substring(0, 2)));
 		cal.set(Calendar.MINUTE, Integer.parseInt(hour.substring(3, 5)));
 		return new Timestamp(cal.getTimeInMillis());
+	}
+
+	@Override
+	public Map<String, Integer> findAcvAverageUsageInPeriod(String startPeriod, String endPeriod, String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+					+ company + ".ITMMASTER.ITMREF_0, "
+					+ "Sum(" + company + ".XCSMED.XQTY_0) AS QTY, "
+					+ "Sum(" + company + ".XCSMED.XQTY_0)/3 AS AVERAGE "
+					//+ "QTY/3 AS AVERAGE "
+					+ "FROM "
+					+ company + ".ITMMASTER INNER JOIN " + company + ".XCSMED "
+					+ "ON "
+					+ company + ".ITMMASTER.ITMREF_0 = " + company + ".XCSMED.XART_0 "
+					+ "WHERE "
+					+ company + ".ITMMASTER.TCLCOD_0 = ? "
+					+ "AND "
+					+ company + ".XCSMED.XPER_0 >= ? "
+					+ "AND "
+					+ company + ".XCSMED.XPER_0 <= ? "
+					+ "GROUP BY "
+					+ company + ".ITMMASTER.ITMREF_0"
+				,
+                new Object[]{"ACV", startPeriod, endPeriod}
+				);
+		
+		Map <String, Integer> map = new HashMap<>();
+		for(Map<String,Object> row: resultSet ){
+			map.put(((String)row.get("ITMREF_0")), ((BigDecimal)row.get("AVERAGE")).intValue());
+		}
+			
+		return map;
+	}
+
+	@Override
+	public Map<String, X3ProductSellDemand> findAcvProductSellDemand(Date startDate, Date endDate, String company) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<String> findAcvNonProductionCodes(String company) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Map<String, Integer> findAcvMagStock(String company) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 		
 	

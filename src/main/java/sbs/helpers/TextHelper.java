@@ -28,4 +28,11 @@ public class TextHelper {
 		return System.getProperty("line.separator");
 	}
 	
+	public String fillWithLeadingZero(String text, int targetCharacters){
+		for (int i = 0; i < targetCharacters - text.length(); i++){
+			text = "0" + text;
+		}
+		return text;
+	}
+	
 }

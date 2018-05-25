@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import sbs.model.proprog.Project;
+import sbs.model.x3.X3ProductSellDemand;
 import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3Product;
@@ -53,4 +54,9 @@ public interface JdbcOracleX3Service {
 	public Project findProjectProgressByNumber(String number);
 	public List<X3WarehouseWeightLine> findWeightSumLine(Date startDate, Date endDate, int weightQueryType);
 	public List<X3WarehouseWeightDetailLine> findWeightDetailLine(Date startDate, Date endDate, int weightQueryReceptionDetail);
+	public Map<String, X3ProductSellDemand> findAcvProductSellDemand(Date startDate, Date endDate, String company);
+	public List<String> findAcvNonProductionCodes(String company);
+	public Map<String, Integer> findAcvMagStock(String company);
+	public Map<String, Integer> findAcvAverageUsageInPeriod(String startPeriod, String endPeriod, String company);
+
 }
