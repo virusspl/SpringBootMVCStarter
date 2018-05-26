@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import sbs.controller.dirrcpship.DirectReceptionsShipmentLine;
 import sbs.helpers.DateHelper;
 import sbs.model.proprog.Project;
 import sbs.model.wpslook.WpslookRow;
@@ -1231,24 +1232,189 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			
 		return map;
 	}
-
-	@Override
-	public Map<String, X3ProductSellDemand> findAcvProductSellDemand(Date startDate, Date endDate, String company) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<String> findAcvNonProductionCodes(String company) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	
 	@Override
 	public Map<String, Integer> findAcvMagStock(String company) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ company + ".ITMMASTER.ITMREF_0, "
+				+ "Sum("+ company + ".STOCK.QTYSTU_0) AS QUANTITY "
+				+ "FROM "
+				+ company + ".ITMMASTER INNER JOIN " + company + ".STOCK "
+				+ "ON "
+				+ company + ".ITMMASTER.ITMREF_0 = " + company + ".STOCK.ITMREF_0 "
+				+ "WHERE "
+				+ company + ".ITMMASTER.TCLCOD_0 = ? "
+				+ "AND "
+				+ company + ".STOCK.LOC_0 = ? "
+				+ "GROUP BY "
+				+ company + ".ITMMASTER.ITMREF_0"
+				,
+                new Object[]{"ACV", "MAG"}
+				);
+		
+		Map <String, Integer> map = new HashMap<>();
+		for(Map<String,Object> row: resultSet ){
+			map.put(((String)row.get("ITMREF_0")), ((BigDecimal)row.get("QUANTITY")).intValue());
+		}
+			
+		return map;
 	}
+	
+	@Override
+	public Map<String, Integer> findAcvShipStock(String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+						+ company + ".ITMMASTER.ITMREF_0, "
+						+ "Sum("+ company + ".STOCK.QTYSTU_0) AS QUANTITY "
+						+ "FROM "
+						+ company + ".ITMMASTER INNER JOIN " + company + ".STOCK "
+						+ "ON "
+						+ company + ".ITMMASTER.ITMREF_0 = " + company + ".STOCK.ITMREF_0 "
+						+ "WHERE "
+						+ company + ".ITMMASTER.TCLCOD_0 = ? "
+						+ "AND ("
+						+ company + ".STOCK.LOC_0 = ? "
+						+ "OR "
+						+ company + ".STOCK.LOC_0 = ? "
+						+ "OR "						
+						+ company + ".STOCK.LOC_0 = ? "
+						+ ")"
+						+ "GROUP BY "
+						+ company + ".ITMMASTER.ITMREF_0"
+						,
+						new Object[]{"ACV", "QGX", "WGX01", "GEODE"}
+				);
+		
+		Map <String, Integer> map = new HashMap<>();
+		for(Map<String,Object> row: resultSet ){
+			map.put(((String)row.get("ITMREF_0")), ((BigDecimal)row.get("QUANTITY")).intValue());
+		}
+		
+		return map;
+	}
+	
+	@Override
+	public List<String> findAcvNonProductionCodes(String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ company + ".ITMMASTER.ITMREF_0 "
+				+ "FROM "
+				+ company + ".ITMMASTER LEFT JOIN " + company + ".BOMD "
+				+ "ON "
+				+ company + ".ITMMASTER.ITMREF_0 = " + company + ".BOMD.CPNITMREF_0 "
+				+ "WHERE "
+				+ company + ".ITMMASTER.TCLCOD_0 = ? "
+				+ "AND "
+				+ "NVL(" + company + ".BOMD.BOMSEQ_0, -1) = -1"
+				+ "GROUP BY "
+				+ company + ".ITMMASTER.ITMREF_0"
+				,
+                new Object[]{"ACV"}
+				);
+		
+		List<String> list = new ArrayList<>();
+		for(Map<String,Object> row: resultSet ){
+			list.add((String)row.get("ITMREF_0"));
+		}
+			
+		return list;
+	}
+
+	
+	@Override
+	public Map<String, X3ProductSellDemand> findAcvProductSellDemand(Date startDate, Date endDate, String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ company + ".ITMMASTER.ITMREF_0, "
+				+ company + ".SORDERQ.QTY_0, "
+				+ company + ".SORDERQ.SOHNUM_0, "
+				+ company + ".SORDERQ.SOPLIN_0 "
+				+ "FROM "
+				+ company + ".SORDERQ INNER JOIN " + company + ".ITMMASTER "
+				+ "ON "
+				+ company + ".SORDERQ.ITMREF_0 = " + company + ".ITMMASTER.ITMREF_0 "
+				+ "WHERE "
+				+ company + ".SORDERQ.DEMDLVDAT_0 >= ? AND "
+				+ company + ".SORDERQ.DEMDLVDAT_0 <= ? AND "
+				+ company + ".ITMMASTER.TCLCOD_0 = ? AND "
+				+ company + ".SORDERQ.SOQSTA_0 != ?"
+				,
+                new Object[]{startDate, endDate, "ACV", 3}
+				);
+		
+		Map <String, X3ProductSellDemand> map = new HashMap<>();
+		X3ProductSellDemand demand;
+		String key;
+		for(Map<String,Object> row: resultSet ){
+			key = (String)row.get("ITMREF_0");
+			if(map.containsKey(key)){
+				map.get(key).addQuantity(((BigDecimal)row.get("QTY_0")).intValue());
+				map.get(key).addOrder((String)row.get("SOHNUM_0"), ((BigDecimal)row.get("SOPLIN_0")).intValue());
+			}
+			else{
+				demand = new X3ProductSellDemand();
+				demand.setProductCode(key);
+				demand.addQuantity(((BigDecimal)row.get("QTY_0")).intValue());
+				demand.addOrder((String)row.get("SOHNUM_0"), ((BigDecimal)row.get("SOPLIN_0")).intValue());
+				map.put(key, demand);
+			}
+			
+		}
+			
+		return map;
+	}
+
+	@Override
+	public List<DirectReceptionsShipmentLine> findDirectReceptionsShipmentLines(Date startDate, Date endDate, String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "SOQ.SOHNUM_0, "
+				+ "SOQ.SOPLIN_0, "
+				+ "(SOQ.QTYSTU_0 - SOQ.ODLQTYSTU_0 - SOQ.DLVQTY_0) AS LEFT_TO_SEND,  "
+				+ "ITM.ITMREF_0, "
+				+ "ITM.ITMDES1_0, "
+				+ "SOQ.DEMDLVDAT_0, "
+				+ "BPR.BPRNAM_0, "
+				+ "BPR.CRY_0 "
+				+ "FROM ("
+				+ "(" + company + ".SORDERQ SOQ INNER JOIN " + company + ".ITMMASTER ITM "
+				+ "ON SOQ.ITMREF_0 = ITM.ITMREF_0) "
+				+ "INNER JOIN " + company + ".SORDER SOR ON SOQ.SOHNUM_0 = SOR.SOHNUM_0) "
+				+ "INNER JOIN " + company + ".BPARTNER BPR ON SOR.X_CODCLI_0 = BPR.BPRNUM_0 "
+				+ "WHERE "
+				+ "SOQ.DEMDLVDAT_0 >= ? AND "
+				+ "SOQ.DEMDLVDAT_0 <= ? AND "
+				+ "ITM.TCLCOD_0  = ? AND "
+				+ "SOQ.SOQSTA_0 <> ? "
+				+ "ORDER BY "
+				+ "SOQ.SOHNUM_0, "
+				+ "ITM.ITMREF_0, "
+				+ "SOQ.DEMDLVDAT_0, "
+				+ "BPR.BPRNAM_0"
+				,
+                new Object[]{startDate, endDate, "ACV", 3}
+				);
+		
+		List<DirectReceptionsShipmentLine> list = new ArrayList<>();
+		DirectReceptionsShipmentLine line;
+		for(Map<String,Object> row: resultSet ){
+			line = new DirectReceptionsShipmentLine();
+			line.setOrderNumber(((String)row.get("SOHNUM_0")));
+			line.setProductCode(((String)row.get("ITMREF_0")));
+			line.setProductDescription(((String)row.get("ITMDES1_0")));
+			line.setDemandedDate(((Timestamp)row.get("DEMDLVDAT_0")));
+			line.setClientName(((String)row.get("BPRNAM_0")));
+			line.setCountry(((String)row.get("CRY_0")));
+			line.setLeftToSend(((BigDecimal)row.get("LEFT_TO_SEND")).intValue());
+			list.add(line);
+		}
+			
+		return list;
+	}
+
+
+
 		
 	
 

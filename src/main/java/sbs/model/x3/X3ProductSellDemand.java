@@ -1,17 +1,13 @@
 package sbs.model.x3;
 
-import java.util.ArrayList;
-
-
-
 public class X3ProductSellDemand {
 	
 	private String productCode;
-	private String quantity;
-	private ArrayList<String> orders;
+	private int quantity;
+	private String orders;
 	
 	public X3ProductSellDemand() {
-		orders = new ArrayList<>();
+
 	}
 
 	public String getProductCode() {
@@ -22,24 +18,33 @@ public class X3ProductSellDemand {
 		this.productCode = productCode;
 	}
 
-	public String getQuantity() {
+	public int getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(String quantity) {
+	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-
-	public ArrayList<String> getOrders() {
+	
+	public String getOrders() {
 		return orders;
 	}
 
-	public void setOrders(ArrayList<String> orders) {
+	public void setOrders(String orders) {
 		this.orders = orders;
 	}
+
+	public void addOrder(String order, int line){
+		if(this.orders == null){
+			this.orders = order + "/" + line;
+		}
+		else{
+			this.orders += "; " + order + "/" + line;
+		}
+	}
 	
-	public void addOrder(String order, String line){
-		this.orders.add(order + "/" + line);
+	public void addQuantity(int quantity){
+		this.quantity += quantity;
 	}
 
 	@Override

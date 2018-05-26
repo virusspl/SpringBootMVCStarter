@@ -115,6 +115,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"ADMIN", 
 				"UTR_NORMALUSER"
 				)
+		.antMatchers("/dirrcpship/**")
+		.hasAnyRole(
+				"ADMIN", 
+				"RCPMANAGER"
+				)
 		.antMatchers("/admin", "/users/**")
 		.hasRole("ADMIN")
 		.anyRequest().authenticated().and()

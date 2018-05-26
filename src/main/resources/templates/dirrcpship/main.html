@@ -58,6 +58,12 @@
 				},
 				order : [ [ 0, 'desc' ] ]
 			});
+			$('#srv2').DataTable({
+				language : {
+					url : getUrl() + "polish.json",
+				},
+				order : [ [ 0, 'desc' ] ]
+			});
 		</script>
 		<script th:if="__${#locale}__ == 'en'">
 			$('#srv').DataTable({
@@ -66,9 +72,21 @@
 				},
 				order : [ [ 0, 'desc' ] ]
 			});
+			$('#srv2').DataTable({
+				language : {
+					url : getUrl() + "english.json"
+				},
+				order : [ [ 0, 'desc' ] ]
+			});
 		</script>
 		<script th:if="__${#locale}__ == 'it'">
 			$('#srv').DataTable({
+				language : {
+					url : getUrl() + "italian.json"
+				},
+				order : [ [ 0, 'desc' ] ]
+			});
+			$('#srv2').DataTable({
 				language : {
 					url : getUrl() + "italian.json"
 				},
@@ -134,14 +152,137 @@
 						class="glyphicon glyphicon-menu-left"></span> <span
 						th:text="#{action.back}">back</span>
 					</a>
-					<button class="btn btn-primary btn-sm" type="submit" name="viewlist">
-						<span class="glyphicon glyphicon-sort"></span> <span
+					<button class="btn btn-primary btn-sm" type="submit"
+						name="viewlist">
+						<span class="glyphicon glyphicon-search"></span> <span
 							th:text="#{dirrcpship.makelist}">search</span>
+					</button>
+					<button class="btn btn-primary btn-sm" type="submit"
+						name="printlist">
+						<span class="glyphicon glyphicon-print"></span> <span
+							th:text="#{dirrcpship.printlist}">search</span>
+					</button>
+					<button class="btn btn-warning btn-sm" type="submit"
+						name="viewnegativelist">
+						<span class="glyphicon glyphicon-search"></span> <span
+							th:text="#{dirrcpship.makenegativelist}">search</span>
+					</button>
+					<button class="btn btn-warning btn-sm" type="submit"
+						name="printnegativelist">
+						<span class="glyphicon glyphicon-print"></span> <span
+							th:text="#{dirrcpship.printnegativelist}">search</span>
 					</button>
 				</div>
 			</div>
 		</form>
-
+		<!-- SHOW LIST -->
+		<div th:if="${showList}">
+			<div class="row margin-top-10">
+				<div class="col-xs-12">
+					<h3 class="text-primary" th:text="#{dirrcpship.list.show}">result</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="table-responsive">
+						<table id="srv" class="display">
+							<thead>
+								<tr>
+									<th th:text="#{dirrcpship.order}">head</th>
+									<th th:text="#{dirrcpship.productCode}">head</th>
+									<th th:text="#{dirrcpship.productDescription}">head</th>
+									<th th:text="#{dirrcpship.demandedDate}">head</th>
+									<th th:text="#{dirrcpship.clientName}">head</th>
+									<th th:text="#{dirrcpship.country}">head</th>
+									<th th:text="#{dirrcpship.stock}">head</th>
+									<th th:text="#{dirrcpship.toGive}">head</th>
+								</tr>
+							</thead>
+							<tfoot>
+								<tr>
+									<th th:text="#{dirrcpship.order}">head</th>
+									<th th:text="#{dirrcpship.productCode}">head</th>
+									<th th:text="#{dirrcpship.productDescription}">head</th>
+									<th th:text="#{dirrcpship.demandedDate}">head</th>
+									<th th:text="#{dirrcpship.clientName}">head</th>
+									<th th:text="#{dirrcpship.country}">head</th>
+									<th th:text="#{dirrcpship.stock}">head</th>
+									<th th:text="#{dirrcpship.toGive}">head</th>
+								</tr>
+							</tfoot>
+							<tbody>
+								<tr th:each="line : ${showList}">
+									<td><span th:text="${line.orderNumber}"></span></td>
+									<td><span th:text="${line.productCode}"></span></td>
+									<td><span th:text="${line.productDescription}"></span></td>
+									<td><span
+										th:text="${#dates.format(line.demandedDate, 'dd.MM.yyyy')}"></span></td>
+									<td><span th:text="${line.clientName}"></span></td>
+									<td><span th:text="${line.country}"></span></td>
+									<td><span th:text="${line.magStock}"></span></td>
+									<td><span th:text="${line.toGive}"></span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /SHOW LIST -->
+		<!-- NEGATIVE LIST -->
+		<div th:if="${negativeList}">
+			<div class="row margin-top-10">
+				<div class="col-xs-12">
+					<h3 class="text-primary" th:text="#{dirrcpship.list.negative}">result</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="table-responsive">
+						<table id="srv2" class="display">
+							<thead>
+								<tr>
+									<th th:text="#{dirrcpship.order}">head</th>
+									<th th:text="#{dirrcpship.productCode}">head</th>
+									<th th:text="#{dirrcpship.productDescription}">head</th>
+									<th th:text="#{dirrcpship.demandedDate}">head</th>
+									<th th:text="#{dirrcpship.clientName}">head</th>
+									<th th:text="#{dirrcpship.country}">head</th>
+									<th th:text="#{dirrcpship.stock}">head</th>
+									<th th:text="#{dirrcpship.toGive}">head</th>
+								</tr>
+							</thead>
+							<tfoot>
+								<tr>
+									<th th:text="#{dirrcpship.order}">head</th>
+									<th th:text="#{dirrcpship.productCode}">head</th>
+									<th th:text="#{dirrcpship.productDescription}">head</th>
+									<th th:text="#{dirrcpship.demandedDate}">head</th>
+									<th th:text="#{dirrcpship.clientName}">head</th>
+									<th th:text="#{dirrcpship.country}">head</th>
+									<th th:text="#{dirrcpship.stock}">head</th>
+									<th th:text="#{dirrcpship.toGive}">head</th>
+								</tr>
+							</tfoot>
+							<tbody>
+								<tr th:each="line : ${negativeList}">
+									<td><span th:text="${line.orderNumber}"></span></td>
+									<td><span th:text="${line.productCode}"></span></td>
+									<td><span th:text="${line.productDescription}"></span></td>
+									<td><span
+										th:text="${#dates.format(line.demandedDate, 'dd.MM.yyyy')}"></span></td>
+									<td><span th:text="${line.clientName}"></span></td>
+									<td><span th:text="${line.country}"></span></td>
+									<td><span th:text="${line.magStock}"></span></td>
+									<td><span th:text="${line.toGive}"></span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /NEGATIVE LIST -->
 	</div>
 </body>
 </html>

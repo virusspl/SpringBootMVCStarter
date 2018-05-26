@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import sbs.controller.dirrcpship.DirectReceptionsShipmentLine;
 import sbs.model.proprog.Project;
 import sbs.model.wpslook.WpslookRow;
 import sbs.model.x3.X3BomItem;
@@ -54,5 +55,7 @@ public interface JdbcOracleX3Repository  {
 	public Map<String, X3ProductSellDemand> findAcvProductSellDemand(Date startDate, Date endDate, String company);
 	public List<String> findAcvNonProductionCodes(String company);
 	public Map<String, Integer> findAcvMagStock(String company);
+	public Map<String, Integer> findAcvShipStock(String company);
+	public List<DirectReceptionsShipmentLine> findDirectReceptionsShipmentLines(Date startDate, Date endDate, String company);
 	
 }

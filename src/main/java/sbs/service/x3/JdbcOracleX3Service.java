@@ -4,12 +4,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import sbs.controller.dirrcpship.DirectReceptionsShipmentLine;
 import sbs.model.proprog.Project;
-import sbs.model.x3.X3ProductSellDemand;
 import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductFinalMachine;
+import sbs.model.x3.X3ProductSellDemand;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3SalesOrder;
 import sbs.model.x3.X3ShipmentMovement;
@@ -58,5 +59,7 @@ public interface JdbcOracleX3Service {
 	public List<String> findAcvNonProductionCodes(String company);
 	public Map<String, Integer> findAcvMagStock(String company);
 	public Map<String, Integer> findAcvAverageUsageInPeriod(String startPeriod, String endPeriod, String company);
+	public Map<String, Integer> findAcvShipStock(String company);
+	public List<DirectReceptionsShipmentLine> findDirectReceptionsShipmentLines(Date startDate, Date endDate, String company);
 
 }

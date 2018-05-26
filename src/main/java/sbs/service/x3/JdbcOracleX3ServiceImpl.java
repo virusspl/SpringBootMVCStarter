@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import sbs.controller.dirrcpship.DirectReceptionsShipmentLine;
 import sbs.model.proprog.Project;
 import sbs.model.wpslook.WpslookRow;
 import sbs.model.x3.X3BomItem;
@@ -184,6 +185,11 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	public Map<String, Integer> findAcvMagStock(String company) {
 		return jdbcOracleX3Repository.findAcvMagStock(company);
 	}
+	
+	@Override
+	public Map<String, Integer> findAcvShipStock(String company) {
+		return jdbcOracleX3Repository.findAcvShipStock(company);
+	}
 
 	@Override
 	public List<String> findAcvNonProductionCodes(String company) {
@@ -199,5 +205,11 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	public Map<String, Integer> findAcvAverageUsageInPeriod(String startPeriod, String endPeriod, String company) {
 		return jdbcOracleX3Repository.findAcvAverageUsageInPeriod(startPeriod, endPeriod, company);
 	}
+
+	@Override
+	public List<DirectReceptionsShipmentLine> findDirectReceptionsShipmentLines(Date startDate, Date endDate, String company) {
+		return jdbcOracleX3Repository.findDirectReceptionsShipmentLines(startDate,  endDate, company);
+	}
+
 
 }

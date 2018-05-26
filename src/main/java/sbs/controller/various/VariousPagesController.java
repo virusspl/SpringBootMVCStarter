@@ -305,6 +305,14 @@ public class VariousPagesController {
 			roleService.save(utrNormalUser);
 			msg += "[role: " + utrNormalUser.getName() + "], ";
 		}
+		
+		Role rcpManager = roleService.findByName("ROLE_RCPMANAGER");
+		if (rcpManager == null) {
+			rcpManager = new Role();
+			rcpManager.setName("ROLE_RCPMANAGER");
+			roleService.save(rcpManager);
+			msg += "[role: " + rcpManager.getName() + "], ";
+		}
 				
 
 		System.out.println("get users:");
