@@ -173,7 +173,12 @@ public class VariousPagesController {
 		}
 		*/
 		//return "various/jdbc";
+		//return "various/test";\
 		return "various/test";
+	}
+	@RequestMapping("/testprint")
+	public String testprint(Model model) {
+		return "various/testprint";
 	}
 
 	@RequestMapping("/init")

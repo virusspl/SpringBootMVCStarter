@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link th:href="@{/css/print.css}" type="text/css" rel="stylesheet" />
+<title th:text="|#{name.company}">ADR Polska S.A. -
+	Wydruk</title>
+<script>
+	function printPage() {
+		window.print();
+	}
+	</script>
+	
+	<style>@page { size: A4 landscape }</style>
+	
+</head>
+<body class="A4 landscape">
+	<!--=================================== HEAD =================================-->
+	<div class="title hideonprint">
+		<h2 th:text="#{printversion.title}">title</h2>
+		<p th:text="#{printversion.message}">message</p>
+		<button onclick="printPage()" th:text="#{action.print}">Drukuj</button>
+	</div>
+	<!--=================================== /HEAD =================================-->
+	<!--=================================== CONTENT ===============================-->
+	<section layout:fragment="content">
+		<p>page content</p>
+	</section>
+	<!--=================================== /CONTENT ==============================-->
+	<!--=================================== FOOTER  ===============================-->
+	<div class="footer hideonprint">
+		<small> Krzysztof Michalak 2017 &copy; <span
+			th:text="#{department.it}">IT Department</span>, <span
+			th:text="#{name.company}">ADR Polska S.A.</span> / build v.<span
+			th:text="${build}">build</span>
+		</small>
+
+
+	</div>
+	<!--=================================== /FOOTER  ==============================-->
+</body>
+</html>
