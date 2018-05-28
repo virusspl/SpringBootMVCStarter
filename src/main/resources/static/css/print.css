@@ -1,16 +1,24 @@
 .title {
-	font-style: italic;
-	padding: 0px 0px 10px 10px;
+	
 }
 .footer {
-	font-style: italic;
-	position: absolute;
-	bottom: 0;
-	width: 100%;
 	height: 33px;
 	line-height: 30px;
+	margin-top: 25px;
 	margin-bottom: 0px;
 }
+a:link {
+    color: grey;
+}
+a:visited {
+    color: grey;
+}
+a:hover {
+    color: blue;
+}
+a:active {
+    color: grey;
+} 
 
 .margin-bottom-5 {
 	margin-bottom: 5px;
@@ -42,6 +50,9 @@
 .center {
 	text-align: center;
 }
+.right {
+	text-align: right;
+}
 .bold {
 	font-weight: bold;
 }
@@ -55,9 +66,32 @@
 	border-top: 1px solid #E0E0E0;
 }
 .hideonprint {
+	margin-bottom: 1px;
+	font-style: italic;
+	padding: 1px 0px 10px 10px;
 	background-color: #EEEEEE;
 }
+table {
+    border-collapse: collapse;
+}
+table, th, td {
+	padding: 0 7px 0 7px;
+    border: 1px solid black;
+}
+td {
+	border: 1px solid #808080;
+}
+.barcode {
+	font-family: C39HrP36DmTt, "Courier New", Courier, monospace;
+	font-size: xx-large;
+}
 
+
+@media screen {
+	.hideonscreen {
+		display: none;
+	}
+}
 /** Fix for Chrome issue #273306 **/
 @media print {
 	.hideonprint {

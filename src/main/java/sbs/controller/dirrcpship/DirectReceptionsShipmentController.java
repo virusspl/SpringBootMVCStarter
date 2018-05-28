@@ -95,11 +95,10 @@ public class DirectReceptionsShipmentController {
 	public String printList(@Valid DirectReceptionsShipmentForm directReceptionsShipmentForm,
 			BindingResult bindingResult, Model model, RedirectAttributes redirectAttrs, Locale locale) {
 		if (bindingResult.hasErrors()) {
-			return "dirrcpship/main";
+			return "dirrcpship/print";
 		}
-		model.addAttribute("showList", prepareList(directReceptionsShipmentForm, false));
-		model.addAttribute("startDate", directReceptionsShipmentForm.getStartDate());
-		model.addAttribute("endDate", directReceptionsShipmentForm.getEndDate());
+		model.addAttribute("list", prepareList(directReceptionsShipmentForm, false));
+		model.addAttribute("title", messageSource.getMessage("dirrcpship.list.show", null, locale));
 		
 		return "dirrcpship/print";
 	}
@@ -119,11 +118,10 @@ public class DirectReceptionsShipmentController {
 	public String printNegativeList(@Valid DirectReceptionsShipmentForm directReceptionsShipmentForm,
 			BindingResult bindingResult, Model model, RedirectAttributes redirectAttrs, Locale locale) {
 		if (bindingResult.hasErrors()) {
-			return "dirrcpship/main";
+			return "dirrcpship/print";
 		}
-		model.addAttribute("negativeList", prepareList(directReceptionsShipmentForm, true));
-		model.addAttribute("startDate", directReceptionsShipmentForm.getStartDate());
-		model.addAttribute("endDate", directReceptionsShipmentForm.getEndDate());
+		model.addAttribute("list", prepareList(directReceptionsShipmentForm, true));
+		model.addAttribute("title", messageSource.getMessage("dirrcpship.list.negative", null, locale));
 		
 		return "dirrcpship/print";
 	}
