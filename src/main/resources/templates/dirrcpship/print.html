@@ -35,6 +35,10 @@
 									<th th:text="#{dirrcpship.country}">head</th>
 									<th th:text="#{dirrcpship.stock}">head</th>
 									<th th:text="#{dirrcpship.toGive}">head</th>
+									<th th:text="#{dirrcpship.issued}" class="hideonscreen">head</th>
+									<th th:text="#{dirrcpship.received}" class="hideonscreen">head</th>
+									<th th:text="#{dirrcpship.date}" class="hideonscreen">head</th>
+									<th th:text="#{dirrcpship.quantity}" class="hideonscreen">head</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -49,11 +53,17 @@
 									<td class="center"><span th:text="${line.country}"></span></td>
 									<td class="right"><span th:text="${line.magStock}"></span></td>
 									<td class="right"><span th:text="${line.toGive}"></span></td>
+									<td rowspan="2" class="hideonscreen"></td>
+									<td rowspan="2" class="hideonscreen"></td>
+									<td rowspan="2" class="hideonscreen"></td>
+									<td rowspan="2" class="hideonscreen"></td>
+									
 								</tr>
 								<tr class="barcode hideonscreen">
 									<td colspan="3"><span th:text="|*${line.orderNumber}*|"></span></td>
 									<td colspan="3"><span th:text="|*${line.productCode}*|"></span></td>
 									<td colspan="2"><span th:text="|*${line.toGive}*|"></span></td>
+
 								</tr>
 							</div>
 							</tbody>
