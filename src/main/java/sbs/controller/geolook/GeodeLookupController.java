@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import sbs.helpers.DateHelper;
-import sbs.model.geolook.GeolookRow;
+import sbs.model.geode.GeolookRow;
 import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.x3.JdbcOracleX3Service;
 

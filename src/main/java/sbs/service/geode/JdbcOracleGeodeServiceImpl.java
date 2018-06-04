@@ -3,13 +3,15 @@ package sbs.service.geode;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import sbs.model.geolook.GeolookRow;
+import sbs.model.geode.GeodeMovement;
+import sbs.model.geode.GeolookRow;
 import sbs.repository.geode.JdbcOracleGeodeRepository;
 
 @Service
@@ -59,5 +61,11 @@ public class JdbcOracleGeodeServiceImpl implements JdbcOracleGeodeService {
 			result.add(newrow);
 		}
 		return result;
+	}
+
+
+	@Override
+	public List<GeodeMovement> findMovementsInPeriod(Date startDate, Date endDate) {
+		return jdbcOracleGeodeRepository.findMovementsInPeriod(startDate, endDate); 
 	}
 }

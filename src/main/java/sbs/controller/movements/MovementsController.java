@@ -1,6 +1,7 @@
 package sbs.controller.movements;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -19,11 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import sbs.model.geode.GeodeMovement;
 import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ShipmentMovement;
 import sbs.model.x3.X3WarehouseWeightDetailLine;
 import sbs.model.x3.X3WarehouseWeightLine;
 import sbs.service.dictionary.X3HistoryPriceService;
+import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.x3.JdbcOracleX3Service;
 
 
@@ -33,14 +36,23 @@ public class MovementsController {
 	
 	@Autowired
 	MessageSource messageSource;
+	@Autowired
+	JdbcOracleGeodeService geodeService;
 	@Autowired 
 	JdbcOracleX3Service x3Service;
 	@Autowired
 	X3HistoryPriceService x3HistoryPriceService;  
 	
+	List<String> productionStores;
+	List<String> receptionStores;
+	List<String> shipmentStores;
+	
+	
     @Autowired
     public MovementsController(Environment env) {
-    	
+    	productionStores = Arrays.asList(env.getRequiredProperty("warehouse.store.production").split(";"));
+    	receptionStores = Arrays.asList(env.getRequiredProperty("warehouse.store.receptions").split(";"));
+    	shipmentStores = Arrays.asList(env.getRequiredProperty("warehouse.store.shipments").split(";"));
     }
 	
     @RequestMapping("/main")
@@ -184,6 +196,20 @@ public class MovementsController {
 		model.addAttribute("endDate", movementsForm.getEndDate());
 		model.addAttribute("counter", lines.size());
 		model.addAttribute("weightdetails", lines);
+		return "movements/main";
+	}
+	
+	@RequestMapping(value = "/calculate", params = { "rcpmovements" }, method = RequestMethod.POST)
+	public String performRcpMovements(@Valid MovementsForm movementsForm, BindingResult bindingResult, Model model, RedirectAttributes redirectAttrs, Locale locale){
+		if(bindingResult.hasErrors()){
+			return "movements/main";
+		}
+		
+		List<GeodeMovement> lines = geodeService.findMovementsInPeriod(movementsForm.getStartDate(), movementsForm.getEndDate());
+		model.addAttribute("startDate", movementsForm.getStartDate());
+		model.addAttribute("endDate", movementsForm.getEndDate());
+		//model.addAttribute("counter", lines.size());
+		//model.addAttribute("weightdetails", lines);
 		return "movements/main";
 	}
     
