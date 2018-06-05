@@ -65,7 +65,7 @@ public class JdbcOracleGeodeServiceImpl implements JdbcOracleGeodeService {
 
 
 	@Override
-	public List<GeodeMovement> findMovementsInPeriod(Date startDate, Date endDate) {
-		return jdbcOracleGeodeRepository.findMovementsInPeriod(startDate, endDate); 
+	public List<GeodeMovement> findRcpMovementsInPeriod(Date startDate, Date endDate) {
+		return jdbcOracleGeodeRepository.findRcpMovementsInPeriod(startDate, endDate); 
 	}
 }

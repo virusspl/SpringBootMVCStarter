@@ -3,10 +3,13 @@ package sbs.controller.movements;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -46,13 +49,16 @@ public class MovementsController {
 	List<String> productionStores;
 	List<String> receptionStores;
 	List<String> shipmentStores;
-	
+	List<String> geodeLoadList;
+	List<String> geodeUnloadList;
 	
     @Autowired
     public MovementsController(Environment env) {
     	productionStores = Arrays.asList(env.getRequiredProperty("warehouse.store.production").split(";"));
     	receptionStores = Arrays.asList(env.getRequiredProperty("warehouse.store.receptions").split(";"));
     	shipmentStores = Arrays.asList(env.getRequiredProperty("warehouse.store.shipments").split(";"));
+    	geodeLoadList = Arrays.asList(env.getRequiredProperty("geode.movements.load").split(";"));
+		geodeUnloadList = Arrays.asList(env.getRequiredProperty("geode.movements.unload").split(";"));
     }
 	
     @RequestMapping("/main")
@@ -127,6 +133,7 @@ public class MovementsController {
 			counter++;
 		}
 		
+
 		model.addAttribute("startDate", movementsForm.getStartDate());
 		model.addAttribute("endDate", movementsForm.getEndDate());
 		model.addAttribute("counter", counter);
@@ -143,6 +150,7 @@ public class MovementsController {
 		model.addAttribute("unassignedMachines", unassignedMachines);
 		
 		return "movements/main";
+
 	}
 	
 	
@@ -205,12 +213,53 @@ public class MovementsController {
 			return "movements/main";
 		}
 		
-		List<GeodeMovement> lines = geodeService.findMovementsInPeriod(movementsForm.getStartDate(), movementsForm.getEndDate());
+		List<GeodeMovement> movements = geodeService.findRcpMovementsInPeriod(movementsForm.getStartDate(), movementsForm.getEndDate());
+		Map<String, GeodeMovementsForUser> summary = new HashMap<>();
+		Set<String> unknownMovements = new HashSet<>();
+		
+		for(GeodeMovement mvt: movements){
+			if(!summary.containsKey(mvt.getCreationUserCode())){
+				summary.put(mvt.getCreationUserCode(), new GeodeMovementsForUser(mvt.getCreationUserCode(), mvt.getCreationUserName()));
+			}
+			
+			if(getGeodeMovementType(mvt) == GeodeMovement.GEODE_MOVEMENT_LOAD){
+				summary.get(mvt.getCreationUserCode()).loadCounterIncrement();
+			}
+			else if(getGeodeMovementType(mvt) == GeodeMovement.GEODE_MOVEMENT_UNLOAD){
+				summary.get(mvt.getCreationUserCode()).unloadCounterIncrement();
+			} 
+			else{
+				unknownMovements.add(mvt.getMovementCode());
+			}
+		}
+		
+		
 		model.addAttribute("startDate", movementsForm.getStartDate());
 		model.addAttribute("endDate", movementsForm.getEndDate());
-		//model.addAttribute("counter", lines.size());
-		//model.addAttribute("weightdetails", lines);
+		model.addAttribute("rcpmovsummary", summary.values());
+		if(movements.size()<=5000){
+			model.addAttribute("rcpmovdetails", movements);
+		}
+		/*if(unknownMovements.size() > 0){
+			model.addAttribute("unknownmovs",unknownMovements);
+		}
+		System.out.println("UNKNOWN:" + unknownMovements);
+		*/
+		
+		
 		return "movements/main";
+	}
+	
+	public int getGeodeMovementType(GeodeMovement mvt){
+		if(this.geodeLoadList.contains(mvt.getMovementCode())){
+			return GeodeMovement.GEODE_MOVEMENT_LOAD;
+		}
+		else if (this.geodeUnloadList.contains(mvt.getMovementCode())){
+			return GeodeMovement.GEODE_MOVEMENT_UNLOAD;
+		}
+		else{
+			return GeodeMovement.GEODE_MOVEMENT_UNKNOWN;
+		}
 	}
     
     

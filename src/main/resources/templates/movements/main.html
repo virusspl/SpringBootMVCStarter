@@ -75,6 +75,31 @@
 				order : [ [ 0, 'desc' ] ]
 			});
 		</script>
+		
+		<script th:if="__${#locale}__ == 'pl'">
+			$('#srv2').DataTable({
+				language : {
+					url : getUrl() + "polish.json",
+				},
+				order : [ [ 0, 'desc' ] ]
+			});
+		</script>
+		<script th:if="__${#locale}__ == 'en'">
+			$('#srv2').DataTable({
+				language : {
+					url : getUrl() + "english.json"
+				},
+				order : [ [ 0, 'desc' ] ]
+			});
+		</script>
+		<script th:if="__${#locale}__ == 'it'">
+			$('#srv2').DataTable({
+				language : {
+					url : getUrl() + "italian.json"
+				},
+				order : [ [ 0, 'desc' ] ]
+			});
+		</script>
 	</div>
 	<div layout:fragment="content">
 		<div class="row">
@@ -316,7 +341,6 @@
 		</div>
 		<!-- /RESULTS FOR SHIPMENT MOVEMENTS -->
 		<!-- RESULTS WEIGHT -->
-		<!-- for rcp weight -->
 		<div th:if="${weight}">
 			<div class="row margin-top-10">
 				<div class="col-xs-12">
@@ -356,7 +380,6 @@
 		</div>
 		<!-- /RESULTS WEIGHT -->
 		<!-- RESULTS WEIGHT DETAILS -->
-		<!-- for rcp weight -->
 		<div th:if="${weightdetails}">
 			<div class="row margin-top-10">
 				<div class="col-xs-12">
@@ -399,6 +422,109 @@
 			</div>
 		</div>
 		<!-- /RESULTS WEIGHT DETAILS -->
+		<!-- RESULTS RCP MOVEMENTS SUMMARY -->
+		<div th:if="${rcpmovsummary}">
+			<div class="row margin-top-10">
+				<div class="col-xs-12">
+					<h3 class="text-primary" th:text="#{movements.list}">result</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="table-responsive">
+						<table id="srv" class="display">
+							<thead>
+								<tr>
+									<th th:text="#{movements.code}">head</th>
+									<th th:text="#{movements.worker}">head</th>
+									<th th:text="#{movements.loadCounter}">head</th>
+									<th th:text="#{movements.unloadCounter}">head</th>
+									<th th:text="#{movements.generalCounter}">head</th>
+								</tr>
+							</thead>
+							<tfoot>
+								<tr>
+									<th th:text="#{movements.code}">head</th>
+									<th th:text="#{movements.worker}">head</th>
+									<th th:text="#{movements.loadCounter}">head</th>
+									<th th:text="#{movements.unloadCounter}">head</th>
+									<th th:text="#{movements.generalCounter}">head</th>
+								</tr>
+							</tfoot>
+							<tbody>
+								<tr th:each="summ : ${rcpmovsummary}">
+									<td><span th:text="${summ.code}"></span></td>
+									<td><span th:text="${summ.name}"></span></td>
+									<td><span th:text="${summ.loadCounter}"></span></td>
+									<td><span th:text="${summ.unloadCounter}"></span></td>
+									<td><span th:text="${summ.generalCounter}"></span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /RESULTS RCP MOVEMENTS SUMMARY -->
+		<!-- RESULTS RCP MOVEMENTS DETAILS -->
+		<div th:if="${rcpmovdetails}">
+			<div class="row margin-top-10">
+				<div class="col-xs-12">
+					<h3 class="text-primary" th:text="#{movements.details}">result</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="table-responsive">
+						<table id="srv2" class="display">
+							<thead>
+								<tr>
+									<th th:text="#{movements.mvtNumber}">head</th>									
+									<th th:text="#{movements.movementCode}">head</th>
+									<th th:text="#{movements.item}">head</th>
+									<th th:text="#{movements.quantity}">head</th>
+									<th th:text="#{movements.store}">head</th>
+									<th th:text="#{movements.slot}">head</th>
+									<th th:text="#{movements.creationTime}">head</th>
+									<th th:text="#{movements.creationUserCode}">head</th>
+									<th th:text="#{movements.creationUserName}">head</th>									
+									
+								</tr>
+							</thead>
+							<tfoot>
+								<tr>
+									<th th:text="#{movements.mvtNumber}">head</th>									
+									<th th:text="#{movements.movementCode}">head</th>
+									<th th:text="#{movements.item}">head</th>
+									<th th:text="#{movements.quantity}">head</th>
+									<th th:text="#{movements.store}">head</th>
+									<th th:text="#{movements.slot}">head</th>
+									<th th:text="#{movements.creationTime}">head</th>
+									<th th:text="#{movements.creationUserCode}">head</th>
+									<th th:text="#{movements.creationUserName}">head</th>									
+									
+								</tr>
+							</tfoot>
+							<tbody>
+								<tr th:each="dtl : ${rcpmovdetails}">
+									<td><span th:text="${dtl.number}"></span></td>
+									<td><span th:text="${dtl.movementCode}"></span></td>
+									<td><span th:text="${dtl.item}"></span></td>
+									<td><span th:text="${dtl.quantity}"></span></td>
+									<td><span th:text="${dtl.store}"></span></td>
+									<td><span th:text="${dtl.slot}"></span></td>
+									<td><span
+										th:text="${#dates.format(dtl.creationDateTime, 'dd.MM.yyyy HH:mm')}"></span></td>
+									<td><span th:text="${dtl.creationUserCode}"></span></td>
+									<td><span th:text="${dtl.creationUserName}"></span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /RESULTS RCP MOVEMENTS DETAILS -->
 	</div>
 </body>
 </html>

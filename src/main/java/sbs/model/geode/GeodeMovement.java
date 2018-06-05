@@ -5,20 +5,22 @@ import java.sql.Timestamp;
 public class GeodeMovement {
 	private String number;
 	private String item;
-	private int quantity1;
-	private int quantity2;
+	private int quantity;
 	private Timestamp creationDateTime;
 	private String movementCode;
 	private String store;
 	private String slot;
 	private String creationUserCode;
 	private String creationUserName;
-
 	
-	public GeodeMovement() {
-		
-	}
+	public static final int GEODE_MOVEMENT_LOAD = 1;
+	public static final int GEODE_MOVEMENT_UNLOAD = 2;
+	public static final int GEODE_MOVEMENT_UNKNOWN = 3;
+	
 
+	public GeodeMovement() {
+
+	}
 
 	public String getNumber() {
 		return number;
@@ -40,25 +42,15 @@ public class GeodeMovement {
 	}
 
 
-	public int getQuantity1() {
-		return quantity1;
+	public int getQuantity() {
+		return quantity;
 	}
 
 
-	public void setQuantity1(int quantity1) {
-		this.quantity1 = quantity1;
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
-
-
-	public int getQuantity2() {
-		return quantity2;
-	}
-
-
-	public void setQuantity2(int quantity2) {
-		this.quantity2 = quantity2;
-	}
-
+	
 
 	public Timestamp getCreationDateTime() {
 		return creationDateTime;
@@ -122,8 +114,7 @@ public class GeodeMovement {
 
 	@Override
 	public String toString() {
-		return "GeodeMovement [number=" + number + ", item=" + item + ", quantity1=" + quantity1 + ", quantity2="
-				+ quantity2 + ", creationDateTime=" + creationDateTime + ", movementCode=" + movementCode + ", store="
+		return "GeodeMovement [number=" + number + ", item=" + item + ", quantity1=" + quantity + ", creationDateTime=" + creationDateTime + ", movementCode=" + movementCode + ", store="
 				+ store + ", slot=" + slot + ", creationUserCode=" + creationUserCode + ", creationUserName="
 				+ creationUserName + "]";
 	}
