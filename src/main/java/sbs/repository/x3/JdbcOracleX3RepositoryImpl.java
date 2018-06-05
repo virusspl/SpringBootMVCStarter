@@ -1206,8 +1206,8 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 					+ company + ".ITMMASTER.ITMREF_0, "
-					+ "Sum(" + company + ".XCSMED.XQTY_0) AS QTY, "
-					+ "Sum(" + company + ".XCSMED.XQTY_0)/3 AS AVERAGE "
+					//+ "Sum(" + company + ".XCSMED.XQTY_0) AS QTY, "
+					+ "AVG(" + company + ".XCSMED.XQTY_0) AS AVERAGE "
 					//+ "QTY/3 AS AVERAGE "
 					+ "FROM "
 					+ company + ".ITMMASTER INNER JOIN " + company + ".XCSMED "

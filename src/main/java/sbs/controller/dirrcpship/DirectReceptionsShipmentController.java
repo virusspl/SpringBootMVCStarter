@@ -157,7 +157,7 @@ public class DirectReceptionsShipmentController {
 				List<DirectReceptionsShipmentLine> negativeList = new ArrayList<>();
 				
 				int avg, dem, stck;
-				
+
 				for (DirectReceptionsShipmentLine line : list) {
 					// if nothing to give, never show
 					if(line.getToGive() == 0){
@@ -195,6 +195,23 @@ public class DirectReceptionsShipmentController {
 						showList.add(line);
 					}
 					else{
+						
+						/**
+						 * TEST
+						 */
+						String testCode = "57120B10";
+						if(line.getProductCode().equals(testCode)){
+							System.out.println("============= " + testCode + "===========");
+							System.out.println("avg: " + avg);
+							System.out.println("dem: " + dem);
+							System.out.println("stck: " + stck);
+							System.out.println("dem <= avg: " + (dem <= avg));
+							System.out.println("stck > 3*avg: " + (stck > 3*avg));
+							System.out.println("=============");
+						}
+						/**
+						 * TEST END
+						 */
 						negativeList.add(line);
 					}	
 				}
