@@ -167,9 +167,9 @@ public class DirectReceptionsShipmentController {
 					if(!magStock.containsKey(line.getProductCode())){
 						continue;
 					}
-					// if always hide, negative
+					// if always hide, never show
 					if(isAlwaysHide(line.getProductCode())){
-						negativeList.add(line);
+						//negativeList.add(line); - update: negative -> never
 						continue;
 					}
 					// is always show, show
@@ -195,23 +195,6 @@ public class DirectReceptionsShipmentController {
 						showList.add(line);
 					}
 					else{
-						
-						/**
-						 * TEST
-						 */
-						String testCode = "57120B10";
-						if(line.getProductCode().equals(testCode)){
-							System.out.println("============= " + testCode + "===========");
-							System.out.println("avg: " + avg);
-							System.out.println("dem: " + dem);
-							System.out.println("stck: " + stck);
-							System.out.println("dem <= avg: " + (dem <= avg));
-							System.out.println("stck > 3*avg: " + (stck > 3*avg));
-							System.out.println("=============");
-						}
-						/**
-						 * TEST END
-						 */
 						negativeList.add(line);
 					}	
 				}
