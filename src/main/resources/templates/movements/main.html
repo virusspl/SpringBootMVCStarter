@@ -75,7 +75,7 @@
 				order : [ [ 0, 'desc' ] ]
 			});
 		</script>
-		
+
 		<script th:if="__${#locale}__ == 'pl'">
 			$('#srv2').DataTable({
 				language : {
@@ -159,12 +159,14 @@
 						class="glyphicon glyphicon-menu-left"></span> <span
 						th:text="#{action.back}">back</span>
 					</a>
-					<div class="shipment_buttons margin-top-5"
-						sec:authorize="hasAnyRole(
+					<div class="shipment_buttons margin-top-5">
+				<!-- 
+				sec:authorize="hasAnyRole(
 				'ROLE_ADMIN',  
 				'ROLE_MOVEMENTSSUPERUSER', 
 				'ROLE_MOVEMENTSSHIPUSER'
-				)">
+				)"
+				 -->
 						<button class="btn btn-primary btn-sm" type="submit"
 							name="shipmov">
 							<span class="glyphicon glyphicon-sort"></span> <span
@@ -181,12 +183,14 @@
 								th:text="#{movements.shipweightdetails}">search</span>
 						</button>
 					</div>
-					<div class="reception_buttons margin-top-5"
-						sec:authorize="hasAnyRole(
+					<div class="reception_buttons margin-top-5">
+				<!--
+				sec:authorize="hasAnyRole(
 				'ROLE_ADMIN',  
 				'ROLE_MOVEMENTSSUPERUSER', 
 				'ROLE_MOVEMENTSRCPUSER'
-				)">
+				)"
+				-->
 						<button class="btn btn-primary btn-sm" type="submit"
 							name="rcpmovements">
 							<span class="glyphicon glyphicon-sort"></span> <span
@@ -479,7 +483,7 @@
 						<table id="srv2" class="display">
 							<thead>
 								<tr>
-									<th th:text="#{movements.mvtNumber}">head</th>									
+									<th th:text="#{movements.mvtNumber}">head</th>
 									<th th:text="#{movements.movementCode}">head</th>
 									<th th:text="#{movements.item}">head</th>
 									<th th:text="#{movements.quantity}">head</th>
@@ -487,13 +491,13 @@
 									<th th:text="#{movements.slot}">head</th>
 									<th th:text="#{movements.creationTime}">head</th>
 									<th th:text="#{movements.creationUserCode}">head</th>
-									<th th:text="#{movements.creationUserName}">head</th>									
-									
+									<th th:text="#{movements.creationUserName}">head</th>
+
 								</tr>
 							</thead>
 							<tfoot>
 								<tr>
-									<th th:text="#{movements.mvtNumber}">head</th>									
+									<th th:text="#{movements.mvtNumber}">head</th>
 									<th th:text="#{movements.movementCode}">head</th>
 									<th th:text="#{movements.item}">head</th>
 									<th th:text="#{movements.quantity}">head</th>
@@ -501,8 +505,8 @@
 									<th th:text="#{movements.slot}">head</th>
 									<th th:text="#{movements.creationTime}">head</th>
 									<th th:text="#{movements.creationUserCode}">head</th>
-									<th th:text="#{movements.creationUserName}">head</th>									
-									
+									<th th:text="#{movements.creationUserName}">head</th>
+
 								</tr>
 							</tfoot>
 							<tbody>
