@@ -133,7 +133,7 @@
 					With title</h3>
 			</div>
 			<div class="col-xs-12 margin-top-10">
-				 <a th:href="@{/proprog/list}"
+				<a th:href="@{/proprog/list}"
 					class="btn btn-info btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-forward"></span> <span
 					th:text="#{proprog.proprog}">Project progress</span>
@@ -141,10 +141,14 @@
 					class="btn btn-info btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-check"></span> <span
 					th:text="#{buyorders.buyorders}">HR UA Files</span>
-				</a>
-				<a th:href="@{/hrua/list}" class="btn btn-info btn-md margin-top-5">
+				</a> <a th:href="@{/hrua/list}" class="btn btn-info btn-md margin-top-5">
 					<span class="glyphicon glyphicon-user"></span> <span
 					th:text="#{hrua.files}">HR UA Files</span>
+				</a> <a th:href="@{/consumption/export}"
+					class="btn btn-info btn-md margin-top-5"
+					sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_CONSUMPTIONUSER')"> <span
+					class="glyphicon glyphicon-export"></span> <span
+					th:text="#{consumption.consumptionacv}">consumption</span>
 				</a>
 			</div>
 			<!-- PRODUCTION -->

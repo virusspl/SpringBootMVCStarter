@@ -23,6 +23,8 @@ import sbs.model.proprog.Project;
 import sbs.model.wpslook.WpslookRow;
 import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3Client;
+import sbs.model.x3.X3ConsumptionProductInfo;
+import sbs.model.x3.X3ConsumptionSupplyInfo;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ProductSellDemand;
@@ -1412,6 +1414,157 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			
 		return list;
 	}
+
+	@Override
+	public Map<String, Integer> getAcvConsumptionListForYear(int year, String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "xcs.XART_0, "
+				+ "Sum(xcs.XQTY_0) AS theSum "
+				+ "FROM " 
+				+ company+ ".XCSMED xcs "
+				+ "WHERE "
+				+ "xcs.XPER_0 >= ? AND xcs.XPER_0 <= ? "
+				+ "GROUP BY xcs.XART_0"
+				,
+                new Object[]{year+"01", year+"12"}
+				);
+		
+		Map <String, Integer> result = new HashMap<>();
+		for(Map<String,Object> row: resultSet ){
+				result.put((String)row.get("XART_0"), ((BigDecimal)row.get("theSum")).intValue());
+		}
+	
+		return result;
+	}
+
+	@Override
+	public Map<String, Integer> getAcvDemandList(String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "Sum(ord.RMNEXTQTY_0) AS theSum, "
+				+ "ord.ITMREF_0 "
+				+ "FROM "
+				+ company + ".ORDERS ord "
+				+ "WHERE "
+				+ "ord.WIPTYP_0 = 1 OR ord.WIPTYP_0 = 6 "
+				+ "GROUP BY "
+				+ "ord.ITMREF_0"	
+				,
+                new Object[]{}
+				);
+		
+		Map <String, Integer> result = new HashMap<>();
+		for(Map<String,Object> row: resultSet ){
+				result.put((String)row.get("ITMREF_0"), ((BigDecimal)row.get("theSum")).intValue());
+		}
+	
+		return result;
+	}
+	
+	@Override
+	public Map<String, String> getAcvProductsEnglishDescriptions(String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "txt.IDENT1_0, "
+				+ "txt.TEXTE_0 "
+				+ "FROM "
+				+ company + ".ATEXTRA txt INNER JOIN "+ company + ".ITMMASTER itm "
+				+ "ON itm.ITMREF_0 = txt.IDENT1_0 "
+				+ "WHERE "
+				+ "txt.CODFIC_0 = ? "
+				+ "AND "
+				+ "txt.LANGUE_0 = ? "
+				+ "AND "
+				+ "txt.ZONE_0 = ? "
+				+ "AND "
+				+ "itm.TCLCOD_0 = ? "
+				,
+                new Object[]{"ITMMASTER", "ENG", "DES1AXX", "ACV"}
+				);
+		
+		Map <String, String> result = new HashMap<>();
+		for(Map<String,Object> row: resultSet ){
+				result.put((String)row.get("IDENT1_0"), ((String)row.get("TEXTE_0")));
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public Map<String, X3ConsumptionSupplyInfo> getAcvListOfLastSupplyInfo(String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "prcd.ITMREF_0, "
+				+ "prct.RCPDAT_0, "
+				+ "prct.BPSNUM_0, "
+				+ "prct.BPONAM_0 "
+				+ "FROM ("
+				+ company + ".PRECEIPTD prcd INNER JOIN " + company + ".PRECEIPT prct "
+				+ "ON prcd.PTHNUM_0 = prct.PTHNUM_0"
+				+ ") "
+				+ "INNER JOIN " + company + ".ITMMASTER itm "
+				+ "ON prcd.ITMREF_0 = itm.ITMREF_0 "
+				+ "WHERE "
+				+ "itm.TCLCOD_0 = ? "
+				,
+                new Object[]{"ACV"}
+				);
+		
+		Map <String, X3ConsumptionSupplyInfo> map = new HashMap<>();
+		X3ConsumptionSupplyInfo info;
+		String key;
+		for(Map<String,Object> row: resultSet ){
+			key = (String)row.get("ITMREF_0");
+			info = new X3ConsumptionSupplyInfo();
+			info.setProductCode(key);
+			info.setDate((Timestamp)row.get("RCPDAT_0"));
+			info.setSupplierCode((String)row.get("BPSNUM_0"));
+			info.setName((String)row.get("BPONAM_0"));
+			map.put(key, info);
+		}
+			
+		return map;
+	}
+
+	@Override
+	public List<X3ConsumptionProductInfo> getAcvListForConsumptionReport(String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "itm.ITMREF_0, "
+				+ "itm.ITMDES1_0, "
+				+ "itv.PHYSTO_0, "
+				+ "itv.ORDSTO_0, "
+				+ "itv.AVC_0 "
+				+ "FROM ("
+				+ company + ".ITMMASTER itm INNER JOIN " + company + ".ITMMVT itv "
+				+ "ON itm.ITMREF_0 = itv.ITMREF_0"
+				+ ") "
+				+ "INNER JOIN " + company + ".ITMFACILIT itf "
+				+ "ON itm.ITMREF_0 = itf.ITMREF_0 "
+				+ "WHERE itm.TCLCOD_0 = ? "
+
+				,
+                new Object[]{"ACV"}
+				);
+		
+		List<X3ConsumptionProductInfo> map = new ArrayList<>();
+		X3ConsumptionProductInfo info;
+		for(Map<String,Object> row: resultSet ){
+			info = new X3ConsumptionProductInfo();
+			info.setProductCode((String)row.get("ITMREF_0"));
+			info.setProductDescriptionPl((String)row.get("ITMDES1_0"));
+			info.setStock(((BigDecimal)row.get("PHYSTO_0")).intValue());
+			info.setInOrder(((BigDecimal)row.get("ORDSTO_0")).intValue());
+			info.setAverageCost(((BigDecimal)row.get("AVC_0")).doubleValue());
+
+			map.add(info);
+		}
+			
+		return map;
+	}
+
+
 
 
 

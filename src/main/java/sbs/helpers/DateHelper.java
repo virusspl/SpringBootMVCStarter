@@ -9,12 +9,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class DateHelper {
 	
+	private SimpleDateFormat YyyyMmDdFormat;
 	private SimpleDateFormat ddMmYyyyFormat;
 	private SimpleDateFormat ddMmYyFormat;
 	private SimpleDateFormat ddMmYyyyHhMmFormat;
 	
 	
 	public DateHelper(){
+		YyyyMmDdFormat = new SimpleDateFormat("yyyy/MM/dd");
 		ddMmYyyyFormat = new SimpleDateFormat("dd/MM/yyyy");
 		ddMmYyFormat = new SimpleDateFormat("dd/MM/yy");
 		ddMmYyyyHhMmFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -38,6 +40,14 @@ public class DateHelper {
 	
 	public String formatDdMmYyyy(Timestamp date){
 		return ddMmYyyyFormat.format(date);
+	}
+	
+	public String formatYyyyMmDd(Date date){
+		return YyyyMmDdFormat.format(date);
+	}
+	
+	public String formatYyyyMmDd(Timestamp date){
+		return YyyyMmDdFormat.format(date);
 	}
 	
 	public String formatDdMmYy(Date date){

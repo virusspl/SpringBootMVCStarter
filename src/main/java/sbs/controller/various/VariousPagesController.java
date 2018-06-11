@@ -1,5 +1,6 @@
 package sbs.controller.various;
 
+import java.util.ArrayList;
 /*
 import java.io.InputStream;
 import java.net.URL;
@@ -15,8 +16,11 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import sbs.helpers.ExcelContents;
+import sbs.helpers.ExcelExportHelper;
 import sbs.model.bhptickets.BhpTicketState;
 import sbs.model.qualitysurveys.QualitySurveyParameter;
 import sbs.model.users.Role;
@@ -62,7 +66,7 @@ public class VariousPagesController {
 	public String noAccess() {
 		return "various/noaccess";
 	}
-	
+
 	@RequestMapping("/expired")
 	public String expired(RedirectAttributes redirectAttributes, Locale locale) {
 		redirectAttributes.addFlashAttribute("error", messageSource.getMessage("session.expired", null, locale));
@@ -77,105 +81,138 @@ public class VariousPagesController {
 	@RequestMapping("/mail")
 	public String mail(Model model) {
 		try {
-			mailService.sendEmail("spring@spring.pl", new String[]{"michalak.k@atwsystem.pl"},new String[]{} ,"Spring mail", "Little test. Without polish znaków :)");
+			mailService.sendEmail("spring@spring.pl", new String[] { "michalak.k@atwsystem.pl" }, new String[] {},
+					"Spring mail", "Little test. Without polish znaków :)");
 		} catch (MessagingException e) {
 			e.printStackTrace();
 		}
 		return "welcome";
 	}
-	
+
+	@RequestMapping("/excel")
+	public ModelAndView getExcel() {
+		// create excel contents
+		ExcelContents contents = new ExcelContents();
+		// filename, sheetname
+		contents.setFileName("excelExport");
+		contents.setSheetName("export1");
+		// headers
+		ArrayList<String> headers = new ArrayList<>();
+		headers.add("COL1");
+		headers.add("COL2");
+		headers.add("COL3");
+		headers.add("COL4");
+		headers.add("COL5");
+		contents.setHeaders(headers);
+		// rows
+		ArrayList<ArrayList<Object>> rows = new ArrayList<>();
+		ArrayList<Object> row;
+		
+		for(int i = 0; i<10; i++){
+			row = new ArrayList<>();
+			row.add("01");
+			row.add("02");
+			row.add("03");
+			row.add("04");
+			row.add("05");
+			rows.add(row);
+		}
+		
+		contents.setValues(rows);
+		
+		return new ModelAndView(new ExcelExportHelper(), "contents", contents);
+	}
+
 	@RequestMapping("/test")
 	public String test(Model model) {
 
+		// URL url = new URL
+		// ("ftp://username:password@www.superland.example/server");
+		// URLConnection urlc = url.openConnection();
+		// InputStream is = urlc.getInputStream();
 
-		//URL url = new URL ("ftp://username:password@www.superland.example/server");
-		//URLConnection urlc = url.openConnection();
-		//InputStream is = urlc.getInputStream();
-		
+		// List<BhpTicketState> listb = bhpTicketStateService.findAll();
+		// System.out.println(listb);
 
-		//List<BhpTicketState> listb = bhpTicketStateService.findAll();
-		//System.out.println(listb);
-		
-		//X3Client result = jdbcOracleX3Service.findClientByCode("ATW", "cad40");
-		//X3SalesOrder result = jdbcOracleX3Service.findSalesOrderByNumber("ATW", "yza140099");
-		//X3Product result = jdbcOracleX3Service.findProductByCode("ATW", "98e01");
-		//X3ProductionOrderDetails result = jdbcOracleX3Service.getProductionOrderInfoByNumber("ATW", "X31121400099455");
-		//System.out.println(result);
-		
-		///List<X3BomItem> list = jdbcOracleX3Service.findBomPartsByParent("ATW", "431S1001");
-		//model.addAttribute("list", listb);
-		
+		// X3Client result = jdbcOracleX3Service.findClientByCode("ATW",
+		// "cad40");
+		// X3SalesOrder result =
+		// jdbcOracleX3Service.findSalesOrderByNumber("ATW", "yza140099");
+		// X3Product result = jdbcOracleX3Service.findProductByCode("ATW",
+		// "98e01");
+		// X3ProductionOrderDetails result =
+		// jdbcOracleX3Service.getProductionOrderInfoByNumber("ATW",
+		// "X31121400099455");
+		// System.out.println(result);
+
+		/// List<X3BomItem> list =
+		/// jdbcOracleX3Service.findBomPartsByParent("ATW", "431S1001");
+		// model.addAttribute("list", listb);
+
 		/*
-		// CREATE DEMO SURVEY
-		QualitySurvey qs = new QualitySurvey();
-		qs.setClientCode("CAD40");
-		qs.setClientName("ADR Uboldo");
-		qs.setCreationDate(new Timestamp(new java.util.Date().getTime()));
-		qs.setOperatorDepartment("Informatyka");
-		qs.setOperatorFirstName("Krzysztof");
-		qs.setOperatorId("1116");
-		qs.setOperatorLastName("Michalak");
-		qs.setOperatorPosition("Ciężko powiedzieć / programista");
-		qs.setOperatorRcpNo("BLABLABLA123");
-		qs.setParameterAnswers(new HashSet<QualitySurveyParameterAnswer>());
-		qs.setProductCode("98E01");
-		qs.setProductDescription("BLA.. blabla...bla bla bla bla (Gigi D'Agostino");
-		qs.setProductionOrder("X111111111111");
-		qs.setSalesOrder("ADASALES00001");
-		qs.setUser(userService.findByUsername("admin"));
-		qs.setType("bom");
-		
-		qualitySurveysService.save(qs);
-		System.out.println(qs.getId());
+		 * // CREATE DEMO SURVEY QualitySurvey qs = new QualitySurvey();
+		 * qs.setClientCode("CAD40"); qs.setClientName("ADR Uboldo");
+		 * qs.setCreationDate(new Timestamp(new java.util.Date().getTime()));
+		 * qs.setOperatorDepartment("Informatyka");
+		 * qs.setOperatorFirstName("Krzysztof"); qs.setOperatorId("1116");
+		 * qs.setOperatorLastName("Michalak");
+		 * qs.setOperatorPosition("Ciężko powiedzieć / programista");
+		 * qs.setOperatorRcpNo("BLABLABLA123"); qs.setParameterAnswers(new
+		 * HashSet<QualitySurveyParameterAnswer>()); qs.setProductCode("98E01");
+		 * qs.
+		 * setProductDescription("BLA.. blabla...bla bla bla bla (Gigi D'Agostino"
+		 * ); qs.setProductionOrder("X111111111111");
+		 * qs.setSalesOrder("ADASALES00001");
+		 * qs.setUser(userService.findByUsername("admin")); qs.setType("bom");
+		 * 
+		 * qualitySurveysService.save(qs); System.out.println(qs.getId());
 		 */
-		
-		/*
-		 // VARIOUS TESTS
-		model.addAttribute("resultOptima",jdbcAdrOptimaService.findAllCurrentlyEmployed());
-		model.addAttribute("resultX3", jdbcOracleX3Service.findAllUsers("ATW"));
-		model.addAttribute("geodeList",jdbcOracleGeodeService.findLocationsOfProduct("836004"));
-		*/
-		
-		/*
-		// TEST HR
-		HrUserInfo hr = jdbcAdrOptimaService.findCurrentlyEmployedById("1116");
-		if (hr != null) {
-			System.out.println(" ==== HR INFO =====");
-			System.out.println(hr.getId());
-			System.out.println(hr.getFirstName());
-			System.out.println(hr.getLastName());
-			System.out.println(hr.getCurrentJobStart());
-			System.out.println(hr.getCurrentJobEnd());
-			System.out.println(hr.getEmployDate());
-			System.out.println(hr.getQuitDate());
-			System.out.println(hr.getDepartment());
-			System.out.println(hr.getPosition());
-			System.out.println(hr.getRcpNumber());
-		} else {
-			System.out.println("no current user HR info found by id");
-		}
 
-		HrUserInfo hr2 = jdbcAdrOptimaService.findCurrentlyEmployedByCardNo("1600DFF297");
-		if (hr2 != null) {
-			System.out.println(" ==== HR INFO =====");
-			System.out.println(hr2.getId());
-			System.out.println(hr2.getFirstName());
-			System.out.println(hr2.getLastName());
-			System.out.println(hr2.getCurrentJobStart());
-			System.out.println(hr2.getCurrentJobEnd());
-			System.out.println(hr2.getEmployDate());
-			System.out.println(hr2.getQuitDate());
-			System.out.println(hr2.getDepartment());
-			System.out.println(hr2.getPosition());
-			System.out.println(hr2.getRcpNumber());
-		} else {
-			System.out.println("no current user HR info found by card no");
-		}
-		*/
-		//return "various/jdbc";
-		//return "various/test";\
+		/*
+		 * // VARIOUS TESTS
+		 * model.addAttribute("resultOptima",jdbcAdrOptimaService.
+		 * findAllCurrentlyEmployed()); model.addAttribute("resultX3",
+		 * jdbcOracleX3Service.findAllUsers("ATW"));
+		 * model.addAttribute("geodeList",jdbcOracleGeodeService.
+		 * findLocationsOfProduct("836004"));
+		 */
+
+		/*
+		 * // TEST HR HrUserInfo hr =
+		 * jdbcAdrOptimaService.findCurrentlyEmployedById("1116"); if (hr !=
+		 * null) { System.out.println(" ==== HR INFO =====");
+		 * System.out.println(hr.getId());
+		 * System.out.println(hr.getFirstName());
+		 * System.out.println(hr.getLastName());
+		 * System.out.println(hr.getCurrentJobStart());
+		 * System.out.println(hr.getCurrentJobEnd());
+		 * System.out.println(hr.getEmployDate());
+		 * System.out.println(hr.getQuitDate());
+		 * System.out.println(hr.getDepartment());
+		 * System.out.println(hr.getPosition());
+		 * System.out.println(hr.getRcpNumber()); } else {
+		 * System.out.println("no current user HR info found by id"); }
+		 * 
+		 * HrUserInfo hr2 =
+		 * jdbcAdrOptimaService.findCurrentlyEmployedByCardNo("1600DFF297"); if
+		 * (hr2 != null) { System.out.println(" ==== HR INFO =====");
+		 * System.out.println(hr2.getId());
+		 * System.out.println(hr2.getFirstName());
+		 * System.out.println(hr2.getLastName());
+		 * System.out.println(hr2.getCurrentJobStart());
+		 * System.out.println(hr2.getCurrentJobEnd());
+		 * System.out.println(hr2.getEmployDate());
+		 * System.out.println(hr2.getQuitDate());
+		 * System.out.println(hr2.getDepartment());
+		 * System.out.println(hr2.getPosition());
+		 * System.out.println(hr2.getRcpNumber()); } else {
+		 * System.out.println("no current user HR info found by card no"); }
+		 */
+		// return "various/jdbc";
 		return "various/test";
+
 	}
+
 	@RequestMapping("/testprint")
 	public String testprint(Model model) {
 		return "various/testprint";
@@ -184,7 +221,7 @@ public class VariousPagesController {
 	@RequestMapping("/init")
 	public String initDatabaseData(Model model, Locale locale) {
 		String msg = messageSource.getMessage("action.objects.created", null, locale) + ": ";
-		
+
 		Role adminRole = roleService.findByName("ROLE_ADMIN");
 		if (adminRole == null) {
 			adminRole = new Role();
@@ -211,7 +248,7 @@ public class VariousPagesController {
 			roleService.save(qualityUserRole);
 			msg += "[role: " + qualityUserRole.getName() + "], ";
 		}
-		
+
 		Role bhpManager = roleService.findByName("ROLE_BHPMANAGER");
 		if (bhpManager == null) {
 			bhpManager = new Role();
@@ -240,7 +277,7 @@ public class VariousPagesController {
 			roleService.save(bhpSupervisor);
 			msg += "[role: " + bhpSupervisor.getName() + "], ";
 		}
-		
+
 		Role hrUaManager = roleService.findByName("ROLE_HRUAMANAGER");
 		if (hrUaManager == null) {
 			hrUaManager = new Role();
@@ -248,7 +285,7 @@ public class VariousPagesController {
 			roleService.save(hrUaManager);
 			msg += "[role: " + hrUaManager.getName() + "], ";
 		}
-		
+
 		Role buyOrdManager = roleService.findByName("ROLE_BUYORDMANAGER");
 		if (buyOrdManager == null) {
 			buyOrdManager = new Role();
@@ -256,7 +293,7 @@ public class VariousPagesController {
 			roleService.save(buyOrdManager);
 			msg += "[role: " + buyOrdManager.getName() + "], ";
 		}
-		
+
 		Role pprog = roleService.findByName("ROLE_PROPROG");
 		if (pprog == null) {
 			pprog = new Role();
@@ -264,7 +301,7 @@ public class VariousPagesController {
 			roleService.save(pprog);
 			msg += "[role: " + pprog.getName() + "], ";
 		}
-		
+
 		Role pprogsuper = roleService.findByName("ROLE_PROPROGSUPERVISOR");
 		if (pprogsuper == null) {
 			pprogsuper = new Role();
@@ -272,7 +309,7 @@ public class VariousPagesController {
 			roleService.save(pprogsuper);
 			msg += "[role: " + pprogsuper.getName() + "], ";
 		}
-		
+
 		Role movementsUser = roleService.findByName("ROLE_MOVEMENTSUSER");
 		if (movementsUser == null) {
 			movementsUser = new Role();
@@ -280,7 +317,7 @@ public class VariousPagesController {
 			roleService.save(movementsUser);
 			msg += "[role: " + movementsUser.getName() + "], ";
 		}
-		
+
 		Role movementsSuperUser = roleService.findByName("ROLE_MOVEMENTSSUPERUSER");
 		if (movementsSuperUser == null) {
 			movementsSuperUser = new Role();
@@ -302,7 +339,7 @@ public class VariousPagesController {
 			roleService.save(movementsRcpUser);
 			msg += "[role: " + movementsRcpUser.getName() + "], ";
 		}
-		
+
 		Role utrNormalUser = roleService.findByName("ROLE_UTR_NORMALUSER");
 		if (utrNormalUser == null) {
 			utrNormalUser = new Role();
@@ -310,7 +347,7 @@ public class VariousPagesController {
 			roleService.save(utrNormalUser);
 			msg += "[role: " + utrNormalUser.getName() + "], ";
 		}
-		
+
 		Role rcpManager = roleService.findByName("ROLE_RCPMANAGER");
 		if (rcpManager == null) {
 			rcpManager = new Role();
@@ -318,7 +355,14 @@ public class VariousPagesController {
 			roleService.save(rcpManager);
 			msg += "[role: " + rcpManager.getName() + "], ";
 		}
-				
+		
+		Role consumptionUser = roleService.findByName("ROLE_CONSUMPTIONUSER");
+		if (consumptionUser == null) {
+			consumptionUser = new Role();
+			consumptionUser.setName("ROLE_CONSUMPTIONUSER");
+			roleService.save(consumptionUser);
+			msg += "[role: " + consumptionUser.getName() + "], ";
+		}
 
 		System.out.println("get users:");
 		User admin = userService.findByUsername("Admin");
@@ -408,161 +452,161 @@ public class VariousPagesController {
 			userService.save(user);
 			msg += "[user: " + user.getUsername() + "], ";
 		}
-		
-		if(parametersService.findAll().size()==0){
+
+		if (parametersService.findAll().size() == 0) {
 			QualitySurveyParameter param;
-			
-			param =  new QualitySurveyParameter();
+
+			param = new QualitySurveyParameter();
 			param.setActive(true);
 			param.setTitle("Podać roztaw osi");
 			param.setType(QualitySurveyParameter.PARAMETER_TEXT);
 			parametersService.save(param);
 			msg += "[qs_param: " + param.getTitle() + "], ";
-			
-			param =  new QualitySurveyParameter();
+
+			param = new QualitySurveyParameter();
 			param.setActive(true);
 			param.setTitle("Podać roztaw płytek resorowych");
 			param.setType(QualitySurveyParameter.PARAMETER_TEXT);
 			parametersService.save(param);
 			msg += "[qs_param: " + param.getTitle() + "], ";
-			
-			param =  new QualitySurveyParameter();
+
+			param = new QualitySurveyParameter();
 			param.setActive(true);
 			param.setTitle("Podać roztaw wspornikówi");
 			param.setType(QualitySurveyParameter.PARAMETER_TEXT);
 			parametersService.save(param);
 			msg += "[qs_param: " + param.getTitle() + "], ";
-			
-			param =  new QualitySurveyParameter();
+
+			param = new QualitySurveyParameter();
 			param.setActive(true);
 			param.setTitle("Podać średnicę szczęk po przetaczaniu");
 			param.setType(QualitySurveyParameter.PARAMETER_TEXT);
 			parametersService.save(param);
 			msg += "[qs_param: " + param.getTitle() + "], ";
-			
-			param =  new QualitySurveyParameter();
+
+			param = new QualitySurveyParameter();
 			param.setActive(true);
 			param.setTitle("Podać moment skrętu osi (skrętnej)");
 			param.setType(QualitySurveyParameter.PARAMETER_TEXT);
 			parametersService.save(param);
 			msg += "[qs_param: " + param.getTitle() + "], ";
-			
-			param =  new QualitySurveyParameter();
+
+			param = new QualitySurveyParameter();
 			param.setActive(true);
 			param.setTitle("Moment dokręcenia nakrętki sworznia hamulca");
 			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
 			parametersService.save(param);
 			msg += "[qs_param: " + param.getTitle() + "], ";
-			
-			param =  new QualitySurveyParameter();
+
+			param = new QualitySurveyParameter();
 			param.setActive(true);
 			param.setTitle("Poprawność działania ABS");
 			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
 			parametersService.save(param);
 			msg += "[qs_param: " + param.getTitle() + "], ";
-			
-			param =  new QualitySurveyParameter();
+
+			param = new QualitySurveyParameter();
 			param.setActive(true);
 			param.setTitle("Dzwignia zgodna z rysunkiem/kat.Prod.");
 			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
 			parametersService.save(param);
 			msg += "[qs_param: " + param.getTitle() + "], ";
-			
-			param =  new QualitySurveyParameter();
+
+			param = new QualitySurveyParameter();
 			param.setActive(true);
 			param.setTitle("Sprawdzić poprawność obrotu Piasty / Bębna");
 			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
 			parametersService.save(param);
 			msg += "[qs_param: " + param.getTitle() + "], ";
-			
-			param =  new QualitySurveyParameter();
+
+			param = new QualitySurveyParameter();
 			param.setActive(true);
 			param.setTitle("Czy zamontowano i poprawnie zaplombowano  zawlęczkę");
 			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
 			parametersService.save(param);
 			msg += "[qs_param: " + param.getTitle() + "], ";
-			
-			param =  new QualitySurveyParameter();
+
+			param = new QualitySurveyParameter();
 			param.setActive(true);
 			param.setTitle("Zgodność Konfiguracji osi z Rysunkiem technicznym");
 			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
 			parametersService.save(param);
 			msg += "[qs_param: " + param.getTitle() + "], ";
 
-			param =  new QualitySurveyParameter();
+			param = new QualitySurveyParameter();
 			param.setActive(true);
 			param.setTitle("Sprawdzić zbieżność");
 			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
 			parametersService.save(param);
 			msg += "[qs_param: " + param.getTitle() + "], ";
-			
-			param =  new QualitySurveyParameter();
+
+			param = new QualitySurveyParameter();
 			param.setActive(true);
 			param.setTitle("Smarowanie zgodnie z instrukcją/kartą");
 			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
 			parametersService.save(param);
 			msg += "[qs_param: " + param.getTitle() + "], ";
 		}
-		
+
 		BhpTicketState bhpState;
-		
-		if(bhpTicketStateService.findByOrder(10) == null){
+
+		if (bhpTicketStateService.findByOrder(10) == null) {
 			bhpState = new BhpTicketState();
 			bhpState.setOrder(10);
 			bhpState.setDescription("Nowy");
 			bhpTicketStateService.save(bhpState);
 			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
 		}
-		
-		if(bhpTicketStateService.findByOrder(20) == null){
+
+		if (bhpTicketStateService.findByOrder(20) == null) {
 			bhpState = new BhpTicketState();
 			bhpState.setOrder(20);
 			bhpState.setDescription("Odczytany");
 			bhpTicketStateService.save(bhpState);
 			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
 		}
-		
-		if(bhpTicketStateService.findByOrder(25) == null){
+
+		if (bhpTicketStateService.findByOrder(25) == null) {
 			bhpState = new BhpTicketState();
 			bhpState.setOrder(25);
 			bhpState.setDescription("Ponownie otwarty");
 			bhpTicketStateService.save(bhpState);
 			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
 		}
-			
-		if(bhpTicketStateService.findByOrder(30) == null){	
+
+		if (bhpTicketStateService.findByOrder(30) == null) {
 			bhpState = new BhpTicketState();
 			bhpState.setOrder(30);
 			bhpState.setDescription("Przekazany");
 			bhpTicketStateService.save(bhpState);
 			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
 		}
-		
-		if(bhpTicketStateService.findByOrder(35) == null){	
+
+		if (bhpTicketStateService.findByOrder(35) == null) {
 			bhpState = new BhpTicketState();
 			bhpState.setOrder(35);
 			bhpState.setDescription("Komentarz UTR");
 			bhpTicketStateService.save(bhpState);
 			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
 		}
-			
-		if(bhpTicketStateService.findByOrder(40) == null){	
+
+		if (bhpTicketStateService.findByOrder(40) == null) {
 			bhpState = new BhpTicketState();
 			bhpState.setOrder(40);
 			bhpState.setDescription("Zamknięty");
 			bhpTicketStateService.save(bhpState);
 			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
 		}
-			
-		if(bhpTicketStateService.findByOrder(90) == null){			
+
+		if (bhpTicketStateService.findByOrder(90) == null) {
 			bhpState = new BhpTicketState();
 			bhpState.setOrder(90);
 			bhpState.setDescription("Anulowany");
 			bhpTicketStateService.save(bhpState);
 			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
-		}	
-		
-		if(bhpTicketStateService.findByOrder(95) == null){			
+		}
+
+		if (bhpTicketStateService.findByOrder(95) == null) {
 			bhpState = new BhpTicketState();
 			bhpState.setOrder(95);
 			bhpState.setDescription("Archiwum");

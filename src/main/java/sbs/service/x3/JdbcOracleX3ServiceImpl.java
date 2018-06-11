@@ -13,6 +13,8 @@ import sbs.model.proprog.Project;
 import sbs.model.wpslook.WpslookRow;
 import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3Client;
+import sbs.model.x3.X3ConsumptionProductInfo;
+import sbs.model.x3.X3ConsumptionSupplyInfo;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ProductSellDemand;
@@ -211,5 +213,29 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 		return jdbcOracleX3Repository.findDirectReceptionsShipmentLines(startDate,  endDate, company);
 	}
 
+	@Override
+	public Map<String, Integer> getAcvConsumptionListForYear(int year, String company) {
+		return jdbcOracleX3Repository.getAcvConsumptionListForYear(year, company);
+	}
+
+	@Override
+	public Map<String, Integer> getAcvDemandList(String company) {
+		return jdbcOracleX3Repository.getAcvDemandList(company);
+	}
+
+	@Override
+	public Map<String, X3ConsumptionSupplyInfo> getAcvListOfLastSupplyInfo(String company) {
+		return jdbcOracleX3Repository.getAcvListOfLastSupplyInfo(company);
+	}
+
+	@Override
+	public List<X3ConsumptionProductInfo> getAcvListForConsumptionReport(String company) {
+		return jdbcOracleX3Repository.getAcvListForConsumptionReport(company);
+	}
+
+	@Override
+	public Map<String, String> getAcvProductsEnglishDescriptions(String company) {
+		return jdbcOracleX3Repository.getAcvProductsEnglishDescriptions(company);
+	}
 
 }

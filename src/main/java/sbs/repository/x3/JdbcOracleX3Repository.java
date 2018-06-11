@@ -9,6 +9,8 @@ import sbs.model.proprog.Project;
 import sbs.model.wpslook.WpslookRow;
 import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3Client;
+import sbs.model.x3.X3ConsumptionProductInfo;
+import sbs.model.x3.X3ConsumptionSupplyInfo;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ProductSellDemand;
@@ -57,5 +59,10 @@ public interface JdbcOracleX3Repository  {
 	public Map<String, Integer> findAcvMagStock(String company);
 	public Map<String, Integer> findAcvShipStock(String company);
 	public List<DirectReceptionsShipmentLine> findDirectReceptionsShipmentLines(Date startDate, Date endDate, String company);
+	public Map<String, Integer> getAcvConsumptionListForYear(int year, String company);
+	public Map<String, Integer> getAcvDemandList(String company);
+	public Map<String, X3ConsumptionSupplyInfo> getAcvListOfLastSupplyInfo(String company);
+	public List<X3ConsumptionProductInfo> getAcvListForConsumptionReport(String company);
+	public Map<String, String> getAcvProductsEnglishDescriptions(String company);
 	
 }
