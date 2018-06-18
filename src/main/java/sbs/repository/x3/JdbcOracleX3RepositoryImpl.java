@@ -30,6 +30,7 @@ import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ProductSellDemand;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3SalesOrder;
+import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
 import sbs.model.x3.X3UtrFault;
 import sbs.model.x3.X3UtrFaultLine;
@@ -1548,7 +1549,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
                 new Object[]{"ACV"}
 				);
 		
-		List<X3ConsumptionProductInfo> map = new ArrayList<>();
+		List<X3ConsumptionProductInfo> list = new ArrayList<>();
 		X3ConsumptionProductInfo info;
 		for(Map<String,Object> row: resultSet ){
 			info = new X3ConsumptionProductInfo();
@@ -1558,11 +1559,91 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			info.setInOrder(((BigDecimal)row.get("ORDSTO_0")).intValue());
 			info.setAverageCost(((BigDecimal)row.get("AVC_0")).doubleValue());
 
-			map.add(info);
+			list.add(info);
 		}
 			
+		return list;
+	}
+
+	@Override
+	public List<X3SalesOrderLine> findOpenedSalesOrderLinesInPeriod(Date startDate, Date endDate, String company) {
+		
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "SOQ.SOHNUM_0, "
+				+ "SOQ.SOPLIN_0, "
+				+ "SOQ.QTYSTU_0, "
+				+ "(SOQ.QTYSTU_0 - SOQ.ODLQTYSTU_0 - SOQ.DLVQTY_0) AS LEFT_TO_SEND,  "
+				+ "ITM.ITMREF_0, "
+				+ "ITM.ITMDES1_0, "
+				+ "ITM.TSICOD_0, "
+				+ "ITM.TSICOD_1, "
+				+ "ITM.TSICOD_2, "
+				+ "SOQ.DEMDLVDAT_0, "
+				+ "BPR.BPRNUM_0, "
+				+ "BPR.BPRNAM_0, "
+				+ "BPR.CRY_0 "
+				+ "FROM ("
+				+ "(" + company + ".SORDERQ SOQ INNER JOIN " + company + ".ITMMASTER ITM "
+				+ "ON SOQ.ITMREF_0 = ITM.ITMREF_0) "
+				+ "INNER JOIN " + company + ".SORDER SOR ON SOQ.SOHNUM_0 = SOR.SOHNUM_0) "
+				+ "INNER JOIN " + company + ".BPARTNER BPR ON SOR.X_CODCLI_0 = BPR.BPRNUM_0 "
+				+ "WHERE "
+				+ "SOQ.DEMDLVDAT_0 >= ? AND "
+				+ "SOQ.DEMDLVDAT_0 <= ? AND "
+				+ "ITM.TCLCOD_0  = ? AND "
+				+ "SOQ.SOQSTA_0 <> ? "
+				+ "ORDER BY "
+				+ "SOQ.SOHNUM_0, "
+				+ "ITM.ITMREF_0, "
+				+ "SOQ.DEMDLVDAT_0, "
+				+ "BPR.BPRNAM_0"
+				,
+                new Object[]{startDate, endDate, "ACV", 3}
+				);
+		
+		List<X3SalesOrderLine> list = new ArrayList<>();
+		X3SalesOrderLine line;
+		for(Map<String,Object> row: resultSet ){
+			line = new X3SalesOrderLine();
+			line.setOrderNumber((String)row.get("SOHNUM_0"));
+			line.setOrderLineNumber(((BigDecimal)row.get("SOPLIN_0")).intValue());
+			line.setProductCode((String)row.get("ITMREF_0"));
+			line.setProductDescription((String)row.get("ITMDES1_0"));
+			line.setProductGr1((String)row.get("TSICOD_0"));
+			line.setProductGr2((String)row.get("TSICOD_1"));
+			line.setProductGr3((String)row.get("TSICOD_2"));
+			line.setClientCode((String)row.get("BPRNUM_0"));
+			line.setClientName(((String)row.get("BPRNAM_0")));
+			line.setCountry(((String)row.get("CRY_0")));
+			line.setDemandedDate(((Timestamp)row.get("DEMDLVDAT_0")));
+			line.setQuantityLeftToSend(((BigDecimal)row.get("LEFT_TO_SEND")).intValue());
+			line.setQuantityOrdered(((BigDecimal)row.get("QTYSTU_0")).intValue());
+			list.add(line);
+		}
+		return list;
+	}
+
+	@Override
+	public Map<String, Integer> findGeneralStockForAllProducts(String company) {
+
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "itv.ITMREF_0, "
+				+ "itv.PHYSTO_0 "
+				+ "FROM " 
+				+ company + ".ITMMVT itv "
+				,
+                new Object[]{}
+				);
+		
+		Map<String, Integer> map = new HashMap<>();
+		for(Map<String,Object> row: resultSet ){
+			map.put((String)row.get("ITMREF_0"), ((BigDecimal)row.get("PHYSTO_0")).intValue());
+		}
 		return map;
 	}
+
 
 
 

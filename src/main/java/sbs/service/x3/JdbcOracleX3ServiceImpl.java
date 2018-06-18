@@ -20,6 +20,7 @@ import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ProductSellDemand;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3SalesOrder;
+import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
 import sbs.model.x3.X3UtrFault;
 import sbs.model.x3.X3UtrFaultLine;
@@ -237,5 +238,16 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	public Map<String, String> getAcvProductsEnglishDescriptions(String company) {
 		return jdbcOracleX3Repository.getAcvProductsEnglishDescriptions(company);
 	}
+
+	@Override
+	public List<X3SalesOrderLine> findOpenedSalesOrderLinesInPeriod(Date startDate, Date endDate, String company) {
+		return jdbcOracleX3Repository.findOpenedSalesOrderLinesInPeriod(startDate, endDate, company);
+	}
+
+	@Override
+	public Map<String, Integer> findGeneralStockForAllProducts(String company) {
+		return jdbcOracleX3Repository.findGeneralStockForAllProducts(company);
+	}
+
 
 }

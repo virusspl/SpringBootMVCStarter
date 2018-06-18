@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/print">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script"></div>
+	<div layout:fragment="content">
+		<div class="hideonprint">
+			<div class="margin-top-10">
+				<span th:text="#{dirrcpship.main.message}"> Welcome message </span>
+			</div>
+			<a th:href="@{/dirrcpship/main}"> <span th:text="#{action.back}">back</span></a>
+		</div>
+		<!-- FORM -->
+		<div th:if="${list}">
+			<div class="row margin-top-10">
+				<div class="col-xs-12">
+					<h3 class="text-primary" th:text="${title}">result</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="table-responsive">
+						<table id="srv" class="display">
+							<thead>
+								<tr>
+									<th th:text="#{dirrcpship.order}">head</th>
+									<th th:text="#{dirrcpship.productCode}">head</th>
+									<th th:text="#{dirrcpship.productDescription}">head</th>
+									<th th:text="#{dirrcpship.demandedDate}">head</th>
+									<th th:text="#{dirrcpship.clientName}">head</th>
+									<th th:text="#{dirrcpship.country}">head</th>
+									<th th:text="#{dirrcpship.stock}">head</th>
+									<th th:text="#{dirrcpship.toGive}">head</th>
+									<th th:text="#{dirrcpship.issued}" class="hideonscreen">head</th>
+									<th th:text="#{dirrcpship.received}" class="hideonscreen">head</th>
+									<th th:text="#{dirrcpship.date}" class="hideonscreen">head</th>
+									<th th:text="#{dirrcpship.quantity}" class="hideonscreen">head</th>
+								</tr>
+							</thead>
+							<tbody>
+							<div th:each="line : ${list}">
+								<tr>
+									<td><span th:text="${line.orderNumber}"></span></td>
+									<td><span th:text="${line.productCode}"></span></td>
+									<td><span th:text="${line.productDescription}"></span></td>
+									<td class="center"><span
+										th:text="${#dates.format(line.demandedDate, 'dd.MM.yyyy')}"></span></td>
+									<td><span th:text="${line.clientName}"></span></td>
+									<td class="center"><span th:text="${line.country}"></span></td>
+									<td class="right"><span th:text="${line.magStock}"></span></td>
+									<td class="right"><span th:text="${line.toGive}"></span></td>
+									<td rowspan="2" class="hideonscreen"></td>
+									<td rowspan="2" class="hideonscreen"></td>
+									<td rowspan="2" class="hideonscreen"></td>
+									<td rowspan="2" class="hideonscreen"></td>
+									
+								</tr>
+								<tr class="barcode hideonscreen">
+									<td colspan="3"><span th:text="|*${line.orderNumber}*|"></span></td>
+									<td colspan="3"><span th:text="|*${line.productCode}*|"></span></td>
+									<td colspan="2"><span th:text="|*${line.toGive}*|"></span></td>
+								</tr>
+							</div>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /SHOW LIST -->
+	</div>
+</body>
+</html>

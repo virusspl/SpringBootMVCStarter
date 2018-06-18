@@ -363,6 +363,14 @@ public class VariousPagesController {
 			roleService.save(consumptionUser);
 			msg += "[role: " + consumptionUser.getName() + "], ";
 		}
+		
+		Role prodtosaleUser = roleService.findByName("ROLE_PRODTOSALEUSER");
+		if (prodtosaleUser == null) {
+			prodtosaleUser = new Role();
+			prodtosaleUser.setName("ROLE_PRODTOSALEUSER");
+			roleService.save(prodtosaleUser);
+			msg += "[role: " + prodtosaleUser.getName() + "], ";
+		}
 
 		System.out.println("get users:");
 		User admin = userService.findByUsername("Admin");

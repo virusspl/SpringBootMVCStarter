@@ -35,8 +35,6 @@ public class DirectReceptionsShipmentController {
 	@Autowired
 	JdbcOracleX3Service x3Service;
 	@Autowired
-	X3HistoryPriceService x3HistoryPriceService;
-	@Autowired
 	TextHelper textHelper;
 
 	List<String> alwaysShow;
