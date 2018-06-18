@@ -1,0 +1,10 @@
+Tomcat -> configure -> java
+
+add
+-Dcom.sun.management.jmxremote.port=8086
+-Dcom.sun.management.jmxremote.ssl=false
+-Dcom.sun.management.jmxremote.authenticate=false
+
+JVisualVM
+add JMX connection: localhost:8086
+
