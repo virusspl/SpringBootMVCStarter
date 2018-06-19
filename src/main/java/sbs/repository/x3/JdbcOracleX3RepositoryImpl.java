@@ -1591,7 +1591,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "WHERE "
 				+ "SOQ.DEMDLVDAT_0 >= ? AND "
 				+ "SOQ.DEMDLVDAT_0 <= ? AND "
-				+ "ITM.TCLCOD_0  = ? AND "
 				+ "SOQ.SOQSTA_0 <> ? "
 				+ "ORDER BY "
 				+ "SOQ.DEMDLVDAT_0, "
@@ -1599,7 +1598,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "ITM.ITMREF_0, "
 				+ "BPR.BPRNAM_0 "
 				,
-                new Object[]{startDate, endDate, "ACV", 3}
+                new Object[]{startDate, endDate, 3}
 				);
 		
 		List<X3SalesOrderLine> list = new ArrayList<>();
