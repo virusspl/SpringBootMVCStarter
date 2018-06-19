@@ -3,98 +3,101 @@ package sbs.controller.prodtosale;
 import java.sql.Timestamp;
 
 public class ProductionToSaleLine {
-	private String orderNumber;
+	
+	private String orderNumberAndLine;
 	private String productCode;
 	private String productDescription;
-	private Timestamp demandedDate;
+	private String productGr1;
+	private String productGr2;
+	private String productGr3;
+	private String clientCode;
 	private String clientName;
-	private String country;
-	private int leftToSend;
-	private int magStock;
-	private int toGive;
+	private Timestamp demandedDate;
+	private int quantityOrdered;
+	private int quantityLeftToSend;
+	private int quantityAvailable;
 	
-	public ProductionToSaleLine() {
+	public String getOrderNumberAndLine() {
+		return orderNumberAndLine;
 	}
-
-	public String getOrderNumber() {
-		return orderNumber;
+	public void setOrderNumberAndLine(String orderNumberAndLine) {
+		this.orderNumberAndLine = orderNumberAndLine;
 	}
-
-	public void setOrderNumber(String orderNumber) {
-		this.orderNumber = orderNumber;
-	}
-
 	public String getProductCode() {
 		return productCode;
 	}
-
 	public void setProductCode(String productCode) {
 		this.productCode = productCode;
 	}
-
 	public String getProductDescription() {
 		return productDescription;
 	}
-
 	public void setProductDescription(String productDescription) {
 		this.productDescription = productDescription;
 	}
-
-	public Timestamp getDemandedDate() {
-		return demandedDate;
+	public String getProductGr1() {
+		return productGr1;
 	}
-
-	public void setDemandedDate(Timestamp demandedDate) {
-		this.demandedDate = demandedDate;
+	public void setProductGr1(String productGr1) {
+		this.productGr1 = productGr1;
 	}
-
+	public String getProductGr2() {
+		return productGr2;
+	}
+	public void setProductGr2(String productGr2) {
+		this.productGr2 = productGr2;
+	}
+	public String getProductGr3() {
+		return productGr3;
+	}
+	public void setProductGr3(String productGr3) {
+		this.productGr3 = productGr3;
+	}
+	public String getClientCode() {
+		return clientCode;
+	}
+	public void setClientCode(String clientCode) {
+		this.clientCode = clientCode;
+	}
 	public String getClientName() {
 		return clientName;
 	}
-
 	public void setClientName(String clientName) {
 		this.clientName = clientName;
 	}
-
-	public String getCountry() {
-		return country;
+	public Timestamp getDemandedDate() {
+		return demandedDate;
 	}
-
-	public void setCountry(String country) {
-		this.country = country;
+	public void setDemandedDate(Timestamp demandedDate) {
+		this.demandedDate = demandedDate;
 	}
-
-	public int getMagStock() {
-		return magStock;
+	public int getQuantityOrdered() {
+		return quantityOrdered;
 	}
-
-	public void setMagStock(int magStock) {
-		this.magStock = magStock;
+	public void setQuantityOrdered(int quantityOrdered) {
+		this.quantityOrdered = quantityOrdered;
 	}
-
-	public int getToGive() {
-		return toGive;
+	public int getQuantityLeftToSend() {
+		return quantityLeftToSend;
 	}
-
-	public void setToGive(int toGive) {
-		this.toGive = toGive;
+	public void setQuantityLeftToSend(int quantityLeftToSend) {
+		this.quantityLeftToSend = quantityLeftToSend;
 	}
-
-	public int getLeftToSend() {
-		return leftToSend;
+	public int getQuantityAvailable() {
+		return quantityAvailable;
 	}
-
-	public void setLeftToSend(int leftToSend) {
-		this.leftToSend = leftToSend;
+	public void setQuantityAvailable(int quantityAvailable) {
+		this.quantityAvailable = quantityAvailable;
 	}
-
 	@Override
 	public String toString() {
-		return "DirectReceptionsShipmentLine [orderNumberAndLine=" + orderNumber + ", productCode=" + productCode
-				+ ", productDescription=" + productDescription + ", demandedDate=" + demandedDate + ", clientName="
-				+ clientName + ", country=" + country + ", magStock=" + magStock + ", leftToSend=" + leftToSend
-				+ ", toGive=" + toGive + "]";
+		return "ProductionToSaleLine [orderNumberAndLine=" + orderNumberAndLine + ", productCode=" + productCode
+				+ ", productDescription=" + productDescription + ", productGr1=" + productGr1 + ", productGr2="
+				+ productGr2 + ", productGr3=" + productGr3 + ", clientCode=" + clientCode + ", clientName="
+				+ clientName + ", demandedDate=" + demandedDate + ", quantityOrdered=" + quantityOrdered
+				+ ", quantityLeftToSend=" + quantityLeftToSend + ", quantityAvailable=" + quantityAvailable + "]";
 	}
-
+	
+	
 	
 }

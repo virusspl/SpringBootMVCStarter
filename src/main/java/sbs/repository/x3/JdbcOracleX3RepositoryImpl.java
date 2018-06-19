@@ -1594,10 +1594,10 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "ITM.TCLCOD_0  = ? AND "
 				+ "SOQ.SOQSTA_0 <> ? "
 				+ "ORDER BY "
+				+ "SOQ.DEMDLVDAT_0, "
 				+ "SOQ.SOHNUM_0, "
 				+ "ITM.ITMREF_0, "
-				+ "SOQ.DEMDLVDAT_0, "
-				+ "BPR.BPRNAM_0"
+				+ "BPR.BPRNAM_0 "
 				,
                 new Object[]{startDate, endDate, "ACV", 3}
 				);

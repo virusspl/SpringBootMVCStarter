@@ -54,9 +54,16 @@
 		<script th:if="__${#locale}__ == 'pl'">
 			$('#srv').DataTable({
 				language : {
-					url : getUrl() + "polish.json",
+					url : getUrl() + "polish.json"
 				},
-				order : [ [ 0, 'desc' ] ]
+				order : [ [ 0, 'asc' ] ]
+			});
+			$('#srv2').DataTable({
+				language : {
+					url : getUrl() + "polish.json"
+				},
+				bPaginate: false,
+				order : [ [ 0, 'asc' ] ]
 			});
 		</script>
 		<script th:if="__${#locale}__ == 'en'">
@@ -64,7 +71,14 @@
 				language : {
 					url : getUrl() + "english.json"
 				},
-				order : [ [ 0, 'desc' ] ]
+				order : [ [ 0, 'asc' ] ]
+			});
+			$('#srv2').DataTable({
+				language : {
+					url : getUrl() + "english.json"
+				},
+				bPaginate: false,
+				order : [ [ 0, 'asc' ] ]
 			});
 		</script>
 		<script th:if="__${#locale}__ == 'it'">
@@ -72,7 +86,14 @@
 				language : {
 					url : getUrl() + "italian.json"
 				},
-				order : [ [ 0, 'desc' ] ]
+				order : [ [ 0, 'asc' ] ]
+			});
+			$('#srv2').DataTable({
+				language : {
+					url : getUrl() + "italian.json"
+				},
+				bPaginate: false,
+				order : [ [ 0, 'asc' ] ]
 			});
 		</script>
 	</div>
@@ -142,52 +163,107 @@
 				</div>
 			</div>
 		</form>
-		<!-- SHOW LIST -->
-		<div th:if="${showList}">
+		<!-- SUMMARY -->
+		<div th:if="${summary}">
 			<div class="row margin-top-10">
 				<div class="col-xs-12">
-					<h3 class="text-primary" th:text="#{dirrcpship.list.show}">result</h3>
+					<h3 class="text-primary" th:text="#{general.summary}">result</h3>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="table-responsive">
-						<table id="srv" class="display">
+						<table id="srv2" class="display" style="font-size: 90%;">
 							<thead>
 								<tr>
-									<th th:text="#{dirrcpship.order}">head</th>
-									<th th:text="#{dirrcpship.productCode}">head</th>
-									<th th:text="#{dirrcpship.productDescription}">head</th>
-									<th th:text="#{dirrcpship.demandedDate}">head</th>
-									<th th:text="#{dirrcpship.clientName}">head</th>
-									<th th:text="#{dirrcpship.country}">head</th>
-									<th th:text="#{dirrcpship.stock}">head</th>
-									<th th:text="#{dirrcpship.toGive}">head</th>
+									<th th:text="#{general.productGr2}">head</th>
+									<th th:text="#{prodtosale.tillToday}">head</th>
+									<th th:text="#{prodtosale.tillEndOfMonth}">head</th>
+									<th th:text="#{prodtosale.tillEndOfNextMonth}">head</th>
+									<th th:text="#{prodtosale.furtherDates}">head</th>
 								</tr>
 							</thead>
 							<tfoot>
 								<tr>
-									<th th:text="#{dirrcpship.order}">head</th>
-									<th th:text="#{dirrcpship.productCode}">head</th>
-									<th th:text="#{dirrcpship.productDescription}">head</th>
-									<th th:text="#{dirrcpship.demandedDate}">head</th>
-									<th th:text="#{dirrcpship.clientName}">head</th>
-									<th th:text="#{dirrcpship.country}">head</th>
-									<th th:text="#{dirrcpship.stock}">head</th>
-									<th th:text="#{dirrcpship.toGive}">head</th>
+									<th th:text="#{general.productGr2}">head</th>
+									<th th:text="#{prodtosale.tillToday}">head</th>
+									<th th:text="#{prodtosale.tillEndOfMonth}">head</th>
+									<th th:text="#{prodtosale.tillEndOfNextMonth}">head</th>
+									<th th:text="#{prodtosale.furtherDates}">head</th>
+								</tr>
+							</tfoot>
+							<tbody>
+								<tr th:each="line : ${summary}">
+									<td><span th:text="${line.group}"></span></td>
+									<td><span th:text="${line.quantityToday}"></span></td>
+									<td><span th:text="${line.quantityEndMonth}"></span></td>
+									<td><span th:text="${line.quantityNextMonth}"></span></td>
+									<td><span th:text="${line.quantityFurther}"></span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /SUMMARY -->
+		<!-- SHOW LIST -->
+		<div th:if="${showList}">
+			<div class="row margin-top-10">
+				<div class="col-xs-12">
+					<h3 class="text-primary" th:text="#{general.list}">result</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="table-responsive">
+						<table id="srv" class="display" style="font-size: 90%;">
+							<thead>
+								<tr>
+									<th th:text="#{general.demandedDate}">head</th>
+									<th th:text="#{general.order}">head</th>
+									<th th:text="#{general.productCode}">head</th>
+									<th th:text="#{general.productDescription}">head</th>
+									<th th:text="#{general.productGr1}">head</th>
+									<th th:text="#{general.productGr2}">head</th>
+									<th th:text="#{general.productGr3}">head</th>
+									<th th:text="#{general.client.code}">head</th>
+									<th th:text="#{general.client.name}">head</th>
+									<th th:text="#{prodtosale.ordered}">head</th>
+									<th th:text="#{prodtosale.lefttosend}">head</th>
+									<th th:text="#{prodtosale.available}">head</th>
+								</tr>
+							</thead>
+							<tfoot>
+								<tr>
+									<th th:text="#{general.demandedDate}">head</th>
+									<th th:text="#{general.order}">head</th>
+									<th th:text="#{general.productCode}">head</th>
+									<th th:text="#{general.productDescription}">head</th>
+									<th th:text="#{general.productGr1}">head</th>
+									<th th:text="#{general.productGr2}">head</th>
+									<th th:text="#{general.productGr3}">head</th>
+									<th th:text="#{general.client.code}">head</th>
+									<th th:text="#{general.client.name}">head</th>
+									<th th:text="#{prodtosale.ordered}">head</th>
+									<th th:text="#{prodtosale.lefttosend}">head</th>
+									<th th:text="#{prodtosale.available}">head</th>
 								</tr>
 							</tfoot>
 							<tbody>
 								<tr th:each="line : ${showList}">
-									<td><span th:text="${line.orderNumber}"></span></td>
+									<td><span th:text="${#dates.format(line.demandedDate, 'yyyy.MM.dd')}"></span></td>
+									<td><span th:text="${line.orderNumberAndLine}"></span></td>
 									<td><span th:text="${line.productCode}"></span></td>
 									<td><span th:text="${line.productDescription}"></span></td>
-									<td><span
-										th:text="${#dates.format(line.demandedDate, 'dd.MM.yyyy')}"></span></td>
+									<td><span th:text="${line.productGr1}"></span></td>
+									<td><span th:text="${line.productGr2}"></span></td>
+									<td><span th:text="${line.productGr3}"></span></td>
+									<td><span th:text="${line.clientCode}"></span></td>
 									<td><span th:text="${line.clientName}"></span></td>
-									<td><span th:text="${line.country}"></span></td>
-									<td><span th:text="${line.magStock}"></span></td>
-									<td><span th:text="${line.toGive}"></span></td>
+									<td><span th:text="${line.quantityOrdered}"></span></td>
+									<td><span th:text="${line.quantityLeftToSend}"></span></td>
+									<td><span th:text="${line.quantityAvailable}"></span></td>
 								</tr>
 							</tbody>
 						</table>
@@ -196,60 +272,6 @@
 			</div>
 		</div>
 		<!-- /SHOW LIST -->
-		<!-- NEGATIVE LIST -->
-		<div th:if="${negativeList}">
-			<div class="row margin-top-10">
-				<div class="col-xs-12">
-					<h3 class="text-primary" th:text="#{dirrcpship.list.negative}">result</h3>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-xs-12">
-					<div class="table-responsive">
-						<table id="srv2" class="display">
-							<thead>
-								<tr>
-									<th th:text="#{dirrcpship.order}">head</th>
-									<th th:text="#{dirrcpship.productCode}">head</th>
-									<th th:text="#{dirrcpship.productDescription}">head</th>
-									<th th:text="#{dirrcpship.demandedDate}">head</th>
-									<th th:text="#{dirrcpship.clientName}">head</th>
-									<th th:text="#{dirrcpship.country}">head</th>
-									<th th:text="#{dirrcpship.stock}">head</th>
-									<th th:text="#{dirrcpship.toGive}">head</th>
-								</tr>
-							</thead>
-							<tfoot>
-								<tr>
-									<th th:text="#{dirrcpship.order}">head</th>
-									<th th:text="#{dirrcpship.productCode}">head</th>
-									<th th:text="#{dirrcpship.productDescription}">head</th>
-									<th th:text="#{dirrcpship.demandedDate}">head</th>
-									<th th:text="#{dirrcpship.clientName}">head</th>
-									<th th:text="#{dirrcpship.country}">head</th>
-									<th th:text="#{dirrcpship.stock}">head</th>
-									<th th:text="#{dirrcpship.toGive}">head</th>
-								</tr>
-							</tfoot>
-							<tbody>
-								<tr th:each="line : ${negativeList}">
-									<td><span th:text="${line.orderNumber}"></span></td>
-									<td><span th:text="${line.productCode}"></span></td>
-									<td><span th:text="${line.productDescription}"></span></td>
-									<td><span
-										th:text="${#dates.format(line.demandedDate, 'dd.MM.yyyy')}"></span></td>
-									<td><span th:text="${line.clientName}"></span></td>
-									<td><span th:text="${line.country}"></span></td>
-									<td><span th:text="${line.magStock}"></span></td>
-									<td><span th:text="${line.toGive}"></span></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- /NEGATIVE LIST -->
 	</div>
 </body>
 </html>

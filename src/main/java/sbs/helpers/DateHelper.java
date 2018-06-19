@@ -65,9 +65,17 @@ public class DateHelper {
 	public boolean dateBeforeOrEqual(Calendar date, Calendar reference) {
 		return (date.before(reference) || date.equals(reference));
 	}
+	
+	public boolean dateBefore(Calendar date, Calendar reference) {
+		return (date.before(reference));
+	}
 
 	public boolean dateAfterOrEqual(Calendar date, Calendar reference) {
 		return (date.after(reference) || date.equals(reference));
+	}
+	
+	public boolean dateAfter(Calendar date, Calendar reference) {
+		return (date.after(reference));
 	}
 
 	public boolean dateInRange(Calendar date, Calendar start, Calendar end) {
@@ -80,9 +88,17 @@ public class DateHelper {
 	public boolean dateBeforeOrEqual(Timestamp date, Timestamp reference) {
 		return (date.before(reference) || date.equals(reference));
 	}
+	
+	public boolean dateBefore(Timestamp date, Timestamp reference) {
+		return (date.before(reference));
+	}
 
 	public boolean dateAfterOrEqual(Timestamp date, Timestamp reference) {
 		return (date.after(reference) || date.equals(reference));
+	}
+	
+	public boolean dateAfter(Timestamp date, Timestamp reference) {
+		return (date.after(reference));
 	}
 	
 	public boolean isDateInRange(Timestamp date, Timestamp start, Timestamp end ){
