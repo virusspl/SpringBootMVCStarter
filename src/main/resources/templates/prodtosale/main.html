@@ -65,6 +65,24 @@
 				bPaginate: false,
 				order : [ [ 0, 'asc' ] ]
 			});
+			$('#srv3').DataTable({
+				language : {
+					url : getUrl() + "polish.json"
+				},
+				bPaginate: false,
+				searching: false,
+				info: false,
+				order : [ [ 0, 'asc' ] ]
+			});
+			$('#srv4').DataTable({
+				language : {
+					url : getUrl() + "polish.json"
+				},
+				bPaginate: false,
+				searching: false,
+				info: false,
+				order : [ [ 0, 'asc' ] ]
+			});
 		</script>
 		<script th:if="__${#locale}__ == 'en'">
 			$('#srv').DataTable({
@@ -80,6 +98,24 @@
 				bPaginate: false,
 				order : [ [ 0, 'asc' ] ]
 			});
+			$('#srv3').DataTable({
+				language : {
+					url : getUrl() + "english.json"
+				},
+				bPaginate: false,
+				searching: false,
+				info: false,
+				order : [ [ 0, 'asc' ] ]
+			});
+			$('#srv4').DataTable({
+				language : {
+					url : getUrl() + "english.json"
+				},
+				bPaginate: false,
+				searching: false,
+				info: false,				
+				order : [ [ 0, 'asc' ] ]
+			});
 		</script>
 		<script th:if="__${#locale}__ == 'it'">
 			$('#srv').DataTable({
@@ -93,6 +129,24 @@
 					url : getUrl() + "italian.json"
 				},
 				bPaginate: false,
+				order : [ [ 0, 'asc' ] ]
+			});
+			$('#srv3').DataTable({
+				language : {
+					url : getUrl() + "italian.json"
+				},
+				bPaginate: false,
+				searching: false,
+				info: false,				
+				order : [ [ 0, 'asc' ] ]
+			});
+			$('#srv4').DataTable({
+				language : {
+					url : getUrl() + "italian.json"
+				},
+				bPaginate: false,
+				searching: false,
+				info: false,				
 				order : [ [ 0, 'asc' ] ]
 			});
 		</script>
@@ -170,7 +224,80 @@
 					<h3 class="text-primary" th:text="#{general.summary}">result</h3>
 				</div>
 			</div>
-			<div class="row">
+			<div class="row margin-top-20">
+				<div class="col-xs-12">
+					<p th:text="#{prodtosale.gr.pza}" class="text-primary"></p>
+					<p th:text="#{prodtosale.gr.pzo}" class="text-primary"></p>
+					<p th:text="#{prodtosale.gr.pzz}" class="text-primary"></p>
+					<p th:text="#{prodtosale.gr.kzg}" class="text-primary"></p>
+					<p th:text="#{prodtosale.gr.kza}" class="text-primary"></p>
+					<p th:text="#{prodtosale.gr.kzd}" class="text-primary"></p>
+				</div>
+			</div>
+			<!-- SUMMARY SKR -->
+			<div class="row margin-top-10">
+				<div class="col-xs-12">
+					<div class="table-responsive">
+						<table id="srv4" class="display" style="font-size: 90%;">
+							<thead>
+								<tr>
+									<th th:text="#{general.productGr2}">head</th>
+									<th th:text="#{prodtosale.tillToday}">head</th>
+									<th th:text="#{prodtosale.tillEndOfMonth}">head</th>
+									<th th:text="#{prodtosale.tillEndOfNextMonth}">head</th>
+									<th th:text="#{prodtosale.furtherDates}">head</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="line : ${summary}" th:if="${line.group eq 'SKR'}">
+									<td><span th:text="${line.group}"></span></td>
+									<td><span th:text="${line.quantityToday}"></span></td>
+									<td><span th:text="${line.quantityEndMonth}"></span></td>
+									<td><span th:text="${line.quantityNextMonth}"></span></td>
+									<td><span th:text="${line.quantityFurther}"></span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<!-- /SUMMARY SKR -->
+			<!-- SUMMARY GRP -->
+			<div class="row margin-top-10">
+				<div class="col-xs-12">
+					<div class="table-responsive">
+						<table id="srv3" class="display" style="font-size: 90%;">
+							<thead>
+								<tr>
+									<th th:text="#{general.productGr2}">head</th>
+									<th th:text="#{prodtosale.tillToday}">head</th>
+									<th th:text="#{prodtosale.tillEndOfMonth}">head</th>
+									<th th:text="#{prodtosale.tillEndOfNextMonth}">head</th>
+									<th th:text="#{prodtosale.furtherDates}">head</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="line : ${summary}" th:if="${
+								line.group eq 'PZA' or
+								line.group eq 'PZO' or
+								line.group eq 'PZZ' or
+								line.group eq 'KZG' or
+								line.group eq 'KZA' or
+								line.group eq 'KZD'
+								}">
+									<td><span th:text="${line.group}"></span></td>
+									<td><span th:text="${line.quantityToday}"></span></td>
+									<td><span th:text="${line.quantityEndMonth}"></span></td>
+									<td><span th:text="${line.quantityNextMonth}"></span></td>
+									<td><span th:text="${line.quantityFurther}"></span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<!-- /SUMMARY GRP -->
+			<div class="row margin-top-20">
 				<div class="col-xs-12">
 					<div class="table-responsive">
 						<table id="srv2" class="display" style="font-size: 90%;">
