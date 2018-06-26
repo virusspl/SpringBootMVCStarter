@@ -54,7 +54,7 @@ public class BhpTicketsServiceImpl extends GenericServiceAdapter<BhpTicket, Inte
 		List<BhpTicket> all = bhpTicketsRepository.findAllPendingTickets();
 		List<BhpTicket> result = new ArrayList<>();
 		for(BhpTicket ticket: all){
-			if(ticket.getAssignedUser().hasRole("ROLE_BHPTICKETSUTRUSER") || ticket.getState().getOrder()==30){
+			if(ticket.getAssignedUser().hasRole("ROLE_BHPTICKETSUTRUSER") || ticket.getState().getOrder()==32){
 				result.add(ticket);
 			} 
 		}

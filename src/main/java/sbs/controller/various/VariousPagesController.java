@@ -589,6 +589,14 @@ public class VariousPagesController {
 			bhpTicketStateService.save(bhpState);
 			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
 		}
+		
+		if (bhpTicketStateService.findByOrder(32) == null) {
+			bhpState = new BhpTicketState();
+			bhpState.setOrder(32);
+			bhpState.setDescription("Przekazany do UTR");
+			bhpTicketStateService.save(bhpState);
+			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
+		}
 
 		if (bhpTicketStateService.findByOrder(35) == null) {
 			bhpState = new BhpTicketState();

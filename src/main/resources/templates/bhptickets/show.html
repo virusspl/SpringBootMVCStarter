@@ -112,12 +112,17 @@
 						<div class="form-group">
 							<label for="controls" th:text="#{action.choose.action}">Title</label>
 							<div id="controls">
-								<button class="btn btn-info btn-sm" type="submit"
+								<button class="btn btn-info btn-sm margin-top-5" type="submit"
 									name="passticket">
 									<span class="glyphicon glyphicon-forward"></span> <span
 										th:text="#{bhp.tickets.confirm.pass}">pass</span>
 								</button>
-								<button class="btn btn-primary btn-sm" type="submit"
+								<button class="btn btn-warning btn-sm margin-top-5" type="submit"
+									name="passtickettour">
+									<span class="glyphicon glyphicon-forward"></span> <span
+										th:text="#{bhp.tickets.confirm.passtour}">pass</span>
+								</button>
+								<button class="btn btn-primary btn-sm margin-top-5" type="submit"
 									name="closeticket">
 									<span class="glyphicon glyphicon-ok"></span> <span
 										th:text="#{bhp.tickets.confirm.success}">success</span>

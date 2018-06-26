@@ -220,7 +220,7 @@ public class BhpTicket {
 	 * @return boolean
 	 */
 	public boolean isUtrCommentNeeded(){
-		if(getState().getOrder() == 30 || !getUtrComment().equals("")){
+		if(getState().getOrder() == 32 || !getUtrComment().equals("")){
 			return true;
 		}
 		return false;

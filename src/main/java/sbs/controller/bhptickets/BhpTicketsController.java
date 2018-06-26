@@ -327,7 +327,7 @@ public class BhpTicketsController {
 		}
 		// set modification for utr user response part
 		if (authUser == null || (!authUser.hasRole("ROLE_BHPTICKETSUTRUSER")) 
-				|| (ticket.getState().getOrder() != 30)) {
+				|| (ticket.getState().getOrder() != 32)) {
 			responseForm.setUtrUserModificationAllowed(false);
 		} else {
 			responseForm.setUtrUserModificationAllowed(true);
@@ -374,6 +374,36 @@ public class BhpTicketsController {
 		ticket.setUpdateDate(new Timestamp(new java.util.Date().getTime()));
 		ticket.setComment(ticketResponseForm.getComment().trim());
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("bhp.tickets.confirm.pass", null, locale));
+		return "redirect:/bhptickets/list";
+	}
+	
+	@RequestMapping(value = "/response", params = { "passtickettour" }, method = RequestMethod.POST)
+	@Transactional
+	public String passTicketToUr(@Valid TicketResponseForm ticketResponseForm, BindingResult bindingResult, Model model,
+			RedirectAttributes redirectAttrs, Locale locale) {
+		if(ticketResponseForm.getComment().trim().length() == 0){
+			bindingResult.rejectValue("comment", "NotEmpty.ticketResponseForm.comment", "ERROR");
+		}
+		// get ticket
+		BhpTicket ticket = bhpTicketsService.findById(ticketResponseForm.getId());
+		// validate
+		if (bindingResult.hasErrors()) {
+			ArrayList<String> fileList = uploadController.listFiles(uploadController.getBhpPhotoPath());
+			for (int i = fileList.size() - 1; i >= 0; i--) {
+				if (!fileList.get(i).startsWith("bhp_" + ticketResponseForm.getId() + "_")) {
+					fileList.remove(i);
+				}
+			}
+			model.addAttribute("photos", fileList);
+			model.addAttribute("ticket", ticket);
+			return "bhptickets/show";
+		}
+		BhpTicketState passedToUrState = bhpTicketStateService.findByOrder(32);
+		passedToUrState.getTickets().add(ticket);
+		ticket.setState(passedToUrState);
+		ticket.setUpdateDate(new Timestamp(new java.util.Date().getTime()));
+		ticket.setComment(ticketResponseForm.getComment().trim());
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("bhp.tickets.confirm.passtour", null, locale));
 		return "redirect:/bhptickets/list";
 	}
 
