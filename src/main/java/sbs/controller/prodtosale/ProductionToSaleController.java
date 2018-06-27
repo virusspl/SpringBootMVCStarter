@@ -97,11 +97,18 @@ public class ProductionToSaleController {
 			sl.setDemandedDate(sol.getDemandedDate());
 			sl.setQuantityOrdered(sol.getQuantityOrdered());
 			sl.setQuantityLeftToSend(sol.getQuantityLeftToSend());
-			// available is minimum of "left to send" and "stock"
-			sl.setQuantityAvailable(Math.min(stock.get(sol.getProductCode()), sol.getQuantityLeftToSend()));
-			// decrease in stock
-			stock.put(sol.getProductCode(),
-					decreaseZeroPositive(stock.get(sol.getProductCode()), sol.getQuantityLeftToSend()));
+			if(stock.get(sol.getProductCode()) == null){
+				// if no stock
+				sl.setQuantityAvailable(sol.getQuantityLeftToSend());
+			}
+			else {
+				// available is minimum of "left to send" and "stock"
+				sl.setQuantityAvailable(Math.min(stock.get(sol.getProductCode()), sol.getQuantityLeftToSend()));
+				// decrease in stock
+				stock.put(sol.getProductCode(),
+						decreaseZeroPositive(stock.get(sol.getProductCode()), sol.getQuantityLeftToSend()));
+			}
+
 			// add line to list
 			showList.add(sl);
 
