@@ -178,9 +178,13 @@
 						class="glyphicon glyphicon-menu-left"></span> <span
 						th:text="#{action.back}">back</span>
 					</a>
-					<button class="btn btn-primary btn-sm" type="submit" name="stats">
+					<button class="btn btn-primary btn-sm" type="submit" name="stats" value="1">
 						<span class="glyphicon glyphicon-search"></span> <span
-							th:text="#{utr.indicators}">search</span>
+							th:text="|#{utr.indicators} ADRP|">search</span>
+					</button>
+					<button class="btn btn-primary btn-sm" type="submit" name="stats" value="2">
+						<span class="glyphicon glyphicon-search"></span> <span
+							th:text="|#{utr.indicators} WPS|">search</span>
 					</button>
 					<button class="btn btn-primary btn-sm" type="submit"
 						name="machines">
@@ -195,7 +199,7 @@
 		<div class="row margin-top-10"
 			th:if="(${faultsCounter} != null) and (${faultsCounter} > 0) ">
 			<div class="col-xs-12">
-				<h3 class="text-primary" th:text="|#{utr.result}">results</h3>
+				<h3 class="text-primary" th:text="|#{utr.result} ${company}|">results</h3>
 			</div>
 			<!-- LEFT SIDE PANELS -->
 			<div class="col-xs-12 col-sm-6">

@@ -23,6 +23,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import sbs.helpers.DateHelper;
@@ -57,6 +58,8 @@ public class UtrController {
 	
 	int criticalMachinesCnt;
 	int nonCriticalMachinesCnt;
+	int criticalMachinesCntWps;
+	int nonCriticalMachinesCntWps;
 	int hoursInShift;
 
 	@Autowired
@@ -66,6 +69,8 @@ public class UtrController {
 		armsMachines = Arrays.asList(env.getRequiredProperty("utr.machineschart.arms").split(";"));
 		criticalMachinesCnt = Integer.parseInt(env.getRequiredProperty("utr.machines.criticalCnt"));
 		nonCriticalMachinesCnt = Integer.parseInt(env.getRequiredProperty("utr.machines.nonCriticalCnt"));
+		criticalMachinesCntWps = Integer.parseInt(env.getRequiredProperty("utr.machines.criticalCnt.wps"));
+		nonCriticalMachinesCntWps = Integer.parseInt(env.getRequiredProperty("utr.machines.nonCriticalCnt.wps"));
 		hoursInShift = Integer.parseInt(env.getRequiredProperty("utr.hoursInShift"));
 	}
 
@@ -86,11 +91,13 @@ public class UtrController {
 
 	@RequestMapping(value = "/stats", params = { "stats" }, method = RequestMethod.POST)
 	public String performSearch(@Valid UtrDispatchForm utrDispatchForm, BindingResult bindingResult,
-			RedirectAttributes redirectAttrs, Model model, Locale locale) {
+			RedirectAttributes redirectAttrs, Model model, Locale locale, 
+			@RequestParam(value = "stats") int company) {
 
 		if (bindingResult.hasErrors()) {
 			return "utr/stats";
 		}
+		
 
 		// dates range
 		Date startDate = utrDispatchForm.getStartDate();
@@ -141,8 +148,8 @@ public class UtrController {
 			if (machines.get(tmpMachineCode) == null) {
 				continue;
 			}
-			if(machines.get(tmpMachineCode).getCompany() == X3UtrMachine.WPS){
-				//System.out.println(tmpMachineCode);
+			// 1 = ADRP; 2 = WPS - in view
+			if(machines.get(tmpMachineCode).getCompany() != company){
 				continue;
 			}
 				
@@ -177,8 +184,17 @@ public class UtrController {
 		int mrt = minutesReactionTotal / validFaultsCnt;
 		int mwt = minutesOfWorkTotal / validFaultsCnt;
 		int daysInPeriod = countDaysInPeriod(startDate, endDate);
-		int mtbf = calculateMtbf(daysInPeriod, validFaultsCnt, utrDispatchForm.getCritical(), criticalMachinesCnt,
-				nonCriticalMachinesCnt);
+		int mtbf = 0;
+		if(company == 1){
+			// ADRP
+			mtbf = calculateMtbf(daysInPeriod, validFaultsCnt, utrDispatchForm.getCritical(), criticalMachinesCnt,
+					nonCriticalMachinesCnt);
+		}
+		else{
+			// WPS
+			mtbf = calculateMtbf(daysInPeriod, validFaultsCnt, utrDispatchForm.getCritical(), criticalMachinesCntWps,
+					nonCriticalMachinesCntWps);
+		}
 
 		// pass values to view
 		model.addAttribute("faultsCounter", validFaultsCnt);
@@ -191,6 +207,7 @@ public class UtrController {
 		model.addAttribute("mtbf", mtbf);
 		model.addAttribute("workers", workers.values());
 		model.addAttribute("criticalMachines", criticalMachines);
+		model.addAttribute("company", company==1 ? "ADRP" : "WPS");
 
 		return "utr/stats";
 	}
@@ -294,6 +311,7 @@ public class UtrController {
 		model.addAttribute("bodiesLines", bodiesLines);
 		model.addAttribute("armsLines", armsLines);
 		model.addAttribute("expandersLines", expandersLines);
+
 
 		return "utr/stats";
 	}
