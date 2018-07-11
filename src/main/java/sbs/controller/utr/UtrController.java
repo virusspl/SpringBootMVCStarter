@@ -142,7 +142,7 @@ public class UtrController {
 				continue;
 			}
 			if(machines.get(tmpMachineCode).getCompany() == X3UtrMachine.WPS){
-				System.out.println(tmpMachineCode);
+				//System.out.println(tmpMachineCode);
 				continue;
 			}
 				
