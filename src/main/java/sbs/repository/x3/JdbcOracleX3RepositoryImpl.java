@@ -547,6 +547,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "ym.YCESPITE_0, "
 				+ "ym.YCESPDESCR_0, "
 				+ "ym.YFLAG_0, "
+				+ "ym.YSOCE_0, "
 				+ "fx.NICCOD_0 "
 				+ "FROM "
 				+ company + ".YMANUPREVE ym LEFT JOIN "
@@ -570,6 +571,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         	machine.setCode((String)row.get("YCESPITE_0"));
         	machine.setName((String)row.get("YCESPDESCR_0"));
         	machine.setCodeNicim((String)row.get("NICCOD_0"));
+        	machine.setCompany(((BigDecimal)row.get("YSOCE_0")).intValue());
         	if(((BigDecimal)row.get("YFLAG_0")).intValue() == 2){
         		machine.setCritical(true);
         	}

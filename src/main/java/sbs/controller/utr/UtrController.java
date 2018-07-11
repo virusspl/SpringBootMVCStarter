@@ -135,10 +135,18 @@ public class UtrController {
 		removeFaultsByCriteria(utrDispatchForm.getCritical(), utrDispatchForm.getStop(), faults);
 
 		// count
+		String tmpMachineCode;
 		for (X3UtrFault fault : faults.values()) {
-			if (machines.get(fault.getMachineCode()) == null) {
+			tmpMachineCode = fault.getMachineCode();
+			if (machines.get(tmpMachineCode) == null) {
 				continue;
 			}
+			if(machines.get(tmpMachineCode).getCompany() == X3UtrMachine.WPS){
+				System.out.println(tmpMachineCode);
+				continue;
+			}
+				
+			
 			// count faults
 			validFaultsCnt++;
 			// MTTR
