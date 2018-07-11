@@ -23,6 +23,7 @@ import sbs.helpers.ExcelContents;
 import sbs.helpers.ExcelExportHelper;
 import sbs.model.bhptickets.BhpTicketState;
 import sbs.model.qualitysurveys.QualitySurveyParameter;
+import sbs.model.tools.ToolsProjectState;
 import sbs.model.users.Role;
 import sbs.model.users.User;
 import sbs.service.bhptickets.BhpTicketStateService;
@@ -32,6 +33,7 @@ import sbs.service.mail.MailService;
 import sbs.service.optima.JdbcAdrOptimaService;
 import sbs.service.qualitysurveys.QualitySurveyParametersService;
 import sbs.service.qualitysurveys.QualitySurveysService;
+import sbs.service.tools.ToolsProjectStateService;
 import sbs.service.users.RoleService;
 import sbs.service.users.UserService;
 import sbs.service.x3.JdbcOracleX3Service;
@@ -59,6 +61,8 @@ public class VariousPagesController {
 	BhpTicketsService bhpTicketsService;
 	@Autowired
 	BhpTicketStateService bhpTicketStateService;
+	@Autowired
+	ToolsProjectStateService toolsProjectStateService;
 	@Autowired
 	MailService mailService;
 
@@ -371,6 +375,22 @@ public class VariousPagesController {
 			roleService.save(prodtosaleUser);
 			msg += "[role: " + prodtosaleUser.getName() + "], ";
 		}
+		
+		Role toolsManager = roleService.findByName("ROLE_TOOLSMANAGER");
+		if (toolsManager == null) {
+			toolsManager = new Role();
+			toolsManager.setName("ROLE_TOOLSMANAGER");
+			roleService.save(toolsManager);
+			msg += "[role: " + toolsManager.getName() + "], ";
+		}
+		
+		Role toolsNormalUser = roleService.findByName("ROLE_TOOLSNORMALUSER");
+		if (toolsNormalUser == null) {
+			toolsNormalUser = new Role();
+			toolsNormalUser.setName("ROLE_TOOLSNORMALUSER");
+			roleService.save(toolsNormalUser);
+			msg += "[role: " + toolsNormalUser.getName() + "], ";
+		}
 
 		System.out.println("get users:");
 		User admin = userService.findByUsername("Admin");
@@ -630,6 +650,51 @@ public class VariousPagesController {
 			msg += "[bts_param: " + bhpState.getOrder() + " " + bhpState.getDescription() + "], ";
 		}
 
+		ToolsProjectState toolsState;
+
+		if (toolsProjectStateService.findByOrder(10) == null) {
+			toolsState = new ToolsProjectState();
+			toolsState.setOrder(10);
+			toolsState.setDescription("Do przypisania");
+			toolsProjectStateService.save(toolsState);
+			msg += "[tps_param: " + toolsState.getOrder() + " " + toolsState.getDescription() + "], ";
+		}
+		if (toolsProjectStateService.findByOrder(20) == null) {
+			toolsState = new ToolsProjectState();
+			toolsState.setOrder(20);
+			toolsState.setDescription("Przypisany");
+			toolsProjectStateService.save(toolsState);
+			msg += "[tps_param: " + toolsState.getOrder() + " " + toolsState.getDescription() + "], ";
+		}
+		if (toolsProjectStateService.findByOrder(30) == null) {
+			toolsState = new ToolsProjectState();
+			toolsState.setOrder(30);
+			toolsState.setDescription("Wstrzymany");
+			toolsProjectStateService.save(toolsState);
+			msg += "[tps_param: " + toolsState.getOrder() + " " + toolsState.getDescription() + "], ";
+		}
+		if (toolsProjectStateService.findByOrder(40) == null) {
+			toolsState = new ToolsProjectState();
+			toolsState.setOrder(40);
+			toolsState.setDescription("Do zatwierdzenia");
+			toolsProjectStateService.save(toolsState);
+			msg += "[tps_param: " + toolsState.getOrder() + " " + toolsState.getDescription() + "], ";
+		}
+		if (toolsProjectStateService.findByOrder(50) == null) {
+			toolsState = new ToolsProjectState();
+			toolsState.setOrder(50);
+			toolsState.setDescription("Zatwierdzony");
+			toolsProjectStateService.save(toolsState);
+			msg += "[tps_param: " + toolsState.getOrder() + " " + toolsState.getDescription() + "], ";
+		}
+		if (toolsProjectStateService.findByOrder(90) == null) {
+			toolsState = new ToolsProjectState();
+			toolsState.setOrder(90);
+			toolsState.setDescription("Anulowany");
+			toolsProjectStateService.save(toolsState);
+			msg += "[tps_param: " + toolsState.getOrder() + " " + toolsState.getDescription() + "], ";
+		}
+		
 		model.addAttribute("msg", msg);
 		return "welcome";
 	}

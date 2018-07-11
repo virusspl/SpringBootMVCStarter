@@ -7,6 +7,7 @@ public class UploadProperties {
 	private String uploadPath;
 	private String avatarPath;
 	private String bhpPhotoPath;
+	private String toolsPhotoPath;
 
 	public String getUploadPath() {
 		return uploadPath;
@@ -31,6 +32,15 @@ public class UploadProperties {
 	public void setBhpPhotoPath(String bhpPhotoPath) {
 		this.bhpPhotoPath = bhpPhotoPath;
 	}
+
+	public String getToolsPhotoPath() {
+		return toolsPhotoPath;
+	}
+
+	public void setToolsPhotoPath(String toolsPhotoPath) {
+		this.toolsPhotoPath = toolsPhotoPath;
+	}
+	
 
 
 	

@@ -125,6 +125,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"ADMIN", 
 				"PRODTOSALEUSER"
 				)
+		.antMatchers("/tools/**")
+		.hasAnyRole(
+				"ADMIN", 
+				"TOOLSMANAGER",
+				"TOOLSNORMALUSER"
+				)
 		.antMatchers("/admin", "/users/**")
 		.hasRole("ADMIN")
 		.anyRequest().authenticated().and()

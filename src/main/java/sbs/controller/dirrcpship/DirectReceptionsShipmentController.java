@@ -212,7 +212,6 @@ public class DirectReceptionsShipmentController {
 			if (line.getToGive() < 0) {
 				line.setToGive(0);
 			}
-
 		}
 	}
 	

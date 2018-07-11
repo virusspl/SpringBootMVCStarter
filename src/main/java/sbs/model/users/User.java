@@ -21,6 +21,7 @@ import sbs.model.bhptickets.BhpTicket;
 import sbs.model.buyorders.BuyOrder;
 import sbs.model.hruafiles.HrUaInfo;
 import sbs.model.qualitysurveys.QualitySurvey;
+import sbs.model.tools.ToolsProject;
 
 @Entity
 @Table(name = "users")
@@ -36,6 +37,8 @@ public class User {
     private Set<QualitySurvey> qualitySurveys;
     private Set<BhpTicket> createdBhpTickets;
     private Set<BhpTicket> assignedBhpTickets;
+    private Set<ToolsProject> createdToolsProjects;
+    private Set<ToolsProject> assignedToolsProjects;
     private Set<HrUaInfo> HrUaFilesCreated;
     private Set<BuyOrder> createdBuyOrders;
     private Set<BuyOrder> respondedBuyOrders;
@@ -140,6 +143,16 @@ public class User {
 		return assignedBhpTickets;
 	}
 	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")	
+	public Set<ToolsProject> getCreatedToolsProjects() {
+		return createdToolsProjects;
+	}
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "assignedUser")
+	public Set<ToolsProject> getAssignedToolsProjects() {
+		return assignedToolsProjects;
+	}
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
 	public Set<HrUaInfo> getHrUaFilesCreated() {
 		return HrUaFilesCreated;
@@ -160,6 +173,14 @@ public class User {
 
 	public void setAssignedBhpTickets(Set<BhpTicket> assignedBhpTickets) {
 		this.assignedBhpTickets = assignedBhpTickets;
+	}
+	
+	public void setCreatedToolsProjects(Set<ToolsProject> createdToolsProjects) {
+		this.createdToolsProjects = createdToolsProjects;
+	}
+	
+	public void setAssignedToolsProjects(Set<ToolsProject> assignedToolsProjects) {
+		this.assignedToolsProjects = assignedToolsProjects;
 	}
 
 	public void setQualitySurveys(Set<QualitySurvey> qualitySurveys) {
