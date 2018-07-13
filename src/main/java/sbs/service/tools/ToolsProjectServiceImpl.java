@@ -24,8 +24,8 @@ public class ToolsProjectServiceImpl extends GenericServiceAdapter<ToolsProject,
 	}
 
 	@Override
-	public List<ToolsProject> findArchivedToolsProjects() {
-		return toolsProjectRepository.findArchivedToolsProjects();
+	public List<ToolsProject> findClosedToolsProjects() {
+		return toolsProjectRepository.findClosedToolsProjects();
 	}
 
 	@Override

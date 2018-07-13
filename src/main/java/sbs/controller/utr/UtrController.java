@@ -152,8 +152,7 @@ public class UtrController {
 			if(machines.get(tmpMachineCode).getCompany() != company){
 				continue;
 			}
-				
-			
+
 			// count faults
 			validFaultsCnt++;
 			// MTTR

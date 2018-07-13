@@ -28,6 +28,7 @@ import sbs.model.x3.X3UtrMachine;
 import sbs.model.x3.X3UtrWorker;
 import sbs.model.x3.X3WarehouseWeightDetailLine;
 import sbs.model.x3.X3WarehouseWeightLine;
+import sbs.model.x3.X3Workstation;
 import sbs.repository.x3.JdbcOracleX3Repository;
 
 @Service
@@ -247,6 +248,11 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	@Override
 	public Map<String, Integer> findGeneralStockForAllProducts(String company) {
 		return jdbcOracleX3Repository.findGeneralStockForAllProducts(company);
+	}
+
+	@Override
+	public X3Workstation findWorkstationByCode(String company, String code) {
+		return jdbcOracleX3Repository.findWorkstationByCode(company, code);
 	}
 
 

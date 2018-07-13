@@ -10,6 +10,10 @@ $(document).ready(function() {
 					window.location.href.indexOf("bhptickets/create") > -1
 					||
 					window.location.href.indexOf("bhptickets/show") > -1
+					||
+					window.location.href.indexOf("tools/createproject") > -1
+					||
+					window.location.href.indexOf("tools/editproject") > -1
 					) {
 				return;
 			}

@@ -7,6 +7,6 @@ import sbs.service.GenericService;
 
 public interface ToolsProjectService extends GenericService<ToolsProject, Integer>{
 
-	public List<ToolsProject> findArchivedToolsProjects();
+	public List<ToolsProject> findClosedToolsProjects();
 	public List<ToolsProject> findAllPendingToolsProjects();
 }

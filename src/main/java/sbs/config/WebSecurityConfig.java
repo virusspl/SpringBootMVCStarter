@@ -131,6 +131,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"TOOLSMANAGER",
 				"TOOLSNORMALUSER"
 				)
+		.antMatchers("/toools/editproject/**", 
+				"/tools/createproject/**"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"TOOLSMANAGER"
+				)
 		.antMatchers("/admin", "/users/**")
 		.hasRole("ADMIN")
 		.anyRequest().authenticated().and()

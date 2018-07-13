@@ -38,6 +38,7 @@ import sbs.model.x3.X3UtrMachine;
 import sbs.model.x3.X3UtrWorker;
 import sbs.model.x3.X3WarehouseWeightDetailLine;
 import sbs.model.x3.X3WarehouseWeightLine;
+import sbs.model.x3.X3Workstation;
 import sbs.service.x3.JdbcOracleX3Service;
 
 @Repository
@@ -1643,6 +1644,33 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			map.put((String)row.get("ITMREF_0"), ((BigDecimal)row.get("PHYSTO_0")).intValue());
 		}
 		return map;
+	}
+
+	@Override
+	public X3Workstation findWorkstationByCode(String company, String code) {
+		
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+
+
+						"SELECT " 
+						+ company + ".WORKSTATIO.WST_0, "
+						+ company + ".WORKSTATIO.WSTDES_0 "
+						+ "FROM " 
+						+ company + ".WORKSTATIO "
+						+ "WHERE UPPER("
+						+ company + ".WORKSTATIO.WST_0) = ?"
+						+ "",
+                new Object[]{code.toUpperCase()});
+        		
+		X3Workstation workstation = null;
+		
+        for(Map<String,Object> row: resultSet ){
+        	workstation = new X3Workstation();
+        	workstation.setCode((String)row.get("WST_0"));
+        	workstation.setName(((String)row.get("WSTDES_0")));
+        }
+		
+		return workstation;
 	}
 
 

@@ -75,6 +75,137 @@ public class ToolsProject {
 
 	}
 
+	public ToolsProjectState getState() {
+		return state;
+	}
+
+	public void setState(ToolsProjectState state) {
+		this.state = state;
+	}
+
+	public User getCreator() {
+		return creator;
+	}
+
+	public void setCreator(User creator) {
+		this.creator = creator;
+	}
+
+	public User getAssignedUser() {
+		return assignedUser;
+	}
+
+	public void setAssignedUser(User assignedUser) {
+		this.assignedUser = assignedUser;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getCechOld() {
+		return cechOld;
+	}
+
+	public void setCechOld(String cechOld) {
+		this.cechOld = cechOld;
+	}
+
+	public String getCechNew() {
+		return cechNew;
+	}
+
+	public void setCechNew(String cechNew) {
+		this.cechNew = cechNew;
+	}
+
+	public String getAssetCode() {
+		return assetCode;
+	}
+
+	public void setAssetCode(String assetCode) {
+		this.assetCode = assetCode;
+	}
+
+	public String getAssetName() {
+		return assetName;
+	}
+
+	public void setAssetName(String assetName) {
+		this.assetName = assetName;
+	}
+
+	public String getClientCode() {
+		return clientCode;
+	}
+
+	public void setClientCode(String clientCode) {
+		this.clientCode = clientCode;
+	}
+
+	public String getClientName() {
+		return clientName;
+	}
+
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
+	}
+
+	public String getThumbnailFileName() {
+		return thumbnailFileName;
+	}
+
+	public void setThumbnailFileName(String thumbnailFileName) {
+		this.thumbnailFileName = thumbnailFileName;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public int getPriority() {
+		return priority;
+	}
+
+	public void setPriority(int priority) {
+		this.priority = priority;
+	}
+
+	public Timestamp getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Timestamp creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public Timestamp getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Timestamp updateDate) {
+		this.updateDate = updateDate;
+	}
+
+	@Override
+	public String toString() {
+		return "ToolsProject [state=" + state + ", creator=" + creator + ", assignedUser=" + assignedUser + ", id=" + id
+				+ ", cechOld=" + cechOld + ", cechNew=" + cechNew + ", assetCode=" + assetCode + ", assetName="
+				+ assetName + ", clientCode=" + clientCode + ", clientName=" + clientName + ", thumbnailFileName="
+				+ thumbnailFileName + ", description=" + description + ", priority=" + priority + ", creationDate="
+				+ creationDate + ", updateDate=" + updateDate + "]";
+	}
+
+
+
 	
 	
 	

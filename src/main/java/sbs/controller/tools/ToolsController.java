@@ -13,7 +13,9 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -27,17 +29,24 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import javassist.NotFoundException;
+import sbs.controller.bhptickets.TicketCreateForm;
 import sbs.controller.upload.UploadController;
 import sbs.helpers.TextHelper;
 import sbs.model.bhptickets.BhpTicket;
 import sbs.model.bhptickets.BhpTicketState;
+import sbs.model.tools.ToolsProject;
+import sbs.model.tools.ToolsProjectState;
 import sbs.model.users.User;
+import sbs.model.x3.X3Client;
+import sbs.model.x3.X3Product;
+import sbs.model.x3.X3Workstation;
 import sbs.service.bhptickets.BhpTicketStateService;
 import sbs.service.bhptickets.BhpTicketsService;
 import sbs.service.mail.MailService;
 import sbs.service.tools.ToolsProjectService;
 import sbs.service.tools.ToolsProjectStateService;
 import sbs.service.users.UserService;
+import sbs.service.x3.JdbcOracleX3Service;
 
 @Controller
 @RequestMapping("tools")
@@ -48,6 +57,8 @@ public class ToolsController {
 	ToolsProjectStateService toolsProjectStateService;
 	@Autowired
 	UserService userService;
+	@Autowired
+	JdbcOracleX3Service x3Service;
 	@Autowired
 	MessageSource messageSource;
 	@Autowired
@@ -64,18 +75,236 @@ public class ToolsController {
 		return "tools/dispatch";
 	}
 	
-	@RequestMapping(value = "/manager")
+	@RequestMapping(value = "/createproject")
 	@Transactional
-	public String managerView(Model model) {
-		model.addAttribute("title", "manager");
-		return "tools/manager";
+	public String createProjectView(Model model) {
+		model.addAttribute("toolsProjectCreateForm", new ToolsProjectCreateForm());
+		return "tools/createproject";
 	}
 	
-	@RequestMapping(value = "/user")
+	@RequestMapping(value = "/createproject", method = RequestMethod.POST)
 	@Transactional
-	public String userView(Model model) {
-		model.addAttribute("title", "user");
-		return "tools/user";
+	public String create(@Valid ToolsProjectCreateForm toolsProjectCreateForm, BindingResult bindingResult,
+			RedirectAttributes redirectAttrs, Locale locale, Model model) {
+
+		// validate
+		if (bindingResult.hasErrors()) {
+			return "tools/createproject";
+		}
+
+		// create project object
+		ToolsProject project = new ToolsProject();
+		
+		// check depending data - client
+		if(toolsProjectCreateForm.getClientCode().trim().length()>0){
+			X3Client client = x3Service.findClientByCode("ATW", toolsProjectCreateForm.getClientCode().trim());
+			if(client==null){
+				bindingResult.rejectValue("clientCode", "error.client.not.found", "ERROR");
+				return "tools/createproject";
+			}
+			else{
+				project.setClientCode(client.getCode());
+				project.setClientName(client.getName());
+			}
+		}
+		else{
+			project.setClientCode("");
+			project.setClientName("");
+		}
+		
+		// check depending data - asset
+		if(toolsProjectCreateForm.getAssetCode().trim().length()>0){
+			X3Product product = x3Service.findProductByCode("ATW", toolsProjectCreateForm.getAssetCode().trim());
+			if(product==null){
+				X3Workstation workstation = x3Service.findWorkstationByCode("ATW",toolsProjectCreateForm.getAssetCode().trim());
+				if(workstation==null){
+					bindingResult.rejectValue("assetCode", "error.asset.not.found", "ERROR");
+					return "tools/createproject";
+				}
+				else{
+					project.setAssetCode(workstation.getCode());
+					project.setAssetName(workstation.getName());
+				}
+			}
+			else{
+				project.setAssetCode(product.getCode());
+				project.setAssetName(product.getDescription());
+			}
+		}
+		else{
+			project.setAssetCode("");
+			project.setAssetName("");
+		}
+
+		// fields
+		Timestamp credat = new Timestamp(new java.util.Date().getTime());
+		project.setCreationDate(credat);
+		project.setUpdateDate(credat);
+		project.setCechOld(toolsProjectCreateForm.getCechOld().toUpperCase().trim());
+		project.setCechNew(toolsProjectCreateForm.getCechNew().toUpperCase().trim());
+		project.setDescription(toolsProjectCreateForm.getDescription().trim());
+		
+		// relations
+		// state
+		ToolsProjectState state = toolsProjectStateService.findByOrder(10);
+		state.getToolsProjects().add(project);
+		project.setState(state);
+		// creator
+		User creator = userService.getAuthenticatedUser();
+		creator.getCreatedToolsProjects().add(project);
+		project.setCreator(creator);
+		project.setPriority(1);
+		
+		// save
+		toolsProjectService.save(project);
+
+		// redirect
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/tools/editproject/" + project.getId();
+	}
+	
+	@RequestMapping("/editproject/{id}")
+	@Transactional
+	public String showEditProjectForm(@PathVariable("id") int id, Model model) throws NotFoundException {
+		ToolsProject project = toolsProjectService.findById(id);
+		if (project == null) {
+			throw new NotFoundException("Project not found");
+		}
+		ToolsProjectCreateForm toolsProjectCreateForm = new ToolsProjectCreateForm();
+		toolsProjectCreateForm.setState(project.getState().getDescription());
+		toolsProjectCreateForm.setId(project.getId());
+		toolsProjectCreateForm.setCechOld(project.getCechOld());
+		toolsProjectCreateForm.setCechNew(project.getCechNew());
+		toolsProjectCreateForm.setAssetCode(project.getAssetCode());
+		toolsProjectCreateForm.setAssetName(project.getAssetName());
+		toolsProjectCreateForm.setClientCode(project.getClientCode());
+		toolsProjectCreateForm.setClientName(project.getClientName());
+		toolsProjectCreateForm.setDescription(project.getDescription());
+		toolsProjectCreateForm.setCreationDate(project.getCreationDate());
+		toolsProjectCreateForm.setUpdateDate(project.getUpdateDate());
+		toolsProjectCreateForm.setCreator(project.getCreator().getName());
+		toolsProjectCreateForm.setThumbnailFileName(project.getThumbnailFileName());
+		toolsProjectCreateForm.setPriority(project.getPriority());
+		if(project.getAssignedUser()!=null){
+			toolsProjectCreateForm.setAssignedUser(project.getAssignedUser().getId());
+		}
+		else{
+			toolsProjectCreateForm.setAssignedUser(0L);
+		}
+
+		model.addAttribute("toolsUsers", userService.findByRole("ROLE_TOOLSNORMALUSER"));
+		model.addAttribute("toolsProjectCreateForm", toolsProjectCreateForm);
+		return "tools/editproject";
+	}
+	
+	@RequestMapping(value = "/editproject", params = { "save" }, method = RequestMethod.POST)
+	@Transactional
+	public String edit(@Valid ToolsProjectCreateForm toolsProjectCreateForm, BindingResult bindingResult,
+			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException{
+
+		
+		// validate
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("toolsUsers", userService.findByRole("ROLE_TOOLSNORMALUSER"));
+			return "tools/editproject";
+		}
+
+		// get project
+		ToolsProject project = toolsProjectService.findById(toolsProjectCreateForm.getId());
+		if (project == null) {
+			throw new NotFoundException("Project not found");
+		}
+
+		toolsProjectCreateForm.setCreationDate(project.getCreationDate());
+		toolsProjectCreateForm.setUpdateDate(project.getUpdateDate());		
+		
+		// fields
+		Timestamp upddat = new Timestamp(new java.util.Date().getTime());
+		project.setUpdateDate(upddat);
+		project.setCechOld(toolsProjectCreateForm.getCechOld().trim().toUpperCase());
+		project.setCechNew(toolsProjectCreateForm.getCechNew().trim().toUpperCase());
+		project.setDescription(toolsProjectCreateForm.getDescription().trim());
+		project.setPriority(toolsProjectCreateForm.getPriority());
+
+		// assigned user
+		User newAssignedUser = userService.findById(toolsProjectCreateForm.getAssignedUser());
+		if (newAssignedUser == null) {
+			bindingResult.rejectValue("assignedUser", "error.user.not.found", "ERROR");
+			model.addAttribute("toolsUsers", userService.findByRole("ROLE_TOOLSNORMALUSER"));
+			return "tools/editproject";
+		} else if (project.getAssignedUser().getId() != newAssignedUser.getId()) {
+			newAssignedUser.getAssignedToolsProjects().add(project);
+			project.setAssignedUser(newAssignedUser);
+			// state
+			ToolsProjectState state = toolsProjectStateService.findByOrder(20);
+			state.getToolsProjects().add(project);
+			project.setState(state);
+		}
+		
+		// check depending data - client
+		if(!toolsProjectCreateForm.getClientCode().trim().toUpperCase().equals(project.getClientCode())){
+			X3Client client = x3Service.findClientByCode("ATW", toolsProjectCreateForm.getClientCode().trim());
+			if(client==null){
+				bindingResult.rejectValue("clientCode", "error.client.not.found", "ERROR");
+				model.addAttribute("toolsUsers", userService.findByRole("ROLE_TOOLSNORMALUSER"));
+				return "tools/createproject";
+			}
+			else{
+				project.setClientCode(client.getCode());
+				project.setClientName(client.getName());
+			}
+		}
+		
+		// check depending data - asset
+		if(!toolsProjectCreateForm.getAssetCode().trim().toUpperCase().equals(project.getAssetCode())){
+			X3Product product = x3Service.findProductByCode("ATW", toolsProjectCreateForm.getAssetCode().trim());
+			if(product==null){
+				X3Workstation workstation = x3Service.findWorkstationByCode("ATW",toolsProjectCreateForm.getAssetCode().trim());
+				if(workstation==null){
+					bindingResult.rejectValue("assetCode", "error.asset.not.found", "ERROR");
+					model.addAttribute("toolsUsers", userService.findByRole("ROLE_TOOLSNORMALUSER"));
+					return "tools/createproject";
+				}
+				else{
+					project.setAssetCode(workstation.getCode());
+					project.setAssetName(workstation.getName());
+				}
+			}
+			else{
+				project.setAssetCode(product.getCode());
+				project.setAssetName(product.getDescription());
+			}
+		}
+
+		// save
+		toolsProjectService.save(project);
+		
+		// redirect
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));		
+		return "redirect:/tools/editproject/" + project.getId();
+	}
+	
+	
+	@RequestMapping(value = "/pendinglist")
+	@Transactional
+	public String managerView(Model model, Locale locale) {
+		
+		List<ToolsProject> list = toolsProjectService.findAllPendingToolsProjects();
+		model.addAttribute("list", list);
+		model.addAttribute("listtitle", messageSource.getMessage("tools.pendinglist", null, locale));
+		
+		return "tools/projectslist";
+	}
+	
+	@RequestMapping(value = "/closedlist")
+	@Transactional
+	public String userView(Model model, Locale locale) {
+		
+		List<ToolsProject> list = toolsProjectService.findClosedToolsProjects();
+		model.addAttribute("list", list);		
+		model.addAttribute("listtitle", messageSource.getMessage("tools.closedlist", null, locale));
+		
+		return "tools/projectslist";
 	}
 
 }

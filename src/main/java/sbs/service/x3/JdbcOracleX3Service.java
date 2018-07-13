@@ -23,6 +23,7 @@ import sbs.model.x3.X3UtrMachine;
 import sbs.model.x3.X3UtrWorker;
 import sbs.model.x3.X3WarehouseWeightDetailLine;
 import sbs.model.x3.X3WarehouseWeightLine;
+import sbs.model.x3.X3Workstation;
 
 public interface JdbcOracleX3Service {
 	
@@ -71,6 +72,7 @@ public interface JdbcOracleX3Service {
 	public Map<String, String> getAcvProductsEnglishDescriptions(String company);
 	public List<X3SalesOrderLine> findOpenedSalesOrderLinesInPeriod(Date startDate, Date endDate, String company);
 	public Map<String, Integer> findGeneralStockForAllProducts(String company);
+	public X3Workstation findWorkstationByCode(String company, String code);
 
 
 }

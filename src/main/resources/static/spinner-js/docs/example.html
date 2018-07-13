@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Example</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="dist/css/bootstrap-spinner.css">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.js"></script>
+    <script src="dist/js/jquery.spinner.js"></script>
+    <script>
+    $(function() {
+      $('#customize-spinner').spinner('changed', function(e, newVal, oldVal) {
+        $('#old-val').text(oldVal);
+        $('#new-val').text(newVal);
+      });
+    });
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Examples for jQuery spinner</h1>
+      <ul class="muted">
+        <li>Arrow-up for increment</li>
+        <li>Arrow-down for decrement</li>
+        <li>Press Arrows or Left-mouse cause continuous changing</li>
+      </ul>
+
+      <div class="well">
+        <h2>Quantity:</h2>
+        <div class="input-group spinner" data-trigger="spinner">
+          <input type="text" class="form-control text-center" value="1" data-rule="quantity">
+          <div class="input-group-addon">
+            <a href="javascript:;" class="spin-up" data-spin="up"><i class="fa fa-caret-up"></i></a>
+            <a href="javascript:;" class="spin-down" data-spin="down"><i class="fa fa-caret-down"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="well">
+        <h2>Currency:</h2>
+        <div class="input-group spinner" data-trigger="spinner">
+          <input type="text" class="form-control text-center" value="1" data-rule="currency">
+          <div class="input-group-addon">
+            <a href="javascript:;" class="spin-up" data-spin="up"><i class="fa fa-caret-up"></i></a>
+            <a href="javascript:;" class="spin-down" data-spin="down"><i class="fa fa-caret-down"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="well">
+        <h2>Percent:</h2>
+        <div class="input-group spinner" data-trigger="spinner">
+          <input type="text" class="form-control text-center" value="1" data-rule="percent">
+          <div class="input-group-addon">
+            <a href="javascript:;" class="spin-up" data-spin="up"><i class="fa fa-caret-up"></i></a>
+            <a href="javascript:;" class="spin-down" data-spin="down"><i class="fa fa-caret-down"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="well">
+        <h2>Month:</h2>
+        <div class="input-group spinner" data-trigger="spinner">
+          <input type="text" class="form-control text-center" value="1" data-rule="month">
+          <div class="input-group-addon">
+            <a href="javascript:;" class="spin-up" data-spin="up"><i class="fa fa-caret-up"></i></a>
+            <a href="javascript:;" class="spin-down" data-spin="down"><i class="fa fa-caret-down"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="well">
+        <h2>Customize (even number less than 200):</h2>
+        <div class="input-group spinner" data-trigger="spinner" id="customize-spinner">
+          <input type="text" class="form-control text-center" value="0" data-max="200" data-min="0" data-step="2">
+          <div class="input-group-addon">
+            <a href="javascript:;" class="spin-up" data-spin="up"><i class="fa fa-caret-up"></i></a>
+            <a href="javascript:;" class="spin-down" data-spin="down"><i class="fa fa-caret-down"></i></a>
+          </div>
+        </div>
+        <p>Event handler: changed</p>
+        <p>
+          Old = <span id="old-val"></span>, New = <span id="new-val"></span>
+        </p>
+      </div>
+
+      <div class="well">
+        <h2>Disabled input:</h2>
+        <div class="input-group spinner" data-trigger="spinner">
+          <input type="text" class="form-control text-center" value="100" disabled>
+          <div class="input-group-addon">
+            <a href="javascript:;" class="spin-up" data-spin="up"><i class="fa fa-caret-up"></i></a>
+            <a href="javascript:;" class="spin-down" data-spin="down"><i class="fa fa-caret-down"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="well">
+        <h2>Control sizing:</h2>
+        <div class="input-group input-group-sm spinner" data-trigger="spinner">
+          <input type="text" class="form-control text-center" value="1">
+
+          <div class="input-group-addon">
+            <button type="button" class="spin-up" data-spin="up"><i class="fa fa-caret-up"></i></button>
+            <button type="button" class="spin-down" data-spin="down"><i class="fa fa-caret-down"></i></button>
+          </div>
+
+          <div class="input-group-addon">
+            <button type="button" class="spin-up" data-spin="up"><span class="glyphicon glyphicon-triangle-top"></span></button>
+            <button type="button" class="spin-down" data-spin="down"><span class="glyphicon glyphicon-triangle-bottom"></span></button>
+          </div>
+        </div>
+
+        <br>
+
+        <div class="input-group input-group-lg spinner" data-trigger="spinner">
+          <input type="text" class="form-control text-center" value="1">
+
+          <div class="input-group-addon">
+            <button type="button" class="spin-up" data-spin="up"><i class="fa fa-caret-up"></i></button>
+            <button type="button" class="spin-down" data-spin="down"><i class="fa fa-caret-down"></i></button>
+          </div>
+
+          <div class="input-group-addon">
+            <button type="button" class="spin-up" data-spin="up"><span class="glyphicon glyphicon-triangle-top"></span></button>
+            <button type="button" class="spin-down" data-spin="down"><span class="glyphicon glyphicon-triangle-bottom"></span></button>
+          </div>
+        </div>
+
+        <br>
+        <div>First <code>.input-group-addon</code>: Font Awesome</div>
+        <div>Second <code>.input-group-addon</code>: Glyphicon</div>
+      </div>
+    </div>
+  </body>
+</html>

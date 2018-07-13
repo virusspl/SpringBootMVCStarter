@@ -20,7 +20,7 @@ public class ToolsProjectRepositoryImpl extends GenericRepositoryAdapter<ToolsPr
 	@Override
 	@SuppressWarnings("unchecked")
 	@Transactional
-	public List<ToolsProject> findArchivedToolsProjects() {
+	public List<ToolsProject> findClosedToolsProjects() {
 		Criteria crit = currentSession().createCriteria(ToolsProject.class, "project");
 		crit.createAlias("project.state", "state");
 		crit.add(Restrictions.ge("state.order", 50));

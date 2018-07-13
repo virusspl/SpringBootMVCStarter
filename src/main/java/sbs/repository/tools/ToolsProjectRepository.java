@@ -7,7 +7,7 @@ import sbs.repository.GenericRepository;
 
 public interface ToolsProjectRepository extends GenericRepository<ToolsProject,Integer> {
 
-	List<ToolsProject> findArchivedToolsProjects();
+	List<ToolsProject> findClosedToolsProjects();
 	List<ToolsProject> findAllPendingToolsProjects();
 	
 }
