@@ -77,7 +77,7 @@
 						<label for="creationDate" th:text="#{general.date.creation}">lbl</label>
 						<span class="form-control" id="creationDate"
 							th:placeholder="#{general.date.creation}"
-							th:text="*{#dates.format(creationDate, 'yyyy.MM.dd HH:mm')}"></span>
+							th:text="${#dates.format(toolsProjectCreateForm.creationDate, 'yyyy.MM.dd HH:mm')}"></span>
 					</div>
 				</div>
 				<div class="col-xs-6 col-sm-4">
@@ -85,7 +85,7 @@
 						<label for="updateDate" th:text="#{general.date.lastupdate}">lbl</label>
 						<span class="form-control" id="updateDate"
 							th:placeholder="#{general.date.lastupdate}"
-							th:text="*{#dates.format(updateDate, 'yyyy.MM.dd HH:mm')}"></span>
+							th:text="${#dates.format(toolsProjectCreateForm.updateDate, 'yyyy.MM.dd HH:mm')}"></span>
 					</div>
 				</div>
 			</div>
@@ -131,8 +131,8 @@
 						<!-- name -->
 						<label for="assetName" th:text="#{tools.asset.name}">lbl</label> <input
 							style="background-color: white;" type="text" class="form-control"
-							id="assetCode" name="assetName"
-							th:placeholder="#{tools.asset.name}" th:field="*{assetName}"
+							id="assetName" name="assetName"
+							th:placeholder="#{tools.asset.name}" th:field="${toolsProjectCreateForm.assetName}"
 							autocomplete="off" readonly="true" />
 						<div th:errors="*{assetName}"
 							class="alert alert-danger margin-top-5">error</div>
@@ -157,11 +157,10 @@
 						<!-- name -->
 						<label for="clientName" th:text="#{general.client.name}">lbl</label>
 						<input style="background-color: white;" type="text"
-							class="form-control" id="clientCode" name="clientName"
-							th:placeholder="#{general.client.name}" th:field="*{clientName}"
+							class="form-control" id="clientName" name="clientName"
+							th:placeholder="#{general.client.name}" th:field="${toolsProjectCreateForm.clientName}"
 							autocomplete="off" readonly="true" />
-						<div th:errors="*{clientName}"
-							class="alert alert-danger margin-top-5">error</div>
+
 					</div>
 				</div>
 			</div>

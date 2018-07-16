@@ -1,21 +1,12 @@
 package sbs.controller.tools;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
-import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -26,22 +17,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
 
 import javassist.NotFoundException;
-import sbs.controller.bhptickets.TicketCreateForm;
 import sbs.controller.upload.UploadController;
 import sbs.helpers.TextHelper;
-import sbs.model.bhptickets.BhpTicket;
-import sbs.model.bhptickets.BhpTicketState;
 import sbs.model.tools.ToolsProject;
 import sbs.model.tools.ToolsProjectState;
 import sbs.model.users.User;
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3Workstation;
-import sbs.service.bhptickets.BhpTicketStateService;
-import sbs.service.bhptickets.BhpTicketsService;
 import sbs.service.mail.MailService;
 import sbs.service.tools.ToolsProjectService;
 import sbs.service.tools.ToolsProjectStateService;
@@ -197,48 +182,55 @@ public class ToolsController {
 		return "tools/editproject";
 	}
 	
+	private void repeatConstants(ToolsProject project, ToolsProjectCreateForm form){
+		form.setCreationDate(project.getCreationDate());
+		form.setUpdateDate(project.getCreationDate());
+		form.setAssetName(project.getAssetName());
+		form.setClientName(project.getClientName());
+	}
+	
 	@RequestMapping(value = "/editproject", params = { "save" }, method = RequestMethod.POST)
 	@Transactional
 	public String edit(@Valid ToolsProjectCreateForm toolsProjectCreateForm, BindingResult bindingResult,
 			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException{
-
-		
-		// validate
-		if (bindingResult.hasErrors()) {
-			model.addAttribute("toolsUsers", userService.findByRole("ROLE_TOOLSNORMALUSER"));
-			return "tools/editproject";
-		}
 
 		// get project
 		ToolsProject project = toolsProjectService.findById(toolsProjectCreateForm.getId());
 		if (project == null) {
 			throw new NotFoundException("Project not found");
 		}
-
-		toolsProjectCreateForm.setCreationDate(project.getCreationDate());
-		toolsProjectCreateForm.setUpdateDate(project.getUpdateDate());		
 		
-		// fields
-		Timestamp upddat = new Timestamp(new java.util.Date().getTime());
-		project.setUpdateDate(upddat);
-		project.setCechOld(toolsProjectCreateForm.getCechOld().trim().toUpperCase());
-		project.setCechNew(toolsProjectCreateForm.getCechNew().trim().toUpperCase());
-		project.setDescription(toolsProjectCreateForm.getDescription().trim());
-		project.setPriority(toolsProjectCreateForm.getPriority());
-
-		// assigned user
-		User newAssignedUser = userService.findById(toolsProjectCreateForm.getAssignedUser());
-		if (newAssignedUser == null) {
-			bindingResult.rejectValue("assignedUser", "error.user.not.found", "ERROR");
+		// validate
+		if (bindingResult.hasErrors()) {
+			repeatConstants(project, toolsProjectCreateForm);
 			model.addAttribute("toolsUsers", userService.findByRole("ROLE_TOOLSNORMALUSER"));
 			return "tools/editproject";
-		} else if (project.getAssignedUser().getId() != newAssignedUser.getId()) {
-			newAssignedUser.getAssignedToolsProjects().add(project);
-			project.setAssignedUser(newAssignedUser);
-			// state
-			ToolsProjectState state = toolsProjectStateService.findByOrder(20);
+		}
+
+		// assigned user
+		if(toolsProjectCreateForm.getAssignedUser() > 0 ){
+			User newAssignedUser = userService.findById(toolsProjectCreateForm.getAssignedUser());
+			if (newAssignedUser == null) {
+				bindingResult.rejectValue("assignedUser", "error.user.not.found", "ERROR");
+				repeatConstants(project, toolsProjectCreateForm);
+				model.addAttribute("toolsUsers", userService.findByRole("ROLE_TOOLSNORMALUSER"));
+				return "tools/editproject";
+			} else if (project.getAssignedUser() == null
+					|| project.getAssignedUser().getId() != newAssignedUser.getId()) {
+				newAssignedUser.getAssignedToolsProjects().add(project);
+				project.setAssignedUser(newAssignedUser);
+				// state
+				ToolsProjectState state = toolsProjectStateService.findByOrder(20);
+				state.getToolsProjects().add(project);
+				project.setState(state);
+			}
+		}
+		else if(project.getState().getOrder() == 20){
+			ToolsProjectState state = toolsProjectStateService.findByOrder(10);
 			state.getToolsProjects().add(project);
 			project.setState(state);
+			project.getAssignedUser().getAssignedToolsProjects().remove(project);
+			project.setAssignedUser(null);
 		}
 		
 		// check depending data - client
@@ -246,8 +238,9 @@ public class ToolsController {
 			X3Client client = x3Service.findClientByCode("ATW", toolsProjectCreateForm.getClientCode().trim());
 			if(client==null){
 				bindingResult.rejectValue("clientCode", "error.client.not.found", "ERROR");
+				repeatConstants(project, toolsProjectCreateForm);
 				model.addAttribute("toolsUsers", userService.findByRole("ROLE_TOOLSNORMALUSER"));
-				return "tools/createproject";
+				return "tools/editproject";
 			}
 			else{
 				project.setClientCode(client.getCode());
@@ -262,8 +255,9 @@ public class ToolsController {
 				X3Workstation workstation = x3Service.findWorkstationByCode("ATW",toolsProjectCreateForm.getAssetCode().trim());
 				if(workstation==null){
 					bindingResult.rejectValue("assetCode", "error.asset.not.found", "ERROR");
+					repeatConstants(project, toolsProjectCreateForm);
 					model.addAttribute("toolsUsers", userService.findByRole("ROLE_TOOLSNORMALUSER"));
-					return "tools/createproject";
+					return "tools/editproject";
 				}
 				else{
 					project.setAssetCode(workstation.getCode());
@@ -275,6 +269,14 @@ public class ToolsController {
 				project.setAssetName(product.getDescription());
 			}
 		}
+		
+		// fields
+		Timestamp upddat = new Timestamp(new java.util.Date().getTime());
+		project.setUpdateDate(upddat);
+		project.setCechOld(toolsProjectCreateForm.getCechOld().trim().toUpperCase());
+		project.setCechNew(toolsProjectCreateForm.getCechNew().trim().toUpperCase());
+		project.setDescription(toolsProjectCreateForm.getDescription().trim());
+		project.setPriority(toolsProjectCreateForm.getPriority());
 
 		// save
 		toolsProjectService.save(project);
