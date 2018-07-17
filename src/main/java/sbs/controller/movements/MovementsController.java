@@ -26,6 +26,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sbs.model.geode.GeodeMovement;
 import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ShipmentMovement;
+import sbs.model.x3.X3ShipmentStockLineWithPrice;
 import sbs.model.x3.X3WarehouseWeightDetailLine;
 import sbs.model.x3.X3WarehouseWeightLine;
 import sbs.service.dictionary.X3HistoryPriceService;
@@ -260,6 +261,45 @@ public class MovementsController {
 		else{
 			return GeodeMovement.GEODE_MOVEMENT_UNKNOWN;
 		}
+	}
+	
+	@RequestMapping(value = "/calculate", params = { "shipstockvalue" }, method = RequestMethod.POST)
+	public String performShipStockValue(@Valid MovementsForm movementsForm, BindingResult bindingResult, Model model, RedirectAttributes redirectAttrs, Locale locale){
+
+		Map<String, Double> prices = x3HistoryPriceService.findAllX3HistoryPrices();
+		List<X3ShipmentStockLineWithPrice> lines = x3Service.findAllShipStockWithAveragePrice("ATW");
+
+		double acvValue = 0;
+		double afvValue = 0;
+		double otherValue = 0;
+		double totalValue = 0;
+		for(X3ShipmentStockLineWithPrice line: lines){
+			if(prices.get(line.getCode())!=null){
+				line.setAveragePrice(prices.get(line.getCode()));
+			}
+			line.setLineValue(line.getAveragePrice()*line.getQuantity()*1.0);
+			if(line.getCategory().equals("ACV")){
+				acvValue += line.getLineValue();
+			}
+			else if(line.getCategory().equals("AFV")){
+				afvValue += line.getLineValue();
+			}
+			else{
+				otherValue += line.getLineValue();
+			}
+		}
+		
+		totalValue = acvValue + afvValue + otherValue;
+		
+		model.addAttribute("shipmentsCurrentValue", lines);
+		model.addAttribute("acvValue", acvValue);
+		model.addAttribute("afvValue", afvValue);
+		model.addAttribute("otherValue", otherValue);
+		model.addAttribute("totalValue", totalValue);
+		
+		
+		
+		return "movements/main";
 	}
     
     

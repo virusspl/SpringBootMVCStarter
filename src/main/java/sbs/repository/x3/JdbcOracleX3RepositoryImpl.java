@@ -32,6 +32,7 @@ import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3SalesOrder;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
+import sbs.model.x3.X3ShipmentStockLineWithPrice;
 import sbs.model.x3.X3UtrFault;
 import sbs.model.x3.X3UtrFaultLine;
 import sbs.model.x3.X3UtrMachine;
@@ -1298,6 +1299,54 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		}
 		
 		return map;
+	}
+	
+	@Override
+	public List<X3ShipmentStockLineWithPrice> findAllShipStockWithAveragePrice(String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "ITM.ITMREF_0, "
+				+ "ITM.ITMDES1_0, "
+				+ "ITM.TCLCOD_0, "
+				+ "ITM.TSICOD_0, "
+				+ "ITM.TSICOD_1, "
+				+ "STK.QTYSTU_0, "
+				+ "ITM.STU_0, "
+				+ "ITV.AVC_0, "
+				+ "STK.LOC_0 "
+				+ "FROM ("
+				+ company + ".STOCK STK INNER JOIN "
+				+ company + ".ITMMASTER ITM "
+				+ "ON STK.ITMREF_0 = ITM.ITMREF_0)"
+				+ "INNER JOIN " + company + ".ITMMVT ITV "
+				+ "ON ITM.ITMREF_0 = ITV.ITMREF_0 "
+				+ "WHERE "
+				+ "STK.LOC_0 = ? OR STK.LOC_0 = ? "
+				+ "ORDER BY ITM.ITMREF_0, STK.LOC_0 "
+				,
+				new Object[]{"WGX01", "GEODE"}
+		);
+		
+		List<X3ShipmentStockLineWithPrice> list = new ArrayList<>();
+		X3ShipmentStockLineWithPrice line;
+		for(Map<String,Object> row: resultSet ){
+			line = new X3ShipmentStockLineWithPrice();
+			
+			line.setCode((String)row.get("ITMREF_0"));
+			line.setDescription((String)row.get("ITMDES1_0"));
+			line.setCategory((String)row.get("TCLCOD_0"));
+			line.setGr1((String)row.get("TSICOD_0"));
+			line.setGr2((String)row.get("TSICOD_1"));
+			line.setUnit((String)row.get("STU_0"));
+			line.setLocation((String)row.get("LOC_0"));
+			line.setQuantity(((BigDecimal)row.get("QTYSTU_0")).doubleValue());
+			line.setAveragePrice(((BigDecimal)row.get("AVC_0")).doubleValue());
+		
+			list.add(line);
+		
+		}
+		
+		return list;
 	}
 	
 	@Override

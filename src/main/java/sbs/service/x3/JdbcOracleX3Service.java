@@ -17,6 +17,7 @@ import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3SalesOrder;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
+import sbs.model.x3.X3ShipmentStockLineWithPrice;
 import sbs.model.x3.X3UtrFault;
 import sbs.model.x3.X3UtrFaultLine;
 import sbs.model.x3.X3UtrMachine;
@@ -64,6 +65,7 @@ public interface JdbcOracleX3Service {
 	public Map<String, Integer> findAcvMagStock(String company);
 	public Map<String, Integer> findAcvAverageUsageInPeriod(String startPeriod, String endPeriod, String company);
 	public Map<String, Integer> findAcvShipStock(String company);
+	public List<X3ShipmentStockLineWithPrice> findAllShipStockWithAveragePrice(String company);
 	public List<DirectReceptionsShipmentLine> findDirectReceptionsShipmentLines(Date startDate, Date endDate, String company);
 	public Map<String, Integer> getAcvConsumptionListForYear(int year, String company);
 	public Map<String, Integer> getAcvDemandList(String company);

@@ -160,7 +160,7 @@
 						th:text="#{action.back}">back</span>
 					</a>
 					<div class="shipment_buttons margin-top-5">
-				<!-- 
+						<!-- 
 				sec:authorize="hasAnyRole(
 				'ROLE_ADMIN',  
 				'ROLE_MOVEMENTSSUPERUSER', 
@@ -182,9 +182,14 @@
 							<span class="glyphicon glyphicon-resize-full"></span> <span
 								th:text="#{movements.shipweightdetails}">search</span>
 						</button>
+						<button class="btn btn-primary btn-sm" type="submit"
+							name="shipstockvalue">
+							<span class="glyphicon glyphicon-euro"></span> <span
+								th:text="#{movements.shipstockvalue}">search</span>
+						</button>
 					</div>
 					<div class="reception_buttons margin-top-5">
-				<!--
+						<!--
 				sec:authorize="hasAnyRole(
 				'ROLE_ADMIN',  
 				'ROLE_MOVEMENTSSUPERUSER', 
@@ -521,6 +526,108 @@
 										th:text="${#dates.format(dtl.creationDateTime, 'dd.MM.yyyy HH:mm')}"></span></td>
 									<td><span th:text="${dtl.creationUserCode}"></span></td>
 									<td><span th:text="${dtl.creationUserName}"></span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /RESULTS RCP MOVEMENTS DETAILS -->
+		<!-- RESULTS SHIPMENT CURRENT VALUE -->
+		<div th:if="${shipmentsCurrentValue}">
+			<div class="row margin-top-10">
+				<div class="col-xs-12">
+					<h3 class="text-primary" th:text="#{movements.shipstockvalue}">result</h3>
+				</div>
+			</div>
+			<div class="underline"></div>
+			<div class="row margin-top-10">
+				<div class="col-xs-2">
+					<span th:text="|#{general.value}|">value</span>
+				</div>
+				<div class="col-xs-10">
+					<span
+						th:text="${#numbers.formatDecimal(totalValue, 0, 'DEFAULT', 2, 'DEFAULT')}"
+						class="bold">value</span>
+				</div>
+				<div class="col-xs-2">
+					<span th:text="|#{general.value} AFV|">value</span>
+				</div>
+				<div class="col-xs-10">
+					<span
+						th:text="${#numbers.formatDecimal(afvValue, 0, 'DEFAULT', 2, 'DEFAULT')}"
+						class="bold">value</span>
+				</div>				
+				<div class="col-xs-2">
+					<span th:text="|#{general.value} ACV|">value</span>
+				</div>
+				<div class="col-xs-10">
+					<span
+						th:text="${#numbers.formatDecimal(acvValue, 0, 'DEFAULT', 2, 'DEFAULT')}"
+						class="bold">value</span>
+				</div>
+				<div class="col-xs-2">
+					<span th:text="|#{movements.value.other}|">value</span>
+				</div>
+				<div class="col-xs-10">
+					<span
+						th:text="${#numbers.formatDecimal(otherValue, 0, 'DEFAULT', 2, 'DEFAULT')}"
+						class="bold">value</span>
+				</div>
+			</div>
+			<div class="row margin-top-10">
+				<div class="col-xs-12">
+					<h3 class="text-primary" th:text="#{movements.details}">result</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="table-responsive">
+						<table id="srv2" class="display">
+							<thead>
+								<tr>
+									<th th:text="#{general.productCode}">head</th>
+									<th th:text="#{general.productDescription}">head</th>
+									<th th:text="#{movements.category}">head</th>
+									<th th:text="|Gr 1|">head</th>
+									<th th:text="|Gr 2|">head</th>
+									<th th:text="#{general.quantity}">head</th>
+									<th th:text="#{general.unit}">head</th>
+									<th th:text="#{general.price}">head</th>
+									<th th:text="#{general.value}">head</th>
+									<th th:text="#{general.state}">head</th>
+								</tr>
+							</thead>
+							<tfoot>
+								<tr>
+									<th th:text="#{general.productCode}">head</th>
+									<th th:text="#{general.productDescription}">head</th>
+									<th th:text="#{movements.category}">head</th>
+									<th th:text="|Gr 1|">head</th>
+									<th th:text="|Gr 2|">head</th>
+									<th th:text="#{general.quantity}">head</th>
+									<th th:text="#{general.unit}">head</th>
+									<th th:text="#{general.price}">head</th>
+									<th th:text="#{general.value}">head</th>
+									<th th:text="#{general.state}">head</th>
+								</tr>
+							</tfoot>
+							<tbody>
+								<tr th:each="scv : ${shipmentsCurrentValue}">
+									<td><span th:text="${scv.code}"></span></td>
+									<td><span th:text="${scv.description}"></span></td>
+									<td><span th:text="${scv.category}"></span></td>
+									<td><span th:text="${scv.gr1}"></span></td>
+									<td><span th:text="${scv.gr2}"></span></td>
+									<td><span
+										th:text="${#numbers.formatDecimal(scv.quantity, 0, 'DEFAULT', 2, 'DEFAULT')}"></span></td>
+									<td><span th:text="${scv.unit}"></span></td>
+									<td><span
+										th:text="${#numbers.formatDecimal(scv.averagePrice, 0, 'DEFAULT', 2, 'DEFAULT')}"></span></td>
+									<td><span
+										th:text="${#numbers.formatDecimal(scv.lineValue, 0, 'DEFAULT', 2, 'DEFAULT')}"></span></td>
+									<td><span th:text="${scv.location}"></span></td>
 								</tr>
 							</tbody>
 						</table>

@@ -22,6 +22,7 @@ import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3SalesOrder;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
+import sbs.model.x3.X3ShipmentStockLineWithPrice;
 import sbs.model.x3.X3UtrFault;
 import sbs.model.x3.X3UtrFaultLine;
 import sbs.model.x3.X3UtrMachine;
@@ -193,6 +194,10 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	@Override
 	public Map<String, Integer> findAcvShipStock(String company) {
 		return jdbcOracleX3Repository.findAcvShipStock(company);
+	}
+	@Override
+	public List<X3ShipmentStockLineWithPrice> findAllShipStockWithAveragePrice(String company) {
+		return jdbcOracleX3Repository.findAllShipStockWithAveragePrice(company);
 	}
 
 	@Override
