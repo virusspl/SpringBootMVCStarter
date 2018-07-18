@@ -281,7 +281,7 @@ public class MovementsController {
 			if(line.getCategory().equals("ACV")){
 				acvValue += line.getLineValue();
 			}
-			else if(line.getCategory().equals("AFV")){
+			else if(line.getCategory().equals("AFV") || line.getCategory().equals("AFN")){
 				afvValue += line.getLineValue();
 			}
 			else{
