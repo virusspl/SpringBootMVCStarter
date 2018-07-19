@@ -52,7 +52,7 @@
 		<script th:src="@{/datatables/dataTables.helper.js}"
 			type="text/javascript"></script>
 		<script th:if="__${#locale}__ == 'pl'">
-			$('#srv').DataTable({
+	   		var table = $('#srv').DataTable({
 				language : {
 					url : getUrl() + "polish.json"
 				},
@@ -62,30 +62,30 @@
 				language : {
 					url : getUrl() + "polish.json"
 				},
-				bPaginate: false,
+				bPaginate : false,
 				order : [ [ 0, 'asc' ] ]
 			});
 			$('#srv3').DataTable({
 				language : {
 					url : getUrl() + "polish.json"
 				},
-				bPaginate: false,
-				searching: false,
-				info: false,
+				bPaginate : false,
+				searching : false,
+				info : false,
 				order : [ [ 0, 'asc' ] ]
 			});
 			$('#srv4').DataTable({
 				language : {
 					url : getUrl() + "polish.json"
 				},
-				bPaginate: false,
-				searching: false,
-				info: false,
+				bPaginate : false,
+				searching : false,
+				info : false,
 				order : [ [ 0, 'asc' ] ]
 			});
 		</script>
 		<script th:if="__${#locale}__ == 'en'">
-			$('#srv').DataTable({
+			var table = $('#srv').DataTable({
 				language : {
 					url : getUrl() + "english.json"
 				},
@@ -95,30 +95,30 @@
 				language : {
 					url : getUrl() + "english.json"
 				},
-				bPaginate: false,
+				bPaginate : false,
 				order : [ [ 0, 'asc' ] ]
 			});
 			$('#srv3').DataTable({
 				language : {
 					url : getUrl() + "english.json"
 				},
-				bPaginate: false,
-				searching: false,
-				info: false,
+				bPaginate : false,
+				searching : false,
+				info : false,
 				order : [ [ 0, 'asc' ] ]
 			});
 			$('#srv4').DataTable({
 				language : {
 					url : getUrl() + "english.json"
 				},
-				bPaginate: false,
-				searching: false,
-				info: false,				
+				bPaginate : false,
+				searching : false,
+				info : false,
 				order : [ [ 0, 'asc' ] ]
 			});
 		</script>
 		<script th:if="__${#locale}__ == 'it'">
-			$('#srv').DataTable({
+			var table = $('#srv').DataTable({
 				language : {
 					url : getUrl() + "italian.json"
 				},
@@ -128,27 +128,64 @@
 				language : {
 					url : getUrl() + "italian.json"
 				},
-				bPaginate: false,
+				bPaginate : false,
 				order : [ [ 0, 'asc' ] ]
 			});
 			$('#srv3').DataTable({
 				language : {
 					url : getUrl() + "italian.json"
 				},
-				bPaginate: false,
-				searching: false,
-				info: false,				
+				bPaginate : false,
+				searching : false,
+				info : false,
 				order : [ [ 0, 'asc' ] ]
 			});
 			$('#srv4').DataTable({
 				language : {
 					url : getUrl() + "italian.json"
 				},
-				bPaginate: false,
-				searching: false,
-				info: false,				
+				bPaginate : false,
+				searching : false,
+				info : false,
 				order : [ [ 0, 'asc' ] ]
 			});
+		</script>
+		<script>
+			// columns filter
+			$(document)
+					.ready(
+							function() {
+								// Setup - add a text input to each footer cell
+								$('#srv tfoot th')
+										.each(
+												function() {
+													var title = $(this).text();
+													$(this)
+															.html(
+																	'<span><input type="text" placeholder="'+title+'" style="width: ' + title.length*8 + 'px;"></input></span>');
+												});
+
+								// Apply the search
+								table
+										.columns()
+										.every(
+												function() {
+													var that = this;
+
+													$('input', this.footer())
+															.on(
+																	'keyup change',
+																	function() {
+																		if (that
+																				.search() !== this.value) {
+																			that
+																					.search(
+																							this.value)
+																					.draw();
+																		}
+																	});
+												});
+							});
 		</script>
 	</div>
 	<div layout:fragment="content">
@@ -277,7 +314,8 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:each="line : ${summary}" th:if="${
+								<tr th:each="line : ${summary}"
+									th:if="${
 								line.group eq 'PZA' or
 								line.group eq 'PZO' or
 								line.group eq 'PZZ' or
@@ -379,7 +417,8 @@
 							</tfoot>
 							<tbody>
 								<tr th:each="line : ${showList}">
-									<td><span th:text="${#dates.format(line.demandedDate, 'yyyy.MM.dd')}"></span></td>
+									<td><span
+										th:text="${#dates.format(line.demandedDate, 'yyyy.MM.dd')}"></span></td>
 									<td><span th:text="${line.orderNumberAndLine}"></span></td>
 									<td><span th:text="${line.productCode}"></span></td>
 									<td><span th:text="${line.productDescription}"></span></td>
