@@ -529,7 +529,26 @@
 									data-placement="top" th:title="${line.faults[iter.index]}"></span>
 								</td>
 							</tr>
-						<!-- EXPANDERS -->							
+						<!-- /EXPANDERS -->							
+						<!-- WPS -->							
+							<tr>
+								<td th:colspan="${#lists.size(titleColors)+1}"
+									style="font-weight: bold; background-color: #E6E6E6;"><span
+									th:text="|WPS|"></span></td>
+							</tr>
+							<tr th:each="line : ${wpsLines}">
+								<td><span th:text="${line.machine.code}"></span></td>
+								<td th:each="val,iter: ${line.values}"><span
+									th:if="${val=='24:00'}" th:text="${val}"
+									style="color: #00dd00;"></span> <span th:if="${val=='00:00'}"
+									th:text="${val}" style="color: #dd0000" data-toggle="tooltip"
+									data-placement="top" th:title="${line.faults[iter.index]}"></span>
+									<span th:if="${val!='00:00' and val!='24:00'}" th:text="${val}"
+									style="color: #0000dd" data-toggle="tooltip"
+									data-placement="top" th:title="${line.faults[iter.index]}"></span>
+								</td>
+							</tr>
+						<!-- /WPS -->							
 						</tbody>
 					</table>
 				</div>

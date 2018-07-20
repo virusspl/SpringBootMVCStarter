@@ -50,12 +50,11 @@ public class UtrController {
 	public static final int MACHINE_BODIES = 1;
 	public static final int MACHINE_ARMS = 2;
 	public static final int MACHINE_EXPANDERS = 3;
-	
+
 	List<String> excludedMachines;
 	List<String> bodiesMachines;
 	List<String> armsMachines;
 
-	
 	int criticalMachinesCnt;
 	int nonCriticalMachinesCnt;
 	int criticalMachinesCntWps;
@@ -91,13 +90,11 @@ public class UtrController {
 
 	@RequestMapping(value = "/stats", params = { "stats" }, method = RequestMethod.POST)
 	public String performSearch(@Valid UtrDispatchForm utrDispatchForm, BindingResult bindingResult,
-			RedirectAttributes redirectAttrs, Model model, Locale locale, 
-			@RequestParam(value = "stats") int company) {
+			RedirectAttributes redirectAttrs, Model model, Locale locale, @RequestParam(value = "stats") int company) {
 
 		if (bindingResult.hasErrors()) {
 			return "utr/stats";
 		}
-		
 
 		// dates range
 		Date startDate = utrDispatchForm.getStartDate();
@@ -149,7 +146,7 @@ public class UtrController {
 				continue;
 			}
 			// 1 = ADRP; 2 = WPS - in view
-			if(machines.get(tmpMachineCode).getCompany() != company){
+			if (machines.get(tmpMachineCode).getCompany() != company) {
 				continue;
 			}
 
@@ -184,12 +181,11 @@ public class UtrController {
 		int mwt = minutesOfWorkTotal / validFaultsCnt;
 		int daysInPeriod = countDaysInPeriod(startDate, endDate);
 		int mtbf = 0;
-		if(company == 1){
+		if (company == 1) {
 			// ADRP
 			mtbf = calculateMtbf(daysInPeriod, validFaultsCnt, utrDispatchForm.getCritical(), criticalMachinesCnt,
 					nonCriticalMachinesCnt);
-		}
-		else{
+		} else {
 			// WPS
 			mtbf = calculateMtbf(daysInPeriod, validFaultsCnt, utrDispatchForm.getCritical(), criticalMachinesCntWps,
 					nonCriticalMachinesCntWps);
@@ -206,7 +202,7 @@ public class UtrController {
 		model.addAttribute("mtbf", mtbf);
 		model.addAttribute("workers", workers.values());
 		model.addAttribute("criticalMachines", criticalMachines);
-		model.addAttribute("company", company==1 ? "ADRP" : "WPS");
+		model.addAttribute("company", company == 1 ? "ADRP" : "WPS");
 
 		return "utr/stats";
 	}
@@ -226,7 +222,7 @@ public class UtrController {
 		Map<String, X3UtrMachine> machines = x3Service.findAllUtrMachines("ATW");
 		Map<String, X3UtrFault> faults = x3Service.findAllUtrFaults();
 		List<X3UtrFaultLine> lines = x3Service.findAllUtrFaultLines();
-
+		System.out.println(machines.size() + " after get");
 		// link maps
 		x3OrmHelper.assignUtrFaultsLines(faults, lines, machines);
 
@@ -264,44 +260,60 @@ public class UtrController {
 		ArrayList<ChartLine> bodiesLines = new ArrayList<>();
 		ArrayList<ChartLine> armsLines = new ArrayList<>();
 		ArrayList<ChartLine> expandersLines = new ArrayList<>();
+		ArrayList<ChartLine> wpsLines = new ArrayList<>();
 		ChartLine line;
-		
+
+		System.out.println(machines.values().size() + " before loop");
+		int cnt= 0;
 		for (X3UtrMachine m : machines.values()) {
-			if (m.getCodeNicim() == null) {
-				// if NICIM code empty - skip
-				continue;
-			}
-			switch (getMachineTypeByNicimCode(m.getCodeNicim())){
-			case MACHINE_BODIES:
+			cnt++;
+			if (m.getCompany() == X3UtrMachine.ADRP) {
+				
+				if (m.getCodeNicim() == null) {
+					// if NICIM code empty - skip
+					continue;
+				}
+				switch (getMachineTypeByNicimCode(m.getCodeNicim())) {
+				case MACHINE_BODIES:
+					line = new ChartLine(m, periodLength);
+					calculateTimeAvailable(line, periodFaults, start, end);
+					linesCount++;
+					bodiesLines.add(line);
+					break;
+				case MACHINE_ARMS:
+					line = new ChartLine(m, periodLength);
+					calculateTimeAvailable(line, periodFaults, start, end);
+					linesCount++;
+					armsLines.add(line);
+					break;
+				case MACHINE_EXPANDERS:
+					line = new ChartLine(m, periodLength);
+					calculateTimeAvailable(line, periodFaults, start, end);
+					linesCount++;
+					expandersLines.add(line);
+					break;
+				default:
+					break;
+				}
+			
+			} 
+			else if (m.getCompany() == X3UtrMachine.WPS) {
 				line = new ChartLine(m, periodLength);
 				calculateTimeAvailable(line, periodFaults, start, end);
 				linesCount++;
-				bodiesLines.add(line);
-				break;
-			case MACHINE_ARMS:
-				line = new ChartLine(m, periodLength);
-				calculateTimeAvailable(line, periodFaults, start, end);
-				linesCount++;
-				armsLines.add(line);
-				break;
-			case MACHINE_EXPANDERS:
-				line = new ChartLine(m, periodLength);
-				calculateTimeAvailable(line, periodFaults, start, end);
-				linesCount++;
-				expandersLines.add(line);
-				break;
-			default:
-				break;
+				wpsLines.add(line);
 			}
 			
-			//ArrayList<ChartLine> chartLines = new ArrayList<>();			
-			/*if (m.getCodeNicim().startsWith("ZGT") || m.getCodeNicim().startsWith("ROB")) {
-				line = new ChartLine(m, periodLength);
-				calculateTimeAvailable(line, periodFaults, start, end);
-				chartLines.add(line);
-			}
-			*/
 		}
+		
+	/*} else if (m.getCompany() == X3UtrMachine.WPS) {
+		line = new ChartLine(m, periodLength);
+		calculateTimeAvailable(line, periodFaults, start, end);
+		linesCount++;
+		wpsLines.add(line);
+		break;
+	}*/
+		System.out.println("after " + cnt + " loops");
 
 		model.addAttribute("titleDates", datesInPeriod);
 		model.addAttribute("titleColors", colorsInPeriod);
@@ -310,25 +322,25 @@ public class UtrController {
 		model.addAttribute("bodiesLines", bodiesLines);
 		model.addAttribute("armsLines", armsLines);
 		model.addAttribute("expandersLines", expandersLines);
-
+		model.addAttribute("wpsLines", wpsLines);
 
 		return "utr/stats";
 	}
 
-	private int getMachineTypeByNicimCode(String machineCode){
-		if(machineCode.startsWith("ZGT")){
+	private int getMachineTypeByNicimCode(String machineCode) {
+		if (machineCode.startsWith("ZGT")) {
 			return MACHINE_EXPANDERS;
 		}
-		if(bodiesMachines.contains(machineCode)){
+		if (bodiesMachines.contains(machineCode)) {
 			return MACHINE_BODIES;
 		}
-		if(armsMachines.contains(machineCode)){
+		if (armsMachines.contains(machineCode)) {
 			return MACHINE_ARMS;
 		}
-		
+
 		return 0;
 	}
-	
+
 	@RequestMapping(value = "/current", method = RequestMethod.GET)
 	public String currentFaultsMonitor(Model model, Locale locale) {
 
@@ -351,28 +363,28 @@ public class UtrController {
 		Map<String, CurrentFaultsLine> list = new TreeMap<>();
 
 		CurrentFaultsLine cfl;
-		for(X3UtrFault fault: faults.values()){
+		for (X3UtrFault fault : faults.values()) {
 			// only critical machines
-			if(fault.getMachine() == null || !fault.getMachine().isCritical()){
+			if (fault.getMachine() == null || !fault.getMachine().isCritical()) {
 				continue;
 			}
-			if(fault.getInputDateTime() == null){
+			if (fault.getInputDateTime() == null) {
 				continue;
 			}
-			if(dateHelper.isDateInRange(new Timestamp(today.getTime().getTime()), fault.getInputDateTime(), fault.getCloseDateTime())){
-				if(!list.containsKey(fault.getMachineCode())){
+			if (dateHelper.isDateInRange(new Timestamp(today.getTime().getTime()), fault.getInputDateTime(),
+					fault.getCloseDateTime())) {
+				if (!list.containsKey(fault.getMachineCode())) {
 					cfl = new CurrentFaultsLine();
 					cfl.setInputDate(fault.getInputDateTime());
 					cfl.setMachine(fault.getMachine());
 					cfl.setFaults(fault.getFaultNumber());
 					list.put(fault.getMachineCode(), cfl);
-				}
-				else{
+				} else {
 					list.get(fault.getMachineCode()).setFaults(fault.getFaultNumber());
-				}				
+				}
 			}
 		}
-		
+
 		model.addAttribute("list", list.values());
 		model.addAttribute("refreshTime", dateHelper.formatDdMmYyyyHhMm(dateHelper.getCurrentTime()));
 
@@ -431,7 +443,7 @@ public class UtrController {
 			if (ft.getInputDateTime() == null) {
 				continue;
 			}
-			// INPUT AND CLOSE DATE 
+			// INPUT AND CLOSE DATE
 			inputDate.setTime(new Date(ft.getInputDateTime().getTime()));
 			if (ft.getCloseDateTime() == null) {
 				// no close date - set future +100 years
@@ -490,7 +502,8 @@ public class UtrController {
 		} else if (closeDate.after(currEnd) && dateHelper.dateInRange(inputDate, currStart, currEnd)) {
 			diff = currEnd.getTime().getTime() - inputDate.getTime().getTime();
 			return (int) diff / 1000 / 60;
-		} else if (dateHelper.dateInRange(inputDate, currStart, currEnd) && dateHelper.dateInRange(closeDate, currStart, currEnd)) {
+		} else if (dateHelper.dateInRange(inputDate, currStart, currEnd)
+				&& dateHelper.dateInRange(closeDate, currStart, currEnd)) {
 			diff = closeDate.getTime().getTime() - inputDate.getTime().getTime();
 			return (int) diff / 1000 / 60;
 		}
@@ -498,8 +511,6 @@ public class UtrController {
 		return 0;
 
 	}
-
-
 
 	/**
 	 * count workers time into a map, based on fault lines
