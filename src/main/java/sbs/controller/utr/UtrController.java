@@ -222,7 +222,6 @@ public class UtrController {
 		Map<String, X3UtrMachine> machines = x3Service.findAllUtrMachines("ATW");
 		Map<String, X3UtrFault> faults = x3Service.findAllUtrFaults();
 		List<X3UtrFaultLine> lines = x3Service.findAllUtrFaultLines();
-		System.out.println(machines.size() + " after get");
 		// link maps
 		x3OrmHelper.assignUtrFaultsLines(faults, lines, machines);
 
@@ -263,10 +262,7 @@ public class UtrController {
 		ArrayList<ChartLine> wpsLines = new ArrayList<>();
 		ChartLine line;
 
-		System.out.println(machines.values().size() + " before loop");
-		int cnt= 0;
 		for (X3UtrMachine m : machines.values()) {
-			cnt++;
 			if (m.getCompany() == X3UtrMachine.ADRP) {
 				
 				if (m.getCodeNicim() == null) {
@@ -305,15 +301,6 @@ public class UtrController {
 			}
 			
 		}
-		
-	/*} else if (m.getCompany() == X3UtrMachine.WPS) {
-		line = new ChartLine(m, periodLength);
-		calculateTimeAvailable(line, periodFaults, start, end);
-		linesCount++;
-		wpsLines.add(line);
-		break;
-	}*/
-		System.out.println("after " + cnt + " loops");
 
 		model.addAttribute("titleDates", datesInPeriod);
 		model.addAttribute("titleColors", colorsInPeriod);
@@ -369,6 +356,9 @@ public class UtrController {
 				continue;
 			}
 			if (fault.getInputDateTime() == null) {
+				continue;
+			}
+			if(fault.getFaultType() == X3UtrFault.NOSTOP_TYPE){
 				continue;
 			}
 			if (dateHelper.isDateInRange(new Timestamp(today.getTime().getTime()), fault.getInputDateTime(),
