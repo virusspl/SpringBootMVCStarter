@@ -197,12 +197,14 @@ public class ToolsProject {
 
 	@Override
 	public String toString() {
-		return "ToolsProject [state=" + state + ", creator=" + creator + ", assignedUser=" + assignedUser + ", id=" + id
+		return "ToolsProject [state=" + state.getOrder() + ", creator=" + creator + ", assignedUser=" + assignedUser + ", id=" + id
 				+ ", cechOld=" + cechOld + ", cechNew=" + cechNew + ", assetCode=" + assetCode + ", assetName="
 				+ assetName + ", clientCode=" + clientCode + ", clientName=" + clientName + ", thumbnailFileName="
 				+ thumbnailFileName + ", description=" + description + ", priority=" + priority + ", creationDate="
 				+ creationDate + ", updateDate=" + updateDate + "]";
 	}
+
+
 
 
 

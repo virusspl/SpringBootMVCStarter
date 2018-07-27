@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import sbs.model.tools.ToolsProject;
+import sbs.model.users.User;
 import sbs.repository.GenericRepository;
 import sbs.repository.tools.ToolsProjectRepository;
 import sbs.service.GenericServiceAdapter;
@@ -31,6 +32,11 @@ public class ToolsProjectServiceImpl extends GenericServiceAdapter<ToolsProject,
 	@Override
 	public List<ToolsProject> findAllPendingToolsProjects() {
 		return toolsProjectRepository.findAllPendingToolsProjects();
+	}
+
+	@Override
+	public List<ToolsProject> findPendingToolsProjectsByUserDescByPriority(User user) {
+		return toolsProjectRepository.findPendingToolsProjectsByUserDescByPriority(user);
 	}
 
 

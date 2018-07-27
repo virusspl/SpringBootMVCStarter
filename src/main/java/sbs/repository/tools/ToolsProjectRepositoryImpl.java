@@ -5,10 +5,12 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import sbs.model.tools.ToolsProject;
+import sbs.model.users.User;
 import sbs.repository.GenericRepositoryAdapter;
 
 @Repository
@@ -34,6 +36,18 @@ public class ToolsProjectRepositoryImpl extends GenericRepositoryAdapter<ToolsPr
 		Criteria crit = currentSession().createCriteria(ToolsProject.class, "project");
 		crit.createAlias("project.state", "state");
 		crit.add(Restrictions.lt("state.order", 50));
+		return crit.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public List<ToolsProject> findPendingToolsProjectsByUserDescByPriority(User user) {
+		Criteria crit = currentSession().createCriteria(ToolsProject.class, "project");
+		crit.add(Restrictions.eq("assignedUser", user));
+		crit.createAlias("project.state", "state");
+		crit.add(Restrictions.lt("state.order", 50));
+		crit.addOrder(Order.desc("priority"));
 		return crit.list();
 	}
 

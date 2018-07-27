@@ -1,8 +1,11 @@
 package sbs.controller.tools;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -56,7 +59,16 @@ public class ToolsController {
 	TextHelper textHelper;
 
 	@RequestMapping(value = "/dispatch")
-	public String dispatch() {
+	@Transactional
+	public String dispatch(Model model) {
+		List<User> toolsUsers = userService.findByRole("ROLE_TOOLSNORMALUSER");
+		
+		Map<String, List<ToolsProject>> map = new HashMap<>();
+		for(User user: toolsUsers){
+			map.put(user.getName(), toolsProjectService.findPendingToolsProjectsByUserDescByPriority(user));
+		}
+		
+		model.addAttribute("userProjectMap", map);
 		return "tools/dispatch";
 	}
 	
@@ -148,9 +160,21 @@ public class ToolsController {
 		return "redirect:/tools/editproject/" + project.getId();
 	}
 	
+	@RequestMapping("/showproject/{id}")
+	@Transactional
+	public String showProject(@PathVariable("id") int id, Model model) throws NotFoundException {
+		ToolsProject project = toolsProjectService.findById(id);
+		if (project == null) {
+			throw new NotFoundException("Project not found");
+		}
+		
+		model.addAttribute("project", project);
+		return "tools/showproject";
+	}
+	
 	@RequestMapping("/editproject/{id}")
 	@Transactional
-	public String showEditProjectForm(@PathVariable("id") int id, Model model) throws NotFoundException {
+	public String editProjectForm(@PathVariable("id") int id, Model model) throws NotFoundException {
 		ToolsProject project = toolsProjectService.findById(id);
 		if (project == null) {
 			throw new NotFoundException("Project not found");
