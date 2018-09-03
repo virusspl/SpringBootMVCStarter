@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -18,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.TemplateEngine;
 
@@ -71,6 +71,8 @@ public class ToolsController {
 		model.addAttribute("userProjectMap", map);
 		return "tools/dispatch";
 	}
+	
+
 	
 	@RequestMapping(value = "/createproject")
 	@Transactional
@@ -167,6 +169,15 @@ public class ToolsController {
 		if (project == null) {
 			throw new NotFoundException("Project not found");
 		}
+		boolean isAssigned;
+		
+		if(project.getAssignedUser() != null){
+			isAssigned = userService.getAuthenticatedUser().getId() == project.getAssignedUser().getId();
+		}
+		else{
+			isAssigned = false;
+		}
+		model.addAttribute("isAssigned", isAssigned );
 		
 		model.addAttribute("project", project);
 		return "tools/showproject";
@@ -211,6 +222,90 @@ public class ToolsController {
 		form.setUpdateDate(project.getCreationDate());
 		form.setAssetName(project.getAssetName());
 		form.setClientName(project.getClientName());
+	}
+
+	@RequestMapping(value = "/projectaction", params = { "markAsDone" }, method = RequestMethod.POST)
+	@Transactional
+	public String markAsDone(@RequestParam String markAsDone, RedirectAttributes redirectAttrs, Locale locale) throws NotFoundException{
+		ToolsProject project = toolsProjectService.findById(Integer.parseInt(markAsDone));
+		if (project == null) {
+			throw new NotFoundException("Project not found");
+		}
+		
+		// state: done - to accept
+		ToolsProjectState state = toolsProjectStateService.findByOrder(40);
+		state.getToolsProjects().add(project);
+		project.setState(state);
+		
+		// redirect
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));		
+		return "redirect:/tools/showproject/" + project.getId();
+	}
+	
+	@RequestMapping(value = "/projectaction", params = { "hold" }, method = RequestMethod.POST)
+	@Transactional
+	public String hold(@RequestParam String hold, RedirectAttributes redirectAttrs, Locale locale) throws NotFoundException{
+		ToolsProject project = toolsProjectService.findById(Integer.parseInt(hold));
+		if (project == null) {
+			throw new NotFoundException("Project not found");
+		}
+		
+		// state: hold
+		ToolsProjectState state = toolsProjectStateService.findByOrder(30);
+		state.getToolsProjects().add(project);
+		project.setState(state);
+		
+		// assigned user: null
+		if(project.getAssignedUser()!=null){
+			project.getAssignedUser().getAssignedToolsProjects().remove(project);
+			project.setAssignedUser(null);
+		}
+		
+		// redirect
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));		
+		return "redirect:/tools/showproject/" + project.getId();
+	}
+	
+	@RequestMapping(value = "/projectaction", params = { "cancel" }, method = RequestMethod.POST)
+	@Transactional
+	public String cancel(@RequestParam String cancel, RedirectAttributes redirectAttrs, Locale locale) throws NotFoundException{
+		ToolsProject project = toolsProjectService.findById(Integer.parseInt(cancel));
+		if (project == null) {
+			throw new NotFoundException("Project not found");
+		}
+		
+		// state: cancel
+		ToolsProjectState state = toolsProjectStateService.findByOrder(90);
+		state.getToolsProjects().add(project);
+		project.setState(state);
+		
+		// assigned user: null
+		if(project.getAssignedUser()!=null){
+			project.getAssignedUser().getAssignedToolsProjects().remove(project);
+			project.setAssignedUser(null);
+		}
+		
+		// redirect
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));		
+		return "redirect:/tools/showproject/" + project.getId();
+	}
+	
+	@RequestMapping(value = "/projectaction", params = { "approve" }, method = RequestMethod.POST)
+	@Transactional
+	public String approve(@RequestParam String approve, RedirectAttributes redirectAttrs, Locale locale) throws NotFoundException{
+		ToolsProject project = toolsProjectService.findById(Integer.parseInt(approve));
+		if (project == null) {
+			throw new NotFoundException("Project not found");
+		}
+		
+		// state: cancel
+		ToolsProjectState state = toolsProjectStateService.findByOrder(50);
+		state.getToolsProjects().add(project);
+		project.setState(state);
+		
+		// redirect
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));		
+		return "redirect:/tools/showproject/" + project.getId();
 	}
 	
 	@RequestMapping(value = "/editproject", params = { "save" }, method = RequestMethod.POST)
@@ -317,9 +412,9 @@ public class ToolsController {
 		
 		List<ToolsProject> list = toolsProjectService.findAllPendingToolsProjects();
 		model.addAttribute("list", list);
-		model.addAttribute("listtitle", messageSource.getMessage("tools.pendinglist", null, locale));
+		model.addAttribute("listtitle", messageSource.getMessage("tools.projects.list.pending", null, locale));
 		
-		return "tools/projectslist";
+		return "tools/dispatch";
 	}
 	
 	@RequestMapping(value = "/closedlist")
@@ -328,9 +423,9 @@ public class ToolsController {
 		
 		List<ToolsProject> list = toolsProjectService.findClosedToolsProjects();
 		model.addAttribute("list", list);		
-		model.addAttribute("listtitle", messageSource.getMessage("tools.closedlist", null, locale));
+		model.addAttribute("listtitle", messageSource.getMessage("tools.projects.list.closed", null, locale));
 		
-		return "tools/projectslist";
+		return "tools/dispatch";
 	}
 
 }

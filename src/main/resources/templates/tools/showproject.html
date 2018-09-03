@@ -22,7 +22,7 @@
 		</div>
 		<div class="underline margin-top-20"></div>
 		<!-- FORM -->
-		<form th:action="@{/tools/showproject}" method="post"
+		<form th:action="@{/tools/projectaction}" method="post"
 			th:object="${project}">
 			<input type="hidden" th:field="*{id}"></input>
 			<div class="row margin-top-20">
@@ -168,17 +168,37 @@
 					<a th:href="@{/tools/dispatch}" class="btn btn-link btn-sm"> <span
 						class="glyphicon glyphicon-menu-left"></span> <span
 						th:text="#{action.back}">back</span>
-					</a> <a sec:authorize="hasAnyRole('ROLE_TOOLSMANAGER', 'ROLE_ADMIN')"
+					</a> 
+					<a sec:authorize="hasAnyRole('ROLE_TOOLSMANAGER', 'ROLE_ADMIN')"
+						th:if="(${project.state.order}  &lt; 50)"
 						th:href="|@{/tools/editproject/}${project.id}|"
 						class="btn btn-info btn-sm"> <span
 						class="glyphicon glyphicon-pencil"></span> <span
 						th:text="#{action.edit}">back</span>
 					</a>
-					<!-- <button class="btn btn-primary btn-sm" type="submit" name="save">
+					 <button th:if="(${isAssigned} == true) and (${project.state.order}  == 20)"
+					 			 class="btn btn-success btn-sm" type="submit" name="markAsDone" th:value="*{id}">
 						<span class="glyphicon glyphicon-ok"></span> <span
-							th:text="#{action.save}">create</span>
+							th:text="#{tools.markasdone}"></span>
 					</button>
-					 -->
+					 <button sec:authorize="hasAnyRole('ROLE_TOOLSMANAGER', 'ROLE_ADMIN')"
+					 th:if="(${project.state.order}  &lt; 50) and (${project.state.order}  != 30)"
+					 			 class="btn btn-warning btn-sm" type="submit" name="hold" th:value="*{id}">
+						<span class="glyphicon glyphicon-warning-sign"></span> <span
+							th:text="#{action.hold}"></span>
+					</button>
+					 <button sec:authorize="hasAnyRole('ROLE_TOOLSMANAGER', 'ROLE_ADMIN')"
+					 th:if="(${project.state.order} &lt; 50)"
+					 			 class="btn btn-danger btn-sm" type="submit" name="cancel" th:value="*{id}">
+						<span class="glyphicon glyphicon-remove"></span> <span
+							th:text="#{action.cancel}"></span>
+					</button>
+					 <button sec:authorize="hasAnyRole('ROLE_TOOLSMANAGER', 'ROLE_ADMIN')"
+					 	th:if="(${project.state.order}  == 40)"
+					 			 class="btn btn-success btn-sm" type="submit" name="approve" th:value="*{id}">
+						<span class="glyphicon glyphicon-ok"></span> <span
+							th:text="#{action.approve}"></span>
+					</button>					
 				</div>
 			</div>
 

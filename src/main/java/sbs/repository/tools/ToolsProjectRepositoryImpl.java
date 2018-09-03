@@ -36,6 +36,7 @@ public class ToolsProjectRepositoryImpl extends GenericRepositoryAdapter<ToolsPr
 		Criteria crit = currentSession().createCriteria(ToolsProject.class, "project");
 		crit.createAlias("project.state", "state");
 		crit.add(Restrictions.lt("state.order", 50));
+		crit.add(Restrictions.ne("state.order", 20));
 		return crit.list();
 	}
 

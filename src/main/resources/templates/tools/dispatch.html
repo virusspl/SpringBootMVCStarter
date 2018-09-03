@@ -8,22 +8,24 @@
 <body>
 
 	<div layout:fragment="script">
-		<script th:src="@{/datatables/jquery.dataTables.min.js}" type="text/javascript"></script>
-		<script th:src="@{/datatables/dataTables.helper.js}" type="text/javascript"></script>
+		<script th:src="@{/datatables/jquery.dataTables.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/dataTables.helper.js}"
+			type="text/javascript"></script>
 		<script th:if="__${#locale}__ == 'pl'">
 			$('#srv').DataTable({
 				language : {
 					url : getUrl() + "polish.json",
 				},
-				order: [[ 0, 'desc' ]]
-			});		    
+				order : [ [ 0, 'desc' ] ]
+			});
 		</script>
 		<script th:if="__${#locale}__ == 'en'">
 			$('#srv').DataTable({
 				language : {
 					url : getUrl() + "english.json"
 				},
-				order: [[ 0, 'desc' ]]
+				order : [ [ 0, 'desc' ] ]
 			});
 		</script>
 		<script th:if="__${#locale}__ == 'it'">
@@ -31,7 +33,7 @@
 				language : {
 					url : getUrl() + "italian.json"
 				},
-				order: [[ 0, 'desc' ]]
+				order : [ [ 0, 'desc' ] ]
 			});
 		</script>
 	</div>
@@ -60,15 +62,19 @@
 					With title</h3>
 			</div>
 			<div class="col-xs-12 margin-top-10">
-				<a class="btn btn-info btn-md margin-top-5"
+				<a class="btn btn-primary btn-md margin-top-5"
 					th:href="@{/tools/createproject}"> <span
 					class="glyphicon glyphicon-copy" style="margin-right: 10px;"></span>
 					<span th:text="#{action.create}">begin</span>
 				</a> <a class="btn btn-info btn-md margin-top-5"
+					th:href="@{/tools/dispatch}"> <span
+					class="glyphicon glyphicon-pencil" style="margin-right: 10px;"></span>
+					<span th:text="#{tools.projects.list.assigned}">begin</span>
+				</a> <a class="btn btn-success btn-md margin-top-5"
 					th:href="@{/tools/pendinglist}"> <span
 					class="glyphicon glyphicon-time" style="margin-right: 10px;"></span>
 					<span th:text="#{tools.projects.list.pending}">begin</span>
-				</a> <a class="btn btn-info btn-md margin-top-5"
+				</a> <a class="btn btn-warning btn-md margin-top-5"
 					th:href="@{/tools/closedlist}"> <span
 					class="glyphicon glyphicon-ok" style="margin-right: 10px;"></span>
 					<span th:text="#{tools.projects.list.closed}">begin</span>
@@ -77,60 +83,122 @@
 		</div>
 		<!-- /CHOOSE ACTION MODULE -->
 		<!-- ASSIGNED TABLES -->
-		<div class="row">
-			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
-				<h3 class="text-primary" th:text="#{general.list}">Panel With
-					title</h3>
+		<div th:if="${userProjectMap}">
+			<div class="row">
+				<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
+					<h3 class="text-primary" th:text="#{tools.projects.list.assigned}">Panel
+						With title</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="table-responsive margin-top-10">
+						<table id="srv" class="display">
+							<thead>
+								<tr>
+									<th th:text="|#id|"></th>
+									<th th:text="#{general.priority}|"></th>
+									<th th:text="#{tools.cech.old}"></th>
+									<th th:text="#{tools.cech.new}"></th>
+									<th th:text="#{tools.asset.code}"></th>
+									<th th:text="#{general.client.code}"></th>
+
+									<th th:text="#{general.state}"></th>
+									<th th:text="#{general.date.lastupdate}"></th>
+								</tr>
+							</thead>
+							<tfoot>
+								<tr>
+									<th th:text="|#id|"></th>
+									<th th:text="#{general.priority}|"></th>
+									<th th:text="#{tools.cech.old}"></th>
+									<th th:text="#{tools.cech.new}"></th>
+									<th th:text="#{tools.asset.code}"></th>
+									<th th:text="#{general.client.code}"></th>
+									<th th:text="#{general.state}"></th>
+									<th th:text="#{general.date.lastupdate}"></th>
+								</tr>
+							</tfoot>
+							<tbody>
+								<div th:each="key : ${userProjectMap.keySet()}">
+									<tr>
+										<td colspan="8" style="background-color: #F7F7F7;"><span
+											th:text="${key}"></span></td>
+									</tr>
+									<tr th:each="project: ${userProjectMap.get(key)}">
+										<td><a th:href="|@{/tools/showproject/}${project.id}|"><span
+												th:text="|#${project.id}|"></span></a></td>
+										<td><span th:text="${project.priority}"></span></td>
+										<td><span th:text="${project.cechOld}"></span></td>
+										<td><span th:text="${project.cechNew}"></span></td>
+										<td><span th:text="${project.assetCode}"></span></td>
+										<td><span th:text="${project.clientCode}"></span></td>
+										<td><span th:text="${project.state.description}"></span></td>
+										<td><span
+											th:text="${#dates.format(project.updateDate, 'yyyy.MM.dd HH:mm')}"></span></td>
+									</tr>
+								</div>
+							</tbody>
+						</table>
+					</div>
+				</div>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-xs-12">
-				<div class="table-responsive margin-top-10">
-					<table id="srv" class="display">
-						<thead>
-							<tr>
-								<th th:text="|#id|"></th>
-								<th th:text="#{general.priority}|"></th>
-								<th th:text="#{tools.cech.old}"></th>
-								<th th:text="#{tools.cech.new}"></th>
-								<th th:text="#{tools.asset.code}"></th>
-								<th th:text="#{general.client.code}"></th>
-							
-								<th th:text="#{general.state}"></th>
-								<th th:text="#{general.date.lastupdate}"></th>
-							</tr>
-						</thead>
-						<tfoot>
-							<tr>
-								<th th:text="|#id|"></th>
-								<th th:text="#{general.priority}|"></th>
-								<th th:text="#{tools.cech.old}"></th>
-								<th th:text="#{tools.cech.new}"></th>
-								<th th:text="#{tools.asset.code}"></th>
-								<th th:text="#{general.client.code}"></th>
-								<th th:text="#{general.state}"></th>
-								<th th:text="#{general.date.lastupdate}"></th>
-							</tr>
-						</tfoot>
-						<tbody>
-							<div th:each="key : ${userProjectMap.keySet()}">
+		<!-- /ASSIGNED TABLES -->
+		<!-- ASSIGNED TABLES -->
+		<div th:if="${list}">
+			<div class="row">
+				<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
+					<h3 class="text-primary" th:text="${listtitle}">Panel With
+						title</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="table-responsive margin-top-10">
+						<table id="srv" class="display">
+							<thead>
 								<tr>
-									<td colspan="8" style="background-color: #F7F7F7;"><span
-										th:text="${key}"></span></td>
+									<th th:text="|#id|"></th>
+									<th th:text="#{general.priority}|"></th>
+									<th th:text="#{tools.cech.old}"></th>
+									<th th:text="#{tools.cech.new}"></th>
+									<th th:text="#{tools.asset.code}"></th>
+									<th th:text="#{general.client.code}"></th>
+
+									<th th:text="#{general.state}"></th>
+									<th th:text="#{general.date.lastupdate}"></th>
 								</tr>
-								<tr th:each="project: ${userProjectMap.get(key)}">
-									<td><a th:href="|@{/tools/showproject/}${project.id}|"><span th:text="|#${project.id}|"></span></a></td>
+							</thead>
+							<tfoot>
+								<tr>
+									<th th:text="|#id|"></th>
+									<th th:text="#{general.priority}|"></th>
+									<th th:text="#{tools.cech.old}"></th>
+									<th th:text="#{tools.cech.new}"></th>
+									<th th:text="#{tools.asset.code}"></th>
+									<th th:text="#{general.client.code}"></th>
+									<th th:text="#{general.state}"></th>
+									<th th:text="#{general.date.lastupdate}"></th>
+								</tr>
+							</tfoot>
+							<tbody>
+								<tr th:each="project: ${list}">
+									<td><a th:href="|@{/tools/showproject/}${project.id}|"><span
+											th:text="|#${project.id}|"></span></a></td>
 									<td><span th:text="${project.priority}"></span></td>
 									<td><span th:text="${project.cechOld}"></span></td>
 									<td><span th:text="${project.cechNew}"></span></td>
 									<td><span th:text="${project.assetCode}"></span></td>
 									<td><span th:text="${project.clientCode}"></span></td>
 									<td><span th:text="${project.state.description}"></span></td>
-									<td><span th:text="${#dates.format(project.updateDate, 'yyyy.MM.dd HH:mm')}"></span></td>
+									<td><span
+										th:text="${#dates.format(project.updateDate, 'yyyy.MM.dd HH:mm')}"></span></td>
 								</tr>
-							</div>
-						</tbody>
-					</table>
+
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>
