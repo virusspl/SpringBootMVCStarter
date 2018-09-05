@@ -70,11 +70,11 @@
 					th:href="@{/tools/dispatch}"> <span
 					class="glyphicon glyphicon-pencil" style="margin-right: 10px;"></span>
 					<span th:text="#{tools.projects.list.assigned}">begin</span>
-				</a> <a class="btn btn-success btn-md margin-top-5"
+				</a> <a class="btn btn-warning btn-md margin-top-5"
 					th:href="@{/tools/pendinglist}"> <span
 					class="glyphicon glyphicon-time" style="margin-right: 10px;"></span>
 					<span th:text="#{tools.projects.list.pending}">begin</span>
-				</a> <a class="btn btn-warning btn-md margin-top-5"
+				</a> <a class="btn btn-success btn-md margin-top-5"
 					th:href="@{/tools/closedlist}"> <span
 					class="glyphicon glyphicon-ok" style="margin-right: 10px;"></span>
 					<span th:text="#{tools.projects.list.closed}">begin</span>
@@ -97,12 +97,12 @@
 							<thead>
 								<tr>
 									<th th:text="|#id|"></th>
-									<th th:text="#{general.priority}|"></th>
-									<th th:text="#{tools.cech.old}"></th>
+									<th th:text="#{general.image}"></th>
+									<th th:text="#{general.priority}|">
+									</th><th th:text="#{tools.cech.old}"></th>
 									<th th:text="#{tools.cech.new}"></th>
 									<th th:text="#{tools.asset.code}"></th>
 									<th th:text="#{general.client.code}"></th>
-
 									<th th:text="#{general.state}"></th>
 									<th th:text="#{general.date.lastupdate}"></th>
 								</tr>
@@ -110,6 +110,7 @@
 							<tfoot>
 								<tr>
 									<th th:text="|#id|"></th>
+									<th th:text="#{general.image}"></th>
 									<th th:text="#{general.priority}|"></th>
 									<th th:text="#{tools.cech.old}"></th>
 									<th th:text="#{tools.cech.new}"></th>
@@ -122,12 +123,17 @@
 							<tbody>
 								<div th:each="key : ${userProjectMap.keySet()}">
 									<tr>
-										<td colspan="8" style="background-color: #F7F7F7;"><span
+										<td colspan="9" style="background-color: #F7F7F7;"><span
 											th:text="${key}"></span></td>
 									</tr>
 									<tr th:each="project: ${userProjectMap.get(key)}">
 										<td><a th:href="|@{/tools/showproject/}${project.id}|"><span
 												th:text="|#${project.id}|"></span></a></td>
+										<td><img
+											th:src="@{'/tools/getphoto/' + ${project.photoName}}"
+											class="img-responsive img-rounded margin-top-10"
+											style="border: 1px solid grey; width: 100px; height: 100px"></img>
+										</td>
 										<td><span th:text="${project.priority}"></span></td>
 										<td><span th:text="${project.cechOld}"></span></td>
 										<td><span th:text="${project.cechNew}"></span></td>
@@ -145,7 +151,7 @@
 			</div>
 		</div>
 		<!-- /ASSIGNED TABLES -->
-		<!-- ASSIGNED TABLES -->
+		<!-- WAITING/CLOSED TABLES -->
 		<div th:if="${list}">
 			<div class="row">
 				<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
@@ -160,6 +166,7 @@
 							<thead>
 								<tr>
 									<th th:text="|#id|"></th>
+									<th th:text="#{general.image}"></th>
 									<th th:text="#{general.priority}|"></th>
 									<th th:text="#{tools.cech.old}"></th>
 									<th th:text="#{tools.cech.new}"></th>
@@ -173,6 +180,7 @@
 							<tfoot>
 								<tr>
 									<th th:text="|#id|"></th>
+									<th th:text="#{general.image}"></th>
 									<th th:text="#{general.priority}|"></th>
 									<th th:text="#{tools.cech.old}"></th>
 									<th th:text="#{tools.cech.new}"></th>
@@ -186,6 +194,11 @@
 								<tr th:each="project: ${list}">
 									<td><a th:href="|@{/tools/showproject/}${project.id}|"><span
 											th:text="|#${project.id}|"></span></a></td>
+									<td><img
+										th:src="@{'/tools/getphoto/' + ${project.photoName}}"
+										class="img-responsive img-rounded margin-top-10"
+										style="border: 1px solid grey; width: 100px; height: 100px"></img>
+									</td>
 									<td><span th:text="${project.priority}"></span></td>
 									<td><span th:text="${project.cechOld}"></span></td>
 									<td><span th:text="${project.cechNew}"></span></td>
@@ -202,7 +215,7 @@
 				</div>
 			</div>
 		</div>
-		<!-- /ASSIGNED TABLES -->
+		<!-- /WAITING/CLOSED TABLES -->
 	</div>
 </body>
 </html>

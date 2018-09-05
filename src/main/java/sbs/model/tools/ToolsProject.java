@@ -20,6 +20,8 @@ import sbs.model.users.User;
 @Table(name = "tools_project")
 public class ToolsProject {
 	
+	private String photoName;
+	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "tp_state_id", nullable = false)
 	private ToolsProjectState state;
@@ -193,6 +195,15 @@ public class ToolsProject {
 
 	public void setUpdateDate(Timestamp updateDate) {
 		this.updateDate = updateDate;
+	}
+
+
+	public String getPhotoName() {
+		return photoName;
+	}
+
+	public void setPhotoName(String photoName) {
+		this.photoName = photoName;
 	}
 
 	@Override

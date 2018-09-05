@@ -1,6 +1,10 @@
 package sbs.controller.upload;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +13,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -29,6 +34,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import sbs.config.UploadProperties;
+import sbs.helpers.ImageHelper;
 import sbs.model.users.User;
 import sbs.service.users.AvatarService;
 import sbs.service.users.UserService;
@@ -40,19 +46,23 @@ public class UploadController {
 	private final String uploadDir;
 	private final String avatarUploadPath;
 	private final String bhpPhotoPath;
+	private final String toolsPhotoPath;
 	
 	@Autowired 
 	UserService userService;
 	@Autowired 
 	AvatarService avatarService;
 	@Autowired 
-	MessageSource messageSource;;
+	MessageSource messageSource;
+	@Autowired
+	ImageHelper imageHelper;
 
     @Autowired
     public UploadController(UploadProperties uploadProperties) {
     	uploadDir = uploadProperties.getAvatarPath();
     	avatarUploadPath = uploadProperties.getAvatarPath();
     	bhpPhotoPath = uploadProperties.getBhpPhotoPath();
+    	toolsPhotoPath = uploadProperties.getToolsPhotoPath();
     }
 
 	public String getAvatarUploadPath() {
@@ -61,6 +71,15 @@ public class UploadController {
 
 	public String getBhpPhotoPath() {
 		return bhpPhotoPath;
+	}
+	
+	public String getToolsPhotoPath() {
+		return toolsPhotoPath;
+	}
+	
+	@Override
+	public String toString() {
+		return "UploadController [toolsPhotoPath=" + toolsPhotoPath + "]";
 	}
 
 	public ArrayList<String> listFiles(String path){
@@ -137,6 +156,14 @@ public class UploadController {
 				response.setHeader("Content-Type", URLConnection.guessContentTypeFromName(picture.getFilename()));
 				IOUtils.copy(picture.getInputStream(), response.getOutputStream());
 	}
+	
+	@RequestMapping(value="/tools/getphoto/{name:.+}")
+	public void getToolsPhoto(HttpServletResponse response, @PathVariable String name) throws IOException {
+		Resource picture;
+		picture = (new DefaultResourceLoader()).getResource(toolsPhotoPath + "/" + name);
+		response.setHeader("Content-Type", URLConnection.guessContentTypeFromName(picture.getFilename()));
+		IOUtils.copy(picture.getInputStream(), response.getOutputStream());
+	}
 
 	@RequestMapping(value = "/upload/bhptickets/{id}",  method = RequestMethod.POST)
 	@Secured({"ROLE_BHPMANAGER", "ROLE_ADMIN"})
@@ -165,6 +192,41 @@ public class UploadController {
 		}
 		
 		return "redirect:/bhptickets/edit/photos/" + id;
+	}
+	
+	@RequestMapping(value = "/upload/tools/{id}",  method = RequestMethod.POST)
+	@Secured({"ROLE_TOOLSMANAGER", "ROLE_ADMIN"})
+	public String onToolsPhotoUpload(@PathVariable("id") int id, MultipartFile file, RedirectAttributes redirectAttrs,
+			Locale locale) {
+		
+		// is image?
+		if (file.isEmpty() || !isImage(file)) {
+			redirectAttrs.addFlashAttribute("error", messageSource.getMessage("upload.bad.file.type", null, locale));
+			return "redirect:/tools/editproject/photos/" + id;
+		}
+		
+		BufferedImage img = null;
+		BufferedImage scale = null;
+		String fileExtension;
+		try {
+		    img = ImageIO.read(file.getInputStream());
+		    scale = imageHelper.toBufferedImage(img.getScaledInstance(200, 200, Image.SCALE_SMOOTH));
+		    fileExtension = getFileExtension(file.getOriginalFilename());
+			File tempFile = File.createTempFile("tool_" + id + "_", fileExtension,
+					(new DefaultResourceLoader()).getResource(toolsPhotoPath).getFile());
+			try (OutputStream out = new FileOutputStream(tempFile)) {
+				ImageIO.write(scale, "png", tempFile);
+			}
+			
+			// say ok
+			redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("upload.success", null, locale));
+		
+		} catch (IOException ioex) {
+			redirectAttrs.addFlashAttribute("error", messageSource.getMessage("upload.io.exception", null, locale));
+			return "redirect:/tools/edit/photos/" + id;
+		}
+		
+		return "redirect:/tools/editproject/" + id;
 	}
 		
 	/*

@@ -214,6 +214,11 @@
 						class="glyphicon glyphicon-menu-left"></span> <span
 						th:text="#{action.back}">back</span>
 					</a>
+					<a th:href="@{'/tools/edit/photos/' + ${toolsProjectCreateForm.id}}"
+						class="btn btn-info btn-sm"> <span
+						class="glyphicon glyphicon-film"></span> <span
+						th:text="#{action.manage.photos}">back</span>
+					</a>
 					<a th:href="|@{/tools/showproject/}${toolsProjectCreateForm.id}|"
 						class="btn btn-info btn-sm"> <span
 						class="glyphicon glyphicon-search"></span> <span
