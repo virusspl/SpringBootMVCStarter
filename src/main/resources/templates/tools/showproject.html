@@ -68,8 +68,8 @@
 			<div class="underline margin-top-10 margin-bottom-5"></div>
 			<div class="row">
 			<div class="col-xs-12 col-xs-8">
-										<img th:src="@{'/tools/getphoto/' + ${project.photoName}}"
-					class="img-responsive img-rounded margin-top-10"
+										<img th:src="|http://192.168.1.23/APACHE_IMG/tools/photo/${project.photoName}|"
+					class="img-responsive img-rounded margin-top-10 thumb-200"
 					style="border: 1px solid grey;"></img>
 			
 			</div>

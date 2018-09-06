@@ -197,7 +197,6 @@ public class ToolsProject {
 		this.updateDate = updateDate;
 	}
 
-
 	public String getPhotoName() {
 		return photoName;
 	}

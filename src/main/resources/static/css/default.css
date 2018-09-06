@@ -111,3 +111,18 @@ html {
 .white {
 	background-color: white;
 }
+
+.thumb-75{
+	width: 75px;
+	height: 75px;
+}
+
+.thumb-100{
+	width: 100px;
+	height: 100px;
+}
+
+.thumb-200{
+	width: 200px;
+	height: 200px;
+}

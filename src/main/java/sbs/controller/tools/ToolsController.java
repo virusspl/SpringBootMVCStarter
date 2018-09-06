@@ -69,6 +69,11 @@ public class ToolsController {
 			map.put(user.getName(), toolsProjectService.findPendingToolsProjectsByUserDescByPriority(user));
 		}
 
+		for(List<ToolsProject> list: map.values()){
+			for(ToolsProject project: list){
+				project.setPhotoName(getPhotoFilenameForProjectById(project.getId()));
+			}
+		}
 		model.addAttribute("userProjectMap", map);
 		return "tools/dispatch";
 	}
@@ -175,6 +180,16 @@ public class ToolsController {
 		project.setPhotoName(getPhotoFilenameForProjectById(project.getId()));
 		model.addAttribute("project", project);
 		return "tools/showproject";
+	}
+
+	private String getPhotoFilenameForProjectById(int id) {
+		ArrayList<String> fileList = uploadController.listFiles(uploadController.getToolsPhotoPath());
+		for (int i = fileList.size() - 1; i >= 0; i--) {
+			if (fileList.get(i).startsWith("tool_" + id + "_")) {
+				return fileList.get(i);
+			}
+		}
+		return "noimage.png";
 	}
 
 	@RequestMapping("/edit/photos/{id}")
@@ -423,6 +438,9 @@ public class ToolsController {
 	public String managerView(Model model, Locale locale) {
 
 		List<ToolsProject> list = toolsProjectService.findAllPendingToolsProjects();
+		for(ToolsProject project: list){
+			project.setPhotoName(getPhotoFilenameForProjectById(project.getId()));
+		}
 		model.addAttribute("list", list);
 		model.addAttribute("listtitle", messageSource.getMessage("tools.projects.list.pending", null, locale));
 
@@ -434,21 +452,14 @@ public class ToolsController {
 	public String userView(Model model, Locale locale) {
 
 		List<ToolsProject> list = toolsProjectService.findClosedToolsProjects();
+		for(ToolsProject project: list){
+			project.setPhotoName(getPhotoFilenameForProjectById(project.getId()));
+		}
 		model.addAttribute("list", list);
 		model.addAttribute("listtitle", messageSource.getMessage("tools.projects.list.closed", null, locale));
 
 		return "tools/dispatch";
 	}
 	
-	private String getPhotoFilenameForProjectById(int id) {
-		ArrayList<String> fileList = uploadController.listFiles(uploadController.getToolsPhotoPath());
-		for (int i = fileList.size() - 1; i >= 0; i--) {
-			System.out.println("getPhoto" + i);
-			if (fileList.get(i).startsWith("tool_" + id + "_")) {
-				return fileList.get(i);
-			}
-		}
-		return "noimage.png";
-	}
 
 }

@@ -2,9 +2,7 @@ package sbs.controller.upload;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,9 +12,10 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import javax.imageio.ImageIO;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.DefaultResourceLoader;
@@ -56,6 +55,8 @@ public class UploadController {
 	MessageSource messageSource;
 	@Autowired
 	ImageHelper imageHelper;
+	@Autowired
+	ServletContext servletContext;
 
     @Autowired
     public UploadController(UploadProperties uploadProperties) {
@@ -75,11 +76,6 @@ public class UploadController {
 	
 	public String getToolsPhotoPath() {
 		return toolsPhotoPath;
-	}
-	
-	@Override
-	public String toString() {
-		return "UploadController [toolsPhotoPath=" + toolsPhotoPath + "]";
 	}
 
 	public ArrayList<String> listFiles(String path){
@@ -157,13 +153,26 @@ public class UploadController {
 				IOUtils.copy(picture.getInputStream(), response.getOutputStream());
 	}
 	
-	@RequestMapping(value="/tools/getphoto/{name:.+}")
-	public void getToolsPhoto(HttpServletResponse response, @PathVariable String name) throws IOException {
-		Resource picture;
-		picture = (new DefaultResourceLoader()).getResource(toolsPhotoPath + "/" + name);
-		response.setHeader("Content-Type", URLConnection.guessContentTypeFromName(picture.getFilename()));
-		IOUtils.copy(picture.getInputStream(), response.getOutputStream());
+		
+	/*
+	@RequestMapping(value="/tools/getphoto-OK/{name:.+}",  method = RequestMethod.GET)
+	public @ResponseBody byte[] getImage(@PathVariable String name) throws IOException {
+	    InputStream in = (new DefaultResourceLoader()).getResource(toolsPhotoPath + "/" + name).getInputStream();
+	    return IOUtils.toByteArray(in);
 	}
+	
+	@RequestMapping(value="/tools/getphoto/{name:.+}",  method = RequestMethod.GET)
+	public ResponseEntity<byte[]> getImageAsResponseEntity(@PathVariable String name) throws IOException {
+		Resource resource = (new DefaultResourceLoader()).getResource(toolsPhotoPath + "/" + name);
+		ResponseEntity<byte[]> responseEntity;
+        final HttpHeaders headers = new HttpHeaders();
+        final InputStream in = resource.getInputStream();
+        byte[] media = IOUtils.toByteArray(in);
+        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+        responseEntity = new ResponseEntity<>(media, headers, HttpStatus.OK);
+    return responseEntity;
+	}
+	*/
 
 	@RequestMapping(value = "/upload/bhptickets/{id}",  method = RequestMethod.POST)
 	@Secured({"ROLE_BHPMANAGER", "ROLE_ADMIN"})
@@ -197,12 +206,26 @@ public class UploadController {
 	@RequestMapping(value = "/upload/tools/{id}",  method = RequestMethod.POST)
 	@Secured({"ROLE_TOOLSMANAGER", "ROLE_ADMIN"})
 	public String onToolsPhotoUpload(@PathVariable("id") int id, MultipartFile file, RedirectAttributes redirectAttrs,
-			Locale locale) {
+			Locale locale) throws IOException {
 		
 		// is image?
 		if (file.isEmpty() || !isImage(file)) {
 			redirectAttrs.addFlashAttribute("error", messageSource.getMessage("upload.bad.file.type", null, locale));
 			return "redirect:/tools/editproject/photos/" + id;
+		}
+		
+		ArrayList<String> fileList = listFiles(getToolsPhotoPath());
+		String tmpPath = getToolsPhotoPath().replaceAll("file:","").replaceAll("/", "\\\\");
+		for (int i = fileList.size() - 1; i >= 0; i--) {
+			if (fileList.get(i).startsWith("tool_" + id + "_")) {
+				
+				File hddFile = new File(tmpPath +"\\" + fileList.get(i));
+				System.out.println(tmpPath +"\\" + fileList.get(i));
+				hddFile.delete();
+				
+				
+				
+			}
 		}
 		
 		BufferedImage img = null;
