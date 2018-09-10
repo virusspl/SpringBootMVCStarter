@@ -2,8 +2,17 @@
 	width: 1024px;
 	height: 476px;
 	margin: 30px auto 0px auto;
+	//background-color: blue;
 	background: url("../images/map/_main_map.png");
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+#imageAreaImage{
+	width: 1024px;
+	height: 476px;
+}
+
+.hoverButton{
+	min-width: 50px;
 }
 
 #mapModuleContainer{
@@ -39,8 +48,8 @@
 #H:hover ~ #imageArea {
   	background: url("../images/map/H.png");
 }
-#J00A:hover ~ #imageArea {
-  	background: url("../images/map/J00A.png");
+#ło:hover ~ #imageArea {
+  	background: url("../images/map/ło.png");
 }
 #J00B:hover ~ #imageArea {
   	background: url("../images/map/J00B.png");

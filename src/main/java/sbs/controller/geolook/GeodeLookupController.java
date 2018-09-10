@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -14,14 +16,17 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import sbs.controller.upload.UploadController;
 import sbs.helpers.DateHelper;
 import sbs.model.geode.GeolookRow;
 import sbs.service.geode.JdbcOracleGeodeService;
@@ -39,9 +44,27 @@ public class GeodeLookupController {
 	JdbcOracleGeodeService jdbcOracleGeodeService;
 	@Autowired
 	DateHelper dateHelper;
+	@Autowired
+	UploadController uploadController;
 
 	@RequestMapping("/map")
-	public String map(GeodeSearchForm geodeSearchForm) {
+	public String map(Model model) {
+		File[] root = uploadController.listFilesAsObjects("/static/images/map/");
+		HashMap<String, String[]> directories = new HashMap<>();
+		File[] tmpFileList;
+		String[] tmpNamesList;
+		for(File dir: root){
+			if(dir.isDirectory()){
+				tmpFileList = dir.listFiles();
+				tmpNamesList = new String[tmpFileList.length];
+				for(int i=0; i<tmpFileList.length; i++){
+					tmpNamesList[i] = FilenameUtils.removeExtension(tmpFileList[i].getName());
+				}
+				directories.put(dir.getName(), tmpNamesList);
+			}
+			
+		}
+		model.addAttribute("directories", directories);
 		return "geolook/map";
 	}
 

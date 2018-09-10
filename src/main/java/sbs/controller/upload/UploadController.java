@@ -90,6 +90,16 @@ public class UploadController {
 		return files;
 	}
 	
+	public File[] listFilesAsObjects(String path){
+		try {
+			File[] filesList = (new DefaultResourceLoader()).getResource(path).getFile().listFiles();
+			return filesList;
+		} catch (IOException e) {
+			return null;
+		}
+		
+	}
+
 	@RequestMapping(value = "/upload/avatar/{id}",  method = RequestMethod.POST)
 	@Secured("ROLE_ADMIN")
 	public String onUpload(@PathVariable("id") long id, MultipartFile file, RedirectAttributes redirectAttrs,

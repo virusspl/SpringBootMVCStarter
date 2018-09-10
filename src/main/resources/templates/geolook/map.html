@@ -6,13 +6,30 @@
 </head>
 <body>
 	<div layout:fragment="script">
-		<!-- SELECTIZE JS -->
-		<script th:src="@{/selectize/js/selectize.min.js}"
-			type="text/javascript"></script>
+	<script type="text/javascript" th:src="@{/js/url.helper.js}"></script>
 		<script>
-			//$('#x3users').selectize();
+		 /*$(document).ready(function() {
+
+	            $(".hoverButton").hover(
+	               function (e) {
+	            	  $("#imageAreaImage").attr("src", getAppUrl() + "/images/map/"+ e.target.id + ".png");
+	               }, 
+					
+	               function (e) {
+	            	   $("#imageAreaImage").attr("src", getAppUrl() + "/images/map/_main_map.png");
+	            	 //  $("#imageArea").css({"background-color":"black"});
+	               }
+	            );
+					
+	         });
+		 */
+		 
+		 function switchImg(id) {
+			$("#imageAreaImage").attr("src", getAppUrl() + "/images/map/"+ id + ".png");		
+		};
 		</script>
 	</div>
+	
 	<div layout:fragment="content">
 	<!-- TITLE -->
 		<div class="row">
@@ -30,133 +47,15 @@
 		</div>
 	<!-- /TITLE -->	
 			<div id="mapModuleContainer">
-				<!-- SHIPMENTS -->
-				<h4 th:text="#{department.shipments}">Category</h4>
-					<span id="J00A" class="btn btn-primary btn-sm margin-bottom-5">
-						<b>J00A</b> - <span th:text="#{department.shipments.warehouse}">Shipments Warehouse</span>
-					</span>					
-					<span id="J00B" class="btn btn-primary btn-sm margin-bottom-5">
-						<b>J00B</b> - <span th:text="#{department.shipments.warehouse}">Shipments Warehouse</span>
-					</span>					
-					<span id="J00C" class="btn btn-primary btn-sm margin-bottom-5">
-						<b>J00C</b> - <span th:text="#{department.outside}">Shipments Warehouse</span>
-					</span>			
-					<span id="YI" class="btn btn-info btn-sm margin-bottom-5">
-						<b>YI</b> - <span th:text="#{department.floor}">Shipments Warehouse</span>
-					</span>			
-			<!-- RECEPTIONS -->
-				<h4 th:text="#{department.receptions}">Category</h4>
-					<span id="P" class="btn btn-primary btn-sm margin-bottom-5">
-						<b>P</b> - <span th:text="#{department.receptions.warehouse}">Receptions Warehouse</span>
-					</span>
-					<span id="S" class="btn btn-primary btn-sm margin-bottom-5">
-						<b>S</b> - <span th:text="#{department.receptions.warehouse}">Receptions Warehouse</span>
-					</span>
-					<span id="N" class="btn btn-primary btn-sm margin-bottom-5">
-						<b>N</b> - <span th:text="#{department.receptions.warehouse}">Receptions Warehouse</span>
-					</span>
-					<span id="Z" class="btn btn-primary btn-sm margin-bottom-5">
-						<b>Z</b> - <span th:text="#{geolook.map.obsolete}">Floor</span>
-					</span>					
-					<span id="XA" class="btn btn-info btn-sm margin-bottom-5">
-						<b>XA</b> - <span th:text="#{department.floor}">Floor</span>
-					</span>		
-					<span id="XB" class="btn btn-info btn-sm margin-bottom-5">
-						<b>XB</b> - <span th:text="#{department.floor}">Floor</span>
-					</span>		
-					<span id="XC" class="btn btn-info btn-sm margin-bottom-5">
-						<b>XC</b> - <span th:text="#{department.floor}">Floor</span>
-					</span>		
-					<span id="XD" class="btn btn-info btn-sm margin-bottom-5">
-						<b>XD</b> - <span th:text="#{department.exchange}">Floor</span>
-					</span>		
-				<!-- PRODUCTION -->
-				<h4  th:text="#{department.production}">Category</h4> 
-					<span id="A" class="btn btn-primary btn-sm margin-bottom-5">
-						<b>A</b> - <span th:text="#{department.axles.assembly}">Production</span>
-					</span>
-					<span id="B" class="btn btn-primary btn-sm margin-bottom-5">
-						<b>B</b> - <span th:text="#{department.driveshafts.assembly}">Production</span>
-					</span>
-					<span id="C" class="btn btn-primary btn-sm margin-bottom-5">
-						<b>C</b> - <span th:text="#{department.presses}">Production</span>
-					</span>
-					<span id="D" class="btn btn-primary btn-sm margin-bottom-5">
-						<b>D</b> - <span th:text="#{department.welding}">Production</span>
-					</span>
-					<span id="E" class="btn btn-primary btn-sm margin-bottom-5">
-						<b>E</b> - <span th:text="#{department.machining}">Production</span>
-					</span>
-					<span id="F" class="btn btn-primary btn-sm margin-bottom-5">
-						<b>F</b> - <span th:text="#{department.axles.assembly}">Production</span>
-					</span>
-					<span id="G" class="btn btn-primary btn-sm margin-bottom-5">
-						<b>G</b> - <span th:text="#{department.axles.assembly}">Production</span>
-					</span>
-					<span id="H" class="btn btn-primary btn-sm margin-bottom-5">
-						<b>H</b> - <span th:text="#{department.suspensions.assembly}">Production</span>
-					</span>
-					<span id="L" class="btn btn-primary btn-sm margin-bottom-5">
-						<b>L</b> - <span th:text="#{department.driveshafts.assembly}">Production</span>
-					</span>
-					<span id="O" class="btn btn-primary btn-sm margin-bottom-5">
-						<b>O</b> - <span th:text="#{department.presses}">Production</span>
-					</span>
-					<span id="R" class="btn btn-primary btn-sm margin-bottom-5">
-						<b>R</b> - <span th:text="#{department.axles.assembly}">Production</span>
-					</span>
-					<span id="W" class="btn btn-primary btn-sm margin-bottom-5">
-						<b>W</b> - <span th:text="#{department.spare.parts}">Production</span>
-					</span>
-					<span id="YA" class="btn btn-info btn-sm margin-bottom-5">
-						<b>YA</b> - <span th:text="#{department.floor}">Floor</span>
-					</span>
-					<span id="YB" class="btn btn-info btn-sm margin-bottom-5">
-						<b>YB</b> - <span th:text="#{department.floor}">Floor</span>
-					</span>
-					<span id="YC" class="btn btn-info btn-sm margin-bottom-5">
-						<b>YC</b> - <span th:text="#{department.floor}">Floor</span>
-					</span>
-					<span id="YD" class="btn btn-info btn-sm margin-bottom-5">
-						<b>YD</b> - <span th:text="#{department.floor}">Floor</span>
-					</span>
-					<span id="YE" class="btn btn-info btn-sm margin-bottom-5">
-						<b>YE</b> - <span th:text="#{department.floor}">Floor</span>
-					</span>
-					<span id="YF" class="btn btn-info btn-sm margin-bottom-5">
-						<b>YF</b> - <span th:text="#{department.floor}">Floor</span>
-					</span>
-					<span id="YG" class="btn btn-info btn-sm margin-bottom-5">
-						<b>YG</b> - <span th:text="#{department.floor}">Floor</span>
-					</span>
-					<span id="YH" class="btn btn-info btn-sm margin-bottom-5">
-						<b>YH</b> - <span th:text="#{department.floor}">Floor</span>
-					</span>
-					<span id="YI" class="btn btn-info btn-sm margin-bottom-5">
-						<b>YI</b> - <span th:text="#{department.floor}">Floor</span>
-					</span>
-					<span id="YJ" class="btn btn-info btn-sm margin-bottom-5">
-						<b>YJ</b> - <span th:text="#{department.floor}">Floor</span>
-					</span>
-					<span id="YK" class="btn btn-info btn-sm margin-bottom-5">
-						<b>YK</b> - <span th:text="#{department.floor}">Floor</span>
-					</span>
-					<span id="YL" class="btn btn-info btn-sm margin-bottom-5">
-						<b>YL</b> - <span th:text="#{department.floor}">Floor</span>
-					</span>
-					<span id="YM" class="btn btn-info btn-sm margin-bottom-5">
-						<b>YM</b> - <span th:text="#{department.floor}">Floor</span>
-					</span>
-					<span id="YN" class="btn btn-info btn-sm margin-bottom-5">
-						<b>YN</b> - <span th:text="#{department.floor}">Floor</span>
-					</span>
-					<span id="YO" class="btn btn-info btn-sm margin-bottom-5">
-						<b>YO</b> - <span th:text="#{department.floor}">Floor</span>
-					</span>
-				<!-- IMAGE AREA - WAREHOUSE MAP -->
-				
+				<div th:each="dir : ${directories}">
+					<h4 th:text="${dir.key}">Category</h4>
+					<span onclick="switchImg(this.id)" th:each="file: ${dir.value}" th:id="|${dir.key}/${file}|" 
+						class="btn btn-primary btn-sm margin-bottom-5 hoverButton">
+						<b><span th:text="${file}"></span></b>
+					</span>	
+				</div>
 				<div id="imageArea" class="margin-top-30">
-					
+					<img id="imageAreaImage" th:src="@{/images/map/_main_map.png}" />
 				</div>
 			</div>
 		</div>
