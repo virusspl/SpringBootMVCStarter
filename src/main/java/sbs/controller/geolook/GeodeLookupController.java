@@ -51,15 +51,17 @@ public class GeodeLookupController {
 	public String map(Model model) {
 		//File[] root = uploadController.listFilesAsObjects("/static/images/map/");
 		File[] root = uploadController.listFilesAsObjects(uploadController.getMapPhotoPath());
-		HashMap<String, String[]> directories = new HashMap<>();
+		HashMap<String, ArrayList<String>> directories = new HashMap<>();
 		File[] tmpFileList;
-		String[] tmpNamesList;
+		ArrayList<String> tmpNamesList;
 		for(File dir: root){
 			if(dir.isDirectory()){
 				tmpFileList = dir.listFiles();
-				tmpNamesList = new String[tmpFileList.length];
+				tmpNamesList = new ArrayList<>();
 				for(int i=0; i<tmpFileList.length; i++){
-					tmpNamesList[i] = FilenameUtils.removeExtension(tmpFileList[i].getName());
+					if(FilenameUtils.getExtension(tmpFileList[i].getName()).equalsIgnoreCase("png")){
+						tmpNamesList.add(FilenameUtils.removeExtension(tmpFileList[i].getName()));
+					}
 				}
 				directories.put(dir.getName(), tmpNamesList);
 			}
