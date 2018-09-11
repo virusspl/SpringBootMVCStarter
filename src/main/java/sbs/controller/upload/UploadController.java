@@ -46,6 +46,7 @@ public class UploadController {
 	private final String avatarUploadPath;
 	private final String bhpPhotoPath;
 	private final String toolsPhotoPath;
+	private final String mapPhotoPath;
 	
 	@Autowired 
 	UserService userService;
@@ -64,6 +65,7 @@ public class UploadController {
     	avatarUploadPath = uploadProperties.getAvatarPath();
     	bhpPhotoPath = uploadProperties.getBhpPhotoPath();
     	toolsPhotoPath = uploadProperties.getToolsPhotoPath();
+    	mapPhotoPath = uploadProperties.getMapPhotoPath();
     }
 
 	public String getAvatarUploadPath() {
@@ -76,6 +78,10 @@ public class UploadController {
 	
 	public String getToolsPhotoPath() {
 		return toolsPhotoPath;
+	}
+	
+	public String getMapPhotoPath() {
+		return mapPhotoPath;
 	}
 
 	public ArrayList<String> listFiles(String path){

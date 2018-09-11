@@ -25,7 +25,8 @@
 		 */
 		 
 		 function switchImg(id) {
-			$("#imageAreaImage").attr("src", getAppUrl() + "/images/map/"+ id + ".png");		
+			//$("#imageAreaImage").attr("src", getAppUrl() + "/images/map/"+ id + ".png");		
+			$("#imageAreaImage").attr("src", "http://192.168.1.23/APACHE_IMG/storemap//"+ id + ".png");		
 		};
 		</script>
 	</div>
@@ -55,7 +56,8 @@
 					</span>	
 				</div>
 				<div id="imageArea" class="margin-top-30">
-					<img id="imageAreaImage" th:src="@{/images/map/_main_map.png}" />
+					<img id="imageAreaImage" src="http://192.168.1.23/APACHE_IMG/storemap/_main_map.png" />
+					<!-- th:src="@{/images/map/_main_map.png}" /> -->
 				</div>
 			</div>
 		</div>

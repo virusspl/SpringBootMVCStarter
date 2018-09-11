@@ -49,7 +49,8 @@ public class GeodeLookupController {
 
 	@RequestMapping("/map")
 	public String map(Model model) {
-		File[] root = uploadController.listFilesAsObjects("/static/images/map/");
+		//File[] root = uploadController.listFilesAsObjects("/static/images/map/");
+		File[] root = uploadController.listFilesAsObjects(uploadController.getMapPhotoPath());
 		HashMap<String, String[]> directories = new HashMap<>();
 		File[] tmpFileList;
 		String[] tmpNamesList;
