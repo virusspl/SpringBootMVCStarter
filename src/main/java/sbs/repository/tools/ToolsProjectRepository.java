@@ -8,9 +8,12 @@ import sbs.repository.GenericRepository;
 
 public interface ToolsProjectRepository extends GenericRepository<ToolsProject,Integer> {
 
-	List<ToolsProject> findClosedToolsProjects();
 	List<ToolsProject> findAllPendingToolsProjects();
+	List<ToolsProject> findToolsProjectsByStateOrder(int order);
 	List<ToolsProject> findPendingToolsProjectsByUserDescByPriority(User user);
+	ToolsProject findByCechOld(String cechOld);
+	ToolsProject findByCechNew(String cechNew);
+	
 	
 }
 

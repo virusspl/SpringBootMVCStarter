@@ -18,17 +18,16 @@ import sbs.repository.GenericRepositoryAdapter;
 public class ToolsProjectRepositoryImpl extends GenericRepositoryAdapter<ToolsProject, Integer>
 		implements ToolsProjectRepository {
 
-
 	@Override
 	@SuppressWarnings("unchecked")
 	@Transactional
-	public List<ToolsProject> findClosedToolsProjects() {
+	public List<ToolsProject> findToolsProjectsByStateOrder(int order) {
 		Criteria crit = currentSession().createCriteria(ToolsProject.class, "project");
 		crit.createAlias("project.state", "state");
-		crit.add(Restrictions.ge("state.order", 50));
+		crit.add(Restrictions.eq("state.order", order));
 		return crit.list();
 	}
-
+	
 	@Override
 	@SuppressWarnings("unchecked")
 	@Transactional
@@ -50,6 +49,34 @@ public class ToolsProjectRepositoryImpl extends GenericRepositoryAdapter<ToolsPr
 		crit.add(Restrictions.lt("state.order", 50));
 		crit.addOrder(Order.desc("priority"));
 		return crit.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public ToolsProject findByCechOld(String cechOld) {
+		Criteria crit = currentSession().createCriteria(ToolsProject.class);
+		crit.add(Restrictions.eq("cechOld", cechOld.toUpperCase()));
+		List<ToolsProject> list = crit.list();
+		if(list.isEmpty()){
+			return null;
+		}
+		else {
+			return (ToolsProject)crit.list().get(0);
+		}
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public ToolsProject findByCechNew(String cechNew) {
+		Criteria crit = currentSession().createCriteria(ToolsProject.class);
+		crit.add(Restrictions.eq("cechNew", cechNew.toUpperCase()));
+		List<ToolsProject> list = crit.list();
+		if(list.isEmpty()){
+			return null;
+		}
+		else {
+			return (ToolsProject)crit.list().get(0);
+		}
 	}
 
 

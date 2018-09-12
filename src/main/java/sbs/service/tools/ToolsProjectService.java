@@ -8,7 +8,9 @@ import sbs.service.GenericService;
 
 public interface ToolsProjectService extends GenericService<ToolsProject, Integer>{
 
-	public List<ToolsProject> findClosedToolsProjects();
+	public List<ToolsProject> findToolsProjectsByStateOrder(int order);
 	public List<ToolsProject> findAllPendingToolsProjects();
 	public List<ToolsProject> findPendingToolsProjectsByUserDescByPriority(User user);
+	public boolean isCechOldInUse(String cechOld);
+	public boolean isCechNewInUse(String cechNew);
 }

@@ -25,11 +25,6 @@ public class ToolsProjectServiceImpl extends GenericServiceAdapter<ToolsProject,
 	}
 
 	@Override
-	public List<ToolsProject> findClosedToolsProjects() {
-		return toolsProjectRepository.findClosedToolsProjects();
-	}
-
-	@Override
 	public List<ToolsProject> findAllPendingToolsProjects() {
 		return toolsProjectRepository.findAllPendingToolsProjects();
 	}
@@ -37,6 +32,23 @@ public class ToolsProjectServiceImpl extends GenericServiceAdapter<ToolsProject,
 	@Override
 	public List<ToolsProject> findPendingToolsProjectsByUserDescByPriority(User user) {
 		return toolsProjectRepository.findPendingToolsProjectsByUserDescByPriority(user);
+	}
+
+	@Override
+	public boolean isCechOldInUse(String cechOld) {
+		ToolsProject project = toolsProjectRepository.findByCechOld(cechOld);
+		return project==null ? false : true;
+	}
+	
+	@Override
+	public boolean isCechNewInUse(String cechNew) {
+		ToolsProject project = toolsProjectRepository.findByCechNew(cechNew);
+		return project==null ? false : true;
+	}
+
+	@Override
+	public List<ToolsProject> findToolsProjectsByStateOrder(int order) {
+		return toolsProjectRepository.findToolsProjectsByStateOrder(order);
 	}
 
 

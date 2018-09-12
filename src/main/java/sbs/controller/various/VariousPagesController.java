@@ -687,6 +687,34 @@ public class VariousPagesController {
 			toolsProjectStateService.save(toolsState);
 			msg += "[tps_param: " + toolsState.getOrder() + " " + toolsState.getDescription() + "], ";
 		}
+		if (toolsProjectStateService.findByOrder(60) == null) {
+			toolsState = new ToolsProjectState();
+			toolsState.setOrder(60);
+			toolsState.setDescription("Zlecony w ADR");
+			toolsProjectStateService.save(toolsState);
+			msg += "[tps_param: " + toolsState.getOrder() + " " + toolsState.getDescription() + "], ";
+		}
+		if (toolsProjectStateService.findByOrder(61) == null) {
+			toolsState = new ToolsProjectState();
+			toolsState.setOrder(61);
+			toolsState.setDescription("Zlecony dostawcy");
+			toolsProjectStateService.save(toolsState);
+			msg += "[tps_param: " + toolsState.getOrder() + " " + toolsState.getDescription() + "], ";
+		}
+		if (toolsProjectStateService.findByOrder(70) == null) {
+			toolsState = new ToolsProjectState();
+			toolsState.setOrder(70);
+			toolsState.setDescription("W produkcji");
+			toolsProjectStateService.save(toolsState);
+			msg += "[tps_param: " + toolsState.getOrder() + " " + toolsState.getDescription() + "], ";
+		}
+		if (toolsProjectStateService.findByOrder(80) == null) {
+			toolsState = new ToolsProjectState();
+			toolsState.setOrder(80);
+			toolsState.setDescription("Wyprodukowany");
+			toolsProjectStateService.save(toolsState);
+			msg += "[tps_param: " + toolsState.getOrder() + " " + toolsState.getDescription() + "], ";
+		}
 		if (toolsProjectStateService.findByOrder(90) == null) {
 			toolsState = new ToolsProjectState();
 			toolsState.setOrder(90);

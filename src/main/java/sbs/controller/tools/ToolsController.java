@@ -69,8 +69,8 @@ public class ToolsController {
 			map.put(user.getName(), toolsProjectService.findPendingToolsProjectsByUserDescByPriority(user));
 		}
 
-		for(List<ToolsProject> list: map.values()){
-			for(ToolsProject project: list){
+		for (List<ToolsProject> list : map.values()) {
+			for (ToolsProject project : list) {
 				project.setPhotoName(getPhotoFilenameForProjectById(project.getId()));
 			}
 		}
@@ -97,6 +97,26 @@ public class ToolsController {
 
 		// create project object
 		ToolsProject project = new ToolsProject();
+
+		// cech old
+		if (toolsProjectCreateForm.getCechOld().trim().length() > 0) {
+			if (toolsProjectService.isCechOldInUse(toolsProjectCreateForm.getCechOld().trim())) {
+				bindingResult.rejectValue("cechOld", "tools.error.cechold.busy", "ERROR");
+				return "tools/createproject";
+			} else {
+				project.setCechOld(toolsProjectCreateForm.getCechOld().trim().toUpperCase());
+			}
+		}
+
+		// cech new
+		if (toolsProjectCreateForm.getCechNew().trim().length() > 0) {
+			if (toolsProjectService.isCechNewInUse(toolsProjectCreateForm.getCechNew().trim())) {
+				bindingResult.rejectValue("cechNew", "tools.error.cechnew.busy", "ERROR");
+				return "tools/createproject";
+			} else {
+				project.setCechNew(toolsProjectCreateForm.getCechNew().trim().toUpperCase());
+			}
+		}
 
 		// check depending data - client
 		if (toolsProjectCreateForm.getClientCode().trim().length() > 0) {
@@ -202,7 +222,7 @@ public class ToolsController {
 		model.addAttribute("project", project);
 		return "tools/photos";
 	}
-	
+
 	@RequestMapping("/editproject/{id}")
 	@Transactional
 	public String editProjectForm(@PathVariable("id") int id, Model model) throws NotFoundException {
@@ -330,6 +350,44 @@ public class ToolsController {
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/tools/showproject/" + project.getId();
 	}
+	
+	@RequestMapping(value = "/projectaction", params = { "delegateadr" }, method = RequestMethod.POST)
+	@Transactional
+	public String delegateAdr(@RequestParam String delegateadr, RedirectAttributes redirectAttrs, Locale locale)
+			throws NotFoundException {
+		ToolsProject project = toolsProjectService.findById(Integer.parseInt(delegateadr));
+		if (project == null) {
+			throw new NotFoundException("Project not found");
+		}
+		
+		// state: cancel
+		ToolsProjectState state = toolsProjectStateService.findByOrder(60);
+		state.getToolsProjects().add(project);
+		project.setState(state);
+		
+		// redirect
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/tools/showproject/" + project.getId();
+	}
+	
+	@RequestMapping(value = "/projectaction", params = { "delegateoutside" }, method = RequestMethod.POST)
+	@Transactional
+	public String delegateOutside(@RequestParam String delegateoutside, RedirectAttributes redirectAttrs, Locale locale)
+			throws NotFoundException {
+		ToolsProject project = toolsProjectService.findById(Integer.parseInt(delegateoutside));
+		if (project == null) {
+			throw new NotFoundException("Project not found");
+		}
+		
+		// state: cancel
+		ToolsProjectState state = toolsProjectStateService.findByOrder(61);
+		state.getToolsProjects().add(project);
+		project.setState(state);
+		
+		// redirect
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/tools/showproject/" + project.getId();
+	}
 
 	@RequestMapping(value = "/editproject", params = { "save" }, method = RequestMethod.POST)
 	@Transactional
@@ -397,7 +455,6 @@ public class ToolsController {
 			project.setAssetCode("");
 			project.setAssetName("");
 		} else if (!toolsProjectCreateForm.getAssetCode().trim().toUpperCase().equals(project.getAssetCode())) {
-
 			X3Product product = x3Service.findProductByCode("ATW", toolsProjectCreateForm.getAssetCode().trim());
 			if (product == null) {
 				X3Workstation workstation = x3Service.findWorkstationByCode("ATW",
@@ -414,6 +471,38 @@ public class ToolsController {
 			} else {
 				project.setAssetCode(product.getCode());
 				project.setAssetName(product.getDescription());
+			}
+		}
+
+		// cech old
+		if (toolsProjectCreateForm.getCechOld().trim().length() == 0) {
+			project.setCechOld("");
+		} 
+		else if (!toolsProjectCreateForm.getCechOld().trim().toUpperCase().equals(project.getCechOld())){
+			if (toolsProjectService.isCechOldInUse(toolsProjectCreateForm.getCechOld().trim())) {
+				bindingResult.rejectValue("cechOld", "tools.error.cech.busy", "ERROR");
+				repeatConstants(project, toolsProjectCreateForm);
+				model.addAttribute("toolsUsers", userService.findByRole("ROLE_TOOLSNORMALUSER"));
+				return "tools/editproject";
+			} else {
+				project.setCechOld(toolsProjectCreateForm.getCechOld().trim().toUpperCase());
+			}
+		}
+
+		
+
+		// cech new
+		if (toolsProjectCreateForm.getCechNew().trim().length() == 0) {
+			project.setCechNew("");
+		} 
+		else if (!toolsProjectCreateForm.getCechNew().trim().toUpperCase().equals(project.getCechNew())){
+			if (toolsProjectService.isCechNewInUse(toolsProjectCreateForm.getCechNew().trim())) {
+				bindingResult.rejectValue("cechNew", "tools.error.cech.busy", "ERROR");
+				repeatConstants(project, toolsProjectCreateForm);
+				model.addAttribute("toolsUsers", userService.findByRole("ROLE_TOOLSNORMALUSER"));
+				return "tools/editproject";
+			} else {
+				project.setCechNew(toolsProjectCreateForm.getCechNew().trim().toUpperCase());
 			}
 		}
 
@@ -438,7 +527,7 @@ public class ToolsController {
 	public String managerView(Model model, Locale locale) {
 
 		List<ToolsProject> list = toolsProjectService.findAllPendingToolsProjects();
-		for(ToolsProject project: list){
+		for (ToolsProject project : list) {
 			project.setPhotoName(getPhotoFilenameForProjectById(project.getId()));
 		}
 		model.addAttribute("list", list);
@@ -451,8 +540,8 @@ public class ToolsController {
 	@Transactional
 	public String userView(Model model, Locale locale) {
 
-		List<ToolsProject> list = toolsProjectService.findClosedToolsProjects();
-		for(ToolsProject project: list){
+		List<ToolsProject> list = toolsProjectService.findToolsProjectsByStateOrder(50);
+		for (ToolsProject project : list) {
 			project.setPhotoName(getPhotoFilenameForProjectById(project.getId()));
 		}
 		model.addAttribute("list", list);
@@ -460,6 +549,4 @@ public class ToolsController {
 
 		return "tools/dispatch";
 	}
-	
-
 }

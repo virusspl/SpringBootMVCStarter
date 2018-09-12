@@ -207,7 +207,17 @@
 					 			 class="btn btn-success btn-sm" type="submit" name="approve" th:value="*{id}">
 						<span class="glyphicon glyphicon-ok"></span> <span
 							th:text="#{action.approve}"></span>
-					</button>					
+					</button>
+					 <button th:if="(${isAssigned} == true) and (${project.state.order}  == 50)"
+					 			 class="btn btn-primary btn-sm" type="submit" name="delegateadr" th:value="*{id}">
+						<span class="glyphicon glyphicon-ok"></span> <span
+							th:text="#{tools.delegateadr}"></span>
+					</button>				
+					 <button th:if="(${isAssigned} == true) and (${project.state.order}  == 50)"
+					 			 class="btn btn-info btn-sm" type="submit" name="delegateoutside" th:value="*{id}">
+						<span class="glyphicon glyphicon-ok"></span> <span
+							th:text="#{tools.delegateoutside}"></span>
+					</button>				
 				</div>
 			</div>
 
