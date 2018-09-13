@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"></meta>
+<style>
+table {
+	width: 100%;
+}
+
+.color {
+	background: #5AC4F2;
+	color: #F3FBFE;
+	font-weight: bold;
+}
+
+a {
+	color: #3AA4D2;
+}
+
+td {
+	padding: 5px 10px 5px 10px;
+	border: 1px solid gray;
+}
+
+.idcell {
+	width: 15%;
+}
+
+.statecell {
+	width: 15%;
+}
+
+.datecell {
+	width: 20%;
+}
+
+.titlecell {
+	width: 50%;
+}
+.datacell {
+	font-weight: bold;
+}
+
+#footer {
+	font-size: 80%;
+}
+</style>
+</head>
+<body>
+	<!-- PAGE TITLE -->
+	<table>
+		<tr class="color">
+			<td>
+				<h1 th:text="|Projekt #${project.id} został zlecony do produkcji|"></h1>
+			</td>
+		</tr>
+		<tr>
+			<td><span
+				th:text="|Projekt #${project.id} został zlecony do realizacji w Narzędziowni. Proszę wykonać 
+				wymagany przyrząd, a następnie zgłosić ten fakt w aplikacji. Link znajduje się poniżej.|"></span></td>
+		</tr>
+	</table>
+	<!-- DETAILS -->
+	<table>
+		<tr>
+			<td class="color" colspan="4"><span th:text="|Szczegóły projektu|"></span></td>
+		</tr>
+		<tr>
+			<td><span th:text="|Wykonujący rysunek|"></span></td>
+			<td class="datacell"><span th:text="${project.assignedUser.name}"></span></td>
+			<td><span th:text="|Priorytet|"></span></td>
+			<td class="datacell"><span th:text="${project.priority}"></span></td>
+		</tr>
+		<tr>
+			<td><span th:text="|Stara cecha|"></span></td>
+			<td class="datacell"><span th:text="${project.cechOld}"></span></td>
+			<td><span th:text="|Nowa cecha|"></span></td>
+			<td class="datacell"><span th:text="${project.cechNew}"></span></td>
+		</tr>
+		<tr>
+			<td colspan="1"><span th:text="|Zasób|"></span></td>
+			<td colspan="3" class="datacell"><span th:text="|${project.assetCode} (${project.assetName})|"></span></td>
+		</tr>
+		<tr>			
+			<td colspan="1"><span th:text="|Klient|"></span></td>
+			<td colspan="3" class="datacell"><span th:text="|${project.clientCode} (${project.clientName})|"></span></td>
+		</tr>
+	</table>
+	<!-- LINK -->
+	<table>
+		<tr>
+			<td class="color" colspan="1"><span>Bezpośredni link do
+					aplikacji</span></td>
+		</tr>
+		<tr>
+			<td><a
+				th:href="|${host}:8080/@{'~/adr/tools/showproject/' + ${project.id}}|"><span
+					th:text="|${host}:8080/@{'~/adr/tools/showproject/' + ${project.id}}|">title</span></a></td>
+		</tr>
+	</table>
+	<!-- FOOTER -->
+	<table>
+		<tr id="footer">
+			<td class="color"><span>Mail został wygenerowany
+					automatycznie przez aplikację webową ADR Polska S.A., moduł
+					Narzędzi. Proszę nie odpowiadać na tę wiadomość.</span></td>
+		</tr>
+	</table>
+</body>
+</html>

@@ -66,6 +66,9 @@ public class ToolsProject {
 
 	@Column(name = "tp_priority", nullable = true)
 	private int priority;
+	
+	@Column(name = "tp_difficulty", nullable = true)
+	private int difficulty;
 
 	@Column(name = "tp_credat", nullable = false)
 	private Timestamp creationDate;
@@ -203,6 +206,14 @@ public class ToolsProject {
 
 	public void setPhotoName(String photoName) {
 		this.photoName = photoName;
+	}
+	
+	public int getDifficulty() {
+		return difficulty;
+	}
+
+	public void setDifficulty(int difficulty) {
+		this.difficulty = difficulty;
 	}
 
 	@Override

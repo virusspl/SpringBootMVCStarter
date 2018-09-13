@@ -384,6 +384,22 @@ public class VariousPagesController {
 			msg += "[role: " + toolsManager.getName() + "], ";
 		}
 		
+		Role toolsProdManager = roleService.findByName("ROLE_TOOLSPRODMANAGER");
+		if (toolsProdManager == null) {
+			toolsProdManager = new Role();
+			toolsProdManager.setName("ROLE_TOOLSPRODMANAGER");
+			roleService.save(toolsProdManager);
+			msg += "[role: " + toolsProdManager.getName() + "], ";
+		}
+		
+		Role toolsMailingUser = roleService.findByName("ROLE_TOOLSMAILINGUSER");
+		if (toolsMailingUser == null) {
+			toolsMailingUser = new Role();
+			toolsMailingUser.setName("ROLE_TOOLSMAILINGUSER");
+			roleService.save(toolsMailingUser);
+			msg += "[role: " + toolsMailingUser.getName() + "], ";
+		}
+		
 		Role toolsNormalUser = roleService.findByName("ROLE_TOOLSNORMALUSER");
 		if (toolsNormalUser == null) {
 			toolsNormalUser = new Role();

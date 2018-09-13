@@ -25,7 +25,7 @@
 		<form th:action="@{/tools/projectaction}" method="post"
 			th:object="${project}">
 			<input type="hidden" th:field="*{id}"></input>
-			<div class="row margin-top-20">			
+			<div class="row margin-top-20">
 				<div class="col-xs-3 col-sm-2">
 					<div class="form-group">
 						<label for="id">#id</label> <span class="form-control" id="id"
@@ -67,12 +67,13 @@
 			</div>
 			<div class="underline margin-top-10 margin-bottom-5"></div>
 			<div class="row">
-			<div class="col-xs-12 col-xs-8">
-										<img th:src="|http://192.168.1.23/APACHE_IMG/tools/photo/${project.photoName}|"
-					class="img-responsive img-rounded margin-top-10 thumb-200"
-					style="border: 1px solid grey;"></img>
-			
-			</div>
+				<div class="col-xs-12 col-xs-8">
+					<img
+						th:src="|http://192.168.1.23/APACHE_IMG/tools/photo/${project.photoName}|"
+						class="img-responsive img-rounded margin-top-10 thumb-200"
+						style="border: 1px solid grey;"></img>
+
+				</div>
 			</div>
 			<div class="underline margin-top-10 margin-bottom-20"></div>
 			<div class="row">
@@ -80,18 +81,18 @@
 					<div class="form-group">
 						<!-- name -->
 						<label for="cechOld" th:text="#{tools.cech.old}">lbl</label> <input
-							type="text" style="background-color: white;" class="form-control" id="cechOld" name="cechOld"
-							th:placeholder="#{tools.cech.old}" th:field="*{cechOld}"
-							readonly="true" autocomplete="off" />
+							type="text" style="background-color: white;" class="form-control"
+							id="cechOld" name="cechOld" th:placeholder="#{tools.cech.old}"
+							th:field="*{cechOld}" readonly="true" autocomplete="off" />
 					</div>
 				</div>
 				<div class="col-xs-6 col-sm-4">
 					<div class="form-group">
 						<!-- name -->
 						<label for="cechNew" th:text="#{tools.cech.new}">lbl</label> <input
-							type="text" style="background-color: white;" class="form-control" id="cechNew" name="cechNew"
-							th:placeholder="#{tools.cech.new}" th:field="*{cechNew}"
-							autocomplete="off" readonly="true" />
+							type="text" style="background-color: white;" class="form-control"
+							id="cechNew" name="cechNew" th:placeholder="#{tools.cech.new}"
+							th:field="*{cechNew}" autocomplete="off" readonly="true" />
 					</div>
 				</div>
 			</div>
@@ -100,7 +101,8 @@
 					<div class="form-group">
 						<!-- name -->
 						<label for="assetCode" th:text="#{tools.asset.code}">lbl</label> <input
-							type="text" style="background-color: white;" class="form-control" id="assetCode" name="assetCode"
+							type="text" style="background-color: white;" class="form-control"
+							id="assetCode" name="assetCode"
 							th:placeholder="#{tools.asset.code}" th:field="*{assetCode}"
 							autocomplete="off" readonly="true" />
 					</div>
@@ -122,9 +124,10 @@
 					<div class="form-group">
 						<!-- name -->
 						<label for="clientCode" th:text="#{general.client.code}">lbl</label>
-						<input type="text" style="background-color: white;" class="form-control" id="clientCode"
-							name="clientCode" th:placeholder="#{general.client.code}"
-							th:field="*{clientCode}" autocomplete="off" readonly="true" />
+						<input type="text" style="background-color: white;"
+							class="form-control" id="clientCode" name="clientCode"
+							th:placeholder="#{general.client.code}" th:field="*{clientCode}"
+							autocomplete="off" readonly="true" />
 
 					</div>
 				</div>
@@ -146,38 +149,49 @@
 						<label for="description" th:text="#{general.description}">comment</label>
 						<textarea class="form-control" id="description" name="description"
 							th:placeholder="#{general.description}" th:field="*{description}"
-							style="min-height: 200px; background-color: white;" readonly="true"></textarea>
+							style="min-height: 200px; background-color: white;"
+							readonly="true"></textarea>
 					</div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-xs-3 col-sm-2">
 					<div class="form-group">
-						<label for="priority" th:text="#{general.priority}">lbl</label>
-							<input id="priority" name="priority"
-								th:placeholder="#{general.priority}" th:field="*{priority}"
-								class="form-control" type="text" 
-								 style="background-color: white;" readonly="true"></input>
-						
+						<label for="priority" th:text="#{general.priority}">lbl</label> <input
+							id="priority" name="priority"
+							th:placeholder="#{general.priority}" th:field="*{priority}"
+							class="form-control" type="text" style="background-color: white;"
+							readonly="true"></input>
+
 					</div>
 				</div>
-				<div class="col-xs-9 col-sm-6">
+				<div class="col-xs-6 col-sm-4">
 					<div class="form-group">
 						<label for="assignedUser" th:text="#{tools.assigneduser}">User</label>
 						<input id="priority" name="priority"
 							th:placeholder="#{tools.assigneduser}"
 							th:field="*{assignedUser.name}" class="form-control" type="text"
-							 style="background-color: white;"
+							style="background-color: white;" readonly="true"></input>
+					</div>
+				</div>
+				<div class="col-xs-3 col-sm-2">
+					<div class="form-group">
+						<label for="difficulty" th:text="#{tools.difficulty}">User</label>
+						<input id="difficulty" name="difficulty"
+							th:placeholder="#{tools.difficulty}" th:field="*{difficulty}"
+							class="form-control" type="text" style="background-color: white;"
 							readonly="true"></input>
 					</div>
 				</div>
 			</div>
 			<div class="row margin-top-20">
 				<div class="col-xs-12">
+					<!-- BACK -->
 					<a th:href="@{/tools/dispatch}" class="btn btn-link btn-sm"> <span
 						class="glyphicon glyphicon-menu-left"></span> <span
 						th:text="#{action.back}">back</span>
-					</a> 
+					</a>
+					<!-- EDIT -->
 					<a sec:authorize="hasAnyRole('ROLE_TOOLSMANAGER', 'ROLE_ADMIN')"
 						th:if="(${project.state.order}  &lt; 50)"
 						th:href="|@{/tools/editproject/}${project.id}|"
@@ -185,39 +199,113 @@
 						class="glyphicon glyphicon-pencil"></span> <span
 						th:text="#{action.edit}">back</span>
 					</a>
-					 <button th:if="(${isAssigned} == true) and (${project.state.order}  == 20)"
-					 			 class="btn btn-success btn-sm" type="submit" name="markAsDone" th:value="*{id}">
+					<!-- MARK AS DONE -->
+					<button
+						th:if="(${isAssigned} == true) and (${project.state.order}  == 20)"
+						class="btn btn-success btn-sm" type="submit" name="markAsDone"
+						th:value="*{id}">
 						<span class="glyphicon glyphicon-ok"></span> <span
 							th:text="#{tools.markasdone}"></span>
 					</button>
-					 <button sec:authorize="hasAnyRole('ROLE_TOOLSMANAGER', 'ROLE_ADMIN')"
-					 th:if="(${project.state.order}  &lt; 50) and (${project.state.order}  != 30)"
-					 			 class="btn btn-warning btn-sm" type="submit" name="hold" th:value="*{id}">
+					<!-- HOLD -->
+					<button
+						sec:authorize="hasAnyRole('ROLE_TOOLSMANAGER', 'ROLE_ADMIN')"
+						th:if="(${project.state.order}  &lt; 50) and (${project.state.order}  != 30)"
+						class="btn btn-warning btn-sm" type="submit" name="hold"
+						th:value="*{id}">
 						<span class="glyphicon glyphicon-warning-sign"></span> <span
 							th:text="#{action.hold}"></span>
 					</button>
-					 <button sec:authorize="hasAnyRole('ROLE_TOOLSMANAGER', 'ROLE_ADMIN')"
-					 th:if="(${project.state.order} &lt; 50)"
-					 			 class="btn btn-danger btn-sm" type="submit" name="cancel" th:value="*{id}">
+					<!-- CANCEL -->
+					<button
+						sec:authorize="hasAnyRole('ROLE_TOOLSMANAGER', 'ROLE_ADMIN')"
+						th:if="(${project.state.order} &lt; 50)"
+						class="btn btn-danger btn-sm" type="submit" name="cancel"
+						th:value="*{id}">
 						<span class="glyphicon glyphicon-remove"></span> <span
 							th:text="#{action.cancel}"></span>
 					</button>
-					 <button sec:authorize="hasAnyRole('ROLE_TOOLSMANAGER', 'ROLE_ADMIN')"
-					 	th:if="(${project.state.order}  == 40)"
-					 			 class="btn btn-success btn-sm" type="submit" name="approve" th:value="*{id}">
+					<!-- APPROVE -->
+					<button
+						sec:authorize="hasAnyRole('ROLE_TOOLSMANAGER', 'ROLE_ADMIN')"
+						th:if="(${project.state.order}  == 40)"
+						class="btn btn-success btn-sm" type="submit" name="approve"
+						th:value="*{id}">
 						<span class="glyphicon glyphicon-ok"></span> <span
 							th:text="#{action.approve}"></span>
 					</button>
-					 <button th:if="(${isAssigned} == true) and (${project.state.order}  == 50)"
-					 			 class="btn btn-primary btn-sm" type="submit" name="delegateadr" th:value="*{id}">
+					<!-- DELEGATE ADR -->
+					<button
+					sec:authorize="hasAnyRole('ROLE_TOOLSMANAGER','ROLE_TOOLSNORMALUSER', 'ROLE_ADMIN')"
+						th:if="${project.state.order}  == 50"
+						class="btn btn-primary btn-sm" type="submit" name="delegateadr"
+						th:value="*{id}">
 						<span class="glyphicon glyphicon-ok"></span> <span
 							th:text="#{tools.delegateadr}"></span>
-					</button>				
-					 <button th:if="(${isAssigned} == true) and (${project.state.order}  == 50)"
-					 			 class="btn btn-info btn-sm" type="submit" name="delegateoutside" th:value="*{id}">
+					</button>
+					<!-- DELEGATE OUTSIDE -->
+					<button
+					sec:authorize="hasAnyRole('ROLE_TOOLSMANAGER','ROLE_TOOLSNORMALUSER', 'ROLE_ADMIN')"
+						th:if="${project.state.order}  == 50"
+						class="btn btn-info btn-sm" type="submit" name="delegateoutside"
+						th:value="*{id}">
 						<span class="glyphicon glyphicon-ok"></span> <span
 							th:text="#{tools.delegateoutside}"></span>
-					</button>				
+					</button>
+					<!-- DIFFICULTY 1 -->
+					<button
+						sec:authorize="hasAnyRole('ROLE_TOOLSPRODMANAGER', 'ROLE_ADMIN')"
+						th:if="(${project.state.order}  == 60)"
+						class="btn btn-default btn-sm" type="submit" name="chgdiff"
+						th:value="|*{id};1|">
+						<span class="glyphicon glyphicon-heart"></span> <span
+							th:text="|#{tools.difficulty} 1|"></span>
+					</button>
+					<!-- DIFFICULTY 2 -->
+					<button
+						sec:authorize="hasAnyRole('ROLE_TOOLSPRODMANAGER', 'ROLE_ADMIN')"
+						th:if="(${project.state.order}  == 60)"
+						class="btn btn-default btn-sm" type="submit" name="chgdiff"
+						th:value="|*{id};2|">
+						<span class="glyphicon glyphicon-flag"></span> <span
+							th:text="|#{tools.difficulty} 2|"></span>
+					</button>
+					<!-- DIFFICULTY 3 -->
+					<button
+						sec:authorize="hasAnyRole('ROLE_TOOLSPRODMANAGER', 'ROLE_ADMIN')"
+						th:if="(${project.state.order}  == 60)"
+						class="btn btn-default btn-sm" type="submit" name="chgdiff"
+						th:value="|*{id};3|">
+						<span class="glyphicon glyphicon-star"></span> <span
+							th:text="|#{tools.difficulty} 3|"></span>
+					</button>
+					<!-- START PRODUCTION -->
+					<button
+						sec:authorize="hasAnyRole('ROLE_TOOLSPRODMANAGER', 'ROLE_ADMIN')"
+						th:if="(${project.state.order}  == 60)"
+						class="btn btn-primary btn-sm" type="submit" name="startproduction"
+						th:value="*{id}">
+						<span class="glyphicon glyphicon-ok"></span> <span
+							th:text="#{tools.startproduction}"></span>
+					</button>
+					<!-- PRODUCED FROM ADR -->
+					<button
+						sec:authorize="hasAnyRole('ROLE_TOOLSPRODMANAGER', 'ROLE_ADMIN')"
+						th:if="(${project.state.order}  == 70)"
+						class="btn btn-success btn-sm" type="submit" name="produced"
+						th:value="*{id}">
+						<span class="glyphicon glyphicon-ok"></span> <span
+							th:text="#{tools.produced}"></span>
+					</button>
+					<!-- PRODUCED FROM SUPPLIER -->
+					<button
+						sec:authorize="hasAnyRole('ROLE_TOOLSMANAGER', 'ROLE_TOOLSPRODMANAGER', 'ROLE_ADMIN')"
+						th:if="(${project.state.order}  == 61)"
+						class="btn btn-success btn-sm" type="submit" name="produced"
+						th:value="*{id}">
+						<span class="glyphicon glyphicon-ok"></span> <span
+							th:text="#{tools.received}"></span>
+					</button>
 				</div>
 			</div>
 

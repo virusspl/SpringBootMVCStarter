@@ -120,6 +120,7 @@
 					With title</h3>
 			</div>
 			<div class="col-xs-12 margin-top-10">
+				<!-- CREATE -->
 				<a
 					sec:authorize="hasAnyRole(
 				'ROLE_ADMIN',  
@@ -129,11 +130,15 @@
 					th:href="@{/tools/createproject}"> <span
 					class="glyphicon glyphicon-copy" style="margin-right: 10px;"></span>
 					<span th:text="#{action.create}">begin</span>
-				</a> <a class="btn btn-info btn-md margin-top-5"
+				</a>
+				<!-- ASSIGNED -->
+				<a class="btn btn-info btn-md margin-top-5"
 					th:href="@{/tools/dispatch}"> <span
 					class="glyphicon glyphicon-pencil" style="margin-right: 10px;"></span>
 					<span th:text="#{tools.projects.list.assigned}">begin</span>
-				</a> <a
+				</a>
+				<!-- PENDING -->
+				<a
 					sec:authorize="hasAnyRole(
 				'ROLE_ADMIN',  
 				'ROLE_TOOLSMANAGER'
@@ -142,10 +147,49 @@
 					th:href="@{/tools/pendinglist}"> <span
 					class="glyphicon glyphicon-time" style="margin-right: 10px;"></span>
 					<span th:text="#{tools.projects.list.pending}">begin</span>
-				</a> <a class="btn btn-success btn-md margin-top-5"
-					th:href="@{/tools/closedlist}"> <span
+				</a>
+				<!-- ACCEPTED -->
+				<a class="btn btn-success btn-md margin-top-5"
+					th:href="@{/tools/acceptedlist}"> <span
 					class="glyphicon glyphicon-ok" style="margin-right: 10px;"></span>
 					<span th:text="#{tools.projects.list.closed}">begin</span>
+				</a>
+				<!-- CANCELLED -->
+				<a
+					sec:authorize="hasAnyRole(
+				'ROLE_ADMIN',  
+				'ROLE_TOOLSMANAGER'
+				)"
+					class="btn btn-danger btn-md margin-top-5"
+					th:href="@{/tools/cancelledlist}"> <span
+					class="glyphicon glyphicon-remove" style="margin-right: 10px;"></span>
+					<span th:text="#{tools.projects.list.cancelled}">begin</span>
+				</a>
+				<!-- NEW LINE -->
+				<br/>
+				<!-- FORWARDED OUTSIDE -->
+				<a class="btn btn-info btn-md margin-top-5"
+					th:href="@{/tools/fwoutsidelist}"> <span
+					class="glyphicon glyphicon-fast-forward" style="margin-right: 10px;"></span>
+					<span th:text="#{tools.projects.list.forwarded.outside}">begin</span>
+				</a>				
+				<!-- FORWARDED ADR -->
+				<a class="btn btn-info btn-md margin-top-5"
+					th:href="@{/tools/fwadrlist}"> <span
+					class="glyphicon glyphicon-forward" style="margin-right: 10px;"></span>
+					<span th:text="#{tools.projects.list.forwarded.adr}">begin</span>
+				</a>
+				<!-- IN PRODUCTION -->
+				<a class="btn btn-warning btn-md margin-top-5"
+					th:href="@{/tools/inproductionlist}"> <span
+					class="glyphicon glyphicon-wrench" style="margin-right: 10px;"></span>
+					<span th:text="#{tools.projects.list.inproduction}">begin</span>
+				</a>
+				<!-- PRODUCED -->
+				<a class="btn btn-success btn-md margin-top-5"
+					th:href="@{/tools/producedlist}"> <span
+					class="glyphicon glyphicon-ok" style="margin-right: 10px;"></span>
+					<span th:text="#{tools.projects.list.produced}">begin</span>
 				</a>
 			</div>
 		</div>

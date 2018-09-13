@@ -129,7 +129,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.hasAnyRole(
 				"ADMIN", 
 				"TOOLSMANAGER",
-				"TOOLSNORMALUSER"
+				"TOOLSNORMALUSER",
+				"TOOLSMAILINGUSER"
 				)
 		.antMatchers("/toools/editproject/**", 
 				"/tools/createproject/**"
