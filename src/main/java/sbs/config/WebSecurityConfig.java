@@ -129,6 +129,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.hasAnyRole(
 				"ADMIN", 
 				"TOOLSMANAGER",
+				"TOOLSPRODMANAGER",
 				"TOOLSNORMALUSER",
 				"TOOLSMAILINGUSER"
 				)

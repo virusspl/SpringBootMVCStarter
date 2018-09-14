@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -307,8 +308,24 @@ public class ToolsController {
 		context.setVariable("host", InetAddress.getLocalHost().getHostAddress());
 		context.setVariable("project", project);
 		String body = templateEngine.process("tools/mail.asdone", context);
-		mailService.sendEmail("webapp@atwsystem.pl", addressMailingList.toArray(new String[0]), new String[0],
+		String[] self = {userService.getAuthenticatedUser().getEmail()};
+		mailService.sendEmail("webapp@atwsystem.pl", addressMailingList.toArray(new String[0]), self,
 				"ADR Polska S.A. - Projekt do zatwierdzenia", body);
+	}
+	
+	private void mailNotifyProduced(ToolsProject project) throws UnknownHostException, MessagingException {
+		List<User> managerList = userService.findByAnyRole(new String[] { "ROLE_TOOLSMANAGER", "ROLE_TOOLSMAILINGUSER" });
+		Set<String> addressMailingList = new HashSet<>();
+		for (User sprv : managerList) {
+			addressMailingList.add(sprv.getEmail());
+		}
+		Context context = new Context();
+		context.setVariable("host", InetAddress.getLocalHost().getHostAddress());
+		context.setVariable("project", project);
+		String body = templateEngine.process("tools/mail.produced", context);
+		String[] self = {userService.getAuthenticatedUser().getEmail()};
+		mailService.sendEmail("webapp@atwsystem.pl", addressMailingList.toArray(new String[0]), self,
+				"ADR Polska S.A. - Zakończono produkcję narzędzia", body);
 	}
 	
 	private void mailNotifyToProduce(ToolsProject project) throws UnknownHostException, MessagingException {
@@ -321,7 +338,8 @@ public class ToolsController {
 		context.setVariable("host", InetAddress.getLocalHost().getHostAddress());
 		context.setVariable("project", project);
 		String body = templateEngine.process("tools/mail.toproduce", context);
-		mailService.sendEmail("webapp@atwsystem.pl", addressMailingList.toArray(new String[0]), new String[0],
+		String[] self = {userService.getAuthenticatedUser().getEmail()};
+		mailService.sendEmail("webapp@atwsystem.pl", addressMailingList.toArray(new String[0]), self,
 				"ADR Polska S.A. - Zlecenie wykonania przyrządu", body);
 	}
 
@@ -334,7 +352,8 @@ public class ToolsController {
 		context.setVariable("host", InetAddress.getLocalHost().getHostAddress());
 		context.setVariable("project", project);
 		String body = templateEngine.process("tools/mail.assigned", context);
-		mailService.sendEmail("webapp@atwsystem.pl", addressMailingList.toArray(new String[0]), new String[0],
+		String[] self = {userService.getAuthenticatedUser().getEmail()};
+		mailService.sendEmail("webapp@atwsystem.pl", addressMailingList.toArray(new String[0]), self,
 				"ADR Polska S.A. - Przypisano nowy projekt", body);
 	}
 
@@ -517,6 +536,14 @@ public class ToolsController {
 		state.getToolsProjects().add(project);
 		project.setState(state);
 
+		// mail notify
+		try {
+			mailNotifyProduced(project);
+		} catch (Exception e) {
+			redirectAttrs.addFlashAttribute("warning",
+					messageSource.getMessage("notification.mail.send.error", null, locale) + ": " + e.getMessage());
+		}
+		
 		// redirect
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/tools/showproject/" + project.getId();
