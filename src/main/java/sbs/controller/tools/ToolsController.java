@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
@@ -30,7 +29,6 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import javassist.NotFoundException;
-import sbs.controller.bhptickets.UserTicketsHolder;
 import sbs.controller.upload.UploadController;
 import sbs.helpers.TextHelper;
 import sbs.model.tools.ToolsProject;
@@ -77,11 +75,6 @@ public class ToolsController {
 			map.put(user.getName(), toolsProjectService.findPendingToolsProjectsByUserDescByPriority(user));
 		}
 
-		for (List<ToolsProject> list : map.values()) {
-			for (ToolsProject project : list) {
-				project.setPhotoName(getPhotoFilenameForProjectById(project.getId()));
-			}
-		}
 		model.addAttribute("userProjectMap", map);
 		return "tools/dispatch";
 	}
@@ -181,6 +174,7 @@ public class ToolsController {
 		creator.getCreatedToolsProjects().add(project);
 		project.setCreator(creator);
 		project.setPriority(1);
+		project.setPhotoName("noimage.png");
 
 		// save
 		toolsProjectService.save(project);
@@ -205,12 +199,11 @@ public class ToolsController {
 			isAssigned = false;
 		}
 		model.addAttribute("isAssigned", isAssigned);
-		project.setPhotoName(getPhotoFilenameForProjectById(project.getId()));
 		model.addAttribute("project", project);
 		return "tools/showproject";
 	}
 
-	private String getPhotoFilenameForProjectById(int id) {
+	/*private String getPhotoFilenameForProjectById(int id) {
 		ArrayList<String> fileList = uploadController.listFiles(uploadController.getToolsPhotoPath());
 		for (int i = fileList.size() - 1; i >= 0; i--) {
 			if (fileList.get(i).startsWith("tool_" + id + "_")) {
@@ -218,7 +211,7 @@ public class ToolsController {
 			}
 		}
 		return "noimage.png";
-	}
+	}*/
 
 	@RequestMapping("/edit/photos/{id}")
 	@Transactional
@@ -329,8 +322,8 @@ public class ToolsController {
 	}
 	
 	private void mailNotifyToProduce(ToolsProject project) throws UnknownHostException, MessagingException {
-		List<User> managerList = userService.findByAnyRole(new String[] { "ROLE_TOOLSPRODMANAGER" });
-		ArrayList<String> addressMailingList = new ArrayList<>();
+		List<User> managerList = userService.findByAnyRole(new String[] { "ROLE_TOOLSMANAGER", "ROLE_TOOLSMAILINGUSER", "ROLE_TOOLSPRODMANAGER" });
+		Set<String> addressMailingList = new HashSet<>();
 		for (User sprv : managerList) {
 			addressMailingList.add(sprv.getEmail());
 		}
@@ -341,6 +334,21 @@ public class ToolsController {
 		String[] self = {userService.getAuthenticatedUser().getEmail()};
 		mailService.sendEmail("webapp@atwsystem.pl", addressMailingList.toArray(new String[0]), self,
 				"ADR Polska S.A. - Zlecenie wykonania przyrządu", body);
+	}
+	
+	private void mailNotifyToProduceOutside(ToolsProject project) throws UnknownHostException, MessagingException {
+		List<User> managerList = userService.findByAnyRole(new String[] { "ROLE_TOOLSMANAGER", "ROLE_TOOLSMAILINGUSER", "ROLE_TOOLSPRODMANAGER" });
+		Set<String> addressMailingList = new HashSet<>();
+		for (User sprv : managerList) {
+			addressMailingList.add(sprv.getEmail());
+		}
+		Context context = new Context();
+		context.setVariable("host", InetAddress.getLocalHost().getHostAddress());
+		context.setVariable("project", project);
+		String body = templateEngine.process("tools/mail.toproduceoutside", context);
+		String[] self = {userService.getAuthenticatedUser().getEmail()};
+		mailService.sendEmail("webapp@atwsystem.pl", addressMailingList.toArray(new String[0]), self,
+				"ADR Polska S.A. - Zewnętrzne zlecenie wykonania przyrządu", body);
 	}
 
 	private void mailNotifyAssigned(ToolsProject project) throws UnknownHostException, MessagingException {
@@ -467,6 +475,14 @@ public class ToolsController {
 		state.getToolsProjects().add(project);
 		project.setState(state);
 
+		// mail notify
+		try {
+			mailNotifyToProduceOutside(project);
+		} catch (Exception e) {
+			redirectAttrs.addFlashAttribute("warning",
+					messageSource.getMessage("notification.mail.send.error", null, locale) + ": " + e.getMessage());
+		}
+		
 		// redirect
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/tools/showproject/" + project.getId();
@@ -696,9 +712,6 @@ public class ToolsController {
 	public String managerView(Model model, Locale locale) {
 
 		List<ToolsProject> list = toolsProjectService.findAllPendingToolsProjects();
-		for (ToolsProject project : list) {
-			project.setPhotoName(getPhotoFilenameForProjectById(project.getId()));
-		}
 		model.addAttribute("list", list);
 		model.addAttribute("listtitle", messageSource.getMessage("tools.projects.list.pending", null, locale));
 
@@ -710,9 +723,6 @@ public class ToolsController {
 	public String acceptedView(Model model, Locale locale) {
 
 		List<ToolsProject> list = toolsProjectService.findToolsProjectsByStateOrder(50);
-		for (ToolsProject project : list) {
-			project.setPhotoName(getPhotoFilenameForProjectById(project.getId()));
-		}
 		model.addAttribute("list", list);
 		model.addAttribute("listtitle", messageSource.getMessage("tools.projects.list.accepted", null, locale));
 
@@ -724,9 +734,6 @@ public class ToolsController {
 	public String fwAdrView(Model model, Locale locale) {
 
 		List<ToolsProject> list = toolsProjectService.findToolsProjectsByStateOrder(60);
-		for (ToolsProject project : list) {
-			project.setPhotoName(getPhotoFilenameForProjectById(project.getId()));
-		}
 		model.addAttribute("list", list);
 		model.addAttribute("listtitle", messageSource.getMessage("tools.projects.list.forwarded.adr", null, locale));
 
@@ -738,9 +745,6 @@ public class ToolsController {
 	public String fwOutsideView(Model model, Locale locale) {
 
 		List<ToolsProject> list = toolsProjectService.findToolsProjectsByStateOrder(61);
-		for (ToolsProject project : list) {
-			project.setPhotoName(getPhotoFilenameForProjectById(project.getId()));
-		}
 		model.addAttribute("list", list);
 		model.addAttribute("listtitle",
 				messageSource.getMessage("tools.projects.list.forwarded.outside", null, locale));
@@ -753,9 +757,6 @@ public class ToolsController {
 	public String inProductionView(Model model, Locale locale) {
 
 		List<ToolsProject> list = toolsProjectService.findToolsProjectsByStateOrder(70);
-		for (ToolsProject project : list) {
-			project.setPhotoName(getPhotoFilenameForProjectById(project.getId()));
-		}
 		model.addAttribute("list", list);
 		model.addAttribute("listtitle", messageSource.getMessage("tools.projects.list.inproduction", null, locale));
 
@@ -767,9 +768,6 @@ public class ToolsController {
 	public String producedView(Model model, Locale locale) {
 
 		List<ToolsProject> list = toolsProjectService.findToolsProjectsByStateOrder(80);
-		for (ToolsProject project : list) {
-			project.setPhotoName(getPhotoFilenameForProjectById(project.getId()));
-		}
 		model.addAttribute("list", list);
 		model.addAttribute("listtitle", messageSource.getMessage("tools.projects.list.produced", null, locale));
 
@@ -781,9 +779,6 @@ public class ToolsController {
 	public String cancelledView(Model model, Locale locale) {
 
 		List<ToolsProject> list = toolsProjectService.findToolsProjectsByStateOrder(90);
-		for (ToolsProject project : list) {
-			project.setPhotoName(getPhotoFilenameForProjectById(project.getId()));
-		}
 		model.addAttribute("list", list);
 		model.addAttribute("listtitle", messageSource.getMessage("tools.projects.list.cancelled", null, locale));
 

@@ -86,6 +86,19 @@ td {
 			<td colspan="3" class="datacell"><span th:text="|${project.clientCode} (${project.clientName})|"></span></td>
 		</tr>
 	</table>
+	<!-- DESCRIPTION -->
+	<table>
+		<tr>
+			<td class="color" colspan="4"><span>Opis projektu</span></td>
+		</tr>
+		<tr>
+			<td th:if="${project.photoName}!='noimage.png'"><img
+				th:src="|http://192.168.1.23/APACHE_IMG/tools/photo/${project.photoName}|"
+				alt="photo"></img>
+			</td>
+			<td><span th:text="${project.description}"></span></td>
+		</tr>
+	</table>	
 	<!-- LINK -->
 	<table>
 		<tr>

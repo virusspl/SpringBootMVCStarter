@@ -37,6 +37,7 @@ td {
 .titlecell {
 	width: 50%;
 }
+
 .datacell {
 	font-weight: bold;
 }
@@ -56,18 +57,21 @@ td {
 		</tr>
 		<tr>
 			<td><span
-				th:text="|Projekt #${project.id} został zlecony do realizacji. Proszę wykonać 
-				wymagany rysunek, a następnie zgłosić ten fakt w aplikacji. Link znajduje się poniżej.|"></span></td>
+				th:text="|Projekt #${project.id} został zlecony do realizacji. Proszę 
+				wykonać zlecony projekt a następnie zgłosić ten fakt w aplikacji. 
+				Link znajduje się poniżej.|"></span></td>
 		</tr>
 	</table>
 	<!-- DETAILS -->
 	<table>
 		<tr>
-			<td class="color" colspan="4"><span th:text="|Szczegóły projektu|"></span></td>
+			<td class="color" colspan="4"><span
+				th:text="|Szczegóły projektu|"></span></td>
 		</tr>
 		<tr>
 			<td><span th:text="|Wykonujący rysunek|"></span></td>
-			<td class="datacell"><span th:text="${project.assignedUser.name}"></span></td>
+			<td class="datacell"><span
+				th:text="${project.assignedUser.name}"></span></td>
 			<td><span th:text="|Priorytet|"></span></td>
 			<td class="datacell"><span th:text="${project.priority}"></span></td>
 		</tr>
@@ -79,11 +83,26 @@ td {
 		</tr>
 		<tr>
 			<td colspan="1"><span th:text="|Zasób|"></span></td>
-			<td colspan="3" class="datacell"><span th:text="|${project.assetCode} (${project.assetName})|"></span></td>
+			<td colspan="3" class="datacell"><span
+				th:text="|${project.assetCode} (${project.assetName})|"></span></td>
 		</tr>
-		<tr>			
+		<tr>
 			<td colspan="1"><span th:text="|Klient|"></span></td>
-			<td colspan="3" class="datacell"><span th:text="|${project.clientCode} (${project.clientName})|"></span></td>
+			<td colspan="3" class="datacell"><span
+				th:text="|${project.clientCode} (${project.clientName})|"></span></td>
+		</tr>
+	</table>
+	<!-- DESCRIPTION -->
+	<table>
+		<tr>
+			<td class="color" colspan="4"><span>Opis projektu</span></td>
+		</tr>
+		<tr>
+			<td th:if="${project.photoName}!='noimage.png'"><img
+				th:src="|http://192.168.1.23/APACHE_IMG/tools/photo/${project.photoName}|"
+				alt="photo"></img>
+			</td>
+			<td><span th:text="${project.description}"></span></td>
 		</tr>
 	</table>
 	<!-- LINK -->

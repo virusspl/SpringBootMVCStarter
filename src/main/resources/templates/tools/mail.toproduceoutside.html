@@ -51,13 +51,13 @@ td {
 	<table>
 		<tr class="color">
 			<td>
-				<h1 th:text="|Projekt #${project.id} oczekuje na zatwierdzenie|"></h1>
+				<h1 th:text="|Projekt #${project.id} został zlecony na zewnątrz|"></h1>
 			</td>
 		</tr>
 		<tr>
 			<td><span
-				th:text="|Projekt został narysowany i oczekuje na zatwierdzenie. 
-				Poniżej szczegóły dotyczące projektu oraz link do projektu.|"></span></td>
+				th:text="|Projekt #${project.id} został zlecony do wykonania zewnętrznemu dostawcy. Proszę 
+			    potwierdzić jego gotowość w aplikacji. Link znajduje się poniżej.|"></span></td>
 		</tr>
 	</table>
 	<!-- DETAILS -->

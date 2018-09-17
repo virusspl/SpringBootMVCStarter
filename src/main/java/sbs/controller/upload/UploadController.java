@@ -34,7 +34,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import sbs.config.UploadProperties;
 import sbs.helpers.ImageHelper;
+import sbs.model.tools.ToolsProject;
 import sbs.model.users.User;
+import sbs.service.tools.ToolsProjectService;
 import sbs.service.users.AvatarService;
 import sbs.service.users.UserService;
 
@@ -58,6 +60,8 @@ public class UploadController {
 	ImageHelper imageHelper;
 	@Autowired
 	ServletContext servletContext;
+	@Autowired
+	ToolsProjectService toolsProjectService;
 
     @Autowired
     public UploadController(UploadProperties uploadProperties) {
@@ -224,6 +228,8 @@ public class UploadController {
 	public String onToolsPhotoUpload(@PathVariable("id") int id, MultipartFile file, RedirectAttributes redirectAttrs,
 			Locale locale) throws IOException {
 		
+		ToolsProject project = toolsProjectService.findById(id);
+		
 		// is image?
 		if (file.isEmpty() || !isImage(file)) {
 			redirectAttrs.addFlashAttribute("error", messageSource.getMessage("upload.bad.file.type", null, locale));
@@ -238,9 +244,6 @@ public class UploadController {
 				File hddFile = new File(tmpPath +"\\" + fileList.get(i));
 				System.out.println(tmpPath +"\\" + fileList.get(i));
 				hddFile.delete();
-				
-				
-				
 			}
 		}
 		
@@ -256,6 +259,11 @@ public class UploadController {
 			try (OutputStream out = new FileOutputStream(tempFile)) {
 				ImageIO.write(scale, "png", tempFile);
 			}
+			
+			
+			project.setPhotoName(tempFile.getName());
+			System.out.println("save " + project.getId() +": " + tempFile.getName() + " ("+project.getPhotoName()+")");
+			toolsProjectService.update(project);
 			
 			// say ok
 			redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("upload.success", null, locale));
