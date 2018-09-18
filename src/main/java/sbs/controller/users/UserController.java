@@ -3,8 +3,10 @@ package sbs.controller.users;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
@@ -190,7 +192,7 @@ public class UserController {
 	
 	private void mailNotifyPassword(User user, String password) throws UnknownHostException, MessagingException {
 		List<User> ccList = userService.findByAnyRole(new String[] { "ROLE_ADMIN" });
-		ArrayList<String> addressCCList = new ArrayList<>();
+		Set<String> addressCCList = new HashSet<>();
 		for (User sprv : ccList) {
 			addressCCList.add(sprv.getEmail());
 		}
