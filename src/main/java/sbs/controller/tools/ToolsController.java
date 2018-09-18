@@ -579,7 +579,14 @@ public class ToolsController {
 			throw new NotFoundException("Project not found");
 		}
 		
-		boolean isAssigned = userService.getAuthenticatedUser().getId() == project.getAssignedUser().getId();
+		boolean isAssigned;
+		
+		if(project.getAssignedUser() != null){
+			isAssigned = userService.getAuthenticatedUser().getId() == project.getAssignedUser().getId();	
+		}
+		else{
+			isAssigned = false;
+		}
 
 		// validate
 		if (bindingResult.hasErrors()) {
