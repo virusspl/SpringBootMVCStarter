@@ -1,8 +1,12 @@
 package sbs.controller.users;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -18,10 +22,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import javassist.NotFoundException;
+import sbs.model.tools.ToolsProject;
 import sbs.model.users.Role;
 import sbs.model.users.User;
+import sbs.service.mail.MailService;
 import sbs.service.users.RoleService;
 import sbs.service.users.UserService;
 
@@ -37,7 +45,10 @@ public class UserController {
 	MessageSource messageSource;
 	@Autowired
 	UsersCriteriaHolder criteriaHolder;
-	
+	@Autowired
+	MailService mailService;
+	@Autowired
+	TemplateEngine templateEngine;
 	
 	@ModelAttribute("availableRoles")
 	public List<Role> getAvailableRoles(){
@@ -163,8 +174,35 @@ public class UserController {
 		String hashedPassword = passwordEncoder.encode(userPasswordForm.getNewPassword());
 		user.setPassword(hashedPassword);
 		userService.update(user);
+		
+		
+		try {
+			mailNotifyPassword(user, userPasswordForm.getNewPassword());
+		} catch (Exception e) {
+			redirectAttrs.addFlashAttribute("warning",
+					messageSource.getMessage("notification.mail.send.error", null, locale) + ": " + e.getMessage());
+		}
+		
+		
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.password.changed", null, locale));
 		return "redirect:/users/edit/" + userPasswordForm.getId();
+	}
+	
+	private void mailNotifyPassword(User user, String password) throws UnknownHostException, MessagingException {
+		List<User> ccList = userService.findByAnyRole(new String[] { "ROLE_ADMIN" });
+		ArrayList<String> addressCCList = new ArrayList<>();
+		for (User sprv : ccList) {
+			addressCCList.add(sprv.getEmail());
+		}
+		Context context = new Context();
+		context.setVariable("host", InetAddress.getLocalHost().getHostAddress());
+		context.setVariable("user", user);
+		context.setVariable("pass", password);
+		
+		String body = templateEngine.process("users/mail.passwordset", context);
+		String[] to = {user.getEmail()};
+		mailService.sendEmail("webapp@atwsystem.pl", to, addressCCList.toArray(new String[0]),
+				"ADR Polska S.A. - Dane do logowania w aplikacij webowej", body);
 	}
 	
 
