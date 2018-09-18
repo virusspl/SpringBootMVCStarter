@@ -262,7 +262,6 @@ public class UploadController {
 			
 			
 			project.setPhotoName(tempFile.getName());
-			System.out.println("save " + project.getId() +": " + tempFile.getName() + " ("+project.getPhotoName()+")");
 			toolsProjectService.update(project);
 			
 			// say ok

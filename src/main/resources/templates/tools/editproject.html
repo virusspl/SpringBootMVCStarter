@@ -39,34 +39,32 @@
 		<!-- FORM -->
 		<form th:action="@{/tools/editproject}" method="post"
 			th:object="${toolsProjectCreateForm}">
-			<input type="hidden" th:field="*{id}"></input>
-			<input type="hidden" th:field="*{state}"></input>
-			<input type="hidden" th:field="*{assetName}"></input>
-			<input type="hidden" th:field="*{clientName}"></input>
-			<input type="hidden" th:field="*{creator}"></input>
-			<input type="hidden" th:field="*{thumbnailFileName}"></input>
-			
-			
+			<input type="hidden" th:field="*{id}"></input> <input type="hidden"
+				th:field="*{state}"></input> <input type="hidden"
+				th:field="*{assetName}"></input> <input type="hidden"
+				th:field="*{clientName}"></input> <input type="hidden"
+				th:field="*{creator}"></input> <input type="hidden"
+				th:field="*{thumbnailFileName}"></input>
+
+
 			<div class="row margin-top-20">
 				<div class="col-xs-3 col-sm-2">
 					<div class="form-group">
-						<label for="id">#id</label>
-						<span class="form-control" id="id" th:text="*{id}"></span>
+						<label for="id">#id</label> <span class="form-control" id="id"
+							th:text="*{id}"></span>
 					</div>
 				</div>
 				<div class="col-xs-6 col-sm-4">
 					<div class="form-group">
-						<label for="creator" th:text="#{general.creator}">lbl</label>
-						<span class="form-control" id="creator"
-							th:placeholder="#{general.creator}"
-							th:text="*{creator}"></span>
+						<label for="creator" th:text="#{general.creator}">lbl</label> <span
+							class="form-control" id="creator"
+							th:placeholder="#{general.creator}" th:text="*{creator}"></span>
 					</div>
 				</div>
 				<div class="col-xs-3 col-sm-2">
 					<div class="form-group">
-						<label for="state" th:text="#{general.state}">lbl</label>
-						<span class="form-control" id="state"
-							th:placeholder="#{general.state}"
+						<label for="state" th:text="#{general.state}">lbl</label> <span
+							class="form-control" id="state" th:placeholder="#{general.state}"
 							th:text="*{state}"></span>
 					</div>
 				</div>
@@ -119,9 +117,14 @@
 					<div class="form-group">
 						<!-- name -->
 						<label for="assetCode" th:text="#{tools.asset.code}">lbl</label> <input
+							sec:authorize="hasAnyRole('ROLE_TOOLSMANAGER', 'ROLE_ADMIN')"
 							type="text" class="form-control" id="assetCode" name="assetCode"
 							th:placeholder="#{tools.asset.code}" th:field="*{assetCode}"
-							autocomplete="off" />
+							autocomplete="off" /> <input
+							sec:authorize="hasAnyRole('ROLE_TOOLSNORMALUSER')" type="text"
+							class="form-control" id="assetCode" name="assetCode"
+							th:placeholder="#{tools.asset.code}" th:field="*{assetCode}"
+							autocomplete="off" readonly="true" />
 						<div th:errors="*{assetCode}"
 							class="alert alert-danger margin-top-5">error</div>
 					</div>
@@ -132,8 +135,9 @@
 						<label for="assetName" th:text="#{tools.asset.name}">lbl</label> <input
 							style="background-color: white;" type="text" class="form-control"
 							id="assetName" name="assetName"
-							th:placeholder="#{tools.asset.name}" th:field="${toolsProjectCreateForm.assetName}"
-							autocomplete="off" readonly="true" />
+							th:placeholder="#{tools.asset.name}"
+							th:field="${toolsProjectCreateForm.assetName}" autocomplete="off"
+							readonly="true" />
 						<div th:errors="*{assetName}"
 							class="alert alert-danger margin-top-5">error</div>
 					</div>
@@ -145,9 +149,15 @@
 					<div class="form-group">
 						<!-- name -->
 						<label for="clientCode" th:text="#{general.client.code}">lbl</label>
-						<input type="text" class="form-control" id="clientCode"
+						<input
+							sec:authorize="hasAnyRole('ROLE_TOOLSMANAGER', 'ROLE_ADMIN')"
+							type="text" class="form-control" id="clientCode"
 							name="clientCode" th:placeholder="#{general.client.code}"
-							th:field="*{clientCode}" autocomplete="off" />
+							th:field="*{clientCode}" autocomplete="off" /> <input
+							sec:authorize="hasAnyRole('ROLE_TOOLSNORMALUSER')" type="text"
+							class="form-control" id="clientCode" name="clientCode"
+							th:placeholder="#{general.client.code}" th:field="*{clientCode}"
+							autocomplete="off" readonly="true" />
 						<div th:errors="*{clientCode}"
 							class="alert alert-danger margin-top-5">error</div>
 					</div>
@@ -158,7 +168,8 @@
 						<label for="clientName" th:text="#{general.client.name}">lbl</label>
 						<input style="background-color: white;" type="text"
 							class="form-control" id="clientName" name="clientName"
-							th:placeholder="#{general.client.name}" th:field="${toolsProjectCreateForm.clientName}"
+							th:placeholder="#{general.client.name}"
+							th:field="${toolsProjectCreateForm.clientName}"
 							autocomplete="off" readonly="true" />
 
 					</div>
@@ -182,19 +193,28 @@
 					<div class="form-group">
 						<label for="priority" th:text="#{general.priority}">lbl</label>
 						<div class="spinner" data-trigger="spinner" id="spinner">
-							<input id="priority" name="priority"
+							<input
+								sec:authorize="hasAnyRole('ROLE_TOOLSMANAGER', 'ROLE_ADMIN')"
+								id="priority" name="priority"
 								th:placeholder="#{general.priority}" th:field="*{priority}"
 								class="form-control" type="text" value="1" data-rule="quantity"
-								data-min="1" data-max="100"></input>
+								data-min="1" data-max="100"></input> <input
+								sec:authorize="hasAnyRole('ROLE_TOOLSNORMALUSER')" id="priority"
+								name="priority" th:placeholder="#{general.priority}"
+								th:field="*{priority}" class="form-control" type="text"
+								value="1" data-rule="quantity" data-min="1" data-max="100"
+								readonly="true"></input>
 						</div>
 						<div th:errors="*{priority}"
 							class="alert alert-danger margin-top-5">error</div>
 					</div>
 				</div>
 				<div class="col-xs-9 col-sm-6">
-					<div class="form-group">
+					<div class="form-group"
+					sec:authorize="hasAnyRole('ROLE_TOOLSMANAGER', 'ROLE_ADMIN')">
 						<label for="assignedUser" th:text="#{tools.assigneduser}">User</label>
-						<select class="form-control" id="assignedUser" name="assignedUser"
+						<select
+							class="form-control" id="assignedUser" name="assignedUser"
 							th:placeholder="#{tools.assigneduser}" th:field="*{assignedUser}">
 							<option value="0" th:text="|#{action.choose}...|"></option>
 							<option th:each="obj,stat : ${toolsUsers}"
@@ -206,6 +226,9 @@
 						<div th:errors="*{assignedUser}"
 							class="alert alert-danger margin-top-5">error</div>
 					</div>
+					<input sec:authorize="hasAnyRole('ROLE_TOOLSNORMALUSER')"
+						type="hidden" id="assignedUser" name="assignedUser"
+						th:field="*{assignedUser}"></input>
 				</div>
 			</div>
 			<div class="row margin-top-20">
@@ -213,18 +236,25 @@
 					<a th:href="@{/tools/dispatch}" class="btn btn-link btn-sm"> <span
 						class="glyphicon glyphicon-menu-left"></span> <span
 						th:text="#{action.back}">back</span>
-					</a>
-					<a th:href="@{'/tools/edit/photos/' + ${toolsProjectCreateForm.id}}"
+					</a> <a sec:authorize="hasAnyRole('ROLE_TOOLSMANAGER', 'ROLE_ADMIN')"
+						th:href="@{'/tools/edit/photos/' + ${toolsProjectCreateForm.id}}"
 						class="btn btn-info btn-sm"> <span
 						class="glyphicon glyphicon-film"></span> <span
 						th:text="#{action.manage.photos}">back</span>
-					</a>
-					<a th:href="|@{/tools/showproject/}${toolsProjectCreateForm.id}|"
+					</a> <a th:href="|@{/tools/showproject/}${toolsProjectCreateForm.id}|"
 						class="btn btn-info btn-sm"> <span
 						class="glyphicon glyphicon-search"></span> <span
 						th:text="#{action.show}">back</span>
 					</a>
-					<button class="btn btn-primary btn-sm" type="submit" name="save">
+					<button
+						sec:authorize="hasAnyRole('ROLE_TOOLSMANAGER', 'ROLE_ADMIN')"
+						class="btn btn-primary btn-sm" type="submit" name="save">
+						<span class="glyphicon glyphicon-ok"></span> <span
+							th:text="#{action.save}">create</span>
+					</button>
+					<button sec:authorize="hasAnyRole('ROLE_TOOLSNORMALUSER')"
+						th:if="(${toolsProjectCreateForm.assigned} == true)"
+						class="btn btn-primary btn-sm" type="submit" name="save">
 						<span class="glyphicon glyphicon-ok"></span> <span
 							th:text="#{action.save}">create</span>
 					</button>

@@ -192,7 +192,6 @@ public class ToolsController {
 			throw new NotFoundException("Project not found");
 		}
 		boolean isAssigned;
-
 		if (project.getAssignedUser() != null) {
 			isAssigned = userService.getAuthenticatedUser().getId() == project.getAssignedUser().getId();
 		} else {
@@ -248,20 +247,22 @@ public class ToolsController {
 		toolsProjectCreateForm.setPriority(project.getPriority());
 		if (project.getAssignedUser() != null) {
 			toolsProjectCreateForm.setAssignedUser(project.getAssignedUser().getId());
+			toolsProjectCreateForm.setAssigned(userService.getAuthenticatedUser().getId() == project.getAssignedUser().getId());
 		} else {
 			toolsProjectCreateForm.setAssignedUser(0L);
+			toolsProjectCreateForm.setAssigned(false);
 		}
-
 		model.addAttribute("toolsUsers", userService.findByRole("ROLE_TOOLSNORMALUSER"));
 		model.addAttribute("toolsProjectCreateForm", toolsProjectCreateForm);
 		return "tools/editproject";
 	}
 
-	private void repeatConstants(ToolsProject project, ToolsProjectCreateForm form) {
+	private void repeatConstants(ToolsProject project, ToolsProjectCreateForm form, boolean isAssigned) {
 		form.setCreationDate(project.getCreationDate());
 		form.setUpdateDate(project.getCreationDate());
 		form.setAssetName(project.getAssetName());
 		form.setClientName(project.getClientName());
+		form.assigned = isAssigned;
 	}
 
 	@RequestMapping(value = "/projectaction", params = { "markAsDone" }, method = RequestMethod.POST)
@@ -577,10 +578,12 @@ public class ToolsController {
 		if (project == null) {
 			throw new NotFoundException("Project not found");
 		}
+		
+		boolean isAssigned = userService.getAuthenticatedUser().getId() == project.getAssignedUser().getId();
 
 		// validate
 		if (bindingResult.hasErrors()) {
-			repeatConstants(project, toolsProjectCreateForm);
+			repeatConstants(project, toolsProjectCreateForm, isAssigned);
 			model.addAttribute("toolsUsers", userService.findByRole("ROLE_TOOLSNORMALUSER"));
 			return "tools/editproject";
 		}
@@ -590,7 +593,7 @@ public class ToolsController {
 			User newAssignedUser = userService.findById(toolsProjectCreateForm.getAssignedUser());
 			if (newAssignedUser == null) {
 				bindingResult.rejectValue("assignedUser", "error.user.not.found", "ERROR");
-				repeatConstants(project, toolsProjectCreateForm);
+				repeatConstants(project, toolsProjectCreateForm, isAssigned);
 				model.addAttribute("toolsUsers", userService.findByRole("ROLE_TOOLSNORMALUSER"));
 				return "tools/editproject";
 			} else if (project.getAssignedUser() == null
@@ -619,7 +622,7 @@ public class ToolsController {
 			X3Client client = x3Service.findClientByCode("ATW", toolsProjectCreateForm.getClientCode().trim());
 			if (client == null) {
 				bindingResult.rejectValue("clientCode", "error.client.not.found", "ERROR");
-				repeatConstants(project, toolsProjectCreateForm);
+				repeatConstants(project, toolsProjectCreateForm, isAssigned);
 				model.addAttribute("toolsUsers", userService.findByRole("ROLE_TOOLSNORMALUSER"));
 				return "tools/editproject";
 			} else {
@@ -640,7 +643,7 @@ public class ToolsController {
 						toolsProjectCreateForm.getAssetCode().trim());
 				if (workstation == null) {
 					bindingResult.rejectValue("assetCode", "error.asset.not.found", "ERROR");
-					repeatConstants(project, toolsProjectCreateForm);
+					repeatConstants(project, toolsProjectCreateForm, isAssigned);
 					model.addAttribute("toolsUsers", userService.findByRole("ROLE_TOOLSNORMALUSER"));
 					return "tools/editproject";
 				} else {
@@ -659,7 +662,7 @@ public class ToolsController {
 		} else if (!toolsProjectCreateForm.getCechOld().trim().toUpperCase().equals(project.getCechOld())) {
 			if (toolsProjectService.isCechOldInUse(toolsProjectCreateForm.getCechOld().trim())) {
 				bindingResult.rejectValue("cechOld", "tools.error.cech.busy", "ERROR");
-				repeatConstants(project, toolsProjectCreateForm);
+				repeatConstants(project, toolsProjectCreateForm, isAssigned);
 				model.addAttribute("toolsUsers", userService.findByRole("ROLE_TOOLSNORMALUSER"));
 				return "tools/editproject";
 			} else {
@@ -673,7 +676,7 @@ public class ToolsController {
 		} else if (!toolsProjectCreateForm.getCechNew().trim().toUpperCase().equals(project.getCechNew())) {
 			if (toolsProjectService.isCechNewInUse(toolsProjectCreateForm.getCechNew().trim())) {
 				bindingResult.rejectValue("cechNew", "tools.error.cech.busy", "ERROR");
-				repeatConstants(project, toolsProjectCreateForm);
+				repeatConstants(project, toolsProjectCreateForm, isAssigned);
 				model.addAttribute("toolsUsers", userService.findByRole("ROLE_TOOLSNORMALUSER"));
 				return "tools/editproject";
 			} else {

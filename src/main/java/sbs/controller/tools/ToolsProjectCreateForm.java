@@ -10,6 +10,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 public class ToolsProjectCreateForm {
 
+	boolean assigned;
+	
 	@Size(max = 30)
 	String cechOld;
 	@Size(max = 30)
@@ -34,6 +36,15 @@ public class ToolsProjectCreateForm {
 	Timestamp updateDate;
 	
 	int id;
+
+
+	public boolean isAssigned() {
+		return assigned;
+	}
+
+	public void setAssigned(boolean assigned) {
+		this.assigned = assigned;
+	}
 
 	public ToolsProjectCreateForm() {
 
