@@ -361,9 +361,9 @@
 									<th th:text="#{tools.cech.new}"></th>
 									<th th:text="#{tools.asset.code}"></th>
 									<th th:text="#{general.client.code}"></th>
-
 									<th th:text="#{general.state}"></th>
 									<th th:text="#{general.date.lastupdate}"></th>
+									<th th:text="#{general.description}"></th>
 								</tr>
 							</thead>
 							<tfoot>
@@ -377,6 +377,7 @@
 									<th th:text="#{general.client.code}"></th>
 									<th th:text="#{general.state}"></th>
 									<th th:text="#{general.date.lastupdate}"></th>
+									<th th:text="#{general.description}"></th>
 								</tr>
 							</tfoot>
 							<tbody>
@@ -395,6 +396,7 @@
 									<td><span th:text="${project.state.description}"></span></td>
 									<td><span
 										th:text="${#dates.format(project.updateDate, 'yyyy.MM.dd HH:mm')}"></span></td>
+									<td><span th:text="${project.description}"></span></td>	
 								</tr>
 
 							</tbody>
