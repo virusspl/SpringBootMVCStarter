@@ -1,5 +1,6 @@
 package sbs.controller.tools;
 
+import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Timestamp;
@@ -214,7 +215,7 @@ public class ToolsController {
 
 	@RequestMapping("/edit/photos/{id}")
 	@Transactional
-	public String showBhpTicketPhotosForm(@PathVariable("id") int id, Model model) throws NotFoundException {
+	public String showToolsPhotosForm(@PathVariable("id") int id, Model model) throws NotFoundException {
 		ToolsProject project = toolsProjectService.findById(id);
 		if (project == null) {
 			throw new NotFoundException("Project not found");
@@ -222,6 +223,50 @@ public class ToolsController {
 		model.addAttribute("project", project);
 		return "tools/photos";
 	}
+	
+	@RequestMapping("/edit/pdf/{id}")
+	@Transactional
+	public String showToolsPdfForm(@PathVariable("id") int id, Model model) throws NotFoundException {
+		ToolsProject project = toolsProjectService.findById(id);
+		if (project == null) {
+			throw new NotFoundException("Project not found");
+		}
+		model.addAttribute("project", project);
+		return "tools/setpdf";
+	}
+	
+	
+	@RequestMapping(value = ("/edit/pdf/{id}"),  method = RequestMethod.POST)
+	public String setPdfPath(@PathVariable("id") int id, @RequestParam String pdfpath, RedirectAttributes redirectAttrs,
+			Locale locale) throws NotFoundException {
+		// not empty
+		if (pdfpath.isEmpty()) {
+			redirectAttrs.addFlashAttribute("error", messageSource.getMessage("tools.error.missingfilename", null, locale));
+			return "redirect:/tools/edit/pdf/" + id;
+		}
+		// exist
+		File file = new File(pdfpath);
+		if (!file.exists()) {
+			redirectAttrs.addFlashAttribute("error", messageSource.getMessage("tools.error.fileinaccessibile", null, locale) + ": " + pdfpath);
+			return "redirect:/tools/edit/pdf/" + id;
+		}
+		// project
+		ToolsProject project = toolsProjectService.findById(id);
+		if (project == null) {
+			throw new NotFoundException("Project not found");
+		}
+		
+		project.setPdfUrl(pdfpath);
+		toolsProjectService.update(project);
+		
+			// say ok
+			redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale) +": " + pdfpath);
+
+		return "redirect:/tools/showproject/" + id;
+	}
+	
+	
+	
 
 	@RequestMapping("/editproject/{id}")
 	@Transactional
@@ -717,6 +762,17 @@ public class ToolsController {
 		return "redirect:/tools/editproject/" + project.getId();
 	}
 
+	@RequestMapping(value = "/alllist")
+	@Transactional
+	public String allView(Model model, Locale locale) {
+		
+		List<ToolsProject> list = toolsProjectService.findAllToolsProjects();
+		model.addAttribute("list", list);
+		model.addAttribute("listtitle", messageSource.getMessage("tools.projects.list.all", null, locale));
+		
+		return "tools/dispatch";
+	}
+	
 	@RequestMapping(value = "/pendinglist")
 	@Transactional
 	public String managerView(Model model, Locale locale) {

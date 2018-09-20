@@ -13,4 +13,5 @@ public interface ToolsProjectService extends GenericService<ToolsProject, Intege
 	public List<ToolsProject> findPendingToolsProjectsByUserDescByPriority(User user);
 	public boolean isCechOldInUse(String cechOld);
 	public boolean isCechNewInUse(String cechNew);
+	public List<ToolsProject> findAllToolsProjects();
 }

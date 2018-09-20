@@ -39,6 +39,9 @@ public class ToolsProject {
 	@Column(name = "tp_id")
 	private int id;
 	
+	@Column(name = "tp_pdf_url", length = 255, nullable = true)
+	private String pdfUrl;
+	
 	@Column(name = "tp_cech_old", length = 30, nullable = true)
 	private String cechOld;
 	
@@ -214,6 +217,14 @@ public class ToolsProject {
 
 	public void setDifficulty(int difficulty) {
 		this.difficulty = difficulty;
+	}
+	
+	public String getPdfUrl() {
+		return pdfUrl;
+	}
+
+	public void setPdfUrl(String pdfUrl) {
+		this.pdfUrl = pdfUrl;
 	}
 
 	@Override

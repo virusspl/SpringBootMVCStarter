@@ -51,6 +51,11 @@ public class ToolsProjectServiceImpl extends GenericServiceAdapter<ToolsProject,
 		return toolsProjectRepository.findToolsProjectsByStateOrder(order);
 	}
 
+	@Override
+	public List<ToolsProject> findAllToolsProjects() {
+		return toolsProjectRepository.findAllToolsProjects();
+	}
+
 
 	
 

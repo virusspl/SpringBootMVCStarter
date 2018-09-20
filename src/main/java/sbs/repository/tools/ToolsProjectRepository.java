@@ -13,6 +13,7 @@ public interface ToolsProjectRepository extends GenericRepository<ToolsProject,I
 	List<ToolsProject> findPendingToolsProjectsByUserDescByPriority(User user);
 	ToolsProject findByCechOld(String cechOld);
 	ToolsProject findByCechNew(String cechNew);
+	List<ToolsProject> findAllToolsProjects();
 	
 	
 }

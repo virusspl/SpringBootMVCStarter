@@ -32,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javassist.NotFoundException;
 import sbs.config.UploadProperties;
 import sbs.helpers.ImageHelper;
 import sbs.model.tools.ToolsProject;
@@ -171,6 +172,18 @@ public class UploadController {
 				picture = (new DefaultResourceLoader()).getResource(bhpPhotoPath + "/" + name);
 				response.setHeader("Content-Type", URLConnection.guessContentTypeFromName(picture.getFilename()));
 				IOUtils.copy(picture.getInputStream(), response.getOutputStream());
+	}
+	
+	@RequestMapping(value="/tools/getpdf/{id}")
+	public void getToolsPdf(HttpServletResponse response, @PathVariable int id) throws IOException, NotFoundException {
+		ToolsProject project = toolsProjectService.findById(id);
+		if (project == null) {
+			throw new NotFoundException("Project not found");
+		}
+		Resource file;
+		file = (new DefaultResourceLoader()).getResource("file://"+project.getPdfUrl());
+		response.setHeader("Content-Type", URLConnection.guessContentTypeFromName(file.getFilename()));
+		IOUtils.copy(file.getInputStream(), response.getOutputStream());
 	}
 	
 		

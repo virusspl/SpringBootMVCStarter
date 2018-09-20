@@ -74,6 +74,11 @@
 						style="border: 1px solid grey;"></img>
 
 				</div>
+				<div class="col-xs-12 col-xs-8">
+					<a class="btn btn-sm btn-primary margin-top-10" th:if="${project.pdfUrl}" target="_blank" th:href="|@{/tools/getpdf/}${project.id}|">
+					<span th:text="#{general.downloadpdf}"></span>
+					</a>
+				</div>
 			</div>
 			<div class="underline margin-top-10 margin-bottom-20"></div>
 			<div class="row">
@@ -314,6 +319,14 @@
 						<span class="glyphicon glyphicon-ok"></span> <span
 							th:text="#{tools.received}"></span>
 					</button>
+					<!-- APPEND PDF -->
+					<a sec:authorize="hasAnyRole('ROLE_TOOLSMANAGER', 'ROLE_ADMIN')"
+						th:if="(${project.state.order} &lt; 60)"
+						th:href="@{'/tools/edit/pdf/' + *{id}}"
+						class="btn btn-primary btn-sm"> 
+						<span class="glyphicon glyphicon-tags"></span> <span
+							th:text="#{tools.appendpdf}"></span>
+					</a>
 				</div>
 			</div>
 

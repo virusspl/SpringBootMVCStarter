@@ -79,6 +79,16 @@ public class ToolsProjectRepositoryImpl extends GenericRepositoryAdapter<ToolsPr
 		}
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public List<ToolsProject> findAllToolsProjects() {
+		Criteria crit = currentSession().createCriteria(ToolsProject.class, "project");
+		crit.createAlias("project.state", "state");
+		crit.add(Restrictions.lt("state.order", 90));
+		return crit.list();
+	}
+
 
 
 }

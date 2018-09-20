@@ -24,157 +24,181 @@
 		<script th:src="@{/datatables/pdfmake.min.js}" type="text/javascript"></script>
 		<script th:src="@{/datatables/vfs_fonts.js}" type="text/javascript"></script>
 		<script th:if="__${#locale}__ == 'pl'">
-			$('#srv').DataTable({
-				language : {
-					url : getUrl() + "polish.json",
-				},
-				order : [ [ 0, 'desc' ] ],
-				dom : 'Bfrtipp',
-				buttons : [ {
-					extend : 'copy',
-					text : 'Kopiuj do schowka'
-				}, {
-					extend : 'csv',
-					text : 'CSV'
-				}, {
-					extend : 'excel',
-					text : 'Excel'
-				}, {
-					extend : 'pdf',
-					text : 'PDF'
-				}, {
-					extend : 'print',
-					text : 'Drukuj',
-					customize: function ( win ) {
-						/* Style for the table */
-		                $( win.document.body )
-		                    .addClass('asset-print-body')
-		                    .css(  { 
-		                    	backgroundImage: 'none',
-		                    	width: '100%'
-		                    	} )
-		                    ;
-		                /* Style for the table */
-		                $( win.document.body )
-		                    .find( 'table' )
-		                    .addClass( 'table' )
-		                    .css( {
-		                        width: '100%'
-		                    } );
-		                
-		                /* Style for the table */
-		                $( win.document.body )
-		                    .find( 'td' )
-		                    .addClass( 'cell' )
-		                    .css( {
-		                    	borderBottom: '1px dotted black',
-		                    	textAlign: 'center'
-		                    } );
-		            }
-				} ]
-			});
+			$('#srv')
+					.DataTable(
+							{
+								language : {
+									url : getUrl() + "polish.json",
+								},
+								order : [ [ 0, 'desc' ] ],
+								dom : 'Bfrtipp',
+								buttons : [
+										{
+											extend : 'copy',
+											text : 'Kopiuj do schowka'
+										},
+										{
+											extend : 'csv',
+											text : 'CSV'
+										},
+										{
+											extend : 'excel',
+											text : 'Excel'
+										},
+										{
+											extend : 'pdf',
+											text : 'PDF'
+										},
+										{
+											extend : 'print',
+											text : 'Drukuj',
+											customize : function(win) {
+												/* Style for the table */
+												$(win.document.body)
+														.addClass(
+																'asset-print-body')
+														.css(
+																{
+																	backgroundImage : 'none',
+																	width : '100%'
+																});
+												/* Style for the table */
+												$(win.document.body).find(
+														'table').addClass(
+														'table').css({
+													width : '100%'
+												});
+
+												/* Style for the table */
+												$(win.document.body)
+														.find('td')
+														.addClass('cell')
+														.css(
+																{
+																	borderBottom : '1px dotted black',
+																	textAlign : 'center'
+																});
+											}
+										} ]
+							});
 		</script>
 		<script th:if="__${#locale}__ == 'en'">
-			$('#srv').DataTable({
-				language : {
-					url : getUrl() + "english.json"
-				},
-				order : [ [ 0, 'desc' ] ],
-				dom : 'Bfrtipp',
-				buttons : [ {
-					extend : 'copy',
-					text : 'Copy to clipboard'
-				}, {
-					extend : 'csv',
-					text : 'CSV'
-				}, {
-					extend : 'excel',
-					text : 'Excel'
-				}, {
-					extend : 'pdf',
-					text : 'PDF'
-				}, {
-					extend : 'print',
-					text : 'Print',
-					customize: function ( win ) {
-						/* Style for the table */
-		                $( win.document.body )
-		                    .addClass('asset-print-body')
-		                    .css(  { 
-		                    	backgroundImage: 'none',
-		                    	width: '100%'
-		                    	} )
-		                    ;
-		                /* Style for the table */
-		                $( win.document.body )
-		                    .find( 'table' )
-		                    .addClass( 'table' )
-		                    .css( {
-		                        width: '100%'
-		                    } );
-		                
-		                /* Style for the table */
-		                $( win.document.body )
-		                    .find( 'td' )
-		                    .addClass( 'cell' )
-		                    .css( {
-		                    	borderBottom: '1px dotted black',
-		                    	textAlign: 'center'
-		                    } );
-		            }
-				} ]
-			});
+			$('#srv')
+					.DataTable(
+							{
+								language : {
+									url : getUrl() + "english.json"
+								},
+								order : [ [ 0, 'desc' ] ],
+								dom : 'Bfrtipp',
+								buttons : [
+										{
+											extend : 'copy',
+											text : 'Copy to clipboard'
+										},
+										{
+											extend : 'csv',
+											text : 'CSV'
+										},
+										{
+											extend : 'excel',
+											text : 'Excel'
+										},
+										{
+											extend : 'pdf',
+											text : 'PDF'
+										},
+										{
+											extend : 'print',
+											text : 'Print',
+											customize : function(win) {
+												/* Style for the table */
+												$(win.document.body)
+														.addClass(
+																'asset-print-body')
+														.css(
+																{
+																	backgroundImage : 'none',
+																	width : '100%'
+																});
+												/* Style for the table */
+												$(win.document.body).find(
+														'table').addClass(
+														'table').css({
+													width : '100%'
+												});
+
+												/* Style for the table */
+												$(win.document.body)
+														.find('td')
+														.addClass('cell')
+														.css(
+																{
+																	borderBottom : '1px dotted black',
+																	textAlign : 'center'
+																});
+											}
+										} ]
+							});
 		</script>
 		<script th:if="__${#locale}__ == 'it'">
-			$('#srv').DataTable({
-				language : {
-					url : getUrl() + "italian.json"
-				},
-				order : [ [ 0, 'desc' ] ],
-				dom : 'Bfrtipp',
-				buttons : [ {
-					extend : 'copy',
-					text : 'Copia'
-				}, {
-					extend : 'csv',
-					text : 'CSV'
-				}, {
-					extend : 'excel',
-					text : 'Excel'
-				}, {
-					extend : 'pdf',
-					text : 'PDF'
-				}, {
-					extend : 'print',
-					text : 'Stampa',
-					customize: function ( win ) {
-						/* Style for the table */
-		                $( win.document.body )
-		                    .addClass('asset-print-body')
-		                    .css(  { 
-		                    	backgroundImage: 'none',
-		                    	width: '100%'
-		                    	} )
-		                    ;
-		                /* Style for the table */
-		                $( win.document.body )
-		                    .find( 'table' )
-		                    .addClass( 'table' )
-		                    .css( {
-		                        width: '100%'
-		                    } );
-		                
-		                /* Style for the table */
-		                $( win.document.body )
-		                    .find( 'td' )
-		                    .addClass( 'cell' )
-		                    .css( {
-		                    	borderBottom: '1px dotted black',
-		                    	textAlign: 'center'
-		                    } );
-		            }
-				} ]
-			});
+			$('#srv')
+					.DataTable(
+							{
+								language : {
+									url : getUrl() + "italian.json"
+								},
+								order : [ [ 0, 'desc' ] ],
+								dom : 'Bfrtipp',
+								buttons : [
+										{
+											extend : 'copy',
+											text : 'Copia'
+										},
+										{
+											extend : 'csv',
+											text : 'CSV'
+										},
+										{
+											extend : 'excel',
+											text : 'Excel'
+										},
+										{
+											extend : 'pdf',
+											text : 'PDF'
+										},
+										{
+											extend : 'print',
+											text : 'Stampa',
+											customize : function(win) {
+												/* Style for the table */
+												$(win.document.body)
+														.addClass(
+																'asset-print-body')
+														.css(
+																{
+																	backgroundImage : 'none',
+																	width : '100%'
+																});
+												/* Style for the table */
+												$(win.document.body).find(
+														'table').addClass(
+														'table').css({
+													width : '100%'
+												});
+
+												/* Style for the table */
+												$(win.document.body)
+														.find('td')
+														.addClass('cell')
+														.css(
+																{
+																	borderBottom : '1px dotted black',
+																	textAlign : 'center'
+																});
+											}
+										} ]
+							});
 		</script>
 	</div>
 	<div layout:fragment="content">
@@ -244,13 +268,14 @@
 					<span th:text="#{tools.projects.list.cancelled}">begin</span>
 				</a>
 				<!-- NEW LINE -->
-				<br/>
+				<br />
 				<!-- FORWARDED OUTSIDE -->
 				<a class="btn btn-info btn-md margin-top-5"
 					th:href="@{/tools/fwoutsidelist}"> <span
-					class="glyphicon glyphicon-fast-forward" style="margin-right: 10px;"></span>
-					<span th:text="#{tools.projects.list.forwarded.outside}">begin</span>
-				</a>				
+					class="glyphicon glyphicon-fast-forward"
+					style="margin-right: 10px;"></span> <span
+					th:text="#{tools.projects.list.forwarded.outside}">begin</span>
+				</a>
 				<!-- FORWARDED ADR -->
 				<a class="btn btn-info btn-md margin-top-5"
 					th:href="@{/tools/fwadrlist}"> <span
@@ -268,6 +293,12 @@
 					th:href="@{/tools/producedlist}"> <span
 					class="glyphicon glyphicon-ok" style="margin-right: 10px;"></span>
 					<span th:text="#{tools.projects.list.produced}">begin</span>
+				</a>
+				<!-- ALL -->
+				<a class="btn btn-primary btn-md margin-top-5"
+					th:href="@{/tools/alllist}"> <span
+					class="glyphicon glyphicon-th-list" style="margin-right: 10px;"></span>
+					<span th:text="#{tools.projects.list.all}">begin</span>
 				</a>
 			</div>
 		</div>
@@ -293,6 +324,7 @@
 									<th th:text="#{tools.cech.new}"></th>
 									<th th:text="#{tools.asset.code}"></th>
 									<th th:text="#{general.client.code}"></th>
+									<th th:text="PDF"></th>
 									<th th:text="#{general.state}"></th>
 									<th th:text="#{general.date.lastupdate}"></th>
 								</tr>
@@ -306,6 +338,7 @@
 									<th th:text="#{tools.cech.new}"></th>
 									<th th:text="#{tools.asset.code}"></th>
 									<th th:text="#{general.client.code}"></th>
+									<th th:text="PDF"></th>
 									<th th:text="#{general.state}"></th>
 									<th th:text="#{general.date.lastupdate}"></th>
 								</tr>
@@ -313,7 +346,7 @@
 							<tbody>
 								<div th:each="key : ${userProjectMap.keySet()}">
 									<tr>
-										<td colspan="9" style="background-color: #F7F7F7;"><span
+										<td colspan="10" style="background-color: #F7F7F7;"><span
 											th:text="${key}"></span></td>
 									</tr>
 									<tr th:each="project: ${userProjectMap.get(key)}">
@@ -328,6 +361,11 @@
 										<td><span th:text="${project.cechNew}"></span></td>
 										<td><span th:text="${project.assetCode}"></span></td>
 										<td><span th:text="${project.clientCode}"></span></td>
+										<td><a class="btn btn-sm btn-default"
+											th:if="${project.pdfUrl}" target="_blank"
+											th:href="|@{/tools/getpdf/}${project.id}|"> <span
+												th:text="#{general.downloadpdf}"></span>
+										</a></td>
 										<td><span th:text="${project.state.description}"></span></td>
 										<td><span
 											th:text="${#dates.format(project.updateDate, 'yyyy.MM.dd HH:mm')}"></span></td>
@@ -361,6 +399,7 @@
 									<th th:text="#{tools.cech.new}"></th>
 									<th th:text="#{tools.asset.code}"></th>
 									<th th:text="#{general.client.code}"></th>
+									<th th:text="PDF"></th>
 									<th th:text="#{general.state}"></th>
 									<th th:text="#{general.date.lastupdate}"></th>
 									<th th:text="#{general.description}"></th>
@@ -375,6 +414,7 @@
 									<th th:text="#{tools.cech.new}"></th>
 									<th th:text="#{tools.asset.code}"></th>
 									<th th:text="#{general.client.code}"></th>
+									<th th:text="PDF"></th>
 									<th th:text="#{general.state}"></th>
 									<th th:text="#{general.date.lastupdate}"></th>
 									<th th:text="#{general.description}"></th>
@@ -393,10 +433,15 @@
 									<td><span th:text="${project.cechNew}"></span></td>
 									<td><span th:text="${project.assetCode}"></span></td>
 									<td><span th:text="${project.clientCode}"></span></td>
+										<td><a class="btn btn-sm btn-default"
+											th:if="${project.pdfUrl}" target="_blank"
+											th:href="|@{/tools/getpdf/}${project.id}|"> <span
+												th:text="#{general.downloadpdf}"></span>
+										</a></td>									
 									<td><span th:text="${project.state.description}"></span></td>
 									<td><span
 										th:text="${#dates.format(project.updateDate, 'yyyy.MM.dd HH:mm')}"></span></td>
-									<td><span th:text="${project.description}"></span></td>	
+									<td><span th:text="${project.description}"></span></td>
 								</tr>
 
 							</tbody>
