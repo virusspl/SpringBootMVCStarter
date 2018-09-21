@@ -31,7 +31,7 @@
 									url : getUrl() + "polish.json",
 								},
 								order : [ [ 0, 'desc' ] ],
-								dom : 'Bfrtipp',
+								dom : 'Bfrtip',
 								buttons : [
 										{
 											extend : 'copy',
@@ -46,8 +46,8 @@
 											text : 'Excel'
 										},
 										{
-											extend : 'pdf',
-											text : 'PDF'
+											extend: 'pdfHtml5',
+							                orientation: 'landscape'
 										},
 										{
 											extend : 'print',
@@ -105,8 +105,8 @@
 											text : 'Excel'
 										},
 										{
-											extend : 'pdf',
-											text : 'PDF'
+											extend: 'pdfHtml5',
+							                orientation: 'landscape'
 										},
 										{
 											extend : 'print',
@@ -164,8 +164,8 @@
 											text : 'Excel'
 										},
 										{
-											extend : 'pdf',
-											text : 'PDF'
+											extend: 'pdfHtml5',
+							                orientation: 'landscape'
 										},
 										{
 											extend : 'print',
@@ -389,7 +389,7 @@
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="table-responsive margin-top-10">
-						<table id="srv" class="display nowrap">
+						<table id="srv" class="display">
 							<thead>
 								<tr>
 									<th th:text="|#id|"></th>
