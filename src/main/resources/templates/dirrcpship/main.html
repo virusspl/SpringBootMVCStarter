@@ -195,6 +195,8 @@
 									<th th:text="#{general.client.name}">head</th>
 									<th th:text="#{general.country}">head</th>
 									<th th:text="#{dirrcpship.stock}">head</th>
+									<th th:text="#{dirrcpship.ordered}">head</th>
+									<th th:text="#{dirrcpship.lefttosend}">head</th>
 									<th th:text="#{dirrcpship.toGive}">head</th>
 								</tr>
 							</thead>
@@ -207,6 +209,8 @@
 									<th th:text="#{general.client.name}">head</th>
 									<th th:text="#{general.country}">head</th>
 									<th th:text="#{dirrcpship.stock}">head</th>
+									<th th:text="#{dirrcpship.ordered}">head</th>
+									<th th:text="#{dirrcpship.lefttosend}">head</th>
 									<th th:text="#{dirrcpship.toGive}">head</th>
 								</tr>
 							</tfoot>
@@ -220,6 +224,8 @@
 									<td><span th:text="${line.clientName}"></span></td>
 									<td><span th:text="${line.country}"></span></td>
 									<td><span th:text="${line.magStock}"></span></td>
+									<td><span th:text="${line.orderedQuantity}"></span></td>
+									<td><span th:text="${line.leftToSend}"></span></td>
 									<td><span th:text="${line.toGive}"></span></td>
 								</tr>
 							</tbody>
@@ -249,6 +255,8 @@
 									<th th:text="#{general.client.name}">head</th>
 									<th th:text="#{general.country}">head</th>
 									<th th:text="#{dirrcpship.stock}">head</th>
+									<th th:text="#{dirrcpship.ordered}">head</th>
+									<th th:text="#{dirrcpship.lefttosend}">head</th>									
 									<th th:text="#{dirrcpship.toGive}">head</th>
 								</tr>
 							</thead>
@@ -261,6 +269,8 @@
 									<th th:text="#{general.client.name}">head</th>
 									<th th:text="#{general.country}">head</th>
 									<th th:text="#{dirrcpship.stock}">head</th>
+									<th th:text="#{dirrcpship.ordered}">head</th>
+									<th th:text="#{dirrcpship.lefttosend}">head</th>									
 									<th th:text="#{dirrcpship.toGive}">head</th>
 								</tr>
 							</tfoot>
@@ -274,6 +284,8 @@
 									<td><span th:text="${line.clientName}"></span></td>
 									<td><span th:text="${line.country}"></span></td>
 									<td><span th:text="${line.magStock}"></span></td>
+									<td><span th:text="${line.orderedQuantity}"></span></td>
+									<td><span th:text="${line.leftToSend}"></span></td>									
 									<td><span th:text="${line.toGive}"></span></td>
 								</tr>
 							</tbody>

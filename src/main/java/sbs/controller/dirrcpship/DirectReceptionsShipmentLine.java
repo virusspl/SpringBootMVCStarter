@@ -9,6 +9,7 @@ public class DirectReceptionsShipmentLine {
 	private Timestamp demandedDate;
 	private String clientName;
 	private String country;
+	private int orderedQuantity;
 	private int leftToSend;
 	private int magStock;
 	private int toGive;
@@ -86,6 +87,14 @@ public class DirectReceptionsShipmentLine {
 
 	public void setLeftToSend(int leftToSend) {
 		this.leftToSend = leftToSend;
+	}
+
+	public int getOrderedQuantity() {
+		return orderedQuantity;
+	}
+
+	public void setOrderedQuantity(int orderedQuantity) {
+		this.orderedQuantity = orderedQuantity;
 	}
 
 	@Override

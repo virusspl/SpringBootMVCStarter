@@ -1430,6 +1430,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "ITM.ITMREF_0, "
 				+ "ITM.ITMDES1_0, "
 				+ "SOQ.DEMDLVDAT_0, "
+				+ "SOQ.QTY_0, "
 				+ "BPR.BPRNAM_0, "
 				+ "BPR.CRY_0 "
 				+ "FROM ("
@@ -1462,6 +1463,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			line.setClientName(((String)row.get("BPRNAM_0")));
 			line.setCountry(((String)row.get("CRY_0")));
 			line.setLeftToSend(((BigDecimal)row.get("LEFT_TO_SEND")).intValue());
+			line.setOrderedQuantity(((BigDecimal)row.get("QTY_0")).intValue());
 			list.add(line);
 		}
 			

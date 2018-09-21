@@ -34,6 +34,8 @@
 									<th th:text="#{general.client.name}">head</th>
 									<th th:text="#{general.country}">head</th>
 									<th th:text="#{dirrcpship.stock}">head</th>
+									<th th:text="#{dirrcpship.ordered}">head</th>
+									<th th:text="#{dirrcpship.lefttosend}">head</th>									
 									<th th:text="#{dirrcpship.toGive}">head</th>
 									<th th:text="#{dirrcpship.issued}" class="hideonscreen">head</th>
 									<th th:text="#{dirrcpship.received}" class="hideonscreen">head</th>
@@ -52,6 +54,8 @@
 									<td><span th:text="${line.clientName}"></span></td>
 									<td class="center"><span th:text="${line.country}"></span></td>
 									<td class="right"><span th:text="${line.magStock}"></span></td>
+									<td class="right"><span th:text="${line.orderedQuantity}"></span></td>
+									<td class="right"><span th:text="${line.leftToSend}"></span></td>									
 									<td class="right"><span th:text="${line.toGive}"></span></td>
 									<td rowspan="2" class="hideonscreen"></td>
 									<td rowspan="2" class="hideonscreen"></td>
@@ -62,7 +66,7 @@
 								<tr class="barcode hideonscreen">
 									<td colspan="3"><span th:text="|*${line.orderNumber}*|"></span></td>
 									<td colspan="3"><span th:text="|*${line.productCode}*|"></span></td>
-									<td colspan="2"><span th:text="|*${line.toGive}*|"></span></td>
+									<td colspan="4"><span th:text="|*${line.toGive}*|"></span></td>
 								</tr>
 							</div>
 							</tbody>
