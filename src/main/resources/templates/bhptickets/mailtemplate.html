@@ -68,7 +68,7 @@
 			<td class="statecell"><span th:text="${ticket.state.description}"></span></td>
 			<td class="datecell"><span th:text="${#dates.format(ticket.toDoDate, 'yyyy.MM.dd')}"></span></td>
 			<td class="titlecell"><a
-				th:href="|${host}:8080/@{'~/adr/bhptickets/show/' + ${ticket.id}}|"><span
+				th:href="|${host}:8080@{'~/adr/bhptickets/show/' + ${ticket.id}}|"><span
 					th:text="${ticket.title}">title</span></a></td>
 		</tr>
 	</table>
