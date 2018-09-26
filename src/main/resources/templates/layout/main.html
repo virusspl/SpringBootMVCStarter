@@ -11,6 +11,8 @@
 	<link th:href="@{/bootstrap/css/bootstrap.min.css}" type="text/css" rel="stylesheet" media="screen,projection" />	
 	<link th:href="@{/css/normalize.css}" type="text/css" rel="stylesheet" media="screen,projection" />
 	<link th:href="@{/css/default.css}" type="text/css" rel="stylesheet" media="screen,projection" />
+	<link sec:authorize="hasAnyRole('ROLE_ADMIN')" th:href="@{/css/default.admin.css}" type="text/css" rel="stylesheet" media="screen,projection" />
+	<link sec:authorize="!hasAnyRole('ROLE_ADMIN')" th:href="@{/css/default.user.css}" type="text/css" rel="stylesheet" media="screen,projection" />	
 	<link th:href="@{/css/map.css}" type="text/css" rel="stylesheet" media="screen,projection" />
 	<link th:href="@{/datatables/jquery.dataTables.min.css}" type="text/css" rel="stylesheet" media="screen,projection" />
 	<link th:href="@{/datatables/buttons.dataTables.min.css}" type="text/css" rel="stylesheet" media="screen,projection" />
