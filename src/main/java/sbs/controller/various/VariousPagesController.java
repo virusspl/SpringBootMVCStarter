@@ -1,6 +1,8 @@
 package sbs.controller.various;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 /*
 import java.io.InputStream;
 import java.net.URL;
@@ -18,6 +20,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import sbs.helpers.ExcelContents;
 import sbs.helpers.ExcelExportHelper;
@@ -37,6 +42,7 @@ import sbs.service.tools.ToolsProjectStateService;
 import sbs.service.users.RoleService;
 import sbs.service.users.UserService;
 import sbs.service.x3.JdbcOracleX3Service;
+import sbs.singleton.LiveFeedSingleton;
 
 @Controller
 public class VariousPagesController {
@@ -65,6 +71,8 @@ public class VariousPagesController {
 	ToolsProjectStateService toolsProjectStateService;
 	@Autowired
 	MailService mailService;
+	@Autowired
+	private LiveFeedSingleton liveFeedSingleton;
 
 	@RequestMapping("/noaccess")
 	public String noAccess() {
@@ -127,6 +135,13 @@ public class VariousPagesController {
 		return new ModelAndView(new ExcelExportHelper(), "contents", contents);
 	}
 
+	@RequestMapping("/timer")
+	public String timerView(Model model){
+		model.addAttribute("timerDate", liveFeedSingleton.getTimerMillis());
+		return "/various/timer"; 
+	}
+	
+	
 	@RequestMapping("/test")
 	public String test(Model model) {
 
@@ -406,6 +421,14 @@ public class VariousPagesController {
 			toolsNormalUser.setName("ROLE_TOOLSNORMALUSER");
 			roleService.save(toolsNormalUser);
 			msg += "[role: " + toolsNormalUser.getName() + "], ";
+		}
+		
+		Role timerUser = roleService.findByName("ROLE_TIMERUSER");
+		if (timerUser == null) {
+			timerUser = new Role();
+			timerUser.setName("ROLE_TIMERUSER");
+			roleService.save(timerUser);
+			msg += "[role: " + timerUser.getName() + "], ";
 		}
 
 		System.out.println("get users:");

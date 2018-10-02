@@ -9,7 +9,7 @@
 .timerStyle {
 	margin-top: 100px;
 	margin-bottom: 50px;
-	color: red;
+	color: #42b3f4;
 	font-size: 300%;
 	text-align: center;
 	font-family: "Lucida Console", Monaco, monospace;
@@ -23,7 +23,7 @@
 			type="text/javascript"></script>
 	</div>
 	<div layout:fragment="content">
-		<div class="alert alert-danger timerStyle">
+		<div class="alert alert-info timerStyle">
 			<span id="timeLong" style="display: none;" th:text="${timerDate}"></span>
 			<span id="timer"></span>
 		</div>

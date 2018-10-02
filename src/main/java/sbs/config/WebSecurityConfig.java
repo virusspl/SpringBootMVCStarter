@@ -140,6 +140,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"ADMIN", 
 				"TOOLSMANAGER"
 				)
+		.antMatchers("/timer/**"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"TIMERUSER"
+				)
 		.antMatchers("/admin", "/users/**")
 		.hasRole("ADMIN")
 		.anyRequest().authenticated().and()

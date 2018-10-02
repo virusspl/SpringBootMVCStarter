@@ -8,6 +8,7 @@ import groovy.lang.Singleton;
 @Singleton
 public class LiveFeedSingleton {
 	String message;
+	long timerMillis;
 	
 	public LiveFeedSingleton() {
 		this.message = null;
@@ -39,6 +40,16 @@ public class LiveFeedSingleton {
 	public String toString() {
 		return message;
 	}
+
+	public long getTimerMillis() {
+		return timerMillis;
+	}
+
+	public void setTimerMillis(long timerMillis) {
+		this.timerMillis = timerMillis;
+	}
+	
+	
 
 	
 }
