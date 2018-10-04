@@ -63,7 +63,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/wakesurvey/dosurvey/**",
 				"/weldlog/**",
 				"/test/**",
-				"/proprog/**"
+				"/proprog/**",
+				"/phones/**"
 				)
 		.permitAll()
 		.antMatchers("/bhptickets/edit/**", 
@@ -146,7 +147,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"ADMIN", 
 				"TIMERUSER"
 				)
-		.antMatchers("/admin", "/users/**")
+		.antMatchers(
+				"/admin", 
+				"/users/**", 
+				"/phones/edit/**")
 		.hasRole("ADMIN")
 		.anyRequest().authenticated().and()
 		.csrf().and()

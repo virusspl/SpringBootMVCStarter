@@ -81,7 +81,7 @@ html {
 	margin-top: 30px;
 }
 .center{
-	style="text-align: center;"
+	text-align: center;
 }
 
 .input-error{
