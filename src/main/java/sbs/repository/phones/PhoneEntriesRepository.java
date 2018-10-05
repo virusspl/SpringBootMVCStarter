@@ -9,6 +9,8 @@ public interface PhoneEntriesRepository extends GenericRepository<PhoneEntry,Int
 
 	List<PhoneEntry> findByNumber(int number);
 
+	List<PhoneEntry> findAllOrderByCategoryAndNumber();
+
 	
 }
 

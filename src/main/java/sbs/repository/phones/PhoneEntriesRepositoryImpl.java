@@ -5,6 +5,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -23,6 +24,17 @@ public class PhoneEntriesRepositoryImpl extends GenericRepositoryAdapter<PhoneEn
 		Criteria crit = currentSession().createCriteria(PhoneEntry.class, "entry");
 		//crit.createAlias("project.state", "state");
 		crit.add(Restrictions.eq("entry.number", number));
+		return crit.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public List<PhoneEntry> findAllOrderByCategoryAndNumber() {
+		Criteria crit = currentSession().createCriteria(PhoneEntry.class, "entry");
+		crit.createAlias("entry.category", "category");
+		crit.addOrder(Order.asc("category.order"));
+		crit.addOrder(Order.asc("entry.number"));
 		return crit.list();
 	}
 

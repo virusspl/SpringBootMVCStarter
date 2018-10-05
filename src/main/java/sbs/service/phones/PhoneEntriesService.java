@@ -9,6 +9,8 @@ public interface PhoneEntriesService extends GenericService<PhoneEntry, Integer>
 
 	List<PhoneEntry> findByNumber(int number);
 
+	List<PhoneEntry> findAllOrderByCategoryAndNumber();
+
 //	public List<ToolsProject> findToolsProjectsByStateOrder(int order);
 	
 }

@@ -7,11 +7,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import sbs.model.phones.PhoneEntry;
-import sbs.model.tools.ToolsProject;
-import sbs.model.users.User;
 import sbs.repository.GenericRepository;
 import sbs.repository.phones.PhoneEntriesRepository;
-import sbs.repository.tools.ToolsProjectRepository;
 import sbs.service.GenericServiceAdapter;
 
 @Service
@@ -29,6 +26,11 @@ public class PhoneEntriesServiceImpl extends GenericServiceAdapter<PhoneEntry, I
 	@Override
 	public List<PhoneEntry> findByNumber(int number) {
 		return phoneEntriesRepository.findByNumber(number);
+	}
+
+	@Override
+	public List<PhoneEntry> findAllOrderByCategoryAndNumber() {
+		return phoneEntriesRepository.findAllOrderByCategoryAndNumber();
 	}
 
 

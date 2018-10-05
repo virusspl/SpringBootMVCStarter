@@ -2,202 +2,111 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
-	layout:decorator="layout/print">
+	layout:decorator="layout/blank_with_libs">
 <head lang="pl">
+
+<style>
+#capture {
+	/* A4 150ppi */
+	padding: 2%;
+	border: 1px dotted black;
+	height: 2480px;
+	width: 3508px;
+	font-size: 150%;
+	border: 1px dotted black;
+}
+
+.category {
+	font-weight: bold;
+}
+
+.entry {
+	
+}
+
+.columnized {
+	
+	column-count: 4;
+	column-gap: 40px;
+	column-rule-style: solid;
+	column-rule-width: 1px;
+	/*https://www.w3schools.com/css/css3_multiple_columns.asp*/
+	    -moz-column-fill: auto; /* Firefox */
+    column-fill: balance;
+}
+</style>
+
 </head>
 <body>
 	<div layout:fragment="script">
-		<script th:src="@{/js/0.9.0rc1_jspdf.min.js}" type="text/javascript"></script>
+		<script th:src="@{/html2canvas/html2canvas.min.js}"
+			type="text/javascript"></script>
 		<script>
-	var doc = new jsPDF('landscape');
-	var specialElementHandlers = {
-	    '#editor': function (element, renderer) {
-	        return true;
-	    }
-	};
-
-	$('#cmd').click(function () {   
-	    doc.fromHTML($('#srv').html(), 15, 15, {
-	        'width': 170,
-	            'elementHandlers': specialElementHandlers
-	    });
-	    doc.save('sample-file.pdf');
-	});
-	
-	
-	function demoFromHTML() {
-		alert("OK0");
-	    var pdf = new jsPDF('p', 'pt', 'letter');
-	    // source can be HTML-formatted string, or a reference
-	    // to an actual DOM element from which the text will be scraped.
-	    source = $('#customers')[0];
-	    // we support special element handlers. Register them with jQuery-style 
-	    // ID selector for either ID or node name. ("#iAmID", "div", "span" etc.)
-	    // There is no support for any other type of selectors 
-	    // (class, of compound) at this time.
-	    specialElementHandlers = {
-	        // element with id of "bypass" - jQuery style selector
-	        '#bypassme': function (element, renderer) {
-	            // true = "handled elsewhere, bypass text extraction"
-	            return true
-	        }
-	    };
-
-	    margins = {
-	        top: 80,
-	        bottom: 60,
-	        left: 40,
-	        width: 522
-	    };
-
-	    // all coords and widths are in jsPDF instance's declared units
-	    // 'inches' in this case
-	    pdf.fromHTML(
-	    source, // HTML string or DOM elem ref.
-	    margins.left, // x coord
-	    margins.top, { // y coord
-	        'width': margins.width, // max width of content on PDF
-	        'elementHandlers': specialElementHandlers
-	    });
-
-	     pdf.save('Test.pdf');
-	 };
-	
-	
-	
-	</script>
+			function print() {
+				html2canvas(document.getElementById('capture'))
+						.then(
+								function(canvas) {
+									$('#result').append(canvas);
+									$('#clicker').attr('href',
+											canvas.toDataURL('image/png'));
+									$('#clicker').attr('download',
+											'TelefonyADRPolska}.png');
+									document.getElementById('capture').style.display = "none";
+									$('#clicker')[0].click();
+								});
+			}
+			//print();
+		</script>
 
 	</div>
 	<div layout:fragment="content">
-		<div class="hideonprint">
-			<div class="margin-top-10">
-				<span th:text="#{dirrcpship.main.message}"> Welcome message </span>
-			</div>
-			<a th:href="@{/dirrcpship/main}"> <span th:text="#{action.back}">back</span></a>
-		</div>
+		<!-- /HIDDEN -->
+		<!-- clicker -->
+		<a id="clicker" href="#"></a>
+		<!-- image -->
+		<div id="result"></div>
+		<!-- /HIDDEN -->
 
-		<div th:if="${list}">
-			<div class="row margin-top-10">
-				<div class="col-xs-12">
-					<h3 class="text-primary" th:text="${title}">result</h3>
-					<button id="cmd" class="margin-bottom-10">PDF</button>
-					<div id="editor"></div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-xs-12">
-					<div class="table-responsive">
-						<table id="srv" class="display">
-							<thead>
-								<tr>
-									<th th:text="#{phones.number}"></th>
-									<th th:text="#{phones.name}|"></th>
-									<th th:text="#{general.category}"></th>
-									<th th:text="#{phones.number}"></th>
-									<th th:text="#{phones.name}|"></th>
-									<th th:text="#{general.category}"></th>
-									<th th:text="#{phones.number}"></th>
-									<th th:text="#{phones.name}|"></th>
-									<th th:text="#{general.category}"></th>
-									<th th:text="#{phones.number}"></th>
-									<th th:text="#{phones.name}|"></th>
-									<th th:text="#{general.category}"></th>
-									<th th:text="#{phones.number}"></th>
-									<th th:text="#{phones.name}|"></th>
-									<th th:text="#{general.category}"></th>
-									<th th:text="#{phones.number}"></th>
-									<th th:text="#{phones.name}|"></th>
-									<th th:text="#{general.category}"></th>
-								</tr>
-							</thead>
-							<tfoot>
-								<tr>
-									<th th:text="#{phones.number}"></th>
-									<th th:text="#{phones.name}|"></th>
-									<th th:text="#{general.category}"></th>
-									<th th:text="#{phones.number}"></th>
-									<th th:text="#{phones.name}|"></th>
-									<th th:text="#{general.category}"></th>
-									<th th:text="#{phones.number}"></th>
-									<th th:text="#{phones.name}|"></th>
-									<th th:text="#{general.category}"></th>
-									<th th:text="#{phones.number}"></th>
-									<th th:text="#{phones.name}|"></th>
-									<th th:text="#{general.category}"></th>
-									<th th:text="#{phones.number}"></th>
-									<th th:text="#{phones.name}|"></th>
-									<th th:text="#{general.category}"></th>
-									<th th:text="#{phones.number}"></th>
-									<th th:text="#{phones.name}|"></th>
-									<th th:text="#{general.category}"></th>
-								</tr>
-							</tfoot>
-							<tbody>
-								<tr th:each="entry : ${list}">
-									<td><span th:text="${entry.number}"></span></td>
-									<td><span th:text="${entry.name}"></span></td>
-									<td><span th:text="${entry.category.name}"></span></td>
-								</tr>
-							</tbody>
-						</table>
+		<!-- CAPTURE SECTION -->
+		<div id="capture">
+			<div class="columnized">
+				<div th:if="${list}" class="margin-top-20">
+
+					<div class="entry" th:each="entry : ${list}">
+					<span th:text="${entry.number}"></span>
+						<span th:text="${entry.name}"></span>
 					</div>
+					<div class="entry" th:each="entry : ${list}">
+					<span th:text="${entry.number}"></span>
+						<span th:text="${entry.name}"></span>
+					</div>
+					<div class="entry" th:each="entry : ${list}">
+					<span th:text="${entry.number}"></span>
+						<span th:text="${entry.name}"></span>
+					</div>
+					<div class="entry" th:each="entry : ${list}">
+					<span th:text="${entry.number}"></span>
+						<span th:text="${entry.name}"></span>
+					</div>
+					<div class="entry" th:each="entry : ${list}">
+					<span th:text="${entry.number}"></span>
+						<span th:text="${entry.name}"></span>
+					</div>
+					<div class="entry" th:each="entry : ${list}">
+					<span th:text="${entry.number}"></span>
+						<span th:text="${entry.name}"></span>
+					</div>
+					<div class="entry" th:each="entry : ${list}">
+					<span th:text="${entry.number}"></span>
+						<span th:text="${entry.name}"></span>
+					</div>
+
+
+
 				</div>
 			</div>
-
-			<button onclick="javascript:demoFromHTML();">PDF</button>
-			<div id="customers">
-				<table id="tab_customers" class="table table-striped">
-					<colgroup>
-						<col width="20%"></col>
-						<col width="20%"></col>
-						<col width="20%"></col>
-						<col width="20%"></col>
-					</colgroup>
-					<thead>
-						<tr class='warning'>
-							<th>Country</th>
-							<th>Population</th>
-							<th>Date</th>
-							<th>Age</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>Chinna</td>
-							<td>1,363,480,000</td>
-							<td>March 24, 2014</td>
-							<td>19.1</td>
-						</tr>
-						<tr>
-							<td>India</td>
-							<td>1,241,900,000</td>
-							<td>March 24, 2014</td>
-							<td>17.4</td>
-						</tr>
-						<tr>
-							<td>United States</td>
-							<td>317,746,000</td>
-							<td>March 24, 2014</td>
-							<td>4.44</td>
-						</tr>
-						<tr>
-							<td>Indonesia</td>
-							<td>249,866,000</td>
-							<td>July 1, 2013</td>
-							<td>3.49</td>
-						</tr>
-						<tr>
-							<td>Brazil</td>
-							<td>201,032,714</td>
-							<td>July 1, 2013</td>
-							<td>2.81</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-
 		</div>
-		<!-- /SHOW LIST -->
+		<!-- /CAPTURE SECTION -->
 	</div>
 </body>
 </html>

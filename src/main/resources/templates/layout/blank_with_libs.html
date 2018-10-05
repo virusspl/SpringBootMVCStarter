@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link th:href="@{/css/print.css}" type="text/css" rel="stylesheet" />
+<title th:text="|#{name.company}">ADR Polska S.A.</title>
+<style>
+@page {
+	size: A4 landscape
+}
+</style>
+</head>
+<body class="A4 landscape">
+	<!--=================================== CONTENT ===============================-->
+	<section layout:fragment="content">
+		<p>page content</p>
+	</section>
+	<!--=================================== /CONTENT ==============================-->
+	<!-- JQUERY -->
+	<script th:src="@{/js/jquery-3.1.1.min.js}" type="text/javascript"></script>
+	<!-- BOOTSTRAP JS -->
+	<script th:src="@{/bootstrap/js/bootstrap.min.js}"
+		type="text/javascript"></script>
+	<!-- ALL SPECIFIC SCRIPTS FROM CHILD VIEWS -->
+	<script type="text/javascript" layout:fragment="script">
+		
+	</script>
+</body>
+</html>

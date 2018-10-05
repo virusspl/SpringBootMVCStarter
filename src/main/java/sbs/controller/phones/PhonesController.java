@@ -43,14 +43,15 @@ public class PhonesController {
 		PhoneEditForm phoneEditForm = new PhoneEditForm();
 		model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder());
 		model.addAttribute("phoneEditForm", phoneEditForm);
-		model.addAttribute("list", phoneEntriesService.findAll());
+		model.addAttribute("list", phoneEntriesService.findAllOrderByCategoryAndNumber());
 		return "phones/list";
 	}
 	
 	@RequestMapping(value = "/print")
 	@Transactional
 	public String print(Model model) {
-		model.addAttribute("list", phoneEntriesService.findAll());
+		model.addAttribute("list", phoneEntriesService.findAllOrderByCategoryAndNumber());
+		
 		return "phones/print";
 	}
 
@@ -167,14 +168,14 @@ public class PhonesController {
 
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder());
-			model.addAttribute("list", phoneEntriesService.findAll());
+			model.addAttribute("list", phoneEntriesService.findAllOrderByCategoryAndNumber());
 			return "phones/list";
 		}
 		
 		if(!(phoneEntriesService.findByNumber(phoneEditForm.getNumber()).isEmpty())){
 			bindingResult.rejectValue("number", "phones.error.numberinuse");
 			model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder());
-			model.addAttribute("list", phoneEntriesService.findAll());
+			model.addAttribute("list", phoneEntriesService.findAllOrderByCategoryAndNumber());
 			return "phones/list";
 		}
 
@@ -198,7 +199,7 @@ public class PhonesController {
 		
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder());
-			model.addAttribute("list", phoneEntriesService.findAll());
+			model.addAttribute("list", phoneEntriesService.findAllOrderByCategoryAndNumber());
 			return "phones/list";
 		}
 		
@@ -206,7 +207,7 @@ public class PhonesController {
 		if(entries.isEmpty()){
 			bindingResult.rejectValue("number", "phones.error.numbernotfound");
 			model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder());
-			model.addAttribute("list", phoneEntriesService.findAll());
+			model.addAttribute("list", phoneEntriesService.findAllOrderByCategoryAndNumber());
 			return "phones/list";
 		}
 
@@ -233,7 +234,7 @@ public class PhonesController {
 		if(phoneEditForm.getNumber() == null){
 			bindingResult.rejectValue("number", "NotNull.phoneEditForm.number");
 			model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder());
-			model.addAttribute("list", phoneEntriesService.findAll());
+			model.addAttribute("list", phoneEntriesService.findAllOrderByCategoryAndNumber());
 			return "phones/list";			
 		}
 		
@@ -241,7 +242,7 @@ public class PhonesController {
 		if(entries.isEmpty()){
 			bindingResult.rejectValue("number", "phones.error.numbernotfound");
 			model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder());
-			model.addAttribute("list", phoneEntriesService.findAll());
+			model.addAttribute("list", phoneEntriesService.findAllOrderByCategoryAndNumber());
 			return "phones/list";
 		}
 

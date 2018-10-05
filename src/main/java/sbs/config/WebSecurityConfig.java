@@ -43,6 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/bootstrap/**",
 				"/lightbox2/**",
 				"/datepicker/**",
+				"/html2canvas/**",
 				"/selectize/**",
 				"/datatables/**",
 				"/sbs-websocket/**",
