@@ -6,38 +6,282 @@
 <head lang="pl">
 
 <style>
+
+p {
+	margin: 0px;
+}
+
 #capture {
-	/* A4 150ppi */
-	padding: 2%;
-	border: 1px dotted black;
+	/* A4 300ppi */
+	font-family: Verdana, Geneva, sans-serif;
+	/*border: 1px dotted black;*/
 	height: 2480px;
 	width: 3508px;
-	font-size: 150%;
-	border: 1px dotted black;
 }
 
-.category {
+#topbar {
+	height: 150px;
+	line-height: 150px;
+	font-size: 290%;
+	text-align: center;
+	column-count: 3;
+	border-bottom: 2px dotted black;	
+	margin-bottom: 25px;
+}
+
+#bottombar {
+	height: 140px;
+	line-height: 140px;
+	font-size: 290%;
+	text-align: center;
+	color: red;
 	font-weight: bold;
+	border-top: 2px dotted black;
+	margin-top: 25px;
 }
 
-.entry {
-	
+#columns {
+	padding: 0 25px 0 25px;
+	height: 2140px;
+	font-size: 225%;
 }
 
 .columnized {
-	
+	border: 0px solid red;
+	max-height: 2190px;
 	column-count: 4;
 	column-gap: 40px;
 	column-rule-style: solid;
-	column-rule-width: 1px;
-	/*https://www.w3schools.com/css/css3_multiple_columns.asp*/
-	    -moz-column-fill: auto; /* Firefox */
-    column-fill: balance;
+	column-rule-width: 2px;
+	-moz-column-fill: auto;
+	column-fill: auto;
+}
+
+.category {
+	line-height: 47px;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.entry {
+	line-height: 47px;
 }
 </style>
 
 </head>
 <body>
+	<div layout:fragment="content">
+		<!-- /HIDDEN -->
+		<!-- clicker -->
+		<a id="clicker" href="#"></a>
+		<!-- image -->
+		<div id="result"></div>
+		<!-- /HIDDEN -->
+
+		<!-- CAPTURE SECTION -->
+		<div id="capture">
+			<div id="topbar">
+				<p>
+					Nr. główne: 134689 <b><u>300</u></b>, 134689 <b><u>313</u></b>
+				</p>
+				<p>
+					<b>Spis numerów telefonów w ADRp i WPS</b>
+				</p>
+				<p>
+					Ochrona: 134689 <b><u>390</u></b>
+				</p>
+			</div>
+
+			<div id="columns" class="columnized">				
+					<p class="entry" th:each="entry : ${list}">
+					<span th:text="${entry.number}"></span>
+						<span th:text="${entry.name}"></span>
+					</p>
+				
+			
+					<!--<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;NOWAKOWSKI M./OSTROWSKI M.</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;PRZYSTASZ Bogusław [zawieszenia]</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">PRODUKCJA Wydział spwalni i tłoczni</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>														
+					<p class="category">KONSTRUKTORZY OPRZYRZADOWANIA</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;GOSZTYŁA A/PETRYK S</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>												
+					<p class="category">KOMORKI</p>
+					<p class="entry">111222333&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">222333444&nbsp;&nbsp;&nbsp;SERWIS posprzedażowy</p>
+					<p class="entry">444555666&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">666777888&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;DYZURKA PARKING STACJONARNY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="category">CATEGORY</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
+					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
+					-->				
+			</div>
+
+			<div id="bottombar">
+				<p>NUMERY ALARMOWE: (0)112 – OGÓLNY; (0)997 – POLICJA; (0)998 –
+					STRAŻ POŻARNA; (0)999 – POGOTOWIE RATUNKOWE</p>
+			</div>
+
+		</div>
+		<!-- /CAPTURE SECTION -->
+	</div>
 	<div layout:fragment="script">
 		<script th:src="@{/html2canvas/html2canvas.min.js}"
 			type="text/javascript"></script>
@@ -57,56 +301,6 @@
 			}
 			//print();
 		</script>
-
-	</div>
-	<div layout:fragment="content">
-		<!-- /HIDDEN -->
-		<!-- clicker -->
-		<a id="clicker" href="#"></a>
-		<!-- image -->
-		<div id="result"></div>
-		<!-- /HIDDEN -->
-
-		<!-- CAPTURE SECTION -->
-		<div id="capture">
-			<div class="columnized">
-				<div th:if="${list}" class="margin-top-20">
-
-					<div class="entry" th:each="entry : ${list}">
-					<span th:text="${entry.number}"></span>
-						<span th:text="${entry.name}"></span>
-					</div>
-					<div class="entry" th:each="entry : ${list}">
-					<span th:text="${entry.number}"></span>
-						<span th:text="${entry.name}"></span>
-					</div>
-					<div class="entry" th:each="entry : ${list}">
-					<span th:text="${entry.number}"></span>
-						<span th:text="${entry.name}"></span>
-					</div>
-					<div class="entry" th:each="entry : ${list}">
-					<span th:text="${entry.number}"></span>
-						<span th:text="${entry.name}"></span>
-					</div>
-					<div class="entry" th:each="entry : ${list}">
-					<span th:text="${entry.number}"></span>
-						<span th:text="${entry.name}"></span>
-					</div>
-					<div class="entry" th:each="entry : ${list}">
-					<span th:text="${entry.number}"></span>
-						<span th:text="${entry.name}"></span>
-					</div>
-					<div class="entry" th:each="entry : ${list}">
-					<span th:text="${entry.number}"></span>
-						<span th:text="${entry.name}"></span>
-					</div>
-
-
-
-				</div>
-			</div>
-		</div>
-		<!-- /CAPTURE SECTION -->
 	</div>
 </body>
 </html>

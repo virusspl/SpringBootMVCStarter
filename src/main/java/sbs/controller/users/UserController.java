@@ -2,7 +2,6 @@ package sbs.controller.users;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -28,7 +27,6 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import javassist.NotFoundException;
-import sbs.model.tools.ToolsProject;
 import sbs.model.users.Role;
 import sbs.model.users.User;
 import sbs.service.mail.MailService;

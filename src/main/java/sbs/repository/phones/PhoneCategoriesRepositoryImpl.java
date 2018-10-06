@@ -6,7 +6,6 @@ import javax.transaction.Transactional;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import sbs.model.phones.PhoneCategory;
