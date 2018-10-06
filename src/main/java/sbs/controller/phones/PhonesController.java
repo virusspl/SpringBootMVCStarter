@@ -1,5 +1,7 @@
 package sbs.controller.phones;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -50,7 +52,37 @@ public class PhonesController {
 	@RequestMapping(value = "/print")
 	@Transactional
 	public String print(Model model) {
-		model.addAttribute("list", phoneEntriesService.findAllOrderByCategoryAndNumber());
+		List<PhoneEntry> entries = phoneEntriesService.findAllOrderByCategoryAndNumber();
+		List<PhoneColumnLine> list = new ArrayList<>();
+		
+		String currentCategory = "";
+		PhoneColumnLine line;
+		for(PhoneEntry entry: entries){
+			// add additional category line if switch category 
+			if(!entry.getCategory().getName().equals(currentCategory)){
+				line = new PhoneColumnLine();
+				line.setCategory(true);
+				line.setName(entry.getCategory().getName());
+				list.add(line);
+				currentCategory = line.getName();
+			}
+			// add phone line
+			line = new PhoneColumnLine();
+			line.setCategory(false);
+			line.setNumber(entry.getNumber());
+			line.setName(entry.getName());
+			list.add(line);
+		}
+		
+		Calendar cal = Calendar.getInstance();
+		String version = "ver. " 
+				+ cal.get(Calendar.DAY_OF_MONTH) + "/" 
+				+ (cal.get(Calendar.MONTH)+1) + "/" 
+				+ cal.get(Calendar.YEAR) 
+				;
+		
+		model.addAttribute("ver", version);
+		model.addAttribute("list", list);
 		
 		return "phones/print";
 	}

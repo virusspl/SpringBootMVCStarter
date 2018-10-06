@@ -148,10 +148,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"ADMIN", 
 				"TIMERUSER"
 				)
+		.antMatchers("/phones/edit/**"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"LIGHT_ADMIN"
+				)
 		.antMatchers(
 				"/admin", 
-				"/users/**", 
-				"/phones/edit/**")
+				"/users/**")
 		.hasRole("ADMIN")
 		.anyRequest().authenticated().and()
 		.csrf().and()

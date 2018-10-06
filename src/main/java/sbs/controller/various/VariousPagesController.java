@@ -240,12 +240,21 @@ public class VariousPagesController {
 		if (adminRole == null) {
 			adminRole = new Role();
 			adminRole.setName("ROLE_ADMIN");
+			roleService.save(adminRole);
 			msg += "[role: " + adminRole.getName() + "], ";
+		}
+		Role lightAdminRole = roleService.findByName("ROLE_LIGHT_ADMIN");
+		if (lightAdminRole == null) {
+			lightAdminRole = new Role();
+			lightAdminRole.setName("ROLE_LIGHT_ADMIN");
+			roleService.save(lightAdminRole);
+			msg += "[role: " + lightAdminRole.getName() + "], ";
 		}
 		Role userRole = roleService.findByName("ROLE_USER");
 		if (userRole == null) {
 			userRole = new Role();
 			userRole.setName("ROLE_USER");
+			roleService.save(userRole);
 			msg += "[role: " + userRole.getName() + "], ";
 		}
 		Role qualityManagerRole = roleService.findByName("ROLE_QSURVEYMANAGER");

@@ -6,11 +6,6 @@
 <head lang="pl">
 
 <style>
-
-p {
-	margin: 0px;
-}
-
 #capture {
 	/* A4 300ppi */
 	font-family: Verdana, Geneva, sans-serif;
@@ -25,7 +20,7 @@ p {
 	font-size: 290%;
 	text-align: center;
 	column-count: 3;
-	border-bottom: 2px dotted black;	
+	border-bottom: 2px dotted black;
 	margin-bottom: 25px;
 }
 
@@ -44,6 +39,7 @@ p {
 	padding: 0 25px 0 25px;
 	height: 2140px;
 	font-size: 225%;
+	position: relative;
 }
 
 .columnized {
@@ -57,6 +53,10 @@ p {
 	column-fill: auto;
 }
 
+p {
+	margin: 0px;
+}
+
 .category {
 	line-height: 47px;
 	font-weight: bold;
@@ -65,6 +65,24 @@ p {
 
 .entry {
 	line-height: 47px;
+}
+
+#backbutton {
+	background-color: #33adff;
+	border: none;
+	color: white;
+	padding: 15px 32px;
+	text-align: center;
+	text-decoration: none;
+	display: none;
+	font-size: 16px;
+}
+
+#version {
+	position: absolute;
+	bottom: 0;
+	right: 25px;
+	font-size: 60%;
 }
 </style>
 
@@ -77,7 +95,9 @@ p {
 		<!-- image -->
 		<div id="result"></div>
 		<!-- /HIDDEN -->
-
+		<a id="backbutton" href="javascript:window.close();"> <span
+			th:text="#{action.closetab}"></span>
+		</a>
 		<!-- CAPTURE SECTION -->
 		<div id="capture">
 			<div id="topbar">
@@ -91,189 +111,17 @@ p {
 					Ochrona: 134689 <b><u>390</u></b>
 				</p>
 			</div>
-
-			<div id="columns" class="columnized">				
-					<p class="entry" th:each="entry : ${list}">
-					<span th:text="${entry.number}"></span>
-						<span th:text="${entry.name}"></span>
-					</p>
-				
-			
-					<!--<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;NOWAKOWSKI M./OSTROWSKI M.</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;PRZYSTASZ Bogusław [zawieszenia]</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">PRODUKCJA Wydział spwalni i tłoczni</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>														
-					<p class="category">KONSTRUKTORZY OPRZYRZADOWANIA</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;GOSZTYŁA A/PETRYK S</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>												
-					<p class="category">KOMORKI</p>
-					<p class="entry">111222333&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">222333444&nbsp;&nbsp;&nbsp;SERWIS posprzedażowy</p>
-					<p class="entry">444555666&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">666777888&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;DYZURKA PARKING STACJONARNY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="category">CATEGORY</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>
-					<p class="entry">313&nbsp;&nbsp;&nbsp;Sekretariat</p>								
-					-->				
+			<div id="columns" class="columnized">
+				<div id="version">
+					<span th:text="${ver}"></span>
+				</div>
+				<p th:each="entry : ${list}">
+					<span th:if="${entry.category}==true" class="category"
+						th:text="|${entry.name}|"></span> <span
+						th:if="${entry.category}==false" class="entry"
+						th:text="|${entry.number}&nbsp;&nbsp;&nbsp;${entry.name}|"></span>
+				</p>
 			</div>
-
 			<div id="bottombar">
 				<p>NUMERY ALARMOWE: (0)112 – OGÓLNY; (0)997 – POLICJA; (0)998 –
 					STRAŻ POŻARNA; (0)999 – POGOTOWIE RATUNKOWE</p>
@@ -294,12 +142,14 @@ p {
 									$('#clicker').attr('href',
 											canvas.toDataURL('image/png'));
 									$('#clicker').attr('download',
-											'TelefonyADRPolska}.png');
+											'TelefonyADRPolska.png');
 									document.getElementById('capture').style.display = "none";
 									$('#clicker')[0].click();
+									document.getElementById('result').style.display = "none";
+									document.getElementById('backbutton').style.display = "inline-block";
 								});
 			}
-			//print();
+			print();
 		</script>
 	</div>
 </body>

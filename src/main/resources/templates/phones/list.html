@@ -105,7 +105,7 @@
 		<div class="underline margin-top-20"></div>
 
 		<!-- ADMIN PANEL -->
-		<div sec:authorize="hasAnyRole('ROLE_ADMIN')"
+		<div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIGHT_ADMIN')"
 			class="panel panel-primary">
 			<div class="panel-heading">
 				<span th:text="#{general.panel.admin}"></span>
