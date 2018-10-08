@@ -393,9 +393,7 @@
 								</tfoot>
 								<tbody>
 									<tr th:each="mvt : ${movements}">
-
-										<td><span
-											th:text="${#dates.format(mvt.date, 'dd.MM.yyyy')}"></span></td>
+										<td><span th:text="${#dates.format(mvt.date, 'dd.MM.yyyy')}"></span></td>
 										<td><span th:text="${mvt.itemCode}"></span></td>
 										<td><span th:text="${mvt.itemDescription}"></span></td>
 										<td><span th:text="${mvt.itemCategory}"></span></td>
