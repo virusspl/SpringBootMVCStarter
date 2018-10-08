@@ -373,6 +373,7 @@
 										<th th:text="#{movements.code}">head</th>
 										<th th:text="#{movements.description}">head</th>
 										<th th:text="#{movements.category}">head</th>
+										<th th:text="#{general.productGr2.short}">head</th>
 										<th th:text="#{movements.quantity}">head</th>
 										<th th:text="#{movements.price}">head</th>
 										<th th:text="#{movements.value}">head</th>
@@ -384,6 +385,7 @@
 										<th th:text="#{movements.code}">head</th>
 										<th th:text="#{movements.description}">head</th>
 										<th th:text="#{movements.category}">head</th>
+										<th th:text="#{general.productGr2.short}">head</th>										
 										<th th:text="#{movements.quantity}">head</th>
 										<th th:text="#{movements.price}">head</th>
 										<th th:text="#{movements.value}">head</th>
@@ -397,6 +399,7 @@
 										<td><span th:text="${mvt.itemCode}"></span></td>
 										<td><span th:text="${mvt.itemDescription}"></span></td>
 										<td><span th:text="${mvt.itemCategory}"></span></td>
+										<td><span th:text="${mvt.gr2}"></span></td>
 										<td><span
 											th:text="${#numbers.formatDecimal(mvt.quantity, 0, 'DEFAULT', 2, 'DEFAULT')}"></span></td>
 										<td><span

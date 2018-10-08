@@ -622,6 +622,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ company + ".YCHGSTKGX.ITMREF_0, "
 				+ company + ".ITMMASTER.ITMDES1_0, "
 				+ company + ".ITMMASTER.TCLCOD_0, "
+				+ company + ".ITMMASTER.TSICOD_1, "
 				+ company + ".YCHGSTKGX.QTYSTU_0, "
 				+ company + ".ITMMVT.AVC_0 "
 				+ "FROM "
@@ -665,6 +666,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         	item.setItemCode((String)row.get("ITMREF_0"));
         	item.setItemDescription(((String)row.get("ITMDES1_0")));
         	item.setItemCategory(((String)row.get("TCLCOD_0")));
+        	item.setGr2(((String)row.get("TSICOD_1")));
         	item.setQuantity(((BigDecimal)row.get("QTYSTU_0")).doubleValue());
         	item.setEmergencyAveragePrice(((BigDecimal)row.get("AVC_0")).doubleValue());
         	item.setDate((Timestamp)row.get("CREDAT_0"));

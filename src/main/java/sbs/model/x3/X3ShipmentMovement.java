@@ -7,6 +7,7 @@ public class X3ShipmentMovement {
 	private String itemCode;
 	private String itemDescription;
 	private String itemCategory;
+	private String gr2;
 	private Timestamp date;
 	private double quantity;
 	private double emergencyAveragePrice;
@@ -92,6 +93,14 @@ public class X3ShipmentMovement {
 
 	public void setValue(double value) {
 		this.value = value;
+	}
+
+	public String getGr2() {
+		return gr2;
+	}
+
+	public void setGr2(String gr2) {
+		this.gr2 = gr2;
 	}
 
 	@Override
