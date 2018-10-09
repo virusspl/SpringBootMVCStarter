@@ -24,11 +24,14 @@
 				th:text="#{action.back}">back</span>
 			</a>
 		</div>
-
 		<div class="row">
 			<div class="col-xs-12 col-sm-6">
-				<h1 th:text="#{bhp.tickets.show.info}"
-					class="text-primary margin-top-30"></h1>
+				<h1 class="text-primary margin-top-30">
+					<span th:text="#{bhp.tickets.show.info}"></span> <a
+						class="btn btn-info btn-sm" th:href="|@{/bhptickets/print}/${ticket.id}|"
+						target="_blank"><span class="glyphicon glyphicon-print"></span>
+						<span th:text="#{action.print}"></span></a>
+				</h1>
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="form-group">

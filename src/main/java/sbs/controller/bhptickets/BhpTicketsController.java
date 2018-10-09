@@ -346,6 +346,29 @@ public class BhpTicketsController {
 		model.addAttribute("ticket", ticket);
 		return "bhptickets/show";
 	}
+	
+	@RequestMapping("/print/{id}")
+	@Transactional
+	public String printBhpTicket(@PathVariable("id") int id, Model model) throws NotFoundException {
+		
+		// get ticket
+		BhpTicket ticket = bhpTicketsService.findById(id);
+		if (ticket == null) {
+			throw new NotFoundException("Ticket not found");
+		}
+		
+		// get photos list
+		ArrayList<String> fileList = uploadController.listFiles(uploadController.getBhpPhotoPath());
+		for (int i = fileList.size() - 1; i >= 0; i--) {
+			if (!fileList.get(i).startsWith("bhp_" + id + "_")) {
+				fileList.remove(i);
+			}
+		}
+		
+		model.addAttribute("photos", fileList);
+		model.addAttribute("ticket", ticket);
+		return "bhptickets/print";
+	}
 
 	@RequestMapping(value = "/response", params = { "passticket" }, method = RequestMethod.POST)
 	@Transactional

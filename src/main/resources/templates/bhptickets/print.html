@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/blank_with_libs">
+<head lang="pl">
+
+
+<style>
+#capture {
+	/* A4 300ppi */
+	font-family: Verdana, Geneva, sans-serif;
+	/*border: 1px dotted black;*/
+	height: 2480px;
+	width: 3508px;
+}
+
+#topbar {
+	height: 150px;
+	line-height: 150px;
+	font-size: 290%;
+	text-align: center;
+	column-count: 3;
+	border-bottom: 2px dotted black;
+	margin-bottom: 25px;
+}
+
+#bottombar {
+	height: 140px;
+	line-height: 140px;
+	font-size: 290%;
+	text-align: center;
+	color: red;
+	font-weight: bold;
+	border-top: 2px dotted black;
+	margin-top: 25px;
+}
+
+#columns {
+	padding: 0 25px 0 25px;
+	height: 2140px;
+	font-size: 225%;
+	position: relative;
+}
+
+.columnized {
+	border: 0px solid red;
+	max-height: 2190px;
+	column-count: 4;
+	column-gap: 40px;
+	column-rule-style: solid;
+	column-rule-width: 2px;
+	-moz-column-fill: auto;
+	column-fill: auto;
+}
+
+p {
+	margin: 0px;
+}
+
+.category {
+	line-height: 47px;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.entry {
+	line-height: 47px;
+}
+
+#backbutton {
+	background-color: #33adff;
+	border: none;
+	color: white;
+	padding: 15px 32px;
+	text-align: center;
+	text-decoration: none;
+	display: none;
+	font-size: 16px;
+}
+
+#version {
+	position: absolute;
+	bottom: 0;
+	right: 25px;
+	font-size: 60%;
+}
+</style>
+
+</head>
+<body>
+	<div layout:fragment="script">
+		<script th:src="@{/html2canvas/html2canvas.min.js}"
+			type="text/javascript"></script>
+		<script>
+			function print() {
+				html2canvas(document.getElementById('capture'))
+						.then(
+								function(canvas) {
+									$('#result').append(canvas);
+									$('#clicker').attr('href',
+											canvas.toDataURL('image/png'));
+									$('#clicker').attr('download',
+											'TelefonyADRPolska.png');
+									document.getElementById('capture').style.display = "none";
+									$('#clicker')[0].click();
+									document.getElementById('result').style.display = "none";
+									document.getElementById('backbutton').style.display = "inline-block";
+								});
+			}
+			//print();
+		</script>
+	</div>
+	<div layout:fragment="content">
+	
+		<!-- /HIDDEN -->
+		<!-- clicker -->
+		<a id="clicker" href="#"></a>
+		<!-- image -->
+		<div id="result"></div>
+		<!-- /HIDDEN -->
+		<a id="backbutton" href="javascript:window.close();"> <span
+			th:text="#{action.closetab}"></span>
+		</a>
+		<!-- CAPTURE SECTION -->
+		<!-- <div id="capture">
+			<div id="topbar">
+			
+			</div>
+			<div id="columns" class="columnized">
+				
+			</div>
+			<div id="bottombar">
+			
+			</div>
+
+		</div>
+		 -->
+		<!-- /CAPTURE SECTION -->
+
+	
+			
+				<h1 th:text="#{bhp.tickets.show.info}"
+					class="text-primary margin-top-30"></h1>
+				<div class="row">
+
+							<label for="title" th:text="#{bhp.tickets.title}">Title</label> <input
+								type="text" class="form-control" id="title"
+								th:value="${ticket.title}" style="background-color: white;"
+								readonly="true" />
+=
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label for="description" th:text="#{bhp.tickets.description}">Description</label>
+							<textarea class="form-control" id="description"
+								th:text="${ticket.description}"
+								style="min-height: 200px; background-color: white;"
+								readonly="true"></textarea>
+						</div>
+					</div>
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label for="assigneduser" th:text="#{bhp.tickets.assigneduser}">Title</label>
+							<span class="form-control" id="assigneduser"
+								th:text="${ticket.assignedUser.name}">title</span>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label for="tododate" th:text="#{bhp.tickets.date.creation}">date</label>
+							<span class="form-control" id="creationdate"
+								th:text="${#dates.format(ticket.creationDate, 'dd.MM.yyyy HH:mm')}"></span>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label for="tododate" th:text="#{bhp.tickets.tododate}">date</label>
+							<span class="form-control" id="tododate"
+								th:text="${#dates.format(ticket.toDoDate, 'dd.MM.yyyy')}"></span>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label for="tododate" th:text="#{bhp.tickets.date.update}">date</label>
+							<span class="form-control" id="creationdate"
+								th:text="${#dates.format(ticket.updateDate, 'dd.MM.yyyy HH:mm')}"></span>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label for="state" th:text="#{bhp.tickets.state}">Title</label> <span
+								class="form-control" id="state"
+								th:text="${ticket.state.description}">title</span>
+						</div>
+					</div>
+				</div>
+			
+			<!-- BHP TICKET FORM -->
+			<form th:action="@{/bhptickets/response}" method="post"
+				th:object="${ticketResponseForm}">
+
+				<!-- /FORM PARAMS -->
+				<!-- TICKETS USER PART -->
+				<div class="col-xs-12 col-sm-6">
+					<h1 th:text="#{bhp.tickets.show.response}"
+						class="text-primary margin-top-30"></h1>
+
+					<div>
+						<div class="form-group">
+							<label for="comment" th:text="#{bhp.tickets.comment}">Comment</label>
+							<textarea class="form-control" id="comment"
+								th:text="${ticket.comment}"
+								style="min-height: 200px; background-color: white;"
+								readonly="true"></textarea>
+						</div>
+					</div>
+					<!-- /IF NOT MODIFY USER RESPONSE -->
+					<!-- / BHP TICKETS USER RESPONSE -->
+				</div>
+				<!-- /TICKETS USER PART -->
+				<!-- UTR PART -->
+				<div class="col-xs-12 col-sm-6"
+					>
+					<h1 th:text="#{bhp.tickets.show.utrresponse}" class="text-primary"></h1>
+
+					<div>
+						<div class="form-group">
+							<label for="utrComment" th:text="#{bhp.tickets.utrComment}">Comment</label>
+							<textarea class="form-control" id="utrComment"
+								th:text="${ticket.utrComment}"
+								style="min-height: 200px; background-color: white;"
+								readonly="true"></textarea>
+						</div>
+					</div>
+				</div>
+				<!-- /UTR PART -->
+			</form>
+			<!-- /BHP TICKET FORM -->
+
+		<!-- PHOTOS -->
+		<div class="row" th:if="${#lists.size(photos)} > 0">
+				<h1 th:text="#{bhp.tickets.photos.list}"
+					class="text-primary margin-top-30"></h1>
+			<div th:each="photo : ${photos}">
+				<img th:src="@{'/bhptickets/getphoto/' + ${photo}}"
+					></img>
+				
+			</div>
+		</div>
+	</div>
+</body>
+</html>
