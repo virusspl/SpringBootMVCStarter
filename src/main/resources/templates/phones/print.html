@@ -131,22 +131,29 @@ p {
 		<!-- /CAPTURE SECTION -->
 	</div>
 	<div layout:fragment="script">
-		<script th:src="@{/html2canvas/html2canvas.min.js}"
-			type="text/javascript"></script>
+		<script th:src="@{/html2canvas/html2canvas.min.js}" type="text/javascript"></script>
+		<script th:src="@{/html2canvas/es6-promise.auto.min.js}"></script>
 		<script>
 			function print() {
 				html2canvas(document.getElementById('capture'))
 						.then(
 								function(canvas) {
 									$('#result').append(canvas);
-									$('#clicker').attr('href',
-											canvas.toDataURL('image/png'));
-									$('#clicker').attr('download',
-											'TelefonyADRPolska.png');
+									if (canvas.msToBlob) { 
+										//for IE
+						                var blob = canvas.msToBlob();
+						                window.navigator.msSaveBlob(blob, 'Telefony.png');
+						            } else {
+						                //other browsers
+										$('#clicker').attr('href', canvas.toDataURL('image/png'));
+										$('#clicker').attr('download', 'Telefony.png');
+										$('#clicker')[0].click();
+						            }
+
 									document.getElementById('capture').style.display = "none";
-									$('#clicker')[0].click();
 									document.getElementById('result').style.display = "none";
 									document.getElementById('backbutton').style.display = "inline-block";
+									
 								});
 			}
 			print();
