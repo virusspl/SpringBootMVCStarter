@@ -77,7 +77,7 @@ public class BhpTicketsController {
 			mailingList.add(user.getEmail());
 		}
 		
-		List<User> supervisors = userService.findByAnyRole(new String[]{"ROLE_BHPMANAGER", "ROLE_BHPSUPERVISOR"});
+		List<User> supervisors = userService.findByAnyRole(new String[]{"ROLE_BHPMANAGER", "ROLE_BHPSUPERVISOR","ROLE_BHPTICKETSUTRUSER"});
 		ArrayList<String> supervisorsMailingList = new ArrayList<>();
 		for(User sprv: supervisors){
 			supervisorsMailingList.add(sprv.getEmail());
