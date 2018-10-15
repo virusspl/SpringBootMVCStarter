@@ -29,6 +29,9 @@ public class PhoneEntry {
 	@Column(name = "pe_position", length = 50, nullable = true)
 	private String position;
 	
+	@Column(name = "pe_email", length = 50, nullable = true)
+	private String email;
+	
 	@Column(name = "pe_number", nullable = true)
 	private int number;
 
@@ -70,6 +73,14 @@ public class PhoneEntry {
 
 	public void setPosition(String position) {
 		this.position = position;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	@Override
