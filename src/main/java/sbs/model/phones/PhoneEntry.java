@@ -26,6 +26,9 @@ public class PhoneEntry {
 	@Column(name = "pe_name", length = 50, nullable = true)
 	private String name;
 	
+	@Column(name = "pe_position", length = 50, nullable = true)
+	private String position;
+	
 	@Column(name = "pe_number", nullable = true)
 	private int number;
 
@@ -59,6 +62,14 @@ public class PhoneEntry {
 
 	public void setNumber(int number) {
 		this.number = number;
+	}
+
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
 	}
 
 	@Override

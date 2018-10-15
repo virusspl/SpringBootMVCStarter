@@ -128,7 +128,7 @@
 											class="alert alert-danger margin-top-5">error</div>
 									</div>
 								</div>
-								<div class="col-xs-5">
+								<div class="col-xs-4">
 									<div class="form-group">
 										<label for="ph_name" th:text="#{phones.name}">lbl</label> <input
 											type="text" class="form-control" id="ph_name" name="ph_name"
@@ -138,9 +138,19 @@
 											class="alert alert-danger margin-top-5">error</div>
 									</div>
 								</div>
-								<div class="col-xs-5">
+								<div class="col-xs-3">
 									<div class="form-group">
-										<label for="pc_category" th:text="#{general.category}">lbl</label>
+										<label for="ph_position" th:text="#{phones.position}">lbl</label> <input
+											type="text" class="form-control" id="ph_position" name="ph_position"
+											th:placeholder="#{phones.position}" th:field="*{position}"
+											autocomplete="off" />
+										<div th:errors="*{position}"
+											class="alert alert-danger margin-top-5">error</div>
+									</div>
+								</div>
+								<div class="col-xs-3">
+									<div class="form-group">
+										<label for="pc_category" th:text="#{general.department}">lbl</label>
 										<select class="form-control" id="pc_category"
 											name="pc_category" th:placeholder="#{phones.category}"
 											th:field="*{categoryId}">
@@ -156,7 +166,7 @@
 								</div>
 							</div>
 							<div class="row">
-								<div class="col-xs-7">
+								<div class="col-xs-9">
 									<button class="btn btn-success btn-sm" type="submit"
 										name="create" th:value="1">
 										<span class="glyphicon glyphicon-save"></span> <span
@@ -173,7 +183,7 @@
 											th:text="#{action.delete}"></span>
 									</button>
 								</div>
-								<div class="col-xs-5">
+								<div class="col-xs-3">
 									<button class="btn btn-primary btn-sm float-right"
 										type="submit" name="editcategory">
 										<span class="glyphicon glyphicon-flag"></span> <span
@@ -209,23 +219,26 @@
 					<table id="srv" class="display">
 						<thead>
 							<tr>
-								<th th:text="#{general.category}"></th>							
+								<th th:text="#{phones.number}"></th>
 								<th th:text="#{phones.name}|"></th>
-								<th th:text="#{phones.number}"></th>								
+								<th th:text="#{phones.position}|"></th>
+								<th th:text="#{general.department}"></th>																							
 							</tr>
 						</thead>
 						<tfoot>
 							<tr>
-								<th th:text="#{general.category}"></th>
-								<th th:text="#{phones.name}|"></th>
 								<th th:text="#{phones.number}"></th>
+								<th th:text="#{phones.name}|"></th>
+								<th th:text="#{phones.position}|"></th>
+								<th th:text="#{general.department}"></th>
 							</tr>
 						</tfoot>
 						<tbody>
 							<tr th:each="entry : ${list}">
-								<td><span th:text="${entry.category.name}"></span></td>
-								<td><span th:text="${entry.name}"></span></td>
 								<td><span th:text="${entry.number}"></span></td>
+								<td><span th:text="${entry.name}"></span></td>
+								<td><span th:text="${entry.position}"></span></td>
+								<td><span th:text="${entry.category.name}"></span></td>
 							</tr>
 						</tbody>
 					</table>

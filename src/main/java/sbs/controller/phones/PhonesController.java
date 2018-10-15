@@ -211,6 +211,7 @@ public class PhonesController {
 		PhoneEntry entry = new PhoneEntry();
 		entry.setNumber(phoneEditForm.getNumber());
 		entry.setName(phoneEditForm.getName().trim());
+		entry.setPosition(phoneEditForm.getPosition().trim());
 		entry.setCategory(category);
 		phoneEntriesService.save(entry);
 
@@ -244,6 +245,7 @@ public class PhonesController {
 
 		entry.setNumber(phoneEditForm.getNumber());
 		entry.setName(phoneEditForm.getName().trim());
+		entry.setPosition(phoneEditForm.getPosition().trim());
 		entry.setCategory(category);
 
 		phoneEntriesService.update(entry);

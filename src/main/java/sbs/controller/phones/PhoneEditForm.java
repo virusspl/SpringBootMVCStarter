@@ -10,6 +10,8 @@ public class PhoneEditForm {
 	Integer number;
 	@Size(min=1, max = 50)
 	String name;
+	@Size(min=0, max = 50)
+	String position;
 	Integer categoryId;
 
 	
@@ -40,6 +42,16 @@ public class PhoneEditForm {
 
 	public Integer getCategoryId() {
 		return categoryId;
+	}
+	
+	
+	public String getPosition() {
+		return position;
+	}
+
+
+	public void setPosition(String position) {
+		this.position = position;
 	}
 
 
