@@ -95,6 +95,7 @@
 									<th th:text="#{general.date.creation}"></th>
 								</tr>
 							</thead>
+							<!-- 
 							<tfoot>
 								<tr>
 									<th th:text="|#id|"></th>
@@ -104,11 +105,12 @@
 									<th th:text="#{general.date.creation}"></th>
 								</tr>
 							</tfoot>
+							 -->							
 							<tbody>
 								<tr th:each="inv: ${inventories}">
 									<!-- ID / EDIT -->
 									<td sec:authorize="hasAnyRole('ROLE_ADMIN')"><a
-										th:href="|@{/inventory/edit/}${inv.id}|" data-toggle="tooltip"
+										th:href="|@{/inventory/editinventory/}${inv.id}|" data-toggle="tooltip"
 										data-placement="top" th:title="#{action.edit}"><span
 											th:text="|#${inv.id}|"></span></a></td>
 									<!-- ID -->

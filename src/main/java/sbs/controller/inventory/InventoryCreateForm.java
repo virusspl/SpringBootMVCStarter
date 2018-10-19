@@ -1,5 +1,6 @@
 package sbs.controller.inventory;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
@@ -12,10 +13,15 @@ public class InventoryCreateForm {
 	@Size(min = 1, max = 255)
 	String title;
 	@NotNull
-	@DateTimeFormat(pattern= "dd.MM.yyyy")
+	@DateTimeFormat(pattern = "dd.MM.yyyy")
 	private Date inventoryDate;
 	/* null-able */
 	String description;
+	
+	// in edit
+	int id;
+	int nextLine;
+	boolean active;
 	
 	public InventoryCreateForm() {
 
@@ -45,13 +51,34 @@ public class InventoryCreateForm {
 		this.description = description;
 	}
 
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getNextLine() {
+		return nextLine;
+	}
+
+	public void setNextLine(int nextLine) {
+		this.nextLine = nextLine;
+	}
+
+	public boolean getActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
 	@Override
 	public String toString() {
 		return "InventoryCreateForm [title=" + title + ", inventoryDate=" + inventoryDate + ", description="
 				+ description + "]";
 	}
-	
-	
-	
 	
 }

@@ -11,11 +11,18 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javassist.NotFoundException;
+import sbs.controller.bhptickets.TicketCreateForm;
+import sbs.controller.buyorders.ResponseForm;
 import sbs.helpers.TextHelper;
+import sbs.model.bhptickets.BhpTicket;
+import sbs.model.bhptickets.BhpTicketState;
+import sbs.model.buyorders.BuyOrder;
 import sbs.model.inventory.Inventory;
 import sbs.model.users.User;
 import sbs.service.inventory.InventoryService;
@@ -92,6 +99,58 @@ public class InventoryController {
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/inventory/editinventory/" + inventory.getId();
 	}	
+	
+	@RequestMapping("/editinventory/{id}")
+	@Transactional
+	public String editInventoryView(@PathVariable("id") int id, Model model) throws NotFoundException {
+		Inventory inventory = inventoryService.findById(id);
+		if (inventory == null) {
+			throw new NotFoundException("Inventory not found");
+		}
+		InventoryCreateForm inventoryCreateForm = new InventoryCreateForm();
+		inventoryCreateForm.setId(inventory.getId());
+		inventoryCreateForm.setActive(inventory.getActive());
+		inventoryCreateForm.setTitle(inventory.getTitle());
+		inventoryCreateForm.setDescription(inventory.getDescription());
+		inventoryCreateForm.setInventoryDate(inventory.getInventoryDate());
+		inventoryCreateForm.setNextLine(inventory.getNextLine());
+		
+		model.addAttribute("inventoryCreateForm", inventoryCreateForm);
+		model.addAttribute("columns", inventory.getColumns());
+		
+		return "inventory/editinventory";
+	}
+	
+	@RequestMapping(value = "/editinventory", method = RequestMethod.POST)
+	@Transactional
+	public String editInventory(@Valid InventoryCreateForm inventoryCreateForm, BindingResult bindingResult,
+			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
+		
+		System.out.println("return:" + inventoryCreateForm);
+		
+		Inventory inventory = inventoryService.findById(inventoryCreateForm.getId());
+		if (inventory == null) {
+			throw new NotFoundException("Inventory not found");
+		}
+		
+		// validate
+		if (bindingResult.hasErrors()) {
+			return "inventory/editinventory";
+		}
+	
+		inventory.setActive(inventoryCreateForm.getActive());
+		inventory.setTitle(inventoryCreateForm.getTitle());
+		inventory.setDescription(inventoryCreateForm.getDescription());
+		System.out.println("date " + inventoryCreateForm.getInventoryDate());
+		System.out.println("DATE: " + new Timestamp(inventoryCreateForm.getInventoryDate().getTime()));
+		inventory.setInventoryDate(new Timestamp(inventoryCreateForm.getInventoryDate().getTime()));
+		
+		System.out.println("UPDATING: " + inventory.getId());
+		inventoryService.update(inventory);
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		
+		return "redirect:/inventory/editinventory/"+inventory.getId();
+	}
 
 
 }
