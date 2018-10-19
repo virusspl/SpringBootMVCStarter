@@ -34,6 +34,7 @@ public class PhoneEntriesRepositoryImpl extends GenericRepositoryAdapter<PhoneEn
 		Criteria crit = currentSession().createCriteria(PhoneEntry.class, "entry");
 		crit.createAlias("entry.category", "category");
 		crit.addOrder(Order.asc("category.order"));
+		crit.addOrder(Order.asc("category.name"));
 		crit.addOrder(Order.asc("entry.number"));
 		return crit.list();
 	}
