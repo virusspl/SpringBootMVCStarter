@@ -20,6 +20,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import sbs.model.bhptickets.BhpTicket;
 import sbs.model.buyorders.BuyOrder;
 import sbs.model.hruafiles.HrUaInfo;
+import sbs.model.inventory.Inventory;
 import sbs.model.qualitysurveys.QualitySurvey;
 import sbs.model.tools.ToolsProject;
 
@@ -42,6 +43,7 @@ public class User {
     private Set<HrUaInfo> HrUaFilesCreated;
     private Set<BuyOrder> createdBuyOrders;
     private Set<BuyOrder> respondedBuyOrders;
+    private Set<Inventory> createdInventories;
     
     
     public User() {
@@ -167,6 +169,11 @@ public class User {
 		return respondedBuyOrders;
 	}
 	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
+	public Set<Inventory> getCreatedInventories() {
+		return createdInventories;
+	}
+	
 	public void setCreatedBhpTickets(Set<BhpTicket> createdBhpTickets) {
 		this.createdBhpTickets = createdBhpTickets;
 	}
@@ -198,6 +205,11 @@ public class User {
 	public void setRespondedBuyOrders(Set<BuyOrder> respondedBuyOrders) {
 		this.respondedBuyOrders = respondedBuyOrders;
 	}
+	
+	public void setCreatedInventories(Set<Inventory> createdInventories) {
+		this.createdInventories = createdInventories;
+	}
+	
 	
 	public boolean hasRole(String role_roletocheck){
 		for(Role role: getRoles()){

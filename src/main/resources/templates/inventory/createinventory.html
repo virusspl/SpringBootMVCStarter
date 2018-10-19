@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script">
+		<!-- DATEPICKER -->
+		<script th:src="@{/datepicker/js/bootstrap-datepicker.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:src="@{/datepicker/locales/bootstrap-datepicker.pl.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script
+			th:src="@{/datepicker/locales/bootstrap-datepicker.en-GB.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:src="@{/datepicker/locales/bootstrap-datepicker.it.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:if="__${#locale}__ == 'pl'">
+			$('#inventoryDate').datepicker({
+				autoclose : true,
+				language : 'pl'
+			});
+		</script>
+		<script th:if="__${#locale}__ == 'en'">
+			$('#inventoryDate').datepicker({
+				autoclose : true,
+				language : 'en-GB'
+			});
+		</script>
+		<script th:if="__${#locale}__ == 'it'">
+			$('#inventoryDate').datepicker({
+				autoclose : true,
+				language : 'it'
+			});
+		</script>
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h1 th:text="#{inventory.create}" class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{inventory.create.message}"> Welcome message
+				</span>
+			</div>
+			<a th:href="@{/inventory/list}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+
+		<div class="underline margin-top-20"></div>
+		<!-- FORM -->
+		<form th:action="@{/inventory/createinventory}" method="post"
+			th:object="${inventoryCreateForm}">
+			<div class="row margin-top-20">
+				<div class="col-xs-12 col-sm-9">
+					<div class="form-group">
+						<!-- title -->
+						<label for="title" th:text="#{general.title}">lbl</label> <input
+							type="text" class="form-control" id="title" name="title"
+							th:placeholder="#{general.title}" th:field="*{title}"
+							autocomplete="off" />
+						<div th:errors="*{title}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-9">
+					<div class="form-group">
+						<!-- comment -->
+						<label for="description" th:text="#{general.description}">comment</label>
+						<textarea class="form-control" id="description" name="description"
+							th:placeholder="#{general.description}" th:field="*{description}"
+							style="min-height: 200px;"></textarea>
+						<div th:errors="*{description}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-4 col-sm-4">
+					<div class="form-group">
+						<label for="inventoryDate" th:text="#{inventory.inventoryDate}">Title</label>
+						<input type="text" class="form-control" id="inventoryDate"
+							name="inventoryDate" th:placeholder="#{inventory.inventoryDate}"
+							th:field="*{inventoryDate}" />
+						<div th:errors="*{inventoryDate}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row margin-top-10">
+				<div class="col-xs-12">
+					<a th:href="@{/inventory/list}" class="btn btn-link btn-sm"> <span
+						class="glyphicon glyphicon-menu-left"></span> <span
+						th:text="#{action.back}">back</span>
+					</a>
+					<button class="btn btn-primary btn-sm" type="submit" name="save">
+						<span class="glyphicon glyphicon-ok"></span> <span
+							th:text="#{action.save}">create</span>
+					</button>
+				</div>
+			</div>
+		</form>
+		<!-- /FORM -->
+	</div>
+</body>
+</html>

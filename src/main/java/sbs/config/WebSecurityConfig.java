@@ -65,7 +65,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/weldlog/**",
 				"/test/**",
 				"/proprog/**",
-				"/phones/**"
+				"/phones/**",
+				"/inventory/**"
 				)
 		.permitAll()
 		.antMatchers("/bhptickets/edit/**", 
@@ -156,7 +157,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				)
 		.antMatchers(
 				"/admin", 
-				"/users/**")
+				"/users/**",
+				"/inventory/createinventory/**",
+				"/inventory/editinventory/**",
+				"/inventory/managecollumns/**"
+				)
 		.hasRole("ADMIN")
 		.anyRequest().authenticated().and()
 		.csrf().and()

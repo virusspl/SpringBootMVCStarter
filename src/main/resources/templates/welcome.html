@@ -136,11 +136,11 @@
 					class="btn btn-info btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-forward"></span> <span
 					th:text="#{proprog.proprog}"></span>
-				</a>  <a th:href="@{/tools/dispatch}"
+				</a> <a th:href="@{/tools/dispatch}"
 					class="btn btn-info btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-copy"></span> <span
 					th:text="#{tools.projects}"></span>
-				</a>  <a th:href="@{/buyorders/list}"
+				</a> <a th:href="@{/buyorders/list}"
 					class="btn btn-info btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-check"></span> <span
 					th:text="#{buyorders.buyorders}"></span>
@@ -153,8 +153,8 @@
 					th:text="#{hrua.files}"></span>
 				</a> <a th:href="@{/consumption/export}"
 					class="btn btn-info btn-md margin-top-5"
-					sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_CONSUMPTIONUSER')"> <span
-					class="glyphicon glyphicon-export"></span> <span
+					sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_CONSUMPTIONUSER')">
+					<span class="glyphicon glyphicon-export"></span> <span
 					th:text="#{consumption.consumptionacv}">consumption</span>
 				</a>
 			</div>
@@ -202,19 +202,23 @@
 				<a th:href="@{/geolook/map}"
 					class="btn btn-info btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-th"></span> <span
-					th:text="#{geolook.warehouses.map}">GEODE Lookup</span>
+					th:text="#{geolook.warehouses.map}">title</span>
 				</a> <a th:href="@{/geolook/search}"
 					class="btn btn-info btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-search"></span> <span
-					th:text="#{geolook.warehouses.lookup}">GEODE Lookup</span>
+					th:text="#{geolook.warehouses.lookup}">title</span>
+				</a> <a th:href="@{/inventory/list}"
+					class="btn btn-info btn-md margin-top-5"> <span
+					class="glyphicon glyphicon-indent-left"></span> <span
+					th:text="#{inventory.inventory}">title</span>
 				</a> <a th:href="@{/movements/main}"
 					class="btn btn-info btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-sort"></span> <span
-					th:text="#{movements.movements}">Shipment warehouse moves</span>
+					th:text="#{movements.movements}">title</span>
 				</a> <a th:href="@{/dirrcpship/main}"
 					class="btn btn-info btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-upload"></span> <span
-					th:text="#{dirrcpship.dirrcpship}">Shipment warehouse moves</span>
+					th:text="#{dirrcpship.dirrcpship}">title</span>
 				</a>
 			</div>
 			<!-- WAREHOUSE WPS -->

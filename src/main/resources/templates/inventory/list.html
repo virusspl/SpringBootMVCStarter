@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+
+	<div layout:fragment="script">
+		<script th:src="@{/datatables/jquery.dataTables.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/dataTables.helper.js}"
+			type="text/javascript"></script>
+		<script th:if="__${#locale}__ == 'pl'">
+			$('#srv').DataTable({
+				language : {
+					url : getUrl() + "polish.json",
+				},
+				order : [ [ 1, 'asc' ] ]
+			});
+		</script>
+		<script th:if="__${#locale}__ == 'en'">
+			$('#srv').DataTable({
+				language : {
+					url : getUrl() + "english.json"
+				},
+				order : [ [ 1, 'asc' ] ]
+			});
+		</script>
+		<script th:if="__${#locale}__ == 'it'">
+			$('#srv').DataTable({
+				language : {
+					url : getUrl() + "italian.json"
+				},
+				order : [ [ 1, 'asc' ] ]
+			});
+		</script>
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12 col-xs-offset-0">
+				<h2 th:text="#{inventory.list.title}" class="text-primary">Hello
+					on a page</h2>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{inventory.list.message}"> Welcome message </span>
+			</div>
+			<a th:href="@{/}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+		<!-- WAITING/CLOSED TABLES -->
+		<div>
+			<div class="row">
+				<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
+					<h3 class="text-primary" th:text="#{general.list}">Panel With
+						title</h3>
+				</div>
+			</div>
+			<div class="row">
+			<div class="col-xs-12 margin-top-10">
+				<!-- CREATE -->
+				<a sec:authorize="hasAnyRole('ROLE_ADMIN')"
+					class="btn btn-primary btn-md margin-top-5"
+					th:href="@{/inventory/createinventory}"> <span
+					class="glyphicon glyphicon-copy" style="margin-right: 10px;"></span>
+					<span th:text="#{action.create}">begin</span>
+				</a>
+				<!-- ACTIVE -->
+				<a class="btn btn-info btn-md margin-top-5"
+					th:href="@{/inventory/list}"> <span
+					class="glyphicon glyphicon-ok" style="margin-right: 10px;"></span>
+					<span th:text="#{inventory.list.active}">begin</span>
+				</a>
+				<!-- INACTIVE -->
+				<a class="btn btn-info btn-md margin-top-5"
+					th:href="@{/inventory/inactivelist}"> <span
+					class="glyphicon glyphicon-ban-circle" style="margin-right: 10px;"></span>
+					<span th:text="#{inventory.list.inactive}">begin</span>
+				</a>
+			</div>
+		</div>
+			<div class="row margin-top-10" th:if="${inventories}">
+				<div class="col-xs-12">
+					<div class="table-responsive margin-top-10">
+						<table id="srv" class="display">
+							<thead>
+								<tr>
+									<th th:text="|#id|"></th>
+									<th th:text="#{inventory.inventoryDate}|"></th>
+									<th th:text="#{general.title}"></th>
+									<th th:text="#{inventory.nextline.short}"></th>
+									<th th:text="#{general.date.creation}"></th>
+								</tr>
+							</thead>
+							<tfoot>
+								<tr>
+									<th th:text="|#id|"></th>
+									<th th:text="#{inventory.inventoryDate}|"></th>
+									<th th:text="#{general.title}"></th>
+									<th th:text="#{inventory.nextline.short}"></th>
+									<th th:text="#{general.date.creation}"></th>
+								</tr>
+							</tfoot>
+							<tbody>
+								<tr th:each="inv: ${inventories}">
+									<!-- ID / EDIT -->
+									<td sec:authorize="hasAnyRole('ROLE_ADMIN')"><a
+										th:href="|@{/inventory/edit/}${inv.id}|" data-toggle="tooltip"
+										data-placement="top" th:title="#{action.edit}"><span
+											th:text="|#${inv.id}|"></span></a></td>
+									<!-- ID -->
+									<td sec:authorize="!hasAnyRole('ROLE_ADMIN')"><span
+										th:text="|#${inv.id}|"></span></td>
+									<!-- INVENTORY DATE -->										
+									<td><span
+										th:text="${#dates.format(inv.inventoryDate, 'yyyy.MM.dd')}"></span></td>
+									<!-- TITLE / SHOW -->
+									<td><a th:href="|@{/inventory/show/}${inv.id}|"
+										data-toggle="tooltip" data-placement="top"
+										th:title="#{action.show}"><span th:text="${inv.title}"></span></a></td>
+									<!-- NEXT LINE -->
+									<td><span th:text="${inv.nextLine}"></span></td>
+									<!-- CREATION DATE -->
+									<td><span
+										th:text="${#dates.format(inv.creationDate, 'yyyy.MM.dd HH:mm')}"></span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /WAITING/CLOSED TABLES -->
+	</div>
+</body>
+</html>
