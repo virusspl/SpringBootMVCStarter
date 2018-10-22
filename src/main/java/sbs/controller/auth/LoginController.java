@@ -32,8 +32,9 @@ public class LoginController {
 		return "welcome";
 	}
 	
-	@RequestMapping("/terminallogin")
+	@RequestMapping("/tlogin")
 	public String authenticateTerminal() {
 		return "terminal/login_terminal";
 	}
+
 }

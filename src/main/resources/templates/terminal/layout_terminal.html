@@ -5,42 +5,42 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initialscale=1, maximum-scale=1.0, user-scalable=no" />
-	<link rel="icon" type="image/png"  th:href="@{/images/TinyADR.png}" />
-	<link th:href="@{/css/terminal.css}" type="text/css" rel="stylesheet" media="screen,projection" />
-	<title th:text="#{name.company}">ADR Polska S.A.</title>
+<meta name="viewport"
+	content="width=device-width, initialscale=1, maximum-scale=1.0, user-scalable=no" />
+<link rel="icon" type="image/png" th:href="@{/images/TinyADR.png}" />
+<link th:href="@{/bootstrap/css/bootstrap.min.css}" type="text/css"
+	rel="stylesheet" media="screen,projection" />
+<link th:href="@{/css/terminal.css}" type="text/css" rel="stylesheet"
+	media="screen,projection" />
+<title th:text="#{name.company}">ADR Polska S.A.</title>
 </head>
 <body>
-
-				<a th:href="@{/terminal}"> HOME  </a>
+	<!-- LAYOUT STATIC -->
+		<a th:href="@{/terminal}">HOME</a>
+	<!-- /LAYOUT STATIC -->
 	
-				<section layout:fragment="content">
-					<p>page content</p>
-				</section>
-
-	<!--=================================== SCRIPTS ===============================-->
-	<!-- JQUERY -->
+	<!-- CONTENT -->
+	<section layout:fragment="content">
+		<p>page content</p>
+	</section>
+	<!-- /CONTENT -->
+	
+	<!-- SCRIPTS -->
+	<!-- jquery -->
 	<script th:src="@{/js/jquery-3.1.1.min.js}" type="text/javascript"></script>
-	<!-- BOOTSTRAP JS -->
-	<script th:src="@{/bootstrap/js/bootstrap.min.js}" type="text/javascript"></script>
+	<!-- bootstrap JS -->
+	<script th:src="@{/bootstrap/js/bootstrap.min.js}"
+		type="text/javascript"></script>
 	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script th:src="@{/bootstrap/js/ie10-viewport-bug-workaround.js}" type="text/javascript"></script>
-	<!-- TOOLTIP -->
-    <script th:src="@{/js/tooltip.js}"    type="text/javascript"></script>
-	<!-- PREVENT DEFAULT -->
-    <script th:src="@{/js/preventDefault.js}" type="text/javascript"></script>
-	<!-- MESSAGING -->
+	<script th:src="@{/bootstrap/js/ie10-viewport-bug-workaround.js}"
+		type="text/javascript"></script>
+	<!-- messaging -->
 	<script th:src="@{/js/messaging/sockjs.min.js}" type="text/javascript"></script>
 	<script th:src="@{/js/messaging/stomp.min.js}" type="text/javascript"></script>
 	<script th:src="@{/js/messaging/messaging.js}" type="text/javascript"></script>
-	<!-- ALL SPECIFIC SCRIPTS FROM CHILD VIEWS -->
+	<!-- specific for view -->
 	<script type="text/javascript" layout:fragment="script">
 	</script>
-	<!-- LOGOUT HIDDEN FORM -->
-	<!-- do href post logout -->
-	<form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
-		<input type="submit" value="Sign Out" />
-	</form>
-	<!--=================================== /SCRIPTS ==============================-->
+	<!-- /SCRIPTS -->
 </body>
 </html>
