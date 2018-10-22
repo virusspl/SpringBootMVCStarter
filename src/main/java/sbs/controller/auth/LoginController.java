@@ -30,5 +30,10 @@ public class LoginController {
 	public String logout(Model model, Locale locale) {
 		model.addAttribute("msg", messageSource.getMessage("action.logged.out", null, locale));
 		return "welcome";
-	}	
+	}
+	
+	@RequestMapping("/terminallogin")
+	public String authenticateTerminal() {
+		return "terminal/login_terminal";
+	}
 }

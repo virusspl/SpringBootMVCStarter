@@ -12,13 +12,18 @@ import sbs.service.GenericServiceAdapter;
 @Service
 public class InventoryDataTypesServiceImpl extends GenericServiceAdapter<InventoryDataType, Integer> implements InventoryDataTypesService{
 	
-	@SuppressWarnings("unused")
+	
 	private InventoryDataTypesRepository inventoryDataTypesRepository;
 	
     @Autowired
 	public InventoryDataTypesServiceImpl(@Qualifier("inventoryDataTypesRepositoryImpl") GenericRepository<InventoryDataType, Integer> genericRepository) {
 			super(genericRepository);
 			this.inventoryDataTypesRepository = (InventoryDataTypesRepository) genericRepository;
+	}
+
+	@Override
+	public InventoryDataType findByColumnTypeCode(String columnTypeCode) {
+		return inventoryDataTypesRepository.findByColumnTypeCode(columnTypeCode);
 	}
 
 }

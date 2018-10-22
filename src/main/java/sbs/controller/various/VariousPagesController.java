@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sbs.helpers.ExcelContents;
 import sbs.helpers.ExcelExportHelper;
 import sbs.model.bhptickets.BhpTicketState;
+import sbs.model.inventory.InventoryDataType;
 import sbs.model.qualitysurveys.QualitySurveyParameter;
 import sbs.model.tools.ToolsProjectState;
 import sbs.model.users.Role;
@@ -29,6 +30,7 @@ import sbs.model.users.User;
 import sbs.service.bhptickets.BhpTicketStateService;
 import sbs.service.bhptickets.BhpTicketsService;
 import sbs.service.geode.JdbcOracleGeodeService;
+import sbs.service.inventory.InventoryDataTypesService;
 import sbs.service.mail.MailService;
 import sbs.service.optima.JdbcAdrOptimaService;
 import sbs.service.qualitysurveys.QualitySurveyParametersService;
@@ -68,6 +70,8 @@ public class VariousPagesController {
 	MailService mailService;
 	@Autowired
 	private LiveFeedSingleton liveFeedSingleton;
+	@Autowired
+	InventoryDataTypesService inventoryDataTypesService;
 
 	@RequestMapping("/noaccess")
 	public String noAccess() {
@@ -765,6 +769,31 @@ public class VariousPagesController {
 			toolsProjectStateService.save(toolsState);
 			msg += "[tps_param: " + toolsState.getOrder() + " " + toolsState.getDescription() + "], ";
 		}
+		
+		InventoryDataType invDataType;
+		// i18n codes
+		String[] types = {
+				"inventory.type.code",
+				"inventory.type.address",
+				"inventory.type.location",
+				"inventory.type.label",
+				"inventory.type.order.sale",
+				"inventory.type.order.purchase",
+				"inventory.type.packagetype",
+				"inventory.type.quantity",
+				"inventory.type.freestring1",
+				"inventory.type.freestring2",
+				"inventory.type.freedouble"
+				};
+		for(String type: types){
+			if(inventoryDataTypesService.findByColumnTypeCode(type) == null){
+				invDataType = new InventoryDataType();
+				invDataType.setColumnTypeCode(type);
+				inventoryDataTypesService.save(invDataType);
+				msg += "[inv_datatype: " + invDataType.getColumnTypeCode() + "], ";
+			}			
+		}
+
 		
 		model.addAttribute("msg", msg);
 		return "welcome";

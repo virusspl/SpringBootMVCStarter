@@ -5,5 +5,6 @@ import sbs.service.GenericService;
 
 public interface InventoryDataTypesService extends GenericService<InventoryDataType, Integer>{
 
+	InventoryDataType findByColumnTypeCode(String columnTypeCode);
 	
 }

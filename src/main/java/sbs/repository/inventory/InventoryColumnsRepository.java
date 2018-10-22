@@ -5,6 +5,8 @@ import sbs.repository.GenericRepository;
 
 public interface InventoryColumnsRepository extends GenericRepository<InventoryColumn,Integer> {
 
+	InventoryColumn findByInventoryAndDataType(int inventoryId, int dataTypeId);
+
 	
 }
 

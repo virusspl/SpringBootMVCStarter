@@ -1,6 +1,5 @@
 package sbs.controller.inventory;
 
-import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;

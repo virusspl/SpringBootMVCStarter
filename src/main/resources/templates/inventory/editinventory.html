@@ -46,10 +46,10 @@
 				language : {
 					url : getUrl() + "polish.json",
 				},
-				order : [ [ 3, 'asc' ] ],
-				paging:   false,
-				info:   false,
-				searching: false
+				order : [ [ 0, 'asc' ] ],
+				paging : false,
+				info : false,
+				searching : false
 			});
 		</script>
 		<script th:if="__${#locale}__ == 'en'">
@@ -57,9 +57,9 @@
 				language : {
 					url : getUrl() + "english.json"
 				},
-				order : [ [ 3, 'asc' ] ],
-				paging:   false,
-				info:   false
+				order : [ [ 0, 'asc' ] ],
+				paging : false,
+				info : false
 			});
 		</script>
 		<script th:if="__${#locale}__ == 'it'">
@@ -67,7 +67,7 @@
 				language : {
 					url : getUrl() + "italian.json"
 				},
-				order : [ [ 3, 'asc' ] ]
+				order : [ [ 0, 'asc' ] ]
 			});
 		</script>
 
@@ -176,38 +176,60 @@
 			<!-- /FORM -->
 		</div>
 		<div class="underline margin-top-20"></div>
+
 		<div class="row">
-			<div class="col-xs-12" >
+			<div class="col-xs-12">
 				<h3 class="text-primary" th:text="#{inventory.columns}">lbl</h3>
 			</div>
-			<div class="col-xs-12 col-sm-6 margin-top-20">
-
+			<div class="col-xs-12">
+				<a th:href="|@{/inventory/createcolumn/}${inventoryCreateForm.id}|"
+					class="btn btn-info btn-sm"> <span
+					class="glyphicon glyphicon-plus"></span> <span
+					th:text="#{inventory.createcolumn}">back</span>
+				</a>
+			</div>
+			<div class="col-xs-12 margin-top-10">
 				<div class="table-responsive">
-
-
-					<table id="srv" >
+					<table id="srv">
 						<thead>
 							<tr>
-								<th>#id</th>
+								<th th:text="#{inventory.order}">head</th>
 								<th th:text="#{general.name}">head</th>
 								<th th:text="#{general.type}">head</th>
-								<th th:text="#{inventory.order}">head</th>
-								<th th:text="#{inventory.required}">head</th>
-								<th th:text="#{inventory.validated}">head</th>
+								<th th:text="#{general.required}">head</th>
+								<th th:text="#{general.validated}">head</th>
+								<th>#id</th>
 								<th th:text="#{general.options}">head</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr th:each="column : ${columns}">
-								<td><span th:text="${column.name}"></span></td>
+								<td><span th:text="${column.order}">txt</span></td>
+								<td><span th:text="${column.columnName}"></span></td>
+								<td><span
+									th:text="#{${column.inventoryDataType.columnTypeCode}}">txt</span></td>
+								<td th:if="${column.required}==true"><span
+									class="glyphicon glyphicon-ok"></span></td>
+								<td th:if="${column.required}==false"><span
+									class="glyphicon glyphicon-remove"></span></td>
+								<td th:if="${column.validated}==true"><span
+									class="glyphicon glyphicon-ok"></span></td>
+								<td th:if="${column.validated}==false"><span
+									class="glyphicon glyphicon-remove"></span></td>
+								<td><span th:text="|#${column.id}|">txt</span></td>
+								<td><a
+									th:href="|@{/inventory/deletecolumn/}${inventoryCreateForm.id}/${column.id}|"
+									class="btn btn-danger btn-sm"> <span
+										class="glyphicon glyphicon-remove"></span> <span
+										th:text="#{action.remove}">back</span>
+								</a></td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
-
 			</div>
 		</div>
-		
+
 	</div>
 </body>
 </html>

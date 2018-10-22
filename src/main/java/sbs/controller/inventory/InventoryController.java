@@ -17,14 +17,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javassist.NotFoundException;
-import sbs.controller.bhptickets.TicketCreateForm;
-import sbs.controller.buyorders.ResponseForm;
 import sbs.helpers.TextHelper;
-import sbs.model.bhptickets.BhpTicket;
-import sbs.model.bhptickets.BhpTicketState;
-import sbs.model.buyorders.BuyOrder;
 import sbs.model.inventory.Inventory;
+import sbs.model.inventory.InventoryColumn;
+import sbs.model.inventory.InventoryDataType;
 import sbs.model.users.User;
+import sbs.service.inventory.InventoryColumnsService;
+import sbs.service.inventory.InventoryDataTypesService;
 import sbs.service.inventory.InventoryService;
 import sbs.service.users.UserService;
 import sbs.service.x3.JdbcOracleX3Service;
@@ -43,6 +42,10 @@ public class InventoryController {
 	TextHelper textHelper;
 	@Autowired
 	InventoryService inventoryService;
+	@Autowired
+	InventoryDataTypesService inventoryDataTypesService;
+	@Autowired
+	InventoryColumnsService inventoryColumnsService;
 
 	@RequestMapping(value = "/list")
 	public String list(Model model) {
@@ -151,6 +154,69 @@ public class InventoryController {
 		
 		return "redirect:/inventory/editinventory/"+inventory.getId();
 	}
+	
+	@RequestMapping("/createcolumn/{id}")
+	@Transactional
+	public String createColumnView(@PathVariable("id") int id, Model model) throws NotFoundException {
+		Inventory inventory = inventoryService.findById(id);
+		if (inventory == null) {
+			throw new NotFoundException("Inventory not found");
+		}
+		InventoryColumnCreateForm inventoryColumnCreateForm = new InventoryColumnCreateForm();
+		inventoryColumnCreateForm.setInventoryId(inventory.getId());
+		
+		model.addAttribute("inventoryColumnCreateForm", inventoryColumnCreateForm);
+		model.addAttribute("types", inventoryDataTypesService.findAll());
+		
+		return "inventory/createcolumn";
+	}
+	
+	@RequestMapping(value = "/createcolumn", method = RequestMethod.POST)
+	@Transactional
+	public String createColumn(@Valid InventoryColumnCreateForm inventoryColumnCreateForm, BindingResult bindingResult,
+			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
+		
+		// validate
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("types", inventoryDataTypesService.findAll());
+			return "inventory/createcolumn";
+		}
+		
+		Inventory inventory = inventoryService.findById(inventoryColumnCreateForm.getInventoryId());
+		InventoryDataType idt = inventoryDataTypesService.findById(inventoryColumnCreateForm.getTypeId());
+		InventoryColumn column = inventoryColumnsService.findByInventoryAndDataType(inventory.getId(), idt.getId());
+		if(column != null){
+			bindingResult.rejectValue("typeId", "inventory.error.columnused", "ERROR");
+			model.addAttribute("types", inventoryDataTypesService.findAll());
+			return "inventory/createcolumn";
+		}
 
+		column = new InventoryColumn();
+		column.setInventory(inventory);
+		inventory.getColumns().add(column);
+		column.setInventoryDataType(idt);
+		column.setOrder(inventoryColumnCreateForm.getOrder());
+		column.setRequired(inventoryColumnCreateForm.isRequired());
+		column.setValidated(inventoryColumnCreateForm.isValidated());
+		column.setColumnName(inventoryColumnCreateForm.getName());
+		inventoryColumnsService.save(column);
+
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale)+ ": " + column.getColumnName());
+		return "redirect:/inventory/editinventory/"+inventoryColumnCreateForm.getInventoryId();
+	}
+	
+	@RequestMapping("/deletecolumn/{inventoryId}/{columnId}")
+	@Transactional
+	public String deleteColumnView(@PathVariable("inventoryId") int inventoryId, @PathVariable("columnId") int columnId, RedirectAttributes redirectAttrs, Locale locale) throws NotFoundException {
+		InventoryColumn column = inventoryColumnsService.findById(columnId);
+		if(column != null){
+			inventoryColumnsService.remove(column);
+			redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.removed", null, locale)+ ": " + column.getColumnName());
+			return "redirect:/inventory/editinventory/"+inventoryId;
+		}
+		else{
+			throw new NotFoundException("Column not found");
+		}
+	}
 
 }

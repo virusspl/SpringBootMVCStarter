@@ -20,4 +20,13 @@ public class HomeController {
 		//return "redirect:/init";
 		return "welcome";
 	}
+	
+	/**
+	 * show terminal view
+	 * @return welcome view
+	 */
+	@RequestMapping("/terminal")	
+	public String terminal() {
+		return "terminal/welcome_terminal";
+	}
 }

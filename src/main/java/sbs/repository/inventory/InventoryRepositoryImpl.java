@@ -19,20 +19,20 @@ public class InventoryRepositoryImpl extends GenericRepositoryAdapter<Inventory,
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	@Transactional
 	public List<Inventory> findAllActiveInventories() {
 		Criteria crit = currentSession().createCriteria(Inventory.class, "inventory");
 		//crit.createAlias("project.state", "state");
+		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		crit.add(Restrictions.eq("inventory.active", true));
 		return crit.list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	@Transactional
 	public List<Inventory> findAllInactiveInventories() {
 		Criteria crit = currentSession().createCriteria(Inventory.class, "inventory");
 		//crit.createAlias("project.state", "state");
+		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		crit.add(Restrictions.eq("inventory.active", false));
 		return crit.list();
 	}

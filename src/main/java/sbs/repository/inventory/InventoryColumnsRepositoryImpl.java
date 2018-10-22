@@ -1,5 +1,7 @@
 package sbs.repository.inventory;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
@@ -11,6 +13,24 @@ import sbs.repository.GenericRepositoryAdapter;
 @Transactional
 public class InventoryColumnsRepositoryImpl extends GenericRepositoryAdapter<InventoryColumn, Integer>
 		implements InventoryColumnsRepository {
+
+	@Override
+	public InventoryColumn findByInventoryAndDataType(int inventoryId, int dataTypeId) {
+		String hql = "from InventoryColumn c where c.inventory.id = :invId and c.inventoryDataType.id = :idtId";
+		@SuppressWarnings("unchecked")
+		List<InventoryColumn> result = (List<InventoryColumn>) 
+		currentSession()
+		.createQuery(hql)
+		.setInteger("invId", inventoryId)
+		.setInteger("idtId", dataTypeId)
+		.list();
+		
+		if (result == null || result.isEmpty()) {
+			return null;
+		}
+		
+		return result.get(0);
+	}
 
 
 }

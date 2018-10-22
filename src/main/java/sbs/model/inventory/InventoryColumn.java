@@ -30,8 +30,8 @@ public class InventoryColumn {
 	@Column(name = "ic_order", nullable = false)
 	private int order;
 	
-	@Column(name = "ic_recquired", nullable = false)
-	private Boolean recquired;
+	@Column(name = "ic_required", nullable = false)
+	private Boolean required;
 	
 	@Column(name = "ic_validated", nullable = false)
 	private Boolean validated;
@@ -75,12 +75,12 @@ public class InventoryColumn {
 		this.order = order;
 	}
 
-	public Boolean getRecquired() {
-		return recquired;
+	public Boolean getRequired() {
+		return required;
 	}
 
-	public void setRecquired(Boolean recquired) {
-		this.recquired = recquired;
+	public void setRequired(Boolean required) {
+		this.required = required;
 	}
 
 	public Boolean getValidated() {
@@ -98,6 +98,14 @@ public class InventoryColumn {
 	public void setColumnName(String columnName) {
 		this.columnName = columnName;
 	}
+
+	@Override
+	public String toString() {
+		return "InventoryColumn [id=" + id + ", inventory=" + inventory + ", inventoryDataType=" + inventoryDataType
+				+ ", order=" + order + ", required=" + required + ", validated=" + validated + ", columnName="
+				+ columnName + "]";
+	}
+	
 	
 
 }

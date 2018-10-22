@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script">
+
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h1 th:text="#{inventory.createcolumn}" class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{inventory.createcolumn}"> Welcome message
+				</span>
+			</div>
+			<a th:href="|@{/inventory/editinventory/}${inventoryColumnCreateForm.inventoryId}|" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+
+		<div class="underline margin-top-20"></div>
+		<!-- FORM -->
+		<form th:action="@{/inventory/createcolumn}" method="post"
+			th:object="${inventoryColumnCreateForm}">
+			<!-- inventory id -->
+			<input type="hidden" th:field="*{inventoryId}" />
+			<div th:errors="*{inventoryId}" class="alert alert-danger margin-top-5">error</div>
+			<div class="row margin-top-20">
+				<!-- type -->
+				<div class="col-xs-12 col-sm-6">
+					<div class="form-group">
+						<label for="type" th:text="#{inventory.columntype}">User</label>
+						<select
+							class="form-control" id="type" name="type"
+							th:placeholder="#{inventory.columntype}" th:field="*{typeId}">
+							<option th:each="obj,stat : ${types}"
+								th:value="${types[__${stat.index}__].id}"
+								th:text="|#{${types[__${stat.index}__].columnTypeCode}}|">
+							</option>
+						</select>
+						<div th:errors="*{typeId}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-12"></div>
+				<!-- name -->
+				<div class="col-xs-12 col-sm-6">
+					<div class="form-group">
+						<label for="name" th:text="#{general.name}">lbl</label> <input
+							type="text" class="form-control" id="name" name="name"
+							th:placeholder="#{general.name}" th:field="*{name}"
+							autocomplete="off" />
+						<div th:errors="*{name}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-12"></div>
+								<!-- order -->
+				<div class="col-xs-12 col-sm-3">
+					<div class="form-group">
+						<label for="order" th:text="#{inventory.order}">lbl</label> <input
+							type="text" class="form-control" id="order" name="order"
+							th:placeholder="#{inventory.order}" th:field="*{order}"
+							autocomplete="off" />
+						<div th:errors="*{order}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-12"></div>
+				<!-- required -->
+				<div class="col-xs-6 col-sm-3">
+					<div class="form-group">
+						<label for="required" th:text="#{general.required}">lbl</label> 
+						<div id="required" class="checkbox">
+							<label><input type="checkbox"
+								th:field="*{required}" /><span
+								th:text="#{general.required}"></span></label>
+						</div>
+					</div>
+				</div>
+				<!-- validated -->
+				<div class="col-xs-6 col-sm-3">
+					<div class="form-group">
+						<label for="validated" th:text="#{general.validated}">lbl</label> 
+												<div id="validated" class="checkbox">
+							<label><input type="checkbox"
+								th:field="*{validated}" /><span
+								th:text="#{general.validated}"></span></label>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12"></div>
+			</div>
+
+			<div class="row margin-top-10">
+				<div class="col-xs-12">
+			<a th:href="|@{/inventory/editinventory/}${inventoryColumnCreateForm.inventoryId}|" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+					<button class="btn btn-primary btn-sm" type="submit" name="save">
+						<span class="glyphicon glyphicon-ok"></span> <span
+							th:text="#{action.save}">create</span>
+					</button>
+				</div>
+			</div>
+		</form>
+		<!-- /FORM -->
+	</div>
+</body>
+</html>

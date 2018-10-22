@@ -12,13 +12,17 @@ import sbs.service.GenericServiceAdapter;
 @Service
 public class InventoryColumnsServiceImpl extends GenericServiceAdapter<InventoryColumn, Integer> implements InventoryColumnsService{
 	
-	@SuppressWarnings("unused")
 	private InventoryColumnsRepository inventoryColumnsRepository;
 	
     @Autowired
 	public InventoryColumnsServiceImpl(@Qualifier("inventoryColumnsRepositoryImpl") GenericRepository<InventoryColumn, Integer> genericRepository) {
 			super(genericRepository);
 			this.inventoryColumnsRepository = (InventoryColumnsRepository) genericRepository;
+	}
+
+	@Override
+	public InventoryColumn findByInventoryAndDataType(int inventoryId, int dataTypeId) {
+		return inventoryColumnsRepository.findByInventoryAndDataType(inventoryId,dataTypeId);
 	}
 
 }

@@ -4,6 +4,8 @@ import sbs.model.inventory.InventoryDataType;
 import sbs.repository.GenericRepository;
 
 public interface InventoryDataTypesRepository extends GenericRepository<InventoryDataType,Integer> {
+
+	InventoryDataType findByColumnTypeCode(String columnTypeCode);
 	
 	
 }
