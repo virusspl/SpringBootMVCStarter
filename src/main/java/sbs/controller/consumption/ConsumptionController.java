@@ -92,7 +92,7 @@ public class ConsumptionController {
 		ExcelContents contents = new ExcelContents();
 		
 		// set contents
-		contents.setFileName("CONS_"+consInitYear+"_EXPORT");
+		contents.setFileName("CONS_"+consInitYear+"_EXPORT.xls");
 		contents.setSheetName(consInitYear+"");
 		contents.setHeaders(headers);
 		contents.setValues(rows);
