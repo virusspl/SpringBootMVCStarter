@@ -23,8 +23,10 @@
 				</tr>
 				<tr>
 					<td>
-						<button class="margin-top-10" th:text="#{action.login}"
+						<button class="button okbutton margin-top-10" th:text="#{action.login}"
 							type="submit" name="action">login</button>
+						<a class="button badbutton margin-top-10" th:text="#{action.clear}"
+							 th:href="@{/terminal}">login</a>
 					</td>
 				</tr>
 			</table>
@@ -35,13 +37,24 @@
 	<!-- SCRIPT -->
 	<div layout:fragment="script">
 		<script>
-			$(document).on("keypress", 'form', function(e) {
+		$(document).ready(function() {
+			$(window).keydown(function(event) {
+				if (event.keyCode == 13) {
+						event.preventDefault();
+						return false;
+				}
+			});
+		});
+		
+		
+		/*	$(document).on("keypress", 'form', function(e) {
 				var code = e.keyCode || e.which;
 				if (code == 13) {
 					e.preventDefault();
 					return false;
 				}
 			});
+		)*/
 		</script>
 	</div>
 	<!-- /SCRIPT -->

@@ -8,31 +8,32 @@
 <title th:text="#{name.company}">ADR-Terminal</title>
 <style>
 body {
-	background-color: rgb(220, 220, 220);
-	color: rgb(0, 0, 0);
+	background-color: #DCDCDC;
+	color: #000000;
 	font-family: Verdana, Geneva, sans-serif;
+	font-size: 90%;
 }
 
 a:link {
-	color: rgb(0, 200, 0);
+	color: #4CAF50;
 	text-decoration: none;
 }
 
 a:visited {
-	color: rgb(0, 200, 0);
+	color: #4CAF50;
 }
 
 a:hover {
-	color: rgb(200, 100, 100);
+	color: #6CCF70;
 }
 
 a:active {
-	color: blue;
+	color: black;
 }
 
 #ttop {
 	width: 100%;
-	border-bottom: 1px solid rgb(150, 150, 150);
+	border-bottom: 1px solid #969696;
 }
 
 #tmessages {
@@ -46,46 +47,78 @@ a:active {
 }
 
 #liveMessage { /* white */
-	background-color: rgb(255, 255, 255);
-	border: 1px solid rgb(0, 0, 0);
+	background-color: #FFFFFF;
+	border: 1px solid #000000;
 }
 
 #msgMessage { /* green */
-	background-color: rgb(179, 255, 179);
-	border: 1px solid rgb(0, 153, 0);
+	background-color: #7AEF89;
+	border: 1px solid #009900;
 }
 
 #warningMessage { /*warning*/ /* yellow */
-	background-color: rgb(255, 255, 179);
-	border: 1px solid rgb(255, 255, 0);
+	background-color: #FFFF83;
+	border: 1px solid #FFFF00;
 }
 
 #errorMessage { /* red */
-	background-color: rgb(255, 179, 179);
-	border: 1px solid rgb(255, 0, 0);
+	background-color: #FF8383;
+	border: 1px solid #FF0000;
 }
-h1{
+h1 {
 	font-size: 200%;
-	color: rgb(0, 200, 0);
+	color: #4CAF50;
 }
 
 input {
 	width: 195px;
 }
-
 .center {
 	text-align: center;
 }
 .margin-top-10 {
 	margin-top: 10px;
 }
+.button {
+    border: none;
+    color: white;
+	padding: 10px 15px 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+    display: inline-block;
+}
+a.button:link {
+	color: white;
+}
+a.button:visited {
+	color: white;
+}
+a.button:hover {
+	color: white;
+}
+a.button:active {
+	color: black;
+}
+.okbutton {
+    background-color: #4CAF50;
+}
+.badbutton {
+    background-color: #BF3C3C;
+}
+.menubutton {
+    background-color: #4CAF50;
+	padding: 15px 25px 15px 25px;
+	font-size: 110%;
+}
+
 
 </style>
 </head>
 <body style="">
 	<!-- LAYOUT STATIC -->
 	<div id="ttop">
-		<span><a th:href="@{/terminal/inventory}" th:text="|Home|"></a></span>
+		<span><a th:href="@{/terminal}" th:text="|Home|"></a></span>
 		<span sec:authorize="isAuthenticated()"
 			th:text="| - ${#authentication.name}|"></span>
 	</div>

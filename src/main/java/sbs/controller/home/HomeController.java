@@ -21,4 +21,10 @@ public class HomeController {
 		return "welcome";
 	}
 	
+	@RequestMapping("/terminal")	
+	public String terminal() {
+		//return "redirect:/init";
+		return "welcome_terminal";
+	}
+	
 }

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/layout_terminal">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="center">
+			<h1>TERMINAL ADR</h1>
+		</div>
+		<div class="center">
+			<a class="button menubutton margin-top-10" th:text="#{inventory.inventory}"
+				th:href="@{/terminal/inventory}">txt</a>
+		</div>
+
+
+	</div>
+</body>
+</html>
