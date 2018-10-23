@@ -1,36 +1,49 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="terminal/layout_terminal">
+	layout:decorator="layout/layout_terminal">
 <head>
 </head>
 <body>
+	<!-- CONTENT -->
 	<div layout:fragment="content">
-		<h2 th:text="#{login.title}">txt</h2>
 		<form th:action="@{/login}" method="post">
-			<label th:text="#{login.username}">txt</label> <input type="text"
-				id="username" name="username" th:placeholder="#{login.username}" />
-			<label th:text="#{login.password}">Password</label> <input
-				type="password" id="password" name="password"
-				th:placeholder="#{login.password}" />
-
-			<button type="submit" name="action"
-				class="btn btn-primary pull-right">
-				<span th:text="#{action.login}"></span>
-			</button>
+			<table class="margin-top-10">
+				<tr>
+					<td><span th:text="#{general.user}">txt</span></td>
+				</tr>
+				<tr>
+					<td><input type="text" id="username" name="username" /></td>
+				</tr>
+				<tr>
+					<td><span th:text="#{login.password}">txt</span></td>
+				</tr>
+				<tr>
+					<td><input type="password" id="password" name="password" /></td>
+				</tr>
+				<tr>
+					<td>
+						<button class="margin-top-10" th:text="#{action.login}"
+							type="submit" name="action">login</button>
+					</td>
+				</tr>
+			</table>
 		</form>
+		<h1 th:text="#{login.title}">txt</h1>
 	</div>
-
+	<!-- /CONTENT -->
+	<!-- SCRIPT -->
 	<div layout:fragment="script">
 		<script>
-			$(document).on("keypress", 'form', function (e) {
-			    var code = e.keyCode || e.which;
-			    if (code == 13) {
-			        e.preventDefault();
-			        return false;
-			    }
+			$(document).on("keypress", 'form', function(e) {
+				var code = e.keyCode || e.which;
+				if (code == 13) {
+					e.preventDefault();
+					return false;
+				}
 			});
-	</script>
+		</script>
 	</div>
+	<!-- /SCRIPT -->
 </body>
 </html>

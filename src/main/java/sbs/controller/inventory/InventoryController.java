@@ -29,7 +29,6 @@ import sbs.service.users.UserService;
 import sbs.service.x3.JdbcOracleX3Service;
 
 @Controller
-@RequestMapping("inventory")
 public class InventoryController {
 	
 	@Autowired
@@ -47,26 +46,26 @@ public class InventoryController {
 	@Autowired
 	InventoryColumnsService inventoryColumnsService;
 
-	@RequestMapping(value = "/list")
+	@RequestMapping(value = "/inventory/list")
 	public String list(Model model) {
 		model.addAttribute("inventories", inventoryService.findAllActiveInventories());
 		return "inventory/list";
 	}
 	
-	@RequestMapping(value = "/inactivelist")
+	@RequestMapping(value = "/inventory/inactivelist")
 	public String inactivelist(Model model) {
 		model.addAttribute("inventories", inventoryService.findAllInactiveInventories());
 		return "inventory/list";
 	}
 	
-	@RequestMapping(value = "/createinventory")
+	@RequestMapping(value = "/inventory/createinventory")
 	@Transactional
 	public String createInventoryView(Model model) {
 		model.addAttribute("inventoryCreateForm", new InventoryCreateForm());
 		return "inventory/createinventory";
 	}
 	
-	@RequestMapping(value = "/createinventory", method = RequestMethod.POST)
+	@RequestMapping(value = "/inventory/createinventory", method = RequestMethod.POST)
 	@Transactional
 	public String createInventory(@Valid InventoryCreateForm inventoryCreateForm, BindingResult bindingResult,
 			RedirectAttributes redirectAttrs, Locale locale, Model model) {
@@ -103,7 +102,7 @@ public class InventoryController {
 		return "redirect:/inventory/editinventory/" + inventory.getId();
 	}	
 	
-	@RequestMapping("/editinventory/{id}")
+	@RequestMapping("/inventory/editinventory/{id}")
 	@Transactional
 	public String editInventoryView(@PathVariable("id") int id, Model model) throws NotFoundException {
 		Inventory inventory = inventoryService.findById(id);
@@ -124,7 +123,7 @@ public class InventoryController {
 		return "inventory/editinventory";
 	}
 	
-	@RequestMapping(value = "/editinventory", method = RequestMethod.POST)
+	@RequestMapping(value = "/inventory/editinventory", method = RequestMethod.POST)
 	@Transactional
 	public String editInventory(@Valid InventoryCreateForm inventoryCreateForm, BindingResult bindingResult,
 			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
@@ -155,7 +154,7 @@ public class InventoryController {
 		return "redirect:/inventory/editinventory/"+inventory.getId();
 	}
 	
-	@RequestMapping("/createcolumn/{id}")
+	@RequestMapping("/inventory/createcolumn/{id}")
 	@Transactional
 	public String createColumnView(@PathVariable("id") int id, Model model) throws NotFoundException {
 		Inventory inventory = inventoryService.findById(id);
@@ -171,7 +170,7 @@ public class InventoryController {
 		return "inventory/createcolumn";
 	}
 	
-	@RequestMapping(value = "/createcolumn", method = RequestMethod.POST)
+	@RequestMapping(value = "/inventory/createcolumn", method = RequestMethod.POST)
 	@Transactional
 	public String createColumn(@Valid InventoryColumnCreateForm inventoryColumnCreateForm, BindingResult bindingResult,
 			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
@@ -205,7 +204,7 @@ public class InventoryController {
 		return "redirect:/inventory/editinventory/"+inventoryColumnCreateForm.getInventoryId();
 	}
 	
-	@RequestMapping("/deletecolumn/{inventoryId}/{columnId}")
+	@RequestMapping("/inventory/deletecolumn/{inventoryId}/{columnId}")
 	@Transactional
 	public String deleteColumnView(@PathVariable("inventoryId") int inventoryId, @PathVariable("columnId") int columnId, RedirectAttributes redirectAttrs, Locale locale) throws NotFoundException {
 		InventoryColumn column = inventoryColumnsService.findById(columnId);
@@ -218,5 +217,28 @@ public class InventoryController {
 			throw new NotFoundException("Column not found");
 		}
 	}
+	
+	
+	@RequestMapping(value = "/terminal/test")
+	public String terminalTest(Model model) {
+		model.addAttribute("msg", "Current message from controller");
+		model.addAttribute("live", "Live feed from server");
+		model.addAttribute("warning", "Warning message during input");
+		model.addAttribute("error", "Error message of any kind");
+		
+		return "inventory/terminal";
+	}
+	
+	@RequestMapping(value = "/terminal/inventory")
+	public String terminalView(Model model) {
+		/*model.addAttribute("msg", "Current message from controller");
+		model.addAttribute("live", "Live feed from server");
+		model.addAttribute("warning", "Warning message during input");
+		model.addAttribute("error", "Error message of any kind");
+		 */
+		return "inventory/terminal";
+	}
+		
+	
 
 }

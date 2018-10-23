@@ -18,8 +18,6 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 
-
-
 @Configuration
 @Order(2)
 @EnableGlobalMethodSecurity(securedEnabled = true)
@@ -69,7 +67,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/test/**",
 				"/proprog/**",
 				"/phones/**",
-				"/inventory/**"
+				"/inventory/**",
+				"/terminal/**"
 				)
 		.permitAll()
 		.antMatchers("/bhptickets/edit/**", 

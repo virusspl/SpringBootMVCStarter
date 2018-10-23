@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!-- <link th:href="@{/css/terminal.css}" type="text/css" rel="stylesheet" /> -->
+<title th:text="#{name.company}">ADR-Terminal</title>
+<style>
+body {
+	background-color: rgb(220, 220, 220);
+	color: rgb(0, 0, 0);
+	font-family: Verdana, Geneva, sans-serif;
+}
+
+a:link {
+	color: rgb(0, 200, 0);
+	text-decoration: none;
+}
+
+a:visited {
+	color: rgb(0, 200, 0);
+}
+
+a:hover {
+	color: rgb(200, 100, 100);
+}
+
+a:active {
+	color: blue;
+}
+
+#ttop {
+	width: 100%;
+	border-bottom: 1px solid rgb(150, 150, 150);
+}
+
+#tmessages {
+	text-align: center;
+}
+
+.tpop {
+	margin: 10px 0px 10px 0px;
+	padding: 10px;
+	color: black;
+}
+
+#liveMessage { /* white */
+	background-color: rgb(255, 255, 255);
+	border: 1px solid rgb(0, 0, 0);
+}
+
+#msgMessage { /* green */
+	background-color: rgb(179, 255, 179);
+	border: 1px solid rgb(0, 153, 0);
+}
+
+#warningMessage { /*warning*/ /* yellow */
+	background-color: rgb(255, 255, 179);
+	border: 1px solid rgb(255, 255, 0);
+}
+
+#errorMessage { /* red */
+	background-color: rgb(255, 179, 179);
+	border: 1px solid rgb(255, 0, 0);
+}
+h1{
+	font-size: 200%;
+	color: rgb(0, 200, 0);
+}
+
+input {
+	width: 195px;
+}
+
+.center {
+	text-align: center;
+}
+.margin-top-10 {
+	margin-top: 10px;
+}
+
+</style>
+</head>
+<body style="">
+	<!-- LAYOUT STATIC -->
+	<div id="ttop">
+		<span><a th:href="@{/terminal/inventory}" th:text="|Home|"></a></span>
+		<span sec:authorize="isAuthenticated()"
+			th:text="| - ${#authentication.name}|"></span>
+	</div>
+	<div id="tmessages">
+		<!-- LIVE FEED -->
+		<div class="tpop" id="liveMessage" th:if="${live}">
+			<span th:text="${live}">live</span>
+		</div>
+		<!-- /LIVE FEED -->
+		<!-- ERROR -->
+		<div class="tpop" id="errorMessage" th:if="${error}">
+			<span th:text="${error}">error</span>
+		</div>
+		<!-- /ERROR -->
+		<!-- WARNING -->
+		<div class="tpop" id="warningMessage" th:if="${warning}">
+			<span th:text="${warning}">warning</span>
+		</div>
+		<!-- /WARNING -->
+		<!-- MESSAGE -->
+		<div class="tpop" id="msgMessage" th:if="${msg}">
+			<span th:text="${msg}">msg</span>
+		</div>
+		<!-- /MESSAGE -->
+	</div>
+	<!-- /LAYOUT STATIC -->
+
+	<!-- CONTENT -->
+	<section layout:fragment="content">
+		<p>page content</p>
+	</section>
+	<!-- /CONTENT -->
+	<!-- SCRIPTS -->
+	<!-- JQUERY -->
+	<script th:src="@{/js/jquery-3.1.1.min.js}" type="text/javascript"></script>
+	<!-- messaging -->
+	<script th:src="@{/js/messaging/sockjs.min.js}" type="text/javascript"></script>
+	<script th:src="@{/js/messaging/stomp.min.js}" type="text/javascript"></script>
+	<script th:src="@{/js/messaging/messaging.js}" type="text/javascript"></script>
+	<!-- specific for view -->
+	<script type="text/javascript" layout:fragment="script">
+	</script>
+</body>
+</html>

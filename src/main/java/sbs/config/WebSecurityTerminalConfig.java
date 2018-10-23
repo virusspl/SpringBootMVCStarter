@@ -6,7 +6,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 
-
 @Configuration
 @Order(1)
 public class WebSecurityTerminalConfig extends WebSecurityConfigurerAdapter {
@@ -22,29 +21,27 @@ public class WebSecurityTerminalConfig extends WebSecurityConfigurerAdapter {
 	  		.hasAnyRole("ADMIN","TERMINAL")
 	  		.and()
 	    	.formLogin()
-	    	.loginPage("/tlogin");			
-
+	    	.loginPage("/tlogin")
+	    	;			
+	    	
 	    	/*.authorizeRequests()
 	    	.anyRequest()
 	  		.hasAnyRole("ADMIN","TERMINAL")
 	  		.and()
 	  		.formLogin()
 	  		.loginPage("/terminallogin")
-	          .failureUrl("/terminallogin?error=loginError")
-	          .defaultSuccessUrl("/terminal")
-	         
-	          .and()
-	          .logout()
-	          .logoutUrl("/admin_logout")
-	          .logoutSuccessUrl("/protectedLinks")
-	          .deleteCookies("JSESSIONID")
-	           
-	          .and()
-	          .exceptionHandling()
-	          .accessDeniedPage("/403")
-	           
-	          .and()
-	          .csrf().disable(); 
-	          */ 
+	        .failureUrl("/terminallogin?error=loginError")
+	        .defaultSuccessUrl("/terminal")
+	        .and()
+	        .logout()
+	        .logoutUrl("/admin_logout")
+	        .logoutSuccessUrl("/protectedLinks")
+	        .deleteCookies("JSESSIONID")
+	        .and()
+	        .exceptionHandling()
+	        .accessDeniedPage("/403")
+	        .and()
+	        .csrf().disable(); 
+	        */ 
 	    }
 }

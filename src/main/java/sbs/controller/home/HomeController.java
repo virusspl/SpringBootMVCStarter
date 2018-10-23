@@ -21,12 +21,4 @@ public class HomeController {
 		return "welcome";
 	}
 	
-	/**
-	 * show terminal view
-	 * @return welcome view
-	 */
-	@RequestMapping("/terminal")	
-	public String terminal() {
-		return "terminal/welcome_terminal";
-	}
 }
