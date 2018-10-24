@@ -23,10 +23,19 @@
 				</tr>
 				<tr>
 					<td>
-						<button class="button okbutton margin-top-10" th:text="#{action.login}"
-							type="submit" name="action">login</button>
-						<a class="button badbutton margin-top-10" th:text="#{action.clear}"
-							 th:href="@{/terminal}">login</a>
+						<button type="submit" name="action" 
+							style="width: 46%;"
+							class="button okbutton margin-top-10" 
+							th:text="#{action.login}">
+							login
+						</button>
+						<button type="button"
+							style="width: 46%;"
+							class="button badbutton margin-top-10" 
+							th:text="#{action.clear}" 
+							onclick="clearFields()">
+							clear
+						</button>
 					</td>
 				</tr>
 			</table>
@@ -46,6 +55,11 @@
 			});
 		});
 		
+		function clearFields(){
+			document.getElementById('username').value = '';
+			document.getElementById('password').value = '';
+			return false;
+		}
 		
 		/*	$(document).on("keypress", 'form', function(e) {
 				var code = e.keyCode || e.which;

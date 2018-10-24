@@ -88,7 +88,7 @@ public class VariousPagesController {
 	public String underConstruction() {
 		return "various/construction";
 	}
-
+	
 	@RequestMapping("/mail")
 	public String mail(Model model) {
 		try {
@@ -100,6 +100,16 @@ public class VariousPagesController {
 		return "welcome";
 	}
 
+	
+	@RequestMapping(value = "/terminal/test")
+	public String terminalTest(Model model) {
+		model.addAttribute("msg", "Current message from controller");
+		model.addAttribute("live", "Live feed from server");
+		model.addAttribute("warning", "Warning message during input");
+		model.addAttribute("error", "Error message of any kind");
+		return "welcome_terminal";
+	}
+	
 	@RequestMapping("/excel")
 	public ModelAndView getExcel() {
 		// create excel contents

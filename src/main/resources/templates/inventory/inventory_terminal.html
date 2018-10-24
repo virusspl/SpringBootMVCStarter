@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/layout_terminal">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="content">
+		<form th:action="@{/inventory/processentry}" method="post"
+			th:object="${inventoryTerminalForm}">
+
+			<!-- HIDDEN -->
+			<input type="hidden" th:field="*{currentColumnNumber}" />
+			<input type="hidden" th:field="*{currentColumnCode}" />
+			<input type="hidden" th:field="*{currentColumnName}" />
+			<input type="hidden" th:field="*{currentColumnRequired}" />
+			<input type="hidden" th:field="*{currentColumnValidated}" />
+			<input type="hidden" th:field="*{inventoryId}" />
+			<input type="hidden" th:field="*{code}" />
+			<input type="hidden" th:field="*{address}" />
+			<input type="hidden" th:field="*{location}" />
+			<input type="hidden" th:field="*{label}" />
+			<input type="hidden" th:field="*{saleOrder}" />
+			<input type="hidden" th:field="*{purchaseOrder}" />
+			<input type="hidden" th:field="*{packageType}" />
+			<input type="hidden" th:field="*{quantity}" />
+			<input type="hidden" th:field="*{freeString1}" />
+			<input type="hidden" th:field="*{freeString2}" />
+			<input type="hidden" th:field="*{freeDouble}" />
+			
+			<!-- VISIBLE --> 
+			<h2 class="columntitle" th:text="*{currentColumnName}">field name</h2> 
+			<input type="text" id="currentValue" name="currentValue "
+				th:field="*{currentValue}" />
+				<div class="valueError" th:errors="*{currentValue}">error</div>
+				
+			<button type="submit" name="action" 
+							class="button okbutton margin-top-10" 
+							style="width: 46%;"
+							th:text="#{action.send}">
+							send
+						</button>
+						<button type="button"
+							class="button badbutton margin-top-10"
+							style="width: 46%;" 
+							th:text="#{action.clear}" 
+							onclick="clearFields()">
+							clear
+						</button>
+			<!-- /VISIBLE -->
+		</form>
+	</div>
+	
+<div layout:fragment="script">
+	<script>
+	window.onload = function() {
+  		document.getElementById("currentValue").focus();
+  		document.getElementById("currentValue").select();
+	};
+	
+	function clearFields(){
+		document.getElementById('currentValue').value = '';
+		return false;
+	}
+	
+	</script>
+</div>
+</body>
+</html>

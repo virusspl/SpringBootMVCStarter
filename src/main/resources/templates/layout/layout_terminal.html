@@ -4,14 +4,26 @@
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<!-- <link th:href="@{/css/terminal.css}" type="text/css" rel="stylesheet" /> -->
-<title th:text="#{name.company}">ADR-Terminal</title>
+<!-- <title th:text="#{name.company}">ADR-Terminal</title> -->
+<title>ADR-Terminal</title>
 <style>
+
+* {
+	padding: 0;
+	margin: 0;
+}
+
 body {
 	background-color: #DCDCDC;
 	color: #000000;
 	font-family: Verdana, Geneva, sans-serif;
 	font-size: 90%;
+}
+
+#termSize {
+	width: 215px;
+	padding: 5px;
+	border: 0px solid black;
 }
 
 a:link {
@@ -65,101 +77,152 @@ a:active {
 	background-color: #FF8383;
 	border: 1px solid #FF0000;
 }
+
+.valueError {
+	margin: 10px 0px 10px 0px;
+	padding: 10px;
+	color: black;
+	background-color: #FF8383;
+	border: 1px solid #FF0000;
+}
+
 h1 {
-	font-size: 200%;
+	margin: 10px 0 10px 0;
+	font-size: 160%;
+	color: #4CAF50;
+}
+
+h2 {
+	margin: 10px 0 10px 0;
+	font-size: 130%;
 	color: #4CAF50;
 }
 
 input {
-	width: 195px;
+	width: 210px;
+	height: 25px;
+	line-height: 25px;
+	font-size: 19px;
+	text-align: center;
+	border: 1px solid black;
 }
+
 .center {
 	text-align: center;
 }
+
 .margin-top-10 {
 	margin-top: 10px;
 }
+
 .button {
-    border: none;
-    color: white;
-	padding: 10px 15px 10px 15px;
-    text-align: center;
-    text-decoration: none;
-    font-size: 14px;
-    display: inline-block;
+	border: none;
+	color: white;
+	padding: 10px 7px 10px 7px;
+	margin-right: 5px;
+	text-align: center;
+	text-decoration: none;
+	font-size: 14px;
+	display: inline-block;
 }
+
 a.button:link {
 	color: white;
 }
+
 a.button:visited {
 	color: white;
 }
+
 a.button:hover {
 	color: white;
 }
+
 a.button:active {
 	color: black;
 }
+
 .okbutton {
-    background-color: #4CAF50;
-}
-.badbutton {
-    background-color: #BF3C3C;
-}
-.menubutton {
-    background-color: #4CAF50;
-	padding: 15px 25px 15px 25px;
-	font-size: 110%;
+	background-color: #4CAF50;
 }
 
+.badbutton {
+	background-color: #BF3C3C;
+}
+
+.menubutton {
+	background-color: #4CAF50;
+	padding: 15px 25px 15px 25px;
+	margin: 5px 0px 5px 0px;
+	display: block;
+}
+
+.columntitle {
+	margin-top: 15px;
+	margin-bottom: 15px;
+	text-align: center;
+	display: block;
+}
 
 </style>
 </head>
-<body style="">
-	<!-- LAYOUT STATIC -->
-	<div id="ttop">
-		<span><a th:href="@{/terminal}" th:text="|Home|"></a></span>
-		<span sec:authorize="isAuthenticated()"
-			th:text="| - ${#authentication.name}|"></span>
-	</div>
-	<div id="tmessages">
-		<!-- LIVE FEED -->
-		<div class="tpop" id="liveMessage" th:if="${live}">
-			<span th:text="${live}">live</span>
+<body>
+	<div id="termSize">
+		<!-- LAYOUT STATIC -->
+		<div id="ttop">
+			<span><a th:href="@{/terminal}" th:text="|Home|"></a></span> <span
+				sec:authorize="isAuthenticated()"
+				th:text="| - ${#authentication.name}|"></span>
 		</div>
-		<!-- /LIVE FEED -->
-		<!-- ERROR -->
-		<div class="tpop" id="errorMessage" th:if="${error}">
-			<span th:text="${error}">error</span>
+		<div id="tmessages">
+			<!-- LIVE FEED -->
+			<div class="tpop" id="liveMessage" th:if="${live}">
+				<span th:text="${live}">live</span>
+			</div>
+			<!-- /LIVE FEED -->
+			<!-- ERROR -->
+			<div class="tpop" id="errorMessage" th:if="${error}">
+				<span th:text="${error}">error</span>
+			</div>
+			<!-- /ERROR -->
+			<!-- WARNING -->
+			<div class="tpop" id="warningMessage" onclick="hideWarning()" th:if="${warning}">
+				<span th:text="${warning}">warning</span>
+			</div>
+			<!-- /WARNING -->
+			<!-- MESSAGE -->
+			<div class="tpop" id="msgMessage" onclick="hideMessage()" th:if="${msg}">
+				<span th:text="${msg}">msg</span>
+			</div>
+			<!-- /MESSAGE -->
 		</div>
-		<!-- /ERROR -->
-		<!-- WARNING -->
-		<div class="tpop" id="warningMessage" th:if="${warning}">
-			<span th:text="${warning}">warning</span>
-		</div>
-		<!-- /WARNING -->
-		<!-- MESSAGE -->
-		<div class="tpop" id="msgMessage" th:if="${msg}">
-			<span th:text="${msg}">msg</span>
-		</div>
-		<!-- /MESSAGE -->
-	</div>
-	<!-- /LAYOUT STATIC -->
+		<!-- /LAYOUT STATIC -->
 
-	<!-- CONTENT -->
-	<section layout:fragment="content">
-		<p>page content</p>
-	</section>
-	<!-- /CONTENT -->
-	<!-- SCRIPTS -->
-	<!-- JQUERY -->
-	<script th:src="@{/js/jquery-3.1.1.min.js}" type="text/javascript"></script>
-	<!-- messaging -->
-	<script th:src="@{/js/messaging/sockjs.min.js}" type="text/javascript"></script>
-	<script th:src="@{/js/messaging/stomp.min.js}" type="text/javascript"></script>
-	<script th:src="@{/js/messaging/messaging.js}" type="text/javascript"></script>
-	<!-- specific for view -->
-	<script type="text/javascript" layout:fragment="script">
-	</script>
+		<!-- CONTENT -->
+		<section layout:fragment="content">
+			<p>page content</p>
+		</section>
+		<!-- /CONTENT -->
+		<!-- SCRIPTS -->
+		<!-- JQUERY -->
+		<script th:src="@{/js/jquery-3.1.1.min.js}" type="text/javascript"></script>
+		<!-- messaging -->
+		<script th:src="@{/js/messaging/sockjs.min.js}" type="text/javascript"></script>
+		<script th:src="@{/js/messaging/stomp.min.js}" type="text/javascript"></script>
+		<script th:src="@{/js/messaging/messaging.js}" type="text/javascript"></script>
+		<script>
+		function hideMessage(){
+			document.getElementById("msgMessage").style.display="none";
+		}
+		function hideWarning(){
+			document.getElementById("warningMessage").style.display="none";
+		}
+		
+		</script>
+		<!-- specific for view -->
+		<script type="text/javascript" layout:fragment="script">
+			
+		</script>
+	</div>
 </body>
 </html>

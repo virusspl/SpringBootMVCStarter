@@ -1,5 +1,7 @@
 package sbs.service.inventory;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,11 @@ public class InventoryColumnsServiceImpl extends GenericServiceAdapter<Inventory
 	@Override
 	public InventoryColumn findByInventoryAndDataType(int inventoryId, int dataTypeId) {
 		return inventoryColumnsRepository.findByInventoryAndDataType(inventoryId,dataTypeId);
+	}
+
+	@Override
+	public List<InventoryColumn> findInventoryColumnsSortByOrder(int inventoryId) {
+		return inventoryColumnsRepository.findInventoryColumnsSortByOrder(inventoryId);
 	}
 
 }
