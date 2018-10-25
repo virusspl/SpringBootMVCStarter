@@ -3,6 +3,7 @@ package sbs.controller.inventory;
 public class InventoryTerminalForm {
 	
 	private int inventoryId;	
+	private String company;
 	private String code;	
 	private String address;	
 	private String location;	
@@ -173,11 +174,25 @@ public class InventoryTerminalForm {
 		this.currentColumnValidated = currentColumnValidated;
 	}
 
+	public String getCompany() {
+		return company;
+	}
 
-	
-	
-	
-	
-	
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+	@Override
+	public String toString() {
+		return "InventoryTerminalForm [inventoryId=" + inventoryId + ", company=" + company + ", code=" + code
+				+ ", address=" + address + ", location=" + location + ", label=" + label + ", saleOrder=" + saleOrder
+				+ ", purchaseOrder=" + purchaseOrder + ", packageType=" + packageType + ", quantity=" + quantity
+				+ ", freeString1=" + freeString1 + ", freeString2=" + freeString2 + ", freeDouble=" + freeDouble
+				+ ", currentValue=" + currentValue + ", currentColumnNumber=" + currentColumnNumber
+				+ ", currentColumnName=" + currentColumnName + ", currentColumnCode=" + currentColumnCode
+				+ ", currentColumnRequired=" + currentColumnRequired + ", currentColumnValidated="
+				+ currentColumnValidated + "]";
+	}
+
 
 }

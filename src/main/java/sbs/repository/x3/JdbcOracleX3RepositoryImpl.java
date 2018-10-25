@@ -29,6 +29,7 @@ import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ProductSellDemand;
 import sbs.model.x3.X3ProductionOrderDetails;
+import sbs.model.x3.X3PurchaseOrder;
 import sbs.model.x3.X3SalesOrder;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
@@ -238,6 +239,43 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         	order.setClientName((String)row.get("BPCNAM_0"));
         	order.setOrderDate((Timestamp)row.get("ORDDAT_0"));
         	if(((BigDecimal)row.get("ORDSTA_0"))==BigDecimal.valueOf(1)){
+        		order.setOpened(true);
+        	}
+        	else{
+        		order.setOpened(false);
+        	}
+        }
+        
+		return order;
+	}
+	
+	@Override
+	public X3PurchaseOrder findPurchaseOrderByNumber(String company, String number) {
+
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+						"SELECT " 
+						+ company + ".PORDER.POHNUM_0, "
+						+ company + ".PORDER.BPSNUM_0, "
+						+ company + ".BPSUPPLIER.BPSNAM_0, "
+						+ company + ".PORDER.ORDDAT_0, "
+						+ company + ".PORDER.CLEFLG_0 "
+						+ "FROM " 
+						+ company + ".BPSUPPLIER INNER JOIN " + company + ".PORDER "
+						+ "ON "
+						+ company + ".BPSUPPLIER.BPSNUM_0 = " + company + ".PORDER.BPSNUM_0 "
+						+ "WHERE UPPER("
+						+ company + ".PORDER.POHNUM_0) = ? ",
+                new Object[]{number.toUpperCase()});
+        
+		X3PurchaseOrder order = null;
+		
+        for(Map<String,Object> row: resultSet ){
+        	order = new X3PurchaseOrder();
+        	order.setPurchaseNumber((String)row.get("POHNUM_0"));
+        	order.setSupplierCode((String)row.get("BPSNUM_0"));
+        	order.setSupplierName((String)row.get("BPSNAM_0"));
+        	order.setOrderDate((Timestamp)row.get("ORDDAT_0"));
+        	if(((BigDecimal)row.get("CLEFLG_0"))==BigDecimal.valueOf(1)){
         		order.setOpened(true);
         	}
         	else{
@@ -1725,6 +1763,22 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		
 		return workstation;
 	}
+
+	@Override
+	public boolean checkIfLocationExist(String company, String location) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+						"SELECT " 
+						+ company + ".STOLOC.LOC_0 "
+						+ "FROM " 
+						+ company + ".STOLOC " 
+						+ "WHERE " 
+						+ company +".STOLOC.LOC_0 = ?",
+                new Object[]{location});
+
+		return !resultSet.isEmpty();
+	}
+
+
 
 
 

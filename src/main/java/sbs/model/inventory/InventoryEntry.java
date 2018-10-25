@@ -59,7 +59,7 @@ public class InventoryEntry {
 	private String packageType;
 	
 	@Column(name = "ie_quantity", nullable = true)
-	private double quantity;
+	private Double quantity;
 	
 	@Column(name = "ie_free_string_1", length = 45, nullable = true)
 	private String freeString1;
@@ -68,7 +68,7 @@ public class InventoryEntry {
 	private String freeString2;
 	
 	@Column(name = "ie_free_double", nullable = true)
-	private double freeDouble;	
+	private Double freeDouble;	
 	
 	public InventoryEntry() {
 
@@ -202,12 +202,21 @@ public class InventoryEntry {
 		this.freeString2 = freeString2;
 	}
 
-	public double getFreeDouble() {
+	public Double getFreeDouble() {
 		return freeDouble;
 	}
 
-	public void setFreeDouble(double freeDouble) {
+	public void setFreeDouble(Double freeDouble) {
 		this.freeDouble = freeDouble;
+	}
+
+	@Override
+	public String toString() {
+		return "InventoryEntry [id=" + id + ", inventory=" + inventory + ", line=" + line + ", creationDate="
+				+ creationDate + ", userCode=" + userCode + ", userName=" + userName + ", code=" + code + ", address="
+				+ address + ", location=" + location + ", label=" + label + ", saleOrder=" + saleOrder
+				+ ", purchaseOrder=" + purchaseOrder + ", packageType=" + packageType + ", quantity=" + quantity
+				+ ", freeString1=" + freeString1 + ", freeString2=" + freeString2 + ", freeDouble=" + freeDouble + "]";
 	}
 	
 	

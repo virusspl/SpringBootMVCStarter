@@ -14,6 +14,7 @@ import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ProductSellDemand;
 import sbs.model.x3.X3ProductionOrderDetails;
+import sbs.model.x3.X3PurchaseOrder;
 import sbs.model.x3.X3SalesOrder;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
@@ -42,6 +43,7 @@ public interface JdbcOracleX3Service {
 	public List<X3SalesOrder> findAllSalesOrders(String company);
 	public List<X3SalesOrder> findOpenedSalesOrders(String company);
 	public X3SalesOrder findSalesOrderByNumber(String company, String number);
+	public X3PurchaseOrder findPurchaseOrderByNumber(String company, String number);
 	public X3ProductionOrderDetails getProductionOrderInfoByNumber(String company, String number);
 	public List<X3BomItem> findBomPartsByParent(String company, String productCode);
 	public Object findLocationsOfProduct(String company, String code);
@@ -75,6 +77,9 @@ public interface JdbcOracleX3Service {
 	public List<X3SalesOrderLine> findOpenedSalesOrderLinesInPeriod(Date startDate, Date endDate, String company);
 	public Map<String, Integer> findGeneralStockForAllProducts(String company);
 	public X3Workstation findWorkstationByCode(String company, String code);
+	public boolean checkIfLocationExist(String company, String location);
+	public String findPackageDescription(String company, String packageCode);
+	
 
 
 }

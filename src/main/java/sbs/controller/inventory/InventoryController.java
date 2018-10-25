@@ -22,9 +22,15 @@ import sbs.helpers.TextHelper;
 import sbs.model.inventory.Inventory;
 import sbs.model.inventory.InventoryColumn;
 import sbs.model.inventory.InventoryDataType;
+import sbs.model.inventory.InventoryEntry;
 import sbs.model.users.User;
+import sbs.model.x3.X3Product;
+import sbs.model.x3.X3PurchaseOrder;
+import sbs.model.x3.X3SalesOrder;
+import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.inventory.InventoryColumnsService;
 import sbs.service.inventory.InventoryDataTypesService;
+import sbs.service.inventory.InventoryEntriesService;
 import sbs.service.inventory.InventoryService;
 import sbs.service.users.UserService;
 import sbs.service.x3.JdbcOracleX3Service;
@@ -37,6 +43,8 @@ public class InventoryController {
 	@Autowired
 	JdbcOracleX3Service x3Service;
 	@Autowired
+	JdbcOracleGeodeService geodeService;
+	@Autowired
 	MessageSource messageSource;
 	@Autowired
 	TextHelper textHelper;
@@ -46,6 +54,11 @@ public class InventoryController {
 	InventoryDataTypesService inventoryDataTypesService;
 	@Autowired
 	InventoryColumnsService inventoryColumnsService;
+	@Autowired
+	InventoryEntriesService inventoryEntriesService;
+
+	String tmpMsg;
+	String tmpWarning;
 
 	@RequestMapping(value = "/inventory/list")
 	public String list(Model model) {
@@ -91,6 +104,7 @@ public class InventoryController {
 		inventory.setNextLine(1);
 
 		// form fields
+		inventory.setCompany(inventoryCreateForm.getCompany());
 		inventory.setTitle(inventoryCreateForm.getTitle());
 		inventory.setDescription(inventoryCreateForm.getDescription());
 		inventory.setInventoryDate(new Timestamp(inventoryCreateForm.getInventoryDate().getTime()));
@@ -117,6 +131,7 @@ public class InventoryController {
 		inventoryCreateForm.setDescription(inventory.getDescription());
 		inventoryCreateForm.setInventoryDate(inventory.getInventoryDate());
 		inventoryCreateForm.setNextLine(inventory.getNextLine());
+		inventoryCreateForm.setCompany(inventory.getCompany());
 
 		model.addAttribute("inventoryCreateForm", inventoryCreateForm);
 		model.addAttribute("columns", inventory.getColumns());
@@ -129,8 +144,6 @@ public class InventoryController {
 	public String editInventory(@Valid InventoryCreateForm inventoryCreateForm, BindingResult bindingResult,
 			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
 
-		System.out.println("return:" + inventoryCreateForm);
-
 		Inventory inventory = inventoryService.findById(inventoryCreateForm.getId());
 		if (inventory == null) {
 			throw new NotFoundException("Inventory not found");
@@ -142,13 +155,11 @@ public class InventoryController {
 		}
 
 		inventory.setActive(inventoryCreateForm.getActive());
+		inventory.setCompany(inventoryCreateForm.getCompany());
 		inventory.setTitle(inventoryCreateForm.getTitle());
 		inventory.setDescription(inventoryCreateForm.getDescription());
-		System.out.println("date " + inventoryCreateForm.getInventoryDate());
-		System.out.println("DATE: " + new Timestamp(inventoryCreateForm.getInventoryDate().getTime()));
 		inventory.setInventoryDate(new Timestamp(inventoryCreateForm.getInventoryDate().getTime()));
 
-		System.out.println("UPDATING: " + inventory.getId());
 		inventoryService.update(inventory);
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 
@@ -226,7 +237,8 @@ public class InventoryController {
 		InventoryTerminalForm inventoryTerminalForm = new InventoryTerminalForm();
 		inventoryTerminalForm.setCurrentColumnNumber(-1);
 		inventoryTerminalForm.setCurrentColumnCode("inventory.type.inventoryid");
-		inventoryTerminalForm.setCurrentColumnName(messageSource.getMessage("inventory.type.inventoryid", null, locale));
+		inventoryTerminalForm
+				.setCurrentColumnName(messageSource.getMessage("inventory.type.inventoryid", null, locale));
 		model.addAttribute("inventoryTerminalForm", inventoryTerminalForm);
 		return "inventory/inventory_terminal";
 	}
@@ -237,109 +249,308 @@ public class InventoryController {
 			BindingResult bindingResult, RedirectAttributes redirectAttrs, Locale locale, Model model)
 			throws NotFoundException {
 
-		/*
-		inventory.type.code
-		inventory.type.address
-		inventory.type.location
-		inventory.type.label
-		inventory.type.order.sale
-		inventory.type.order.purchase
-		inventory.type.packagetype
-		inventory.type.quantity
-		inventory.type.freestring1
-		inventory.type.freestring2
-		inventory.type.freedouble
-		*/
-
 		try {
-			/* ============================ INVENTORY ID =========================== */
+			/*
+			 * ================== INVENTORY ID ===============
+			 */
 			if (inventoryTerminalForm.getCurrentColumnCode().equals("inventory.type.inventoryid")) {
-				// check number format
-			
-					int inventoryId = Integer.parseInt(inventoryTerminalForm.getCurrentValue());
-					// find inventory
-					Inventory inventory = inventoryService.findById(inventoryId);
-					if (inventory == null) {
-						bindingResult.rejectValue("currentValue", "inventory.error.inventorynotfound");
-						// no inventory found
-						return "inventory/inventory_terminal";
-					}
-					else if(!inventory.getActive()){
-						bindingResult.rejectValue("currentValue", "inventory.error.inventoryinactive");
-						// inventory inactive
-						return "inventory/inventory_terminal";						
-					}
-					// inventory found and active!
-					// get columns
-					List<InventoryColumn> columns = inventoryColumnsService.findInventoryColumnsSortByOrder(inventory.getId());
-					if (columns.isEmpty()){
-						redirectAttrs.addFlashAttribute("warning", messageSource.getMessage("inventory.error.nocolumnsdefined", null, locale));
-						// no columns found	
-						return "redirect:/terminal/inventory";
-					}
-
-					// save value and reset field
-					inventoryTerminalForm.setInventoryId(inventoryId);
-					// switch to next column
-					switchToNextColumn(inventoryTerminalForm, columns);
-					// show inventory title
-					model.addAttribute("msg", inventory.getTitle());
+				// get inventory
+				int inventoryId = Integer.parseInt(inventoryTerminalForm.getCurrentValue());
+				Inventory inventory = inventoryService.findById(inventoryId);
+				if (inventory == null) {
+					bindingResult.rejectValue("currentValue", "inventory.error.inventorynotfound");
 					return "inventory/inventory_terminal";
-			}
-			
-			/* ============================ CODE =========================== */
-			if (inventoryTerminalForm.getCurrentColumnCode().equals("inventory.type.code")) {
-				
-				if(inventoryTerminalForm.getCurrentValue().length() == 0){
-					// empty
-					if(inventoryTerminalForm.isCurrentColumnRequired()){
-						// required error
-						bindingResult.rejectValue("currentValue", "inventory.error.fieldrequired");
-						return "inventory/inventory_terminal";
-					}
-					else{
-						// empty ok
-						// switch to next column
-						switchToNextColumn(inventoryTerminalForm);
-							model.addAttribute("warning", messageSource.getMessage("inventory.warning.fieldskipped", null, locale));
-							return "inventory/inventory_terminal";
-					}
+				} else if (!inventory.getActive()) {
+					bindingResult.rejectValue("currentValue", "inventory.error.inventoryinactive");
+					return "inventory/inventory_terminal";
 				}
-				else {
-					//not empty
-					
-				}
-				
-				
-				// save value and reset field
-				inventoryTerminalForm.setCode(inventoryTerminalForm.getCurrentValue().trim().toUpperCase());
 
-				// switch to next column
+				// get columns
+				List<InventoryColumn> columns = inventoryColumnsService
+						.findInventoryColumnsSortByOrder(inventory.getId());
+				if (columns.isEmpty()) {
+					redirectAttrs.addFlashAttribute("warning",
+							messageSource.getMessage("inventory.error.nocolumnsdefined", null, locale));
+					return "redirect:/terminal/inventory";
+				}
+
+				// set inventory id and switch column
+				inventoryTerminalForm.setInventoryId(inventory.getId());
+				inventoryTerminalForm.setCompany(inventory.getCompany());
+				switchToNextColumn(inventoryTerminalForm, columns);
+				model.addAttribute("msg", inventory.getTitle());
+
+				return "inventory/inventory_terminal";
+			}
+
+			/*
+			 * ================== MANAGE EMPTY =====================
+			 */
+			if (inventoryTerminalForm.getCurrentValue().length() == 0) {
+				if (inventoryTerminalForm.isCurrentColumnRequired()) {
+					// return required error
+					bindingResult.rejectValue("currentValue", "inventory.error.fieldrequired");
+					return "inventory/inventory_terminal";
+				} else {
+					// switch to next column / empty OK
+					switchToNextColumn(inventoryTerminalForm);
+					model.addAttribute("warning",
+							messageSource.getMessage("inventory.warning.fieldskipped", null, locale));
+					return "inventory/inventory_terminal";
+				}
+			}
+
+			/*
+			 * ================== MANAGE VALIDATION ================
+			 */
+			String errorMessageCode = validateCurrentField(inventoryTerminalForm);
+
+			if (errorMessageCode != null) {
+				setValidationMessages(model);
+				bindingResult.rejectValue("currentValue", errorMessageCode);
+				return "inventory/inventory_terminal";
+			} else {
+				setValidationMessages(model);
+				saveCurrentValueInForm(inventoryTerminalForm);
 				switchToNextColumn(inventoryTerminalForm);
-					model.addAttribute("msg", "NEXT LINE!! " + inventoryTerminalForm.getCode());
-					return "inventory/inventory_terminal";
-			
+				return "inventory/inventory_terminal";
 			}
-			
-		} catch (EndOfColumnsException eoc){
+		} catch (EndOfColumnsException eoc) {
 			System.out.println("END OF COLUMNS " + inventoryTerminalForm.toString());
 			model.addAttribute("live", "end of columns!");
-			//String summary = generateSummary(inventoryTerminalForm());
+			// String summary = generateSummary(inventoryTerminalForm());
 		} catch (NumberFormatException nfe) {
 			bindingResult.rejectValue("currentValue", "inventory.error.mustbeanumber");
-			// bad number format
-			return "inventory/inventory_terminal";	
+			return "inventory/inventory_terminal";
+		} catch (UnknownDataTypeException udt) {
+			bindingResult.rejectValue("currentValue", "inventory.error.unknowndatatype");
+			return "inventory/inventory_terminal";
 		} catch (Exception e) {
-			// catch any other exceptions
 			model.addAttribute("error", e.getMessage());
 			return "inventory/inventory_terminal";
 		}
 		return "redirect:/terminal/inventory";
 	}
 
-	private void switchToNextColumn(InventoryTerminalForm inventoryTerminalForm, List<InventoryColumn> columns) throws EndOfColumnsException{
-		int number = inventoryTerminalForm.getCurrentColumnNumber()+1;
-		if(number >= columns.size()){
+	private void setValidationMessages(Model model) {
+		if (this.tmpMsg != null) {
+			model.addAttribute("msg", this.tmpMsg);
+			this.tmpMsg = null;
+		} else if (this.tmpWarning != null) {
+			model.addAttribute("warning", this.tmpWarning);
+			this.tmpWarning = null;
+		}
+
+	}
+
+	/**
+	 * @return String - i18n message code of error OR null if validation OK
+	 */
+	private String validateCurrentField(InventoryTerminalForm inventoryTerminalForm)
+			throws NumberFormatException, UnknownDataTypeException {
+
+		boolean advanced = inventoryTerminalForm.isCurrentColumnValidated();
+		int inventoryId = inventoryTerminalForm.getInventoryId();
+		String company = inventoryTerminalForm.getCompany();
+		String currentValue = inventoryTerminalForm.getCurrentValue().trim().toUpperCase();
+
+		String resultCode = null;
+
+		switch (inventoryTerminalForm.getCurrentColumnCode()) {
+		/* CODE */
+		case "inventory.type.code":
+			if (currentValue.length() > 45) {
+				resultCode = "inventory.error.valuetoolong";
+			}
+			if (advanced) {
+				X3Product product = x3Service.findProductByCode(company, currentValue);
+				if (product != null) {
+					resultCode = null;
+					this.tmpMsg = product.getDescription();
+				} else {
+					resultCode = "general.productCode.notfound";
+				}
+			}
+			break;
+		/* ADDRESS */
+		case "inventory.type.address":
+			if (currentValue.length() > 15) {
+				resultCode = "inventory.error.valuetoolong";
+			}
+			if (advanced) {
+				if (!geodeService.checkIfAddressExist(currentValue)) {
+					resultCode = "inventory.error.addressnotexist";
+				}
+			}
+			break;
+		/* LOCATION */
+		case "inventory.type.location":
+			if (currentValue.length() > 25) {
+				resultCode = "inventory.error.valuetoolong";
+			}
+			if (advanced) {
+				if (!x3Service.checkIfLocationExist(company, currentValue)) {
+					resultCode = "inventory.error.locationnotexist";
+				}
+			}
+			break;
+		/* LABEL */
+		case "inventory.type.label":
+			if (currentValue.length() > 15) {
+				resultCode = "inventory.error.valuetoolong";
+			}
+			if (advanced) {
+				List<InventoryEntry> entries = inventoryEntriesService.findByInventoryIdAndLabelNumber(inventoryId,
+						currentValue);
+				if (!entries.isEmpty()) {
+					resultCode = "inventory.error.labelinuse";		
+					this.tmpWarning = "";
+					if(entries.get(0).getAddress() != null && !entries.get(0).getAddress().isEmpty()){
+						this.tmpWarning = "["+entries.get(0).getAddress()+"]";
+					}
+					if(entries.get(0).getCode() != null && !entries.get(0).getCode().isEmpty()){
+						this.tmpWarning += " ["+entries.get(0).getCode()+"]";
+					}
+					if(this.tmpWarning.length()==0){
+						this.tmpWarning=null;
+					}
+				}
+			}
+			break;
+		/* SALE ORDER */
+		case "inventory.type.order.sale":
+			if (currentValue.length() > 30) {
+				resultCode = "inventory.error.valuetoolong";
+			}
+			if (advanced) {
+				X3SalesOrder order = x3Service.findSalesOrderByNumber(company, currentValue);
+				if (order == null) {
+					resultCode = "general.order.notfound";		
+				}
+				else{
+					this.tmpMsg = order.getClientName();
+				}
+			}
+			break;
+		/* SALE PURCHASE */
+		case "inventory.type.order.purchase":
+			if (currentValue.length() > 30) {
+				resultCode = "inventory.error.valuetoolong";
+			}
+			if (advanced) {
+				X3PurchaseOrder order = x3Service.findPurchaseOrderByNumber(company, currentValue);
+				if (order == null) {
+					resultCode = "general.order.notfound";		
+				}
+				else{
+					this.tmpMsg = order.getSupplierName();
+				}
+			}
+			break;
+		/* PACKAGE */
+		case "inventory.type.packagetype":
+			if (currentValue.length() > 15) {
+				resultCode = "inventory.error.valuetoolong";
+			}
+			if (currentValue.length() > 25) {
+				resultCode = "inventory.error.valuetoolong";
+			}
+			if (advanced) {
+				String packageDescription = x3Service.findPackageDescription(company, currentValue);
+				if(packageDescription == null){
+					resultCode = "inventory.error.packagenotexist";
+				}
+				else{a
+					this.tmpMsg = packageDescription;
+				}
+			}
+			break;
+		/* QUANTITY */
+		case "inventory.type.quantity":
+			try {
+				Double val = Double.parseDouble(currentValue);
+				if (val <= 0) {
+					resultCode = "inventory.error.mustbepositive";
+				}
+			} catch (NumberFormatException e) {
+				resultCode = "inventory.error.mustbeanumber";
+			}
+			break;
+		/* FREESTRING 1 */
+		case "inventory.type.freestring1":
+			if (currentValue.length() > 45) {
+				resultCode = "inventory.error.valuetoolong";
+			}
+			break;
+		/* FREESTRING 2 */
+		case "inventory.type.freestring2":
+			if (currentValue.length() > 45) {
+				resultCode = "inventory.error.valuetoolong";
+			}
+			break;
+		/* FREEDOUBLE */
+		case "inventory.type.freedouble":
+			try {
+				Double.parseDouble(currentValue);
+			} catch (NumberFormatException e) {
+				resultCode = "inventory.error.mustbeanumber";
+			}
+			break;
+		default:
+			throw new UnknownDataTypeException();
+		}
+
+		return resultCode;
+	}
+
+	private void saveCurrentValueInForm(InventoryTerminalForm inventoryTerminalForm) throws UnknownDataTypeException {
+
+		String currentValue = inventoryTerminalForm.getCurrentValue().trim().toUpperCase();
+
+		switch (inventoryTerminalForm.getCurrentColumnCode()) {
+		case "inventory.type.code":
+			inventoryTerminalForm.setCode(currentValue);
+			break;
+		case "inventory.type.address":
+			inventoryTerminalForm.setAddress(currentValue);
+			break;
+		case "inventory.type.location":
+			inventoryTerminalForm.setLocation(currentValue);
+			break;
+		case "inventory.type.label":
+			inventoryTerminalForm.setLabel(currentValue);
+			break;
+		case "inventory.type.order.sale":
+			inventoryTerminalForm.setSaleOrder(currentValue);
+			break;
+		case "inventory.type.order.purchase":
+			inventoryTerminalForm.setPurchaseOrder(currentValue);
+			break;
+		case "inventory.type.packagetype":
+			inventoryTerminalForm.setPackageType(currentValue);
+			break;
+		case "inventory.type.quantity":
+			inventoryTerminalForm.setQuantity(Double.parseDouble(currentValue));
+			break;
+		case "inventory.type.freestring1":
+			inventoryTerminalForm.setFreeString1(currentValue);
+			break;
+		case "inventory.type.freestring2":
+			inventoryTerminalForm.setFreeString2(currentValue);
+			break;
+		case "inventory.type.freedouble":
+			inventoryTerminalForm.setFreeDouble(Double.parseDouble(currentValue));
+			break;
+		default:
+			throw new UnknownDataTypeException();
+		}
+
+	}
+
+	private void switchToNextColumn(InventoryTerminalForm inventoryTerminalForm, List<InventoryColumn> columns)
+			throws EndOfColumnsException {
+		int number = inventoryTerminalForm.getCurrentColumnNumber() + 1;
+		if (number >= columns.size()) {
 			throw new EndOfColumnsException();
 		}
 		inventoryTerminalForm.setCurrentColumnNumber(number);
@@ -349,11 +560,12 @@ public class InventoryController {
 		inventoryTerminalForm.setCurrentColumnValidated(columns.get(number).getValidated());
 		inventoryTerminalForm.setCurrentValue("");
 	}
-	
+
 	private void switchToNextColumn(InventoryTerminalForm inventoryTerminalForm) throws EndOfColumnsException {
-		List<InventoryColumn> columns = inventoryColumnsService.findInventoryColumnsSortByOrder(inventoryTerminalForm.getInventoryId());
-		int number = inventoryTerminalForm.getCurrentColumnNumber()+1;
-		if(number >= columns.size()){
+		List<InventoryColumn> columns = inventoryColumnsService
+				.findInventoryColumnsSortByOrder(inventoryTerminalForm.getInventoryId());
+		int number = inventoryTerminalForm.getCurrentColumnNumber() + 1;
+		if (number >= columns.size()) {
 			throw new EndOfColumnsException();
 		}
 		inventoryTerminalForm.setCurrentColumnNumber(number);

@@ -43,6 +43,9 @@ public class Inventory {
 	@Column(name = "inv_title", length = 255, nullable = false)
 	private String title;
 	
+	@Column(name = "inv_company", length = 15, nullable = false)
+	private String company;
+	
 	@Column(name = "inv_description", nullable = true)
 	@Type(type="text")
 	private String description;
@@ -139,6 +142,15 @@ public class Inventory {
 	public void setNextLine(int nextLine) {
 		this.nextLine = nextLine;
 	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+	
 	
 	
 }

@@ -17,6 +17,7 @@
 			<input type="hidden" th:field="*{currentColumnRequired}" />
 			<input type="hidden" th:field="*{currentColumnValidated}" />
 			<input type="hidden" th:field="*{inventoryId}" />
+			<input type="hidden" th:field="*{company}" />
 			<input type="hidden" th:field="*{code}" />
 			<input type="hidden" th:field="*{address}" />
 			<input type="hidden" th:field="*{location}" />
@@ -32,7 +33,7 @@
 			<!-- VISIBLE --> 
 			<h2 class="columntitle" th:text="*{currentColumnName}">field name</h2> 
 			<input type="text" id="currentValue" name="currentValue "
-				th:field="*{currentValue}" />
+				th:field="*{currentValue}" autocomplete="off"/>
 				<div class="valueError" th:errors="*{currentValue}">error</div>
 				
 			<button type="submit" name="action" 
@@ -58,6 +59,12 @@
   		document.getElementById("currentValue").focus();
   		document.getElementById("currentValue").select();
 	};
+	
+	$(document).ready(function() {
+	    $("input:text").focus(function() { $(this).select(); } );
+	});
+
+
 	
 	function clearFields(){
 		document.getElementById('currentValue').value = '';

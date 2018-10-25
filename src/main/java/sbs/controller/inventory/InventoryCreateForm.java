@@ -16,6 +16,7 @@ public class InventoryCreateForm {
 	private Date inventoryDate;
 	/* null-able */
 	String description;
+	String company;
 	
 	// in edit
 	int id;
@@ -73,11 +74,23 @@ public class InventoryCreateForm {
 	public void setActive(boolean active) {
 		this.active = active;
 	}
+	
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
 
 	@Override
 	public String toString() {
 		return "InventoryCreateForm [title=" + title + ", inventoryDate=" + inventoryDate + ", description="
-				+ description + "]";
+				+ description + ", company=" + company + ", id=" + id + ", nextLine=" + nextLine + ", active=" + active
+				+ "]";
 	}
+
+
 	
 }

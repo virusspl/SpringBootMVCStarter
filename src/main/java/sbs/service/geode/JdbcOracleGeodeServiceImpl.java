@@ -68,4 +68,10 @@ public class JdbcOracleGeodeServiceImpl implements JdbcOracleGeodeService {
 	public List<GeodeMovement> findRcpMovementsInPeriod(Date startDate, Date endDate) {
 		return jdbcOracleGeodeRepository.findRcpMovementsInPeriod(startDate, endDate); 
 	}
+
+
+	@Override
+	public boolean checkIfAddressExist(String address) {
+		return jdbcOracleGeodeRepository.checkIfAddressExist(address);
+	}
 }

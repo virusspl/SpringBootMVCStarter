@@ -19,6 +19,7 @@ import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ProductSellDemand;
 import sbs.model.x3.X3ProductionOrderDetails;
+import sbs.model.x3.X3PurchaseOrder;
 import sbs.model.x3.X3SalesOrder;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
@@ -258,6 +259,16 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	@Override
 	public X3Workstation findWorkstationByCode(String company, String code) {
 		return jdbcOracleX3Repository.findWorkstationByCode(company, code);
+	}
+
+	@Override
+	public boolean checkIfLocationExist(String company, String location) {
+		return jdbcOracleX3Repository.checkIfLocationExist(company, location);
+	}
+
+	@Override
+	public X3PurchaseOrder findPurchaseOrderByNumber(String company, String number) {
+		return jdbcOracleX3Repository.findPurchaseOrderByNumber(company, number);
 	}
 
 

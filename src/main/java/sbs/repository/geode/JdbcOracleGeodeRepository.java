@@ -10,4 +10,5 @@ public interface JdbcOracleGeodeRepository  {
     public List<Map<String,Object>> findLocationsOfProduct(String product);
 	public List<Map<String, Object>> findAllLocationsOfProducts();
 	public List<GeodeMovement> findRcpMovementsInPeriod(Date startDate, Date endDate);
+	public boolean checkIfAddressExist(String address);
 }

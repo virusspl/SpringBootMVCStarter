@@ -91,6 +91,7 @@
 									<th th:text="|#id|"></th>
 									<th th:text="#{inventory.inventoryDate}|"></th>
 									<th th:text="#{general.title}"></th>
+									<th th:text="#{general.company}"></th>
 									<th th:text="#{inventory.nextline.short}"></th>
 									<th th:text="#{general.date.creation}"></th>
 								</tr>
@@ -123,6 +124,9 @@
 									<td><a th:href="|@{/inventory/show/}${inv.id}|"
 										data-toggle="tooltip" data-placement="top"
 										th:title="#{action.show}"><span th:text="${inv.title}"></span></a></td>
+									<!-- COMPANY -->
+									<td><span
+										th:text="${inv.company}"></span></td>										
 									<!-- NEXT LINE -->
 									<td><span th:text="${inv.nextLine}"></span></td>
 									<!-- CREATION DATE -->

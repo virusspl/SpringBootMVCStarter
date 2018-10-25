@@ -129,4 +129,17 @@ public class JdbcOracleGeodeRepositoryImpl implements JdbcOracleGeodeRepository 
 		return new Timestamp(cal.getTimeInMillis());
 	}
 
+
+
+	@Override
+	public boolean checkIfAddressExist(String address) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT (GEOATW.SLOT.STO_0 || GEOATW.SLOT.ADD_0) AS ADDRESS FROM GEOATW.SLOT "
+				+ "WHERE (GEOATW.SLOT.STO_0 || GEOATW.SLOT.ADD_0) = ?",
+                new Object[]{address});
+
+		return !resultSet.isEmpty();
+		
+	}
+
 }
