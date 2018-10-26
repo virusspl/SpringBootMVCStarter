@@ -271,5 +271,10 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 		return jdbcOracleX3Repository.findPurchaseOrderByNumber(company, number);
 	}
 
+	@Override
+	public String findPackageDescription(String company, String packageCode) {
+		return jdbcOracleX3Repository.findPackageDescription(company, packageCode);
+	}
+
 
 }

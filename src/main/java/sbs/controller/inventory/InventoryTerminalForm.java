@@ -16,16 +16,29 @@ public class InventoryTerminalForm {
 	private String freeString2;
 	private double freeDouble;
 	
+	private String codeTitle;	
+	private String addressTitle;	
+	private String locationTitle;	
+	private String labelTitle;	
+	private String saleOrderTitle;	
+	private String purchaseOrderTitle;	
+	private String packageTypeTitle;
+	private String quantityTitle;
+	private String freeString1Title;
+	private String freeString2Title;
+	private String freeDoubleTitle;
+	
 	private String currentValue;
 	private int currentColumnNumber;
 	private String currentColumnName;
 	private String currentColumnCode;
 	private boolean currentColumnRequired;
 	private boolean currentColumnValidated;
+	private boolean readyToSave;;
 	
 	
 	public InventoryTerminalForm() {
-
+		this.readyToSave = false;
 	}
 
 	public int getInventoryId() {
@@ -180,6 +193,103 @@ public class InventoryTerminalForm {
 
 	public void setCompany(String company) {
 		this.company = company;
+	}
+	
+
+	public boolean isReadyToSave() {
+		return readyToSave;
+	}
+
+	public void setReadyToSave(boolean readyToSave) {
+		this.readyToSave = readyToSave;
+	}
+
+	public String getCodeTitle() {
+		return codeTitle;
+	}
+
+	public void setCodeTitle(String codeTitle) {
+		this.codeTitle = codeTitle;
+	}
+
+	public String getAddressTitle() {
+		return addressTitle;
+	}
+
+	public void setAddressTitle(String addressTitle) {
+		this.addressTitle = addressTitle;
+	}
+
+	public String getLocationTitle() {
+		return locationTitle;
+	}
+
+	public void setLocationTitle(String locationTitle) {
+		this.locationTitle = locationTitle;
+	}
+
+	public String getLabelTitle() {
+		return labelTitle;
+	}
+
+	public void setLabelTitle(String labelTitle) {
+		this.labelTitle = labelTitle;
+	}
+
+	public String getSaleOrderTitle() {
+		return saleOrderTitle;
+	}
+
+	public void setSaleOrderTitle(String saleOrderTitle) {
+		this.saleOrderTitle = saleOrderTitle;
+	}
+
+	public String getPurchaseOrderTitle() {
+		return purchaseOrderTitle;
+	}
+
+	public void setPurchaseOrderTitle(String purchaseOrderTitle) {
+		this.purchaseOrderTitle = purchaseOrderTitle;
+	}
+
+	public String getPackageTypeTitle() {
+		return packageTypeTitle;
+	}
+
+	public void setPackageTypeTitle(String packageTypeTitle) {
+		this.packageTypeTitle = packageTypeTitle;
+	}
+
+	public String getFreeString1Title() {
+		return freeString1Title;
+	}
+
+	public void setFreeString1Title(String freeString1Title) {
+		this.freeString1Title = freeString1Title;
+	}
+
+	public String getFreeString2Title() {
+		return freeString2Title;
+	}
+
+	public void setFreeString2Title(String freeString2Title) {
+		this.freeString2Title = freeString2Title;
+	}
+
+	public String getQuantityTitle() {
+		return quantityTitle;
+	}
+
+	public void setQuantityTitle(String quantityTitle) {
+		this.quantityTitle = quantityTitle;
+	}
+
+	public String getFreeDoubleTitle() {
+		return freeDoubleTitle;
+	}
+
+	public void setFreeDoubleTitle(String freeDoubleTitle) {
+		this.freeDoubleTitle = freeDoubleTitle;
 	}
 
 	@Override

@@ -74,6 +74,7 @@ public interface JdbcOracleX3Repository  {
 	public List<X3SalesOrderLine> findOpenedSalesOrderLinesInPeriod(Date startDate, Date endDate, String company);
 	public X3Workstation findWorkstationByCode(String company, String code);
 	public boolean checkIfLocationExist(String company, String location);
+	public String findPackageDescription(String company, String packageCode);
 	
 	
 }

@@ -1778,6 +1778,33 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		return !resultSet.isEmpty();
 	}
 
+	@Override
+	public String findPackageDescription(String company, String packageCode) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ company + ".ATEXTRA.TEXTE_0 "
+				+ "FROM " 
+				+ company + ".ATEXTRA "
+				+ "WHERE "
+				+ "UPPER(" + company + ".ATEXTRA.IDENT2_0) = ? AND "
+				+ company + ".ATEXTRA.CODFIC_0 = ? AND "
+				+ company + ".ATEXTRA.ZONE_0 = ? AND "
+				+ company + ".ATEXTRA.LANGUE_0 = ? AND "
+				+ company + ".ATEXTRA.IDENT1_0 = ? "
+				, new Object[] {
+						packageCode.toUpperCase(),
+						"ATABDIV",
+						"LNGDES",
+						"POL",
+						"6283"
+						});
+        String result = null;
+        for(Map<String,Object> row: resultSet ){
+        	result = (String)row.get("TEXTE_0");
+        }
+		return result;
+	}
+
 
 
 

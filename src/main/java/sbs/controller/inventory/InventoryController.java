@@ -235,15 +235,41 @@ public class InventoryController {
 	@RequestMapping(value = "/terminal/inventory")
 	public String terminalView(Model model, Locale locale) {
 		InventoryTerminalForm inventoryTerminalForm = new InventoryTerminalForm();
-		inventoryTerminalForm.setCurrentColumnNumber(-1);
-		inventoryTerminalForm.setCurrentColumnCode("inventory.type.inventoryid");
-		inventoryTerminalForm
-				.setCurrentColumnName(messageSource.getMessage("inventory.type.inventoryid", null, locale));
+		initTerminalForm(inventoryTerminalForm, locale, false);
 		model.addAttribute("inventoryTerminalForm", inventoryTerminalForm);
 		return "inventory/inventory_terminal";
 	}
 
-	@RequestMapping(value = "/inventory/processentry", method = RequestMethod.POST)
+	private void initTerminalForm(InventoryTerminalForm form, Locale locale, boolean restoreInventoryId) {
+		// first column - inventory ID
+		form.setCurrentColumnNumber(-1);
+		form.setCurrentColumnCode("inventory.type.inventoryid");
+		form.setCurrentColumnName(messageSource.getMessage("inventory.type.inventoryid", null, locale));
+		if(restoreInventoryId){
+			form.setCurrentValue(form.getInventoryId()+"");
+		}
+		else{
+			form.setCurrentValue("");
+		}
+		// fields empty for new entry
+		form.setInventoryId(0);
+		form.setCompany("");
+		form.setCode("");
+		form.setAddress("");
+		form.setLocation("");
+		form.setLabel("");
+		form.setSaleOrder("");
+		form.setPurchaseOrder("");
+		form.setPackageType("");
+		form.setQuantity(0.0);
+		form.setFreeString1("");
+		form.setFreeString2("");
+		form.setFreeDouble(0.0);
+		form.setReadyToSave(false);
+		
+	}
+
+	@RequestMapping(value = "/inventory/processentry", params = { "step" }, method = RequestMethod.POST)
 	@Transactional
 	public String terminalProcessInventoryEntry(InventoryTerminalForm inventoryTerminalForm,
 			BindingResult bindingResult, RedirectAttributes redirectAttrs, Locale locale, Model model)
@@ -316,8 +342,8 @@ public class InventoryController {
 				return "inventory/inventory_terminal";
 			}
 		} catch (EndOfColumnsException eoc) {
-			System.out.println("END OF COLUMNS " + inventoryTerminalForm.toString());
-			model.addAttribute("live", "end of columns!");
+			inventoryTerminalForm.setReadyToSave(true);
+			return "inventory/inventory_terminal";
 			// String summary = generateSummary(inventoryTerminalForm());
 		} catch (NumberFormatException nfe) {
 			bindingResult.rejectValue("currentValue", "inventory.error.mustbeanumber");
@@ -329,7 +355,62 @@ public class InventoryController {
 			model.addAttribute("error", e.getMessage());
 			return "inventory/inventory_terminal";
 		}
-		return "redirect:/terminal/inventory";
+	}
+	
+	@RequestMapping(value = "/inventory/save", method = RequestMethod.POST)
+	@Transactional
+	public String saveTerminalProcessInventoryEntry(InventoryTerminalForm inventoryTerminalForm,
+			BindingResult bindingResult, RedirectAttributes redirectAttrs, Locale locale, Model model)
+			throws NotFoundException {
+		
+		saveInventoryEntryFromForm(inventoryTerminalForm);
+		initTerminalForm(inventoryTerminalForm, locale, true);
+		
+		model.addAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		
+		return "inventory/inventory_terminal";
+	}
+	
+	@RequestMapping(value = "/inventory/cancel", method = RequestMethod.POST)
+	@Transactional
+	public String cancelTerminalProcessInventoryEntry(InventoryTerminalForm inventoryTerminalForm,
+			BindingResult bindingResult, RedirectAttributes redirectAttrs, Locale locale, Model model)
+			throws NotFoundException {
+		
+		initTerminalForm(inventoryTerminalForm, locale, true);
+		model.addAttribute("warning", messageSource.getMessage("action.cancelled", null, locale));
+		return "inventory/inventory_terminal";
+	}
+	
+	@Transactional
+	private void saveInventoryEntryFromForm(InventoryTerminalForm form) {
+		
+		Inventory inventory = inventoryService.findById(form.getInventoryId());
+		User user = userService.getAuthenticatedUser();
+		
+		InventoryEntry entry = new InventoryEntry();
+		
+		entry.setCreationDate(new Timestamp(new java.util.Date().getTime()));
+		entry.setInventory(inventory);
+		inventory.getEntries().add(entry);
+		entry.setLine(inventory.getNextLine());
+		inventory.setNextLine(entry.getLine()+1);
+		entry.setUserCode(user.getUsername());
+		entry.setUserName(user.getName());
+		
+		entry.setAddress(form.getAddress());
+		entry.setCode(form.getCode());
+		entry.setFreeDouble(form.getFreeDouble());
+		entry.setFreeString1(form.getFreeString1());
+		entry.setFreeString2(form.getFreeString2());
+		entry.setLabel(form.getLabel());
+		entry.setLocation(form.getLocation());
+		entry.setPackageType(form.getPackageType());
+		entry.setPurchaseOrder(form.getPurchaseOrder());
+		entry.setQuantity(form.getQuantity());
+		entry.setSaleOrder(form.getSaleOrder());
+
+		inventoryEntriesService.save(entry);
 	}
 
 	private void setValidationMessages(Model model) {
@@ -342,6 +423,7 @@ public class InventoryController {
 		}
 
 	}
+	
 
 	/**
 	 * @return String - i18n message code of error OR null if validation OK
@@ -371,6 +453,7 @@ public class InventoryController {
 					resultCode = "general.productCode.notfound";
 				}
 			}
+			inventoryTerminalForm.setCodeTitle(inventoryTerminalForm.getCurrentColumnName());
 			break;
 		/* ADDRESS */
 		case "inventory.type.address":
@@ -382,6 +465,7 @@ public class InventoryController {
 					resultCode = "inventory.error.addressnotexist";
 				}
 			}
+			inventoryTerminalForm.setAddressTitle(inventoryTerminalForm.getCurrentColumnName());
 			break;
 		/* LOCATION */
 		case "inventory.type.location":
@@ -393,6 +477,7 @@ public class InventoryController {
 					resultCode = "inventory.error.locationnotexist";
 				}
 			}
+			inventoryTerminalForm.setLocationTitle(inventoryTerminalForm.getCurrentColumnName());
 			break;
 		/* LABEL */
 		case "inventory.type.label":
@@ -416,6 +501,7 @@ public class InventoryController {
 					}
 				}
 			}
+			inventoryTerminalForm.setLabelTitle(inventoryTerminalForm.getCurrentColumnName());
 			break;
 		/* SALE ORDER */
 		case "inventory.type.order.sale":
@@ -431,6 +517,7 @@ public class InventoryController {
 					this.tmpMsg = order.getClientName();
 				}
 			}
+			inventoryTerminalForm.setSaleOrderTitle(inventoryTerminalForm.getCurrentColumnName());
 			break;
 		/* SALE PURCHASE */
 		case "inventory.type.order.purchase":
@@ -446,6 +533,7 @@ public class InventoryController {
 					this.tmpMsg = order.getSupplierName();
 				}
 			}
+			inventoryTerminalForm.setPurchaseOrderTitle(inventoryTerminalForm.getCurrentColumnName());
 			break;
 		/* PACKAGE */
 		case "inventory.type.packagetype":
@@ -460,10 +548,11 @@ public class InventoryController {
 				if(packageDescription == null){
 					resultCode = "inventory.error.packagenotexist";
 				}
-				else{a
+				else{
 					this.tmpMsg = packageDescription;
 				}
 			}
+			inventoryTerminalForm.setPackageTypeTitle(inventoryTerminalForm.getCurrentColumnName());
 			break;
 		/* QUANTITY */
 		case "inventory.type.quantity":
@@ -475,18 +564,21 @@ public class InventoryController {
 			} catch (NumberFormatException e) {
 				resultCode = "inventory.error.mustbeanumber";
 			}
+			inventoryTerminalForm.setQuantityTitle(inventoryTerminalForm.getCurrentColumnName());
 			break;
 		/* FREESTRING 1 */
 		case "inventory.type.freestring1":
 			if (currentValue.length() > 45) {
 				resultCode = "inventory.error.valuetoolong";
 			}
+			inventoryTerminalForm.setFreeString1Title(inventoryTerminalForm.getCurrentColumnName());
 			break;
 		/* FREESTRING 2 */
 		case "inventory.type.freestring2":
 			if (currentValue.length() > 45) {
 				resultCode = "inventory.error.valuetoolong";
 			}
+			inventoryTerminalForm.setFreeString2Title(inventoryTerminalForm.getCurrentColumnName());
 			break;
 		/* FREEDOUBLE */
 		case "inventory.type.freedouble":
@@ -495,6 +587,7 @@ public class InventoryController {
 			} catch (NumberFormatException e) {
 				resultCode = "inventory.error.mustbeanumber";
 			}
+			inventoryTerminalForm.setFreeDoubleTitle(inventoryTerminalForm.getCurrentColumnName());
 			break;
 		default:
 			throw new UnknownDataTypeException();

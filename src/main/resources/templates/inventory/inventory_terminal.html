@@ -7,63 +7,200 @@
 </head>
 <body>
 	<div layout:fragment="content">
-		<form th:action="@{/inventory/processentry}" method="post"
+		<form id="termForm" th:action="@{/inventory/processentry}" method="post"
 			th:object="${inventoryTerminalForm}">
 
 			<!-- HIDDEN -->
-			<input type="hidden" th:field="*{currentColumnNumber}" />
-			<input type="hidden" th:field="*{currentColumnCode}" />
-			<input type="hidden" th:field="*{currentColumnName}" />
-			<input type="hidden" th:field="*{currentColumnRequired}" />
-			<input type="hidden" th:field="*{currentColumnValidated}" />
-			<input type="hidden" th:field="*{inventoryId}" />
-			<input type="hidden" th:field="*{company}" />
+			<input type="hidden" th:field="*{currentColumnNumber}" /> 
+			<input type="hidden" th:field="*{currentColumnCode}" /> 
+			<input type="hidden" th:field="*{currentColumnName}" /> 
+			<input type="hidden" th:field="*{currentColumnRequired}" /> 
+			<input type="hidden" th:field="*{currentColumnValidated}" /> 
+			<input type="hidden" th:field="*{inventoryId}" /> 
+			<input type="hidden" th:field="*{company}" /> 
+			
 			<input type="hidden" th:field="*{code}" />
-			<input type="hidden" th:field="*{address}" />
-			<input type="hidden" th:field="*{location}" />
+			<input type="hidden" th:field="*{address}" /> 
+			<input type="hidden" th:field="*{location}" /> 
 			<input type="hidden" th:field="*{label}" />
-			<input type="hidden" th:field="*{saleOrder}" />
-			<input type="hidden" th:field="*{purchaseOrder}" />
-			<input type="hidden" th:field="*{packageType}" />
-			<input type="hidden" th:field="*{quantity}" />
-			<input type="hidden" th:field="*{freeString1}" />
-			<input type="hidden" th:field="*{freeString2}" />
+			<input type="hidden" th:field="*{saleOrder}" /> 
+			<input type="hidden" th:field="*{purchaseOrder}" /> 
+			<input type="hidden" th:field="*{packageType}" /> 
+			<input type="hidden" th:field="*{quantity}" /> 
+			<input type="hidden" th:field="*{freeString1}" /> 
+			<input type="hidden" th:field="*{freeString2}" /> 
 			<input type="hidden" th:field="*{freeDouble}" />
 			
-			<!-- VISIBLE --> 
-			<h2 class="columntitle" th:text="*{currentColumnName}">field name</h2> 
-			<input type="text" id="currentValue" name="currentValue "
-				th:field="*{currentValue}" autocomplete="off"/>
+			<input type="hidden" th:field="*{codeTitle}" />
+			<input type="hidden" th:field="*{addressTitle}" /> 
+			<input type="hidden" th:field="*{locationTitle}" /> 
+			<input type="hidden" th:field="*{labelTitle}" />
+			<input type="hidden" th:field="*{saleOrderTitle}" /> 
+			<input type="hidden" th:field="*{purchaseOrderTitle}" /> 
+			<input type="hidden" th:field="*{packageTypeTitle}" /> 
+			<input type="hidden" th:field="*{quantityTitle}" /> 
+			<input type="hidden" th:field="*{freeString1Title}" /> 
+			<input type="hidden" th:field="*{freeString2Title}" /> 
+			<input type="hidden" th:field="*{freeDoubleTitle}" />
+			
+			<input type="hidden" th:field="*{readyToSave}" />
+
+			<!-- VISIBLE -->
+			<div th:if="!*{readyToSave}">
+				<h2 class="columntitle" th:text="*{currentColumnName}">field
+					name</h2>
+				<input type="text" id="currentValue" name="currentValue "
+					th:field="*{currentValue}" autocomplete="off" />
 				<div class="valueError" th:errors="*{currentValue}">error</div>
-				
-			<button type="submit" name="action" 
-							class="button okbutton margin-top-10" 
-							style="width: 46%;"
-							th:text="#{action.send}">
-							send
-						</button>
-						<button type="button"
-							class="button badbutton margin-top-10"
-							style="width: 46%;" 
-							th:text="#{action.clear}" 
-							onclick="clearFields()">
-							clear
-						</button>
+				<button type="submit" name="step" value="step"
+					class="button okbutton margin-top-10" style="width: 46%;"
+					th:text="#{action.send}">send</button>
+				<button type="button" class="button badbutton margin-top-10"
+					style="width: 46%;" th:text="#{action.clear}"
+					onclick="clearFields()">clear</button>
+			</div>
+			<div th:if="*{readyToSave}">
+			<h2 th:text="#{general.summary}">txt</h2>
+			<div id = "summary">
+				<table class="summaryTable">
+					<tr>
+						<td class="summaryTitleColumn">
+							<span th:text="#{inventory.inventory}"></span>	
+						</td>
+						<td class="summaryValueColumn">
+							<span th:text="|#*{inventoryId}|"> </span> 	
+						</td>
+					</tr>
+					<tr th:if="*{#strings.length(code)>0}">
+						<td class="summaryTitleColumn">
+							<span th:text="*{codeTitle}"></span>	
+						</td>
+						<td class="summaryValueColumn">
+							<span th:text="*{code}"></span> 	
+						</td>
+					</tr>
+					<tr th:if="*{#strings.length(address)>0}">
+						<td class="summaryTitleColumn">
+							<span th:text="*{addressTitle}"></span>	
+						</td>
+						<td class="summaryValueColumn">
+							<span th:text="*{address}"></span> 	
+						</td>
+					</tr>					
+					<tr th:if="*{#strings.length(location)>0}">
+						<td class="summaryTitleColumn">
+							<span th:text="*{locationTitle}"></span>	
+						</td>
+						<td class="summaryValueColumn">
+							<span th:text="*{location}"></span> 	
+						</td>
+					</tr>
+					<tr th:if="*{#strings.length(label)>0}">
+						<td class="summaryTitleColumn">
+							<span th:text="*{labelTitle}"></span>	
+						</td>
+						<td class="summaryValueColumn">
+							<span th:text="*{label}"></span> 	
+						</td>
+					</tr>
+					<tr th:if="*{#strings.length(saleOrder)>0}">
+						<td class="summaryTitleColumn">
+							<span th:text="*{saleOrderTitle}"></span>	
+						</td>
+						<td class="summaryValueColumn">
+							<span th:text="*{saleOrder}"></span> 	
+						</td>
+					</tr>
+					<tr th:if="*{#strings.length(purchaseOrder)>0}">
+						<td class="summaryTitleColumn">
+							<span th:text="*{purchaseOrderTitle}"></span>	
+						</td>
+						<td class="summaryValueColumn">
+							<span th:text="*{purchaseOrder}"></span> 	
+						</td>
+					</tr>
+					<tr th:if="*{#strings.length(packageType)>0}">
+						<td class="summaryTitleColumn">
+							<span th:text="*{packageTypeTitle}"></span>	
+						</td>
+						<td class="summaryValueColumn">
+							<span th:text="*{packageType}"></span> 	
+						</td>
+					</tr>	
+					<tr th:if="*{#strings.length(freeString1)>0}">
+						<td class="summaryTitleColumn">
+							<span th:text="*{freeString1Title}"></span>	
+						</td>
+						<td class="summaryValueColumn">
+							<span th:text="*{freeString1}"></span> 	
+						</td>
+					</tr>								
+					<tr th:if="*{#strings.length(freeString2)>0}">
+						<td class="summaryTitleColumn">
+							<span th:text="*{freeString2Title}"></span>	
+						</td>
+						<td class="summaryValueColumn">
+							<span th:text="*{freeString2}"></span> 	
+						</td>
+					</tr>
+					<tr th:if="*{quantity} > 0">
+						<td class="summaryTitleColumn">
+							<span th:text="*{quantityTitle}"></span>	
+						</td>
+						<td class="summaryValueColumn">
+							<span th:text="*{quantity}"></span> 	
+						</td>
+					</tr>													
+					<tr th:if="*{freeDouble} != 0">
+						<td class="summaryTitleColumn">
+							<span th:text="*{freeDoubleTitle}"></span>	
+						</td>
+						<td class="summaryValueColumn">
+							<span th:text="*{freeDouble}"></span> 	
+						</td>
+					</tr>													
+				</table>
+			</div>
+				<!-- <button type="submit" name="save" value="save"
+					class="button okbutton margin-top-10" style="width: 46%;"
+					th:text="#{action.save}">send</button>
+				<button type="submit" name="cancel" value="cancel" 
+					class="button badbutton margin-top-10"
+					style="width: 46%;" th:text="#{action.cancel}"
+					onclick="clearFields()">clear</button>-->			
+				<button type="button" onclick="submitForm('save')"
+					class="button okbutton margin-top-10" style="width: 46%;"
+					th:text="#{action.save}">send</button>
+				<button type="button" onclick="submitForm('cancel')"
+					class="button badbutton margin-top-10"
+					style="width: 46%;" th:text="#{action.cancel}">clear</button>			
+			</div>
 			<!-- /VISIBLE -->
+
 		</form>
 	</div>
-	
-<div layout:fragment="script">
-	<script>
+
+	<div layout:fragment="script">
+	<script th:src="@{/js/url.helper.js}" type="text/javascript"></script>
+		<script>
 	window.onload = function() {
   		document.getElementById("currentValue").focus();
   		document.getElementById("currentValue").select();
 	};
-	
 	$(document).ready(function() {
 	    $("input:text").focus(function() { $(this).select(); } );
 	});
-
+	
+	  function submitForm(action) {		  
+		  var form = document.getElementById('termForm');
+		  if(action == 'save'){
+			  form.action = getAppUrl()+'/inventory/save';  
+		  }
+		  else{
+			  form.action = getAppUrl()+'/inventory/cancel';
+		  }
+		form.submit();
+		}
 
 	
 	function clearFields(){
@@ -72,6 +209,6 @@
 	}
 	
 	</script>
-</div>
+	</div>
 </body>
 </html>
