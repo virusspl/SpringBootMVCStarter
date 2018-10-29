@@ -8,6 +8,8 @@ import sbs.repository.GenericRepository;
 public interface InventoryEntriesRepository extends GenericRepository<InventoryEntry,Integer> {
 
 	List<InventoryEntry> findByInventoryIdAndLabelNumber(int inventoryId, String labelNumber);
+
+	List<InventoryEntry> findByInventoryIdSortByLines(int inventoryId);
 	
 }
 

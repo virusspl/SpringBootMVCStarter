@@ -67,7 +67,10 @@
 				language : {
 					url : getUrl() + "italian.json"
 				},
-				order : [ [ 0, 'asc' ] ]
+				order : [ [ 0, 'asc' ] ],
+				paging : false,
+				info : false,
+				searching : false
 			});
 		</script>
 
@@ -206,7 +209,7 @@
 			</div>
 			<div class="col-xs-12 margin-top-10">
 				<div class="table-responsive">
-					<table id="srv">
+					<table id="srv" class="display">
 						<thead>
 							<tr>
 								<th th:text="#{inventory.order}">head</th>

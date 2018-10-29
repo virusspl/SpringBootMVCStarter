@@ -28,5 +28,18 @@ public class InventoryEntriesRepositoryImpl extends GenericRepositoryAdapter<Inv
 			return result;		
 	}
 
+	@Override
+	public List<InventoryEntry> findByInventoryIdSortByLines(int inventoryId) {
+		String hql = "from InventoryEntry e where e.inventory.id = :invId order by e.line";
+		@SuppressWarnings("unchecked")
+		List<InventoryEntry> result = (List<InventoryEntry>) 
+		currentSession()
+		.createQuery(hql)
+		.setInteger("invId", inventoryId)
+		.list();
+		
+		return result;
+	}
+
 	
 }

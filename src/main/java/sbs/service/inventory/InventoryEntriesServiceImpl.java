@@ -27,5 +27,10 @@ public class InventoryEntriesServiceImpl extends GenericServiceAdapter<Inventory
 		return inventoryEntriesRepository.findByInventoryIdAndLabelNumber(inventoryId, labelNumber);
 	}
 
+	@Override
+	public List<InventoryEntry> findByInventoryIdSortByLines(int inventoryId) {
+		return inventoryEntriesRepository.findByInventoryIdSortByLines(inventoryId);
+	}
+
 
 }

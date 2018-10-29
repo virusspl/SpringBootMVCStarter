@@ -34,5 +34,19 @@ public class TextHelper {
 		}
 		return text;
 	}
+
+	public String formatDouble2Digits(double quantity) {
+		return String.format("%.2f", quantity);
+	}
+
+	public String formatDouble2OrNoDigits(double quantity) {
+		if(quantity%1==0){
+			return String.format("%.0f", quantity);
+		}
+		else{
+			return String.format("%.2f", quantity);
+		}
+		
+	}
 	
 }

@@ -1,6 +1,7 @@
 package sbs.controller.inventory;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javassist.NotFoundException;
+import sbs.helpers.DateHelper;
 import sbs.helpers.TextHelper;
 import sbs.model.inventory.Inventory;
 import sbs.model.inventory.InventoryColumn;
@@ -48,6 +50,8 @@ public class InventoryController {
 	MessageSource messageSource;
 	@Autowired
 	TextHelper textHelper;
+	@Autowired
+	DateHelper dateHelper;
 	@Autowired
 	InventoryService inventoryService;
 	@Autowired
@@ -667,6 +671,88 @@ public class InventoryController {
 		inventoryTerminalForm.setCurrentColumnRequired(columns.get(number).getRequired());
 		inventoryTerminalForm.setCurrentColumnValidated(columns.get(number).getValidated());
 		inventoryTerminalForm.setCurrentValue("");
+	}
+	
+	@RequestMapping("/inventory/showinventory/{id}")
+	@Transactional
+	public String showInventoryView(@PathVariable("id") int id, Model model) throws NotFoundException, UnknownDataTypeException {
+		
+		Inventory inventory = inventoryService.findById(id);
+		
+		if (inventory == null) {
+			throw new NotFoundException("Inventory not found");
+		}
+		
+		List<InventoryColumn> columns = inventoryColumnsService.findInventoryColumnsSortByOrder(inventory.getId());
+		List<InventoryEntry> entries = inventoryEntriesService.findByInventoryIdSortByLines(inventory.getId());
+		List<InventoryShowLine> lines = new ArrayList<>();
+		InventoryShowLine line;
+		
+		for(InventoryEntry entry: entries){
+			line = prepareShowLine(entry, columns);
+			lines.add(line);
+		}
+		
+		model.addAttribute("inventory", inventory);
+		model.addAttribute("columns", columns);
+		model.addAttribute("lines", lines);
+
+		return "inventory/showinventory";
+	}
+
+	private InventoryShowLine prepareShowLine(InventoryEntry entry, List<InventoryColumn> columns) throws UnknownDataTypeException {
+		InventoryShowLine line = new InventoryShowLine();
+		
+		line.getValues().add(""+entry.getLine());
+		line.getValues().add(dateHelper.formatYyyyMmDdHhMm(entry.getCreationDate()));
+		
+		for(InventoryColumn column: columns){
+			switch (column.getInventoryDataType().getColumnTypeCode()) {
+			case "inventory.type.code":
+				line.getValues().add(entry.getCode());
+				break;
+			case "inventory.type.address":
+				line.getValues().add(entry.getAddress());
+				break;
+			case "inventory.type.location":
+				line.getValues().add(entry.getLocation());
+				break;
+			case "inventory.type.label":
+				line.getValues().add(entry.getLabel());
+				break;
+			case "inventory.type.order.sale":
+				line.getValues().add(entry.getSaleOrder());
+				break;
+			case "inventory.type.order.purchase":
+				line.getValues().add(entry.getPurchaseOrder());
+				break;
+			case "inventory.type.packagetype":
+				line.getValues().add(entry.getPackageType());
+				break;
+			case "inventory.type.quantity":
+				line.getValues().add(textHelper.formatDouble2OrNoDigits(entry.getQuantity()));
+				break;
+			case "inventory.type.freestring1":
+				line.getValues().add(entry.getFreeString1());
+				break;
+			case "inventory.type.freestring2":
+				line.getValues().add(entry.getFreeString2());
+				break;
+			case "inventory.type.freedouble":
+				line.getValues().add(textHelper.formatDouble2OrNoDigits(entry.getFreeDouble()));
+				break;
+			default:
+				throw new UnknownDataTypeException();
+			}
+		}
+		
+		line.getValues().add(entry.getUserCode());
+		line.getValues().add(entry.getUserName());
+
+		
+		
+		
+		return line;
 	}
 
 }

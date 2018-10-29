@@ -121,7 +121,7 @@
 									<td><span
 										th:text="${#dates.format(inv.inventoryDate, 'yyyy.MM.dd')}"></span></td>
 									<!-- TITLE / SHOW -->
-									<td><a th:href="|@{/inventory/show/}${inv.id}|"
+									<td><a th:href="|@{/inventory/showinventory/}${inv.id}|"
 										data-toggle="tooltip" data-placement="top"
 										th:title="#{action.show}"><span th:text="${inv.title}"></span></a></td>
 									<!-- COMPANY -->

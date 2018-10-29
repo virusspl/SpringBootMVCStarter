@@ -13,6 +13,7 @@ public class DateHelper {
 	private SimpleDateFormat ddMmYyyyFormat;
 	private SimpleDateFormat ddMmYyFormat;
 	private SimpleDateFormat ddMmYyyyHhMmFormat;
+	private SimpleDateFormat YyyyMmDdHhMmFormat;
 	
 	
 	public DateHelper(){
@@ -20,6 +21,7 @@ public class DateHelper {
 		ddMmYyyyFormat = new SimpleDateFormat("dd/MM/yyyy");
 		ddMmYyFormat = new SimpleDateFormat("dd/MM/yy");
 		ddMmYyyyHhMmFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		YyyyMmDdHhMmFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 	}
 	
 	public Timestamp getCurrentTime(){
@@ -48,6 +50,15 @@ public class DateHelper {
 	
 	public String formatYyyyMmDd(Timestamp date){
 		return YyyyMmDdFormat.format(date);
+	}
+	
+
+	public String formatYyyyMmDdHhMm(Date date) {
+		return YyyyMmDdHhMmFormat.format(date);
+	}
+
+	public String formatYyyyMmDdHhMm(Timestamp date) {
+		return YyyyMmDdHhMmFormat.format(date);
 	}
 	
 	public String formatDdMmYy(Date date){
@@ -107,5 +118,6 @@ public class DateHelper {
 		}
 		return false;
 	}
+
 	
 }
