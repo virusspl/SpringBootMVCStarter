@@ -48,7 +48,6 @@ public class PhonesController {
 		else{
 			return "redirect:/phones/list/it";
 		}
-		
 	}
 	
 	@RequestMapping(value = "/list/{ver}")
@@ -59,7 +58,6 @@ public class PhonesController {
 		model.addAttribute("phoneEditForm", phoneEditForm);
 		model.addAttribute("list", phoneEntriesService.findAllOrderByCategoryAndNumber(version));
 		model.addAttribute("version", version);
-		
 		return "phones/list";
 	}
 
@@ -94,7 +92,8 @@ public class PhonesController {
 
 		model.addAttribute("ver", prtVersion);
 		model.addAttribute("list", list);
-
+		model.addAttribute("version", version);
+		
 		return "phones/print";
 	}
 
@@ -117,6 +116,7 @@ public class PhonesController {
 			phoneCategoryEditForm.setVersion(category.getVersion());
 		}
 		model.addAttribute("phoneCategoryEditForm", phoneCategoryEditForm);
+		
 		return "phones/categoryedit";
 	}
 
@@ -214,6 +214,7 @@ public class PhonesController {
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder(phoneEditForm.getVersion()));
 			model.addAttribute("list", phoneEntriesService.findAllOrderByCategoryAndNumber(phoneEditForm.getVersion()));
+			model.addAttribute("version", phoneEditForm.getVersion());
 			return "phones/list";
 		}
 
@@ -221,6 +222,7 @@ public class PhonesController {
 			bindingResult.rejectValue("number", "phones.error.numberinuse");
 			model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder(phoneEditForm.getVersion()));
 			model.addAttribute("list", phoneEntriesService.findAllOrderByCategoryAndNumber(phoneEditForm.getVersion()));
+			model.addAttribute("version", phoneEditForm.getVersion());
 			return "phones/list";
 		}
 
@@ -248,6 +250,7 @@ public class PhonesController {
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder(phoneEditForm.getVersion()));
 			model.addAttribute("list", phoneEntriesService.findAllOrderByCategoryAndNumber(phoneEditForm.getVersion()));
+			model.addAttribute("version", phoneEditForm.getVersion());
 			return "phones/list";
 		}
 
@@ -256,6 +259,7 @@ public class PhonesController {
 			bindingResult.rejectValue("number", "phones.error.numbernotfound");
 			model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder(phoneEditForm.getVersion()));
 			model.addAttribute("list", phoneEntriesService.findAllOrderByCategoryAndNumber(phoneEditForm.getVersion()));
+			model.addAttribute("version", phoneEditForm.getVersion());
 			return "phones/list";
 		}
 
@@ -286,6 +290,7 @@ public class PhonesController {
 			bindingResult.rejectValue("number", "NotNull.phoneEditForm.number");
 			model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder(phoneEditForm.getVersion()));
 			model.addAttribute("list", phoneEntriesService.findAllOrderByCategoryAndNumber(phoneEditForm.getVersion()));
+			model.addAttribute("version", phoneEditForm.getVersion());
 			return "phones/list";
 		}
 
@@ -294,6 +299,7 @@ public class PhonesController {
 			bindingResult.rejectValue("number", "phones.error.numbernotfound");
 			model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder(phoneEditForm.getVersion()));
 			model.addAttribute("list", phoneEntriesService.findAllOrderByCategoryAndNumber(phoneEditForm.getVersion()));
+			model.addAttribute("version", phoneEditForm.getVersion());
 			return "phones/list";
 		}
 

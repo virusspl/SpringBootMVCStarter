@@ -448,6 +448,14 @@ public class VariousPagesController {
 			roleService.save(timerUser);
 			msg += "[role: " + timerUser.getName() + "], ";
 		}
+		
+		Role phonesManager = roleService.findByName("ROLE_PHONESMANAGER");
+		if (phonesManager == null) {
+			phonesManager = new Role();
+			phonesManager.setName("ROLE_PHONESMANAGER");
+			roleService.save(phonesManager);
+			msg += "[role: " + phonesManager.getName() + "], ";
+		}
 
 		System.out.println("get users:");
 		User admin = userService.findByUsername("Admin");

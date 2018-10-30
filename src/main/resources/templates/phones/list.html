@@ -105,7 +105,7 @@
 		<div class="underline margin-top-20"></div>
 
 		<!-- ADMIN PANEL -->
-		<div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIGHT_ADMIN')"
+		<div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIGHT_ADMIN', 'ROLE_PHONESMANAGER')"
 			class="panel panel-primary">
 			<div class="panel-heading">
 				<span th:text="#{general.panel.admin}"></span>
@@ -223,6 +223,8 @@
 			<div class="panel-heading">
 				<h2 class="margin-top-10">
 					<span th:text="#{phone.numbers}"></span>
+					<span th:if="${version} == 'pl'">- ADR Polska S.A.</span>
+					<span th:if="${version} != 'pl'">- ADR Italia</span>
 				</h2>
 				<a class="btn btn-default btn" th:href="|@{/phones/print}/${version}|"
 					target="_blank"> <span class="glyphicon glyphicon-print"></span>

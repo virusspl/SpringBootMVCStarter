@@ -155,7 +155,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				)
 		.hasAnyRole(
 				"ADMIN", 
-				"LIGHT_ADMIN"
+				"LIGHT_ADMIN",
+				"PHONESMANAGER"
 				)
 		.antMatchers(
 				"/admin", 
