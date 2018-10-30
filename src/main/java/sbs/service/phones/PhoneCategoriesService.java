@@ -7,7 +7,7 @@ import sbs.service.GenericService;
 
 public interface PhoneCategoriesService extends GenericService<PhoneCategory, Integer>{
 
-	List<PhoneCategory> findAllByAscOrder();
+	List<PhoneCategory> findAllByAscOrder(String version);
 
 	//public ToolsProjectState findByOrder(int stateOrderNo);
 

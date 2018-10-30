@@ -6,6 +6,7 @@ import javax.transaction.Transactional;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import sbs.model.phones.PhoneCategory;
@@ -19,9 +20,10 @@ public class PhoneCategoriesRepositoryImpl extends GenericRepositoryAdapter<Phon
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional
-	public List<PhoneCategory> findAllByAscOrder() {
+	public List<PhoneCategory> findAllByAscOrder(String version) {
 		Criteria crit = currentSession().createCriteria(PhoneCategory.class, "category");
 		//crit.createAlias("project.state", "state");
+		crit.add(Restrictions.eq("category.version", version));
 		crit.addOrder(Order.asc("order"));
 		return crit.list();
 	}

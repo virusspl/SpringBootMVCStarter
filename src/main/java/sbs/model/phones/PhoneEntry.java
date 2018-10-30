@@ -32,8 +32,11 @@ public class PhoneEntry {
 	@Column(name = "pe_email", length = 50, nullable = true)
 	private String email;
 	
-	@Column(name = "pe_number", nullable = true)
-	private int number;
+	@Column(name = "pe_number", length = 45, nullable = true)
+	private String number;
+	
+	@Column(name = "pc_version", length = 5, nullable= false)
+	private String version;
 
 	public PhoneCategory getCategory() {
 		return category;
@@ -59,11 +62,11 @@ public class PhoneEntry {
 		this.name = name;
 	}
 
-	public int getNumber() {
+	public String getNumber() {
 		return number;
 	}
 
-	public void setNumber(int number) {
+	public void setNumber(String number) {
 		this.number = number;
 	}
 
@@ -81,6 +84,14 @@ public class PhoneEntry {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
 	@Override

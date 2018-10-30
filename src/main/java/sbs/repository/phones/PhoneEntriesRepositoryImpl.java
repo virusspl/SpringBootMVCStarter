@@ -20,9 +20,10 @@ public class PhoneEntriesRepositoryImpl extends GenericRepositoryAdapter<PhoneEn
 	@Override
 	@SuppressWarnings("unchecked")
 	@Transactional
-	public List<PhoneEntry> findByNumber(int number) {
+	public List<PhoneEntry> findByNumber(String number, String version) {
 		Criteria crit = currentSession().createCriteria(PhoneEntry.class, "entry");
 		//crit.createAlias("project.state", "state");
+		crit.add(Restrictions.eq("entry.version", version));
 		crit.add(Restrictions.eq("entry.number", number));
 		return crit.list();
 	}
@@ -30,9 +31,10 @@ public class PhoneEntriesRepositoryImpl extends GenericRepositoryAdapter<PhoneEn
 	@Override
 	@SuppressWarnings("unchecked")
 	@Transactional
-	public List<PhoneEntry> findAllOrderByCategoryAndNumber() {
+	public List<PhoneEntry> findAllOrderByCategoryAndNumber(String version) {
 		Criteria crit = currentSession().createCriteria(PhoneEntry.class, "entry");
 		crit.createAlias("entry.category", "category");
+		crit.add(Restrictions.eq("entry.version", version));
 		crit.addOrder(Order.asc("category.order"));
 		crit.addOrder(Order.asc("category.name"));
 		crit.addOrder(Order.asc("entry.number"));

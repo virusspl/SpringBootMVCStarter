@@ -1,13 +1,12 @@
 package sbs.controller.phones;
 
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class PhoneEditForm {
 	
-	@NotNull
-	Integer number;
+	@Size(min=1, max = 45)
+	String number;
 	@Size(min=1, max = 50)
 	String name;
 	@Size(min=0, max = 50)
@@ -15,18 +14,18 @@ public class PhoneEditForm {
 	@Size(min=0, max = 50)
 	String email;
 	Integer categoryId;
+	String version;
 
 	
 	public PhoneEditForm() {
 		
 	}
 
-
-	public Integer getNumber() {
+	public String getNumber() {
 		return number;
 	}
 
-	public void setNumber(Integer number) {
+	public void setNumber(String number) {
 		this.number = number;
 	}
 
@@ -60,7 +59,16 @@ public class PhoneEditForm {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
 	}	
+	
 
 
 }

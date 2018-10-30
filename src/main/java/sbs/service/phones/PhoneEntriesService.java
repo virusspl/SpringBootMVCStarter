@@ -7,9 +7,9 @@ import sbs.service.GenericService;
 
 public interface PhoneEntriesService extends GenericService<PhoneEntry, Integer>{
 
-	List<PhoneEntry> findByNumber(int number);
+	List<PhoneEntry> findByNumber(String number, String version);
 
-	List<PhoneEntry> findAllOrderByCategoryAndNumber();
+	List<PhoneEntry> findAllOrderByCategoryAndNumber(String version);
 
 //	public List<ToolsProject> findToolsProjectsByStateOrder(int order);
 	

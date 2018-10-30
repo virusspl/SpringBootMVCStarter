@@ -24,8 +24,8 @@ public class PhoneCategoriesServiceImpl extends GenericServiceAdapter<PhoneCateg
 	}
 
 	@Override
-	public List<PhoneCategory> findAllByAscOrder() {
-		return phoneCategoriesRepository.findAllByAscOrder();
+	public List<PhoneCategory> findAllByAscOrder(String version) {
+		return phoneCategoriesRepository.findAllByAscOrder(version);
 	}
 
 

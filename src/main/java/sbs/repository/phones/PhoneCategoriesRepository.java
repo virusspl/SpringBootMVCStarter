@@ -7,7 +7,7 @@ import sbs.repository.GenericRepository;
 
 public interface PhoneCategoriesRepository extends GenericRepository<PhoneCategory,Integer> {
 
-	List<PhoneCategory> findAllByAscOrder();
+	List<PhoneCategory> findAllByAscOrder(String version);
 	
 }
 

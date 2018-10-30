@@ -7,9 +7,9 @@ import sbs.repository.GenericRepository;
 
 public interface PhoneEntriesRepository extends GenericRepository<PhoneEntry,Integer> {
 
-	List<PhoneEntry> findByNumber(int number);
+	List<PhoneEntry> findByNumber(String number, String version);
 
-	List<PhoneEntry> findAllOrderByCategoryAndNumber();
+	List<PhoneEntry> findAllOrderByCategoryAndNumber(String version);
 
 	
 }

@@ -12,6 +12,7 @@ public class PhoneCategoryEditForm {
 	@Size(max = 50)
 	String name;
 	Integer order;
+	String version;
 	
 	public PhoneCategoryEditForm() {
 		
@@ -39,6 +40,14 @@ public class PhoneCategoryEditForm {
 
 	public void setOrder(Integer order) {
 		this.order = order;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
 	

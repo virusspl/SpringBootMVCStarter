@@ -24,13 +24,13 @@ public class PhoneEntriesServiceImpl extends GenericServiceAdapter<PhoneEntry, I
 	}
 
 	@Override
-	public List<PhoneEntry> findByNumber(int number) {
-		return phoneEntriesRepository.findByNumber(number);
+	public List<PhoneEntry> findByNumber(String number, String version) {
+		return phoneEntriesRepository.findByNumber(number, version);
 	}
 
 	@Override
-	public List<PhoneEntry> findAllOrderByCategoryAndNumber() {
-		return phoneEntriesRepository.findAllOrderByCategoryAndNumber();
+	public List<PhoneEntry> findAllOrderByCategoryAndNumber(String version) {
+		return phoneEntriesRepository.findAllOrderByCategoryAndNumber(version);
 	}
 
 

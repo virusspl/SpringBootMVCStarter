@@ -5,7 +5,7 @@ public class PhoneColumnLine {
 	boolean category;
 	String name;
 	String position;
-	int number;
+	String number;
 	
 	
 	public PhoneColumnLine() {
@@ -36,11 +36,11 @@ public class PhoneColumnLine {
 		this.position = position;
 	}
 
-	public int getNumber() {
+	public String getNumber() {
 		return number;
 	}
 
-	public void setNumber(int number) {
+	public void setNumber(String number) {
 		this.number = number;
 	}
 

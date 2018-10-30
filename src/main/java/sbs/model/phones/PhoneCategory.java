@@ -29,11 +29,14 @@ public class PhoneCategory {
 	
 	@Column(name = "pc_order", nullable= false)
 	private int order;
-
+	
+	@Column(name = "pc_version", length = 5, nullable= false)
+	private String version;
+	
 	public PhoneCategory() {
 		phoneEntries = new HashSet<>();
 	}
-
+	
 	public int getId() {
 		return id;
 	}
@@ -64,6 +67,14 @@ public class PhoneCategory {
 
 	public void setPhoneEntries(Set<PhoneEntry> phoneEntries) {
 		this.phoneEntries = phoneEntries;
+	}
+	
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
 	@Override
