@@ -329,7 +329,6 @@ public class InventoryController {
 					return "inventory/inventory_terminal";
 				}
 			}
-
 			/*
 			 * ================== MANAGE VALIDATION ================
 			 */
@@ -544,9 +543,6 @@ public class InventoryController {
 			if (currentValue.length() > 15) {
 				resultCode = "inventory.error.valuetoolong";
 			}
-			if (currentValue.length() > 25) {
-				resultCode = "inventory.error.valuetoolong";
-			}
 			if (advanced) {
 				String packageDescription = x3Service.findPackageDescription(company, currentValue);
 				if(packageDescription == null){
@@ -562,8 +558,10 @@ public class InventoryController {
 		case "inventory.type.quantity":
 			try {
 				Double val = Double.parseDouble(currentValue);
-				if (val <= 0) {
-					resultCode = "inventory.error.mustbepositive";
+				if(advanced){
+					if (val <= 0) {
+						resultCode = "inventory.error.mustbepositive";
+					}
 				}
 			} catch (NumberFormatException e) {
 				resultCode = "inventory.error.mustbeanumber";
@@ -587,7 +585,12 @@ public class InventoryController {
 		/* FREEDOUBLE */
 		case "inventory.type.freedouble":
 			try {
-				Double.parseDouble(currentValue);
+				Double val = Double.parseDouble(currentValue);
+				if(advanced){
+					if (val <= 0) {
+						resultCode = "inventory.error.mustbepositive";
+					}
+				}
 			} catch (NumberFormatException e) {
 				resultCode = "inventory.error.mustbeanumber";
 			}

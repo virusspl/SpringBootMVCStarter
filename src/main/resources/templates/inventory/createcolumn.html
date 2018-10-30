@@ -41,7 +41,8 @@
 							th:placeholder="#{inventory.columntype}" th:field="*{typeId}">
 							<option th:each="obj,stat : ${types}"
 								th:value="${types[__${stat.index}__].id}"
-								th:text="|#{${types[__${stat.index}__].columnTypeCode}}|">
+								th:text="|#{${types[__${stat.index}__].columnTypeCode}}|"
+								th:title="#{|${types[__${stat.index}__].columnTypeCode}.descr|}">
 							</option>
 						</select>
 						<div th:errors="*{typeId}"
