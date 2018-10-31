@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.TemplateEngine;
 
@@ -53,9 +54,6 @@ public class PhonesController {
 	@RequestMapping(value = "/list/{ver}")
 	@Transactional
 	public String list(@PathVariable("ver") String version, Model model) {
-		PhoneEditForm phoneEditForm = new PhoneEditForm();
-		model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder(version));
-		model.addAttribute("phoneEditForm", phoneEditForm);
 		model.addAttribute("list", phoneEntriesService.findAllOrderByCategoryAndNumber(version));
 		model.addAttribute("version", version);
 		return "phones/list";
@@ -75,6 +73,7 @@ public class PhonesController {
 				line = new PhoneColumnLine();
 				line.setCategory(true);
 				line.setName(entry.getCategory().getName());
+				line.setVoip(entry.getVoip());
 				list.add(line);
 				currentCategory = line.getName();
 			}
@@ -97,27 +96,180 @@ public class PhonesController {
 		return "phones/print";
 	}
 
-	@RequestMapping(value = "/numberaction", params = { "editcategory" }, method = RequestMethod.POST)
+
+	@RequestMapping(value = "/createentry/{ver}")
 	@Transactional
-	public String editCategory(PhoneEditForm phoneEditForm, RedirectAttributes redirectAttrs, Locale locale,
+	public String createEntryView(@PathVariable("ver") String version, Model model) {
+		
+		PhoneEditForm phoneEditForm = new PhoneEditForm();
+		phoneEditForm.setVersion(version);
+		model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder(version));
+		model.addAttribute("phoneEditForm", phoneEditForm);
+		model.addAttribute("version", version);
+		return "phones/createentry";
+	}
+	
+	@RequestMapping(value = "/editentry/{ver}/{id}")
+	@Transactional
+	public String editEntryView(@PathVariable("ver") String version, @PathVariable("id") int id, Model model) throws NotFoundException {
+		
+		PhoneEntry entry = phoneEntriesService.findById(id);
+		if (entry == null) {
+			throw new NotFoundException("Entry not found");
+		}
+
+		PhoneEditForm phoneEditForm = getPhoneEditFormFromEntity(entry, version);
+		
+		model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder(version));
+		model.addAttribute("phoneEditForm", phoneEditForm);
+		model.addAttribute("version", version);
+		return "phones/editentry";
+	}
+	
+	private PhoneEditForm getPhoneEditFormFromEntity(PhoneEntry entry, String version) {
+		PhoneEditForm form = new PhoneEditForm();
+		form.setCategoryId(entry.getCategory().getId());
+		form.setEmail(entry.getEmail());
+		form.setName(entry.getName());
+		form.setNumber(entry.getNumber());
+		form.setPosition(entry.getPosition());
+		form.setVersion(entry.getVersion());
+		form.setVoip(entry.getVoip());
+		form.setId(entry.getId());
+	
+		return form;
+	}
+	
+	@RequestMapping(value = "/numberaction", params = { "create" }, method = RequestMethod.POST)
+	@Transactional
+	public String createNumber(@Valid PhoneEditForm phoneEditForm, BindingResult bindingResult,
+			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
+
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder(phoneEditForm.getVersion()));
+			model.addAttribute("version", phoneEditForm.getVersion());
+			return "phones/createentry";
+		}
+
+		if (!(phoneEntriesService.findByNumber(phoneEditForm.getNumber(), phoneEditForm.getVersion()).isEmpty())) {
+			bindingResult.rejectValue("number", "phones.error.numberinuse");
+			model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder(phoneEditForm.getVersion()));
+			model.addAttribute("version", phoneEditForm.getVersion());
+			return "phones/createentry";
+		}
+
+		PhoneCategory category = phoneCategoriesService.findById(phoneEditForm.getCategoryId());
+		PhoneEntry entry = new PhoneEntry();
+		entry.setNumber(phoneEditForm.getNumber());
+		entry.setName(phoneEditForm.getName().trim());
+		entry.setPosition(phoneEditForm.getPosition().trim());
+		entry.setEmail(phoneEditForm.getEmail().trim());
+		entry.setCategory(category);
+		entry.setVersion(phoneEditForm.getVersion());
+		entry.setVoip(phoneEditForm.getVoip());
+		
+		phoneEntriesService.save(entry);
+
+		// redirect
+		redirectAttrs.addFlashAttribute("msg", entry.getName() + " (" + entry.getNumber() + ") - "
+				+ messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/phones/list/"+phoneEditForm.getVersion();
+	}
+
+	@RequestMapping(value = "/numberaction", params = { "update" }, method = RequestMethod.POST)
+	@Transactional
+	public String updateNumber(@Valid PhoneEditForm phoneEditForm, BindingResult bindingResult,
+			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
+
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder(phoneEditForm.getVersion()));
+			model.addAttribute("version", phoneEditForm.getVersion());
+			return "phones/list";
+		}
+
+		PhoneEntry entry = phoneEntriesService.findById(phoneEditForm.getId());
+		if (entry == null) {
+			throw new NotFoundException("Entry not found");
+		}
+
+		PhoneCategory category = phoneCategoriesService.findById(phoneEditForm.getCategoryId());
+
+		entry.setNumber(phoneEditForm.getNumber());
+		entry.setName(phoneEditForm.getName().trim());
+		entry.setPosition(phoneEditForm.getPosition().trim());
+		entry.setEmail(phoneEditForm.getEmail().trim());
+		entry.setCategory(category);
+		entry.setVersion(phoneEditForm.getVersion());
+		entry.setVoip(phoneEditForm.getVoip());
+
+		phoneEntriesService.update(entry);
+
+		// redirect
+		redirectAttrs.addFlashAttribute("msg", entry.getName() + " (" + entry.getNumber() + ") - "
+				+ messageSource.getMessage("action.updated", null, locale));
+		return "redirect:/phones/list/"+phoneEditForm.getVersion();
+	}
+
+	@RequestMapping(value = "/numberaction", params = { "delete" }, method = RequestMethod.POST)
+	@Transactional
+	public String deleteNumber(PhoneEditForm phoneEditForm, BindingResult bindingResult,
+			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
+
+
+		PhoneEntry entry = phoneEntriesService.findById(phoneEditForm.getId());
+		if (entry == null) {
+			throw new NotFoundException("Entry not found");
+		}
+
+		phoneEntriesService.remove(entry);
+
+		// redirect
+		redirectAttrs.addFlashAttribute("msg", entry.getName() + " (" + entry.getNumber() + ") - "
+				+ messageSource.getMessage("action.deleted", null, locale));
+		return "redirect:/phones/list/"+phoneEditForm.getVersion();
+	}
+	
+	@RequestMapping(value = "/managecategories/{ver}")
+	@Transactional
+	public String manageCatView(@PathVariable("ver") String version, RedirectAttributes redirectAttrs, Locale locale,
 			Model model) throws NotFoundException {
 
-		PhoneCategoryEditForm phoneCategoryEditForm = new PhoneCategoryEditForm();
-
-		if (phoneEditForm.getCategoryId() != null) {
-			PhoneCategory category = phoneCategoriesService.findById(phoneEditForm.getCategoryId());
-			if (category == null) {
-				throw new NotFoundException("No category found: #" + phoneEditForm.getCategoryId());
-			}
-
-			phoneCategoryEditForm.setId(category.getId());
-			phoneCategoryEditForm.setName(category.getName());
-			phoneCategoryEditForm.setOrder(category.getOrder());
-			phoneCategoryEditForm.setVersion(category.getVersion());
-		}
-		model.addAttribute("phoneCategoryEditForm", phoneCategoryEditForm);
 		
-		return "phones/categoryedit";
+		model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder(version));
+		model.addAttribute("version", version);
+		
+		return "phones/managecategories";
+	}
+	
+	@RequestMapping(value = "/createcategory/{ver}")
+	@Transactional
+	public String createCategoryView(@PathVariable("ver") String version, Model model) {
+		
+		PhoneCategoryEditForm phoneCategoryEditForm = new PhoneCategoryEditForm();
+		phoneCategoryEditForm.setVersion(version);
+		model.addAttribute("phoneCategoryEditForm", phoneCategoryEditForm);
+		model.addAttribute("version", version);
+		return "phones/createcategory";
+	}
+	
+	@RequestMapping(value = "/editcategory/{ver}/{id}")
+	@Transactional
+	public String editCategoryView(@PathVariable("ver") String version, @PathVariable("id") int id, Model model) throws NotFoundException {
+		
+		PhoneCategory category = phoneCategoriesService.findById(id);
+		if (category == null) {
+			throw new NotFoundException("Category not found");
+		}
+
+		PhoneCategoryEditForm phoneCategoryEditForm = new PhoneCategoryEditForm();
+		phoneCategoryEditForm.setVersion(version);
+		phoneCategoryEditForm.setId(category.getId());
+		phoneCategoryEditForm.setName(category.getName());
+		phoneCategoryEditForm.setOrder(category.getOrder());
+		
+		model.addAttribute("phoneCategoryEditForm", phoneCategoryEditForm);
+		model.addAttribute("version", version);
+		return "phones/editcategory";
 	}
 
 	@RequestMapping(value = "/categoryaction", params = { "create" }, method = RequestMethod.POST)
@@ -125,9 +277,6 @@ public class PhonesController {
 	public String createCategory(PhoneCategoryEditForm phoneCategoryEditForm, BindingResult bindingResult,
 			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
 
-		if (phoneCategoryEditForm.getId() != null && phoneCategoryEditForm.getId() > 0) {
-			bindingResult.rejectValue("id", "phones.error.redundandpcid");
-		}
 
 		if (phoneCategoryEditForm.getName().length() == 0 || phoneCategoryEditForm.getName().length() > 50) {
 			bindingResult.rejectValue("name", "error.size.wrong");
@@ -146,7 +295,7 @@ public class PhonesController {
 		// redirect
 		redirectAttrs.addFlashAttribute("msg",
 				category.getName() + " - " + messageSource.getMessage("action.saved", null, locale));
-		return "redirect:/phones/list/"+phoneCategoryEditForm.getVersion();
+		return "redirect:/phones/managecategories/"+phoneCategoryEditForm.getVersion();
 	}
 
 	@RequestMapping(value = "/categoryaction", params = { "update" }, method = RequestMethod.POST)
@@ -154,10 +303,7 @@ public class PhonesController {
 	public String updateCategory(PhoneCategoryEditForm phoneCategoryEditForm, BindingResult bindingResult,
 			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
 
-		if (phoneCategoryEditForm.getId() == null || phoneCategoryEditForm.getId() < 0) {
-			bindingResult.rejectValue("id", "phones.error.missingid");
-		}
-
+		
 		if (phoneCategoryEditForm.getName().length() == 0 || phoneCategoryEditForm.getName().length() > 50) {
 			bindingResult.rejectValue("name", "error.size.wrong");
 		}
@@ -165,11 +311,10 @@ public class PhonesController {
 		if (bindingResult.hasErrors()) {
 			return "phones/categoryedit";
 		}
-
+		
 		PhoneCategory category = phoneCategoriesService.findById(phoneCategoryEditForm.getId());
 		if (category == null) {
-			bindingResult.rejectValue("id", "phones.error.categorynotfound");
-			return "phones/categoryedit";
+			throw new NotFoundException("Category not found");
 		}
 
 		category.setName(phoneCategoryEditForm.getName().trim().toUpperCase());
@@ -180,22 +325,16 @@ public class PhonesController {
 		// redirect
 		redirectAttrs.addFlashAttribute("msg",
 				category.getName() + " - " + messageSource.getMessage("action.updated", null, locale));
-		return "redirect:/phones/list/"+phoneCategoryEditForm.getVersion();
+		return "redirect:/phones/managecategories/"+phoneCategoryEditForm.getVersion();
 	}
 
 	@RequestMapping(value = "/categoryaction", params = { "delete" }, method = RequestMethod.POST)
 	@Transactional
-	public String deleteCategory(PhoneCategoryEditForm phoneCategoryEditForm, BindingResult bindingResult,
-			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
+	public String deleteCategory(PhoneCategoryEditForm phoneCategoryEditForm, RedirectAttributes redirectAttrs, Locale locale) throws NotFoundException {
 
-		if (phoneCategoryEditForm.getId() == null || phoneCategoryEditForm.getId() < 0) {
-			bindingResult.rejectValue("id", "phones.error.missingid");
-			return "phones/categoryedit";
-		}
 		PhoneCategory category = phoneCategoriesService.findById(phoneCategoryEditForm.getId());
 		if (category == null) {
-			bindingResult.rejectValue("id", "phones.error.categorynotfound");
-			return "phones/categoryedit";
+			throw new NotFoundException("Category not found");
 		}
 
 		phoneCategoriesService.remove(category);
@@ -203,112 +342,7 @@ public class PhonesController {
 		// redirect
 		redirectAttrs.addFlashAttribute("msg",
 				category.getName() + " - " + messageSource.getMessage("action.deleted", null, locale));
-		return "redirect:/phones/list/"+phoneCategoryEditForm.getVersion();
-	}
-
-	@RequestMapping(value = "/numberaction", params = { "create" }, method = RequestMethod.POST)
-	@Transactional
-	public String createNumber(@Valid PhoneEditForm phoneEditForm, BindingResult bindingResult,
-			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
-
-		if (bindingResult.hasErrors()) {
-			model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder(phoneEditForm.getVersion()));
-			model.addAttribute("list", phoneEntriesService.findAllOrderByCategoryAndNumber(phoneEditForm.getVersion()));
-			model.addAttribute("version", phoneEditForm.getVersion());
-			return "phones/list";
-		}
-
-		if (!(phoneEntriesService.findByNumber(phoneEditForm.getNumber(), phoneEditForm.getVersion()).isEmpty())) {
-			bindingResult.rejectValue("number", "phones.error.numberinuse");
-			model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder(phoneEditForm.getVersion()));
-			model.addAttribute("list", phoneEntriesService.findAllOrderByCategoryAndNumber(phoneEditForm.getVersion()));
-			model.addAttribute("version", phoneEditForm.getVersion());
-			return "phones/list";
-		}
-
-		PhoneCategory category = phoneCategoriesService.findById(phoneEditForm.getCategoryId());
-		PhoneEntry entry = new PhoneEntry();
-		entry.setNumber(phoneEditForm.getNumber());
-		entry.setName(phoneEditForm.getName().trim());
-		entry.setPosition(phoneEditForm.getPosition().trim());
-		entry.setEmail(phoneEditForm.getEmail().trim());
-		entry.setCategory(category);
-		entry.setVersion(phoneEditForm.getVersion());
-		phoneEntriesService.save(entry);
-
-		// redirect
-		redirectAttrs.addFlashAttribute("msg", entry.getName() + " (" + entry.getNumber() + ") - "
-				+ messageSource.getMessage("action.saved", null, locale));
-		return "redirect:/phones/list/"+phoneEditForm.getVersion();
-	}
-
-	@RequestMapping(value = "/numberaction", params = { "update" }, method = RequestMethod.POST)
-	@Transactional
-	public String updateNumber(@Valid PhoneEditForm phoneEditForm, BindingResult bindingResult,
-			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
-
-		if (bindingResult.hasErrors()) {
-			model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder(phoneEditForm.getVersion()));
-			model.addAttribute("list", phoneEntriesService.findAllOrderByCategoryAndNumber(phoneEditForm.getVersion()));
-			model.addAttribute("version", phoneEditForm.getVersion());
-			return "phones/list";
-		}
-
-		List<PhoneEntry> entries = phoneEntriesService.findByNumber(phoneEditForm.getNumber(),phoneEditForm.getVersion());
-		if (entries.isEmpty()) {
-			bindingResult.rejectValue("number", "phones.error.numbernotfound");
-			model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder(phoneEditForm.getVersion()));
-			model.addAttribute("list", phoneEntriesService.findAllOrderByCategoryAndNumber(phoneEditForm.getVersion()));
-			model.addAttribute("version", phoneEditForm.getVersion());
-			return "phones/list";
-		}
-
-		PhoneEntry entry = entries.get(0);
-		PhoneCategory category = phoneCategoriesService.findById(phoneEditForm.getCategoryId());
-
-		entry.setNumber(phoneEditForm.getNumber());
-		entry.setName(phoneEditForm.getName().trim());
-		entry.setPosition(phoneEditForm.getPosition().trim());
-		entry.setEmail(phoneEditForm.getEmail().trim());
-		entry.setCategory(category);
-		entry.setVersion(phoneEditForm.getVersion());
-
-		phoneEntriesService.update(entry);
-
-		// redirect
-		redirectAttrs.addFlashAttribute("msg", entry.getName() + " (" + entry.getNumber() + ") - "
-				+ messageSource.getMessage("action.updated", null, locale));
-		return "redirect:/phones/list/"+phoneEditForm.getVersion();
-	}
-
-	@RequestMapping(value = "/numberaction", params = { "delete" }, method = RequestMethod.POST)
-	@Transactional
-	public String deleteNumber(PhoneEditForm phoneEditForm, BindingResult bindingResult,
-			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
-
-		if (phoneEditForm.getNumber() == null) {
-			bindingResult.rejectValue("number", "NotNull.phoneEditForm.number");
-			model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder(phoneEditForm.getVersion()));
-			model.addAttribute("list", phoneEntriesService.findAllOrderByCategoryAndNumber(phoneEditForm.getVersion()));
-			model.addAttribute("version", phoneEditForm.getVersion());
-			return "phones/list";
-		}
-
-		List<PhoneEntry> entries = phoneEntriesService.findByNumber(phoneEditForm.getNumber(),phoneEditForm.getVersion());
-		if (entries.isEmpty()) {
-			bindingResult.rejectValue("number", "phones.error.numbernotfound");
-			model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder(phoneEditForm.getVersion()));
-			model.addAttribute("list", phoneEntriesService.findAllOrderByCategoryAndNumber(phoneEditForm.getVersion()));
-			model.addAttribute("version", phoneEditForm.getVersion());
-			return "phones/list";
-		}
-
-		phoneEntriesService.remove(entries.get(0));
-
-		// redirect
-		redirectAttrs.addFlashAttribute("msg", entries.get(0).getName() + " (" + entries.get(0).getNumber() + ") - "
-				+ messageSource.getMessage("action.deleted", null, locale));
-		return "redirect:/phones/list/"+phoneEditForm.getVersion();
+		return "redirect:/phones/managecategories/"+phoneCategoryEditForm.getVersion();
 	}
 
 }

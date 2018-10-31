@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script"></div>
+	<div layout:fragment="content">
+
+		<!-- ADMIN PANEL -->
+		<div class="panel panel-primary margin-top-20">
+			<div class="panel-heading">
+				<span th:text="#{action.edit}"></span>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<!-- NUMBER SIDE -->
+					<div class="col-xs-12">
+						<!-- NUMBER FORM -->
+						<form th:action="@{/phones/numberaction}" method="post"
+							th:object="${phoneEditForm}">
+							<input type="hidden" th:field="*{version}" /> <input
+								type="hidden" th:field="*{id}" /> <input
+								th:if="${version}!='pl'" type="hidden" th:field="*{email}" /> <input
+								th:if="${version}=='pl'" type="hidden" th:field="*{voip}" />
+							<div class="row margin-top-20">
+								<div class="col-xs-3">
+									<div class="form-group">
+										<label for="ph_number" th:text="#{phones.number}">lbl</label>
+										<input type="text" class="form-control" id="ph_number"
+											name="ph_number" th:placeholder="#{phones.number}"
+											th:field="*{number}" autocomplete="off" />
+										<div th:errors="*{number}"
+											class="alert alert-danger margin-top-5">error</div>
+									</div>
+								</div>
+
+								<div class="col-xs-2" th:if="${version}!='pl'">
+									<div class="form-group">
+										<label for="ph_voip" th:text="|VOIP|">lbl</label> <input
+											type="text" class="form-control" id="ph_voip" name="ph_email"
+											th:placeholder="|VOIP|" th:field="*{voip}" autocomplete="off" />
+										<div th:errors="*{voip}"
+											class="alert alert-danger margin-top-5">error</div>
+									</div>
+								</div>
+								
+
+								<div class="col-xs-4">
+									<div class="form-group">
+										<label for="ph_name" th:text="#{phones.name}">lbl</label> <input
+											type="text" class="form-control" id="ph_name" name="ph_name"
+											th:placeholder="#{phones.name}" th:field="*{name}"
+											autocomplete="off" />
+										<div th:errors="*{name}"
+											class="alert alert-danger margin-top-5">error</div>
+									</div>
+								</div>
+								<div class="col-xs-3">
+									<div class="form-group">
+										<label for="ph_position" th:text="#{phones.position}">lbl</label>
+										<input type="text" class="form-control" id="ph_position"
+											name="ph_position" th:placeholder="#{phones.position}"
+											th:field="*{position}" autocomplete="off" />
+										<div th:errors="*{position}"
+											class="alert alert-danger margin-top-5">error</div>
+									</div>
+								</div>
+								<div class="col-xs-3" th:if="${version}=='pl'">
+									<div class="form-group">
+										<label for="ph_email" th:text="|E-Mail|">lbl</label> <input
+											type="text" class="form-control" id="ph_email"
+											name="ph_email" th:placeholder="|E-Mail|" th:field="*{email}"
+											autocomplete="off" />
+										<div th:errors="*{email}"
+											class="alert alert-danger margin-top-5">error</div>
+									</div>
+								</div>
+								<div class="col-xs-3">
+									<div class="form-group">
+										<label for="pc_category" th:if="${version} == 'pl'"
+											th:text="#{general.department}">lbl</label> <label
+											for="pc_category" th:if="${version} != 'pl'"
+											th:text="#{general.category}">lbl</label> <select
+											class="form-control" id="pc_category" name="pc_category"
+											th:placeholder="#{phones.category}" th:field="*{categoryId}">
+											<option th:each="obj,stat : ${categories}"
+												th:value="${categories[__${stat.index}__].id}"
+												th:text="|
+								${categories[__${stat.index}__].order} - ${categories[__${stat.index}__].name}  #${categories[__${stat.index}__].id} 
+								|">opt</option>
+										</select>
+										<div th:errors="*{categoryId}"
+											class="alert alert-danger margin-top-5">error</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<a th:href="|@{/phones/list/}${version}|"
+										class="btn btn-link btn-sm"> <span
+										class="glyphicon glyphicon-menu-left"></span> <span
+										th:text="#{action.back}">back</span>
+									</a>
+									<button class="btn btn-success btn-sm" type="submit"
+										name="update" th:value="1">
+										<span class="glyphicon glyphicon-ok"></span> <span
+											th:text="#{action.update}"></span>
+									</button>
+									<button class="btn btn-danger btn-sm" type="submit"
+										name="delete" th:value="1" th:onclick="|return confirm('#{general.areyousure}')|">
+										<span class="glyphicon glyphicon-remove"></span> <span
+											th:text="#{action.delete}"></span>
+									</button>
+								</div>
+
+							</div>
+						</form>
+						<!-- /NUMBER FORM -->
+					</div>
+					<!-- /NUMBER SIDE -->
+				</div>
+			</div>
+		</div>
+		<!-- /ADMIN PANEL -->
+	</div>
+</body>
+</html>

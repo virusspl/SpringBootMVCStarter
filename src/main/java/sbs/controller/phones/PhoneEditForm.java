@@ -5,7 +5,7 @@ import javax.validation.constraints.Size;
 
 public class PhoneEditForm {
 	
-	@Size(min=1, max = 45)
+	@Size(min=0, max = 45)
 	String number;
 	@Size(min=1, max = 50)
 	String name;
@@ -13,8 +13,12 @@ public class PhoneEditForm {
 	String position;
 	@Size(min=0, max = 50)
 	String email;
+	@Size(min=0, max = 20)
+	String voip;
 	Integer categoryId;
 	String version;
+	int id;
+	
 
 	
 	public PhoneEditForm() {
@@ -67,7 +71,24 @@ public class PhoneEditForm {
 
 	public void setVersion(String version) {
 		this.version = version;
+	}
+
+	public String getVoip() {
+		return voip;
+	}
+
+	public void setVoip(String voip) {
+		this.voip = voip;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}	
+
 	
 
 

@@ -8,22 +8,10 @@
 <body>
 	<div layout:fragment="script"></div>
 	<div layout:fragment="content">
-		<div class="row">
-			<div class="col-xs-12">
-				<h1 th:text="#{phones.editcategories}" class="text-primary"></h1>
-			</div>
-			<a th:href="@{/phones/list}" class="btn btn-link btn-sm"> <span
-				class="glyphicon glyphicon-menu-left"></span> <span
-				th:text="#{action.back}">back</span>
-			</a>
-		</div>
-
-		<div class="underline margin-top-20"></div>
-
 		<!-- ADMIN PANEL -->
-		<div class="panel panel-primary">
+		<div class="panel panel-primary margin-top-20">
 			<div class="panel-heading">
-				<span th:text="#{phones.editcategories}"></span>
+				<span th:text="#{action.edit}"></span>
 			</div>
 			<div class="panel-body">
 				<div class="row">
@@ -32,15 +20,9 @@
 						<!-- CATEGORY FORM -->
 						<form th:action="@{/phones/categoryaction}" method="post"
 							th:object="${phoneCategoryEditForm}">
+							<input type="hidden" th:field="*{version}" />
+							<input type="hidden" th:field="*{id}" />
 							<div class="row margin-top-20">
-								<div class="col-xs-2">
-									<div class="form-group">
-										<label for="cat_id" th:text="|#id|">lbl</label> <input
-											type="text" class="form-control" id="cat_id" name="cat_id"
-											th:placeholder="|#id|" th:field="*{id}" autocomplete="off" />
-										<div th:errors="*{id}" class="alert alert-danger margin-top-5">error</div>
-									</div>
-								</div>
 								<div class="col-xs-5">
 									<div class="form-group">
 										<label for="cat_name" th:text="#{general.department}">lbl</label>
@@ -61,28 +43,19 @@
 											class="alert alert-danger margin-top-5">error</div>
 									</div>
 								</div>
-								<div class="col-xs-2">
-									<div class="form-group">
-										<label for="cat_version" th:text="#{general.version}">txt</label>
-										<select class="form-control" id="cat_version" name="cat_version"
-											th:placeholder="#{general.version}" th:field="*{version}">
-											<option value="pl">pl</option>
-											<option value="it">it</option>
-										</select>
-									</div>
-								</div>
 								<div class="col-xs-12">
+									<a th:href="|@{/phones/managecategories/}${version}|"
+										class="btn btn-link btn-sm"> <span
+										class="glyphicon glyphicon-menu-left"></span> <span
+										th:text="#{action.back}">back</span>
+									</a>
 									<button class="btn btn-success btn-sm" type="submit"
-										name="create" th:value="1">
-										<span class="glyphicon glyphicon-save"></span> <span
-											th:text="#{action.create}"></span>
-									</button>
-									<button class="btn btn-primary btn-sm" type="submit"
 										name="update">
 										<span class="glyphicon glyphicon-ok"></span> <span
 											th:text="#{action.update}"></span>
 									</button>
 									<button class="btn btn-danger btn-sm" type="submit"
+									th:onclick="|return confirm('#{general.areyousure}')|" 
 										name="delete">
 										<span class="glyphicon glyphicon-remove"></span> <span
 											th:text="#{action.delete}"></span>

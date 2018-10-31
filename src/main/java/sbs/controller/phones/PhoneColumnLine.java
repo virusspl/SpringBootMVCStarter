@@ -6,6 +6,7 @@ public class PhoneColumnLine {
 	String name;
 	String position;
 	String number;
+	String voip;
 	
 	
 	public PhoneColumnLine() {
@@ -42,6 +43,15 @@ public class PhoneColumnLine {
 
 	public void setNumber(String number) {
 		this.number = number;
+	}
+	
+
+	public String getVoip() {
+		return voip;
+	}
+
+	public void setVoip(String voip) {
+		this.voip = voip;
 	}
 
 	@Override

@@ -42,7 +42,7 @@
 				</a> 
 				<!-- http://codecouple.pl/2016/09/30/8-spring-boot-email-szablon-i-wysylanie/ -->
 				<a class="btn btn-info btn-md margin-top-5"
-					onclick="return confirm('Mail?')"
+					th:onclick="|return confirm('#{general.areyousure}')|"
 					th:href="@{/bhptickets/sendemails}"> <span
 					class="glyphicon glyphicon-envelope" style="margin-right: 10px;"></span>
 					<span th:text="#{bhp.tickets.send.emails}">begin</span>

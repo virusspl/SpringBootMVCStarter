@@ -35,6 +35,9 @@ public class PhoneEntry {
 	@Column(name = "pe_number", length = 45, nullable = true)
 	private String number;
 	
+	@Column(name = "pe_voip", length = 20, nullable = true)
+	private String voip;
+	
 	@Column(name = "pc_version", length = 5, nullable= false)
 	private String version;
 
@@ -64,6 +67,14 @@ public class PhoneEntry {
 
 	public String getNumber() {
 		return number;
+	}
+
+	public String getVoip() {
+		return voip;
+	}
+
+	public void setVoip(String voip) {
+		this.voip = voip;
 	}
 
 	public void setNumber(String number) {

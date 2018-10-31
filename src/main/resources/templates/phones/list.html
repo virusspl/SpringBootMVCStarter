@@ -28,7 +28,7 @@
 				language : {
 					url : getUrl() + "polish.json",
 				},
-				order : [ ],
+				order : [],
 				dom : 'Bfrtip',
 				buttons : [ {
 					extend : 'copy',
@@ -48,7 +48,7 @@
 		<script th:if="__${#locale}__ == 'en'">
 			$('#srv').DataTable({
 				paging : false,
-				order : [ ],
+				order : [],
 				language : {
 					url : getUrl() + "english.json"
 				},
@@ -72,7 +72,7 @@
 		<script th:if="__${#locale}__ == 'it'">
 			$('#srv').DataTable({
 				paging : false,
-				order : [ ],
+				order : [],
 				language : {
 					url : getUrl() + "italian.json"
 				},
@@ -105,7 +105,8 @@
 		<div class="underline margin-top-20"></div>
 
 		<!-- ADMIN PANEL -->
-		<div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIGHT_ADMIN', 'ROLE_PHONESMANAGER')"
+		<div
+			sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIGHT_ADMIN', 'ROLE_PHONESMANAGER')"
 			class="panel panel-primary">
 			<div class="panel-heading">
 				<span th:text="#{general.panel.admin}"></span>
@@ -117,98 +118,21 @@
 						<!-- NUMBER FORM -->
 						<form th:action="@{/phones/numberaction}" method="post"
 							th:object="${phoneEditForm}">
-							<div class="row margin-top-20">
-								<div class="col-xs-3">
-									<div class="form-group">
-										<label for="ph_number" th:text="#{phones.number}">lbl</label>
-										<input type="text" class="form-control" id="ph_number"
-											name="ph_number" th:placeholder="#{phones.number}"
-											th:field="*{number}" autocomplete="off" />
-										<div th:errors="*{number}"
-											class="alert alert-danger margin-top-5">error</div>
-									</div>
-								</div>
-								<div class="col-xs-4">
-									<div class="form-group">
-										<label for="ph_name" th:text="#{phones.name}">lbl</label> <input
-											type="text" class="form-control" id="ph_name" name="ph_name"
-											th:placeholder="#{phones.name}" th:field="*{name}"
-											autocomplete="off" />
-										<div th:errors="*{name}"
-											class="alert alert-danger margin-top-5">error</div>
-									</div>
-								</div>
-								<div class="col-xs-3">
-									<div class="form-group">
-										<label for="ph_position" th:text="#{phones.position}">lbl</label>
-										<input type="text" class="form-control" id="ph_position"
-											name="ph_position" th:placeholder="#{phones.position}"
-											th:field="*{position}" autocomplete="off" />
-										<div th:errors="*{position}"
-											class="alert alert-danger margin-top-5">error</div>
-									</div>
-								</div>
-																<div class="col-xs-2">
-									<div class="form-group">
-										<label for="ph_version" th:text="#{general.version}">txt</label>
-										<select class="form-control" id="ph_version" name="ph_version"
-											th:placeholder="#{general.version}" th:field="*{version}">
-											<option value="pl">pl</option>
-											<option value="it">it</option>
-										</select>
-									</div>
-								</div>
-								<div class="col-xs-3">
-									<div class="form-group">
-										<label for="ph_email" th:text="|E-Mail|">lbl</label> <input
-											type="text" class="form-control" id="ph_email"
-											name="ph_email" th:placeholder="|E-Mail|" th:field="*{email}"
-											autocomplete="off" />
-										<div th:errors="*{email}"
-											class="alert alert-danger margin-top-5">error</div>
-									</div>
-								</div>								
-								<div class="col-xs-3">
-									<div class="form-group">
-										<label for="pc_category" th:text="#{general.department}">lbl</label>
-										<select class="form-control" id="pc_category"
-											name="pc_category" th:placeholder="#{phones.category}"
-											th:field="*{categoryId}">
-											<option th:each="obj,stat : ${categories}"
-												th:value="${categories[__${stat.index}__].id}"
-												th:text="|
-								${categories[__${stat.index}__].order} - ${categories[__${stat.index}__].name}  #${categories[__${stat.index}__].id} 
-								|">opt</option>
-										</select>
-										<div th:errors="*{categoryId}"
-											class="alert alert-danger margin-top-5">error</div>
-									</div>
-								</div>
-							</div>
+
 							<div class="row">
 								<div class="col-xs-12">
-									<button class="btn btn-success btn-sm" type="submit"
-										name="create" th:value="1">
-										<span class="glyphicon glyphicon-save"></span> <span
-											th:text="#{action.create}"></span>
-									</button>
-									<button class="btn btn-primary btn-sm" type="submit"
-										name="update">
-										<span class="glyphicon glyphicon-ok"></span> <span
-											th:text="#{action.update}"></span>
-									</button>
-									<button class="btn btn-danger btn-sm" type="submit"
-										name="delete">
-										<span class="glyphicon glyphicon-remove"></span> <span
-											th:text="#{action.delete}"></span>
-									</button>
-									<button class="btn btn-info btn-sm float-right"
-										type="submit" name="editcategory">
-										<span class="glyphicon glyphicon-flag"></span> <span
-											th:text="#{phones.editcategories}"></span>
-									</button>
+
+									<a class="btn btn-primary btn-sm"
+										th:href="|@{/phones/createentry}/${version}|"> <span
+										class="glyphicon glyphicon-save"></span> <span
+										th:text="#{action.create}"></span>
+									</a> <a class="btn btn-info btn-sm"
+										th:href="|@{/phones/managecategories}/${version}|"> <span
+										class="glyphicon glyphicon-edit"></span> <span
+										th:text="#{phones.editcategories}"></span>
+									</a>
 								</div>
-								
+
 							</div>
 						</form>
 						<!-- /NUMBER FORM -->
@@ -222,13 +146,14 @@
 		<div class="panel panel-primary">
 			<div class="panel-heading">
 				<h2 class="margin-top-10">
-					<span th:text="#{phone.numbers}"></span>
-					<span th:if="${version} == 'pl'">- ADR Polska S.A.</span>
-					<span th:if="${version} != 'pl'">- ADR Italia</span>
+					<span th:text="#{phone.numbers}"></span> <span
+						th:if="${version} == 'pl'">- ADR Polska S.A.</span> <span
+						th:if="${version} != 'pl'">- ADR Italia</span>
 				</h2>
-				<a class="btn btn-default btn" th:href="|@{/phones/print}/${version}|"
-					target="_blank"> <span class="glyphicon glyphicon-print"></span>
-					<span th:text="#{action.print}"></span>
+				<a class="btn btn-default btn"
+					th:href="|@{/phones/print}/${version}|" target="_blank"> <span
+					class="glyphicon glyphicon-print"></span> <span
+					th:text="#{action.print}"></span>
 				</a>
 			</div>
 			<div class="panel-body">
@@ -238,28 +163,41 @@
 						<thead>
 							<tr>
 								<th th:text="#{phones.number}"></th>
+								<th th:if="${version} != 'pl'" th:text="|VOIP|"></th>
 								<th th:text="#{phones.name}|"></th>
 								<th th:text="#{phones.position}|"></th>
-								<th th:text="#{general.department}"></th>
-								<th th:text="|E-Mail|"></th>
+								<th th:if="${version} == 'pl'" th:text="#{general.department}"></th>
+								<th th:if="${version} != 'pl'" th:text="#{general.category}"></th>
+								<th th:if="${version} == 'pl'" th:text="|E-Mail|"></th>
 							</tr>
 						</thead>
 						<tfoot>
 							<tr>
 								<th th:text="#{phones.number}"></th>
+								<th th:if="${version} != 'pl'" th:text="|VOIP|"></th>
 								<th th:text="#{phones.name}|"></th>
 								<th th:text="#{phones.position}|"></th>
-								<th th:text="#{general.department}"></th>
-								<th th:text="|E-Mail|"></th>
+								<th th:if="${version} == 'pl'" th:text="#{general.department}"></th>
+								<th th:if="${version} != 'pl'" th:text="#{general.category}"></th>
+								<th th:if="${version} == 'pl'" th:text="|E-Mail|"></th>
 							</tr>
 						</tfoot>
 						<tbody>
 							<tr th:each="entry : ${list}">
 								<td><span th:text="${entry.number}"></span></td>
-								<td><span th:text="${entry.name}"></span></td>
+								<td th:if="${version} != 'pl'"><span
+									th:text="${entry.voip}"></span></td>
+								<td sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIGHT_ADMIN', 'ROLE_PHONESMANAGER')">
+									<a th:href="|@{/phones/editentry}/${version}/${entry.id}|"> <span
+										th:text="${entry.name}"></span></a>
+								</td>
+								<td
+									sec:authorize="!hasAnyRole('ROLE_ADMIN', 'ROLE_LIGHT_ADMIN', 'ROLE_PHONESMANAGER')"><span
+									th:text="${entry.name}"></span></td>
 								<td><span th:text="${entry.position}"></span></td>
 								<td><span th:text="${entry.category.name}"></span></td>
-								<td><a th:href="|mailto:${entry.email}|"><span
+								<td th:if="${version} == 'pl'"><a
+									th:href="|mailto:${entry.email}|"><span
 										th:text="${entry.email}"></span></a></td>
 							</tr>
 						</tbody>
