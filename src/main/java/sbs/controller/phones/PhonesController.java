@@ -190,7 +190,7 @@ public class PhonesController {
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder(phoneEditForm.getVersion()));
 			model.addAttribute("version", phoneEditForm.getVersion());
-			return "phones/list";
+			return "phones/editentry";
 		}
 
 		PhoneEntry entry = phoneEntriesService.findById(phoneEditForm.getId());
@@ -293,7 +293,8 @@ public class PhonesController {
 		}
 
 		if (bindingResult.hasErrors()) {
-			return "phones/categoryedit";
+			model.addAttribute("version", phoneCategoryEditForm.getVersion());
+			return "phones/createcategory";
 		}
 
 		PhoneCategory category = new PhoneCategory();
@@ -319,7 +320,8 @@ public class PhonesController {
 		}
 
 		if (bindingResult.hasErrors()) {
-			return "phones/categoryedit";
+			model.addAttribute("version", phoneCategoryEditForm.getVersion());
+			return "phones/editcategory";
 		}
 		
 		PhoneCategory category = phoneCategoriesService.findById(phoneCategoryEditForm.getId());
