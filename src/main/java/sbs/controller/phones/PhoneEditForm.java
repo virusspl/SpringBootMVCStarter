@@ -7,6 +7,12 @@ public class PhoneEditForm {
 	
 	@Size(min=0, max = 45)
 	String number;
+	@Size(min=0, max = 10)
+	String numberShort;
+	@Size(min=0, max = 10)
+	String numberInternal;
+	@Size(min=0, max = 10)
+	String numberInternalPortable;
 	@Size(min=1, max = 50)
 	String name;
 	@Size(min=0, max = 50)
@@ -15,6 +21,8 @@ public class PhoneEditForm {
 	String email;
 	@Size(min=0, max = 20)
 	String voip;
+	@Size(min=0, max = 50)
+	String note;
 	Integer categoryId;
 	String version;
 	int id;
@@ -87,6 +95,38 @@ public class PhoneEditForm {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getNumberShort() {
+		return numberShort;
+	}
+
+	public void setNumberShort(String numberShort) {
+		this.numberShort = numberShort;
+	}
+
+	public String getNumberInternal() {
+		return numberInternal;
+	}
+
+	public void setNumberInternal(String numberInternal) {
+		this.numberInternal = numberInternal;
+	}
+
+	public String getNumberInternalPortable() {
+		return numberInternalPortable;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+	public void setNumberInternalPortable(String numberInternalPortable) {
+		this.numberInternalPortable = numberInternalPortable;
 	}	
 
 	

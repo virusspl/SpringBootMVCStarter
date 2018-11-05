@@ -6,7 +6,11 @@ public class PhoneColumnLine {
 	String name;
 	String position;
 	String number;
+	String numberShort;
+	String numberInternal;
+	String numberInternalPortable;
 	String voip;
+	String note;
 	
 	
 	public PhoneColumnLine() {
@@ -44,7 +48,30 @@ public class PhoneColumnLine {
 	public void setNumber(String number) {
 		this.number = number;
 	}
-	
+
+	public String getNumberShort() {
+		return numberShort;
+	}
+
+	public void setNumberShort(String numberShort) {
+		this.numberShort = numberShort;
+	}
+
+	public String getNumberInternal() {
+		return numberInternal;
+	}
+
+	public void setNumberInternal(String numberInternal) {
+		this.numberInternal = numberInternal;
+	}
+
+	public String getNumberInternalPortable() {
+		return numberInternalPortable;
+	}
+
+	public void setNumberInternalPortable(String numberInternalPortable) {
+		this.numberInternalPortable = numberInternalPortable;
+	}
 
 	public String getVoip() {
 		return voip;
@@ -52,6 +79,14 @@ public class PhoneColumnLine {
 
 	public void setVoip(String voip) {
 		this.voip = voip;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
 	}
 
 	@Override

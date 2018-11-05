@@ -32,8 +32,20 @@ public class PhoneEntry {
 	@Column(name = "pe_email", length = 50, nullable = true)
 	private String email;
 	
+	@Column(name = "pe_note", length = 50, nullable = true)
+	private String note;
+	
 	@Column(name = "pe_number", length = 45, nullable = true)
 	private String number;
+	
+	@Column(name = "pe_number_short", length = 10, nullable = true)
+	private String numberShort;
+	
+	@Column(name = "pe_number_internal", length = 10, nullable = true)
+	private String numberInternal;
+	
+	@Column(name = "pe_number_internal_portable", length = 10, nullable = true)
+	private String numberInternalPortable;
 	
 	@Column(name = "pe_voip", length = 20, nullable = true)
 	private String voip;
@@ -103,6 +115,38 @@ public class PhoneEntry {
 
 	public void setVersion(String version) {
 		this.version = version;
+	}
+
+	public String getNumberShort() {
+		return numberShort;
+	}
+
+	public void setNumberShort(String numberShort) {
+		this.numberShort = numberShort;
+	}
+
+	public String getNumberInternal() {
+		return numberInternal;
+	}
+
+	public void setNumberInternal(String numberInternal) {
+		this.numberInternal = numberInternal;
+	}
+
+	public String getNumberInternalPortable() {
+		return numberInternalPortable;
+	}
+
+	public void setNumberInternalPortable(String numberInternalPortable) {
+		this.numberInternalPortable = numberInternalPortable;
+	}
+	
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
 	}
 
 	@Override

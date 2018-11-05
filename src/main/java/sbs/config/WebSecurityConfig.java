@@ -66,7 +66,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/weldlog/**",
 				"/test/**",
 				"/proprog/**",
-				"/phones/**",
+				"/phones/list/**",
 				"/inventory/**",
 				"/terminal/**"
 				)
@@ -151,7 +151,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"ADMIN", 
 				"TIMERUSER"
 				)
-		.antMatchers("/phones/edit/**"
+		.antMatchers(
+				"/phones/createentry/**",
+				"/phones/editentry/**",
+				"/phones/createcategory/**",
+				"/phones/editcategory/**"
 				)
 		.hasAnyRole(
 				"ADMIN", 

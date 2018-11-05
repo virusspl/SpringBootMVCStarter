@@ -16,7 +16,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.TemplateEngine;
 
@@ -73,7 +72,6 @@ public class PhonesController {
 				line = new PhoneColumnLine();
 				line.setCategory(true);
 				line.setName(entry.getCategory().getName());
-				line.setVoip(entry.getVoip());
 				list.add(line);
 				currentCategory = line.getName();
 			}
@@ -132,9 +130,13 @@ public class PhonesController {
 		form.setEmail(entry.getEmail());
 		form.setName(entry.getName());
 		form.setNumber(entry.getNumber());
+		form.setNumberShort(entry.getNumberShort());
+		form.setNumberInternal(entry.getNumberInternal());
+		form.setNumberInternalPortable(entry.getNumberInternalPortable());
 		form.setPosition(entry.getPosition());
 		form.setVersion(entry.getVersion());
 		form.setVoip(entry.getVoip());
+		form.setNote(entry.getNote());
 		form.setId(entry.getId());
 	
 		return form;
@@ -161,11 +163,15 @@ public class PhonesController {
 		PhoneCategory category = phoneCategoriesService.findById(phoneEditForm.getCategoryId());
 		PhoneEntry entry = new PhoneEntry();
 		entry.setNumber(phoneEditForm.getNumber());
+		entry.setNumberShort(phoneEditForm.getNumberShort());
+		entry.setNumberInternal(phoneEditForm.getNumberInternal());
+		entry.setNumberInternalPortable(phoneEditForm.getNumberInternalPortable());
 		entry.setName(phoneEditForm.getName().trim());
 		entry.setPosition(phoneEditForm.getPosition().trim());
 		entry.setEmail(phoneEditForm.getEmail().trim());
 		entry.setCategory(category);
 		entry.setVersion(phoneEditForm.getVersion());
+		entry.setNote(phoneEditForm.getNote());
 		entry.setVoip(phoneEditForm.getVoip());
 		
 		phoneEntriesService.save(entry);
@@ -195,11 +201,15 @@ public class PhonesController {
 		PhoneCategory category = phoneCategoriesService.findById(phoneEditForm.getCategoryId());
 
 		entry.setNumber(phoneEditForm.getNumber());
+		entry.setNumberShort(phoneEditForm.getNumberShort());
+		entry.setNumberInternal(phoneEditForm.getNumberInternal());
+		entry.setNumberInternalPortable(phoneEditForm.getNumberInternalPortable());
 		entry.setName(phoneEditForm.getName().trim());
 		entry.setPosition(phoneEditForm.getPosition().trim());
 		entry.setEmail(phoneEditForm.getEmail().trim());
 		entry.setCategory(category);
 		entry.setVersion(phoneEditForm.getVersion());
+		entry.setNote(phoneEditForm.getNote());
 		entry.setVoip(phoneEditForm.getVoip());
 
 		phoneEntriesService.update(entry);

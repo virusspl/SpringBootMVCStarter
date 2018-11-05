@@ -3,7 +3,10 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
 	layout:decorator="layout/main">
+	
+	
 <head lang="pl">
+	<title th:if="${version} != 'pl'">PhonebookADR</title>
 </head>
 <body>
 	<div layout:fragment="script">
@@ -52,7 +55,7 @@
 				language : {
 					url : getUrl() + "english.json"
 				},
-				order : [ [ 0, 'desc' ] ],
+				order : [],
 				dom : 'Bfrtipp',
 				buttons : [ {
 					extend : 'copy',
@@ -121,7 +124,6 @@
 
 							<div class="row">
 								<div class="col-xs-12">
-
 									<a class="btn btn-primary btn-sm"
 										th:href="|@{/phones/createentry}/${version}|"> <span
 										class="glyphicon glyphicon-save"></span> <span
@@ -150,7 +152,7 @@
 						th:if="${version} == 'pl'">- ADR Polska S.A.</span> <span
 						th:if="${version} != 'pl'">- ADR Italia</span>
 				</h2>
-				<a class="btn btn-default btn"
+				<a class="btn btn-default btn" th:if="${version} == 'pl'"
 					th:href="|@{/phones/print}/${version}|" target="_blank"> <span
 					class="glyphicon glyphicon-print"></span> <span
 					th:text="#{action.print}"></span>
@@ -162,21 +164,31 @@
 					<table id="srv" class="display">
 						<thead>
 							<tr>
-								<th th:text="#{phones.number}"></th>
-								<th th:if="${version} != 'pl'" th:text="|VOIP|"></th>
+								
 								<th th:text="#{phones.name}|"></th>
 								<th th:text="#{phones.position}|"></th>
+								<th th:if="${version} != 'pl'" th:text="|VOIP|"></th>
+								<th th:if="${version} != 'pl'" th:text="#{phones.number.internal.short}"></th>
+								<th th:if="${version} != 'pl'" th:text="#{phones.number.internal.portable.short}"></th>
+								<th th:if="${version} != 'pl'" th:text="#{phones.number.short}"></th>
+								<th th:text="#{phones.number}"></th>
+								<th th:if="${version} != 'pl'" th:text="#{phones.note}"></th>
 								<th th:if="${version} == 'pl'" th:text="#{general.department}"></th>
 								<th th:if="${version} != 'pl'" th:text="#{general.category}"></th>
-								<th th:if="${version} == 'pl'" th:text="|E-Mail|"></th>
+								<th th:if="${version} == 'pl'" th:text="|E-Mail|"></th>								
 							</tr>
 						</thead>
 						<tfoot>
 							<tr>
-								<th th:text="#{phones.number}"></th>
-								<th th:if="${version} != 'pl'" th:text="|VOIP|"></th>
+								
 								<th th:text="#{phones.name}|"></th>
 								<th th:text="#{phones.position}|"></th>
+								<th th:if="${version} != 'pl'" th:text="|VOIP|"></th>
+								<th th:if="${version} != 'pl'" th:text="#{phones.number.internal.short}"></th>
+								<th th:if="${version} != 'pl'" th:text="#{phones.number.internal.portable.short}"></th>
+								<th th:if="${version} != 'pl'" th:text="#{phones.number.short}"></th>
+								<th th:text="#{phones.number}"></th>
+								<th th:if="${version} != 'pl'" th:text="#{phones.note}"></th>
 								<th th:if="${version} == 'pl'" th:text="#{general.department}"></th>
 								<th th:if="${version} != 'pl'" th:text="#{general.category}"></th>
 								<th th:if="${version} == 'pl'" th:text="|E-Mail|"></th>
@@ -184,9 +196,6 @@
 						</tfoot>
 						<tbody>
 							<tr th:each="entry : ${list}">
-								<td><span th:text="${entry.number}"></span></td>
-								<td th:if="${version} != 'pl'"><span
-									th:text="${entry.voip}"></span></td>
 								<td sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIGHT_ADMIN', 'ROLE_PHONESMANAGER')">
 									<a th:href="|@{/phones/editentry}/${version}/${entry.id}|"> <span
 										th:text="${entry.name}"></span></a>
@@ -195,6 +204,17 @@
 									sec:authorize="!hasAnyRole('ROLE_ADMIN', 'ROLE_LIGHT_ADMIN', 'ROLE_PHONESMANAGER')"><span
 									th:text="${entry.name}"></span></td>
 								<td><span th:text="${entry.position}"></span></td>
+								<td th:if="${version} != 'pl'"><span
+									th:text="${entry.voip}"></span></td>
+								<td th:if="${version} != 'pl'"><span
+									th:text="${entry.numberInternal}"></span></td>
+								<td th:if="${version} != 'pl'"><span
+									th:text="${entry.numberInternalPortable}"></span></td>
+								<td th:if="${version} != 'pl'"><span
+									th:text="${entry.numberShort}"></span></td>
+									<td><span th:text="${entry.number}"></span></td>
+								<td th:if="${version} != 'pl'"><span
+									th:text="${entry.note}"></span></td>
 								<td><span th:text="${entry.category.name}"></span></td>
 								<td th:if="${version} == 'pl'"><a
 									th:href="|mailto:${entry.email}|"><span
