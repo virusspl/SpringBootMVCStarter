@@ -6,7 +6,7 @@
 	
 	
 <head lang="pl">
-	<title th:if="${version} != 'pl'">PhonebookADR</title>
+	<title th:if="${version} != 'pl'">Phonebook ADR</title>
 </head>
 <body>
 	<div layout:fragment="script">
@@ -79,7 +79,7 @@
 				language : {
 					url : getUrl() + "italian.json"
 				},
-				order : [ [ 0, 'desc' ] ],
+				order : [],
 				dom : 'Bfrtipp',
 				buttons : [ {
 					extend : 'copy',
