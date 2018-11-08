@@ -318,6 +318,22 @@
 						class="bold">value</span>
 				</div>
 				<div class="col-xs-2">
+					<span th:text="|&nbsp;&nbsp;&nbsp;[KAL05]|">value</span>
+				</div>
+				<div class="col-xs-10">
+					<span
+						th:text="|&nbsp;&nbsp;&nbsp;${#numbers.formatDecimal(kal05Value, 0, 'DEFAULT', 2, 'DEFAULT')}|"
+						class="bold">value</span>
+				</div>
+				<div class="col-xs-2">
+					<span th:text="|&nbsp;&nbsp;&nbsp;[KAL10]|">value</span>
+				</div>
+				<div class="col-xs-10">
+					<span
+						th:text="|&nbsp;&nbsp;&nbsp;${#numbers.formatDecimal(kal10Value, 0, 'DEFAULT', 2, 'DEFAULT')}|"
+						class="bold">value</span>
+				</div>
+				<div class="col-xs-2">
 					<span th:text="#{movements.value.welding}">value</span>
 				</div>
 				<div class="col-xs-10">
