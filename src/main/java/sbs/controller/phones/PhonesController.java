@@ -194,20 +194,23 @@ public class PhonesController {
 			model.addAttribute("version", phoneEditForm.getVersion());
 			return "phones/editentry";
 		}
-		
-		if (phoneEditForm.getNumber().trim().length() != 0) {
-			if (!(phoneEntriesService.findByNumber(phoneEditForm.getNumber().trim(), phoneEditForm.getVersion())
-					.isEmpty())) {
-				bindingResult.rejectValue("number", "phones.error.numberinuse");
-				model.addAttribute("categories", phoneCategoriesService.findAllByAscOrder(phoneEditForm.getVersion()));
-				model.addAttribute("version", phoneEditForm.getVersion());
-				return "phones/editentry";
-			}
-		}
 
 		PhoneEntry entry = phoneEntriesService.findById(phoneEditForm.getId());
 		if (entry == null) {
 			throw new NotFoundException("Entry not found");
+		}
+
+		if (phoneEditForm.getNumber().trim().length() != 0) {
+			if (!phoneEditForm.getNumber().trim().equals(entry.getNumber().trim())) {
+				if (!(phoneEntriesService.findByNumber(phoneEditForm.getNumber().trim(), phoneEditForm.getVersion())
+						.isEmpty())) {
+					bindingResult.rejectValue("number", "phones.error.numberinuse");
+					model.addAttribute("categories",
+							phoneCategoriesService.findAllByAscOrder(phoneEditForm.getVersion()));
+					model.addAttribute("version", phoneEditForm.getVersion());
+					return "phones/editentry";
+				}
+			}
 		}
 
 		PhoneCategory category = phoneCategoriesService.findById(phoneEditForm.getCategoryId());
