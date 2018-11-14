@@ -154,7 +154,7 @@ a.button:active {
 .menubutton {
 	background-color: #4CAF50;
 	padding: 15px 25px 15px 25px;
-	margin: 5px 0px 5px 0px;
+	margin: 15px 0px 5px 0px;
 	display: block;
 }
 
@@ -175,6 +175,8 @@ a.button:active {
 .summaryValueColumn {
 	text-align: right;
 }
+
+
 
 </style>
 </head>
@@ -223,11 +225,20 @@ a.button:active {
 		<script th:src="@{/js/messaging/stomp.min.js}" type="text/javascript"></script>
 		<script th:src="@{/js/messaging/messaging.js}" type="text/javascript"></script>
 		<script>
+		
 		function hideMessage(){
 			document.getElementById("msgMessage").style.display="none";
 		}
 		function hideWarning(){
 			document.getElementById("warningMessage").style.display="none";
+		}
+		
+		function setFocusColor(e){
+			e.style.backgroundColor = "#B9DFB9";	
+		}
+		
+		function setBlurColor(e){
+			e.style.backgroundColor = "#FFFFFF";
 		}
 		
 		</script>

@@ -50,7 +50,8 @@
 				<h2 class="columntitle" th:text="*{currentColumnName}">field
 					name</h2>
 				<input type="text" id="currentValue" name="currentValue "
-					th:field="*{currentValue}" autocomplete="off" />
+					th:field="*{currentValue}" autocomplete="off" 
+					onfocus="setFocusColor(this)" onblur="setBlurColor(this)" />
 				<div class="valueError" th:errors="*{currentValue}">error</div>
 				<button type="submit" name="step" value="step"
 					class="button okbutton margin-top-10" style="width: 46%;"

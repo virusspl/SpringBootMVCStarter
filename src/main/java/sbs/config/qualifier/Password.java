@@ -35,10 +35,10 @@ public @interface Password {
 			)				# End of group
 			 */
 			  String password_pattern = "("
-			  		+ "(?=.*\\d)"
-			  		+ "(?=.*[a-z])"
-			  		+ "(?=.*[A-Z])"
-			  		+ ".{6,20}"
+			  		+ "(?=.*\\d)"		// 1 digit
+//			  		+ "(?=.*[a-z])"		// 1 lowercase 
+			  		+ "(?=.*[A-Z])"		// 1 uppercase
+			  		+ ".{6,20}"			// 6-20 length
 			  		+ ")";
 			  Pattern pattern = Pattern.compile(password_pattern);
 			  Matcher matcher = pattern.matcher(password);

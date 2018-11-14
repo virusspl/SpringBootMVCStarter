@@ -456,6 +456,14 @@ public class VariousPagesController {
 			roleService.save(phonesManager);
 			msg += "[role: " + phonesManager.getName() + "], ";
 		}
+		
+		Role terminalRole = roleService.findByName("ROLE_TERMINAL");
+		if (terminalRole == null) {
+			terminalRole = new Role();
+			terminalRole.setName("ROLE_TERMINAL");
+			roleService.save(terminalRole);
+			msg += "[role: " + terminalRole.getName() + "], ";
+		}
 
 		System.out.println("get users:");
 		User admin = userService.findByUsername("Admin");

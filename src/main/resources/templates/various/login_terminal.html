@@ -13,62 +13,56 @@
 					<td><span th:text="#{general.user}">txt</span></td>
 				</tr>
 				<tr>
-					<td><input type="text" id="username" name="username" /></td>
+					<td><input type="text" id="username" name="username"
+						onfocus="setFocusColor(this)" onblur="setBlurColor(this)"
+						onkeydown="blockEnter(event)" /></td>
 				</tr>
 				<tr>
 					<td><span th:text="#{login.password}">txt</span></td>
 				</tr>
 				<tr>
-					<td><input type="password" id="password" name="password" /></td>
+					<td><input type="password" id="password" name="password"
+						onfocus="setFocusColor(this)" onblur="setBlurColor(this)" /></td>
 				</tr>
 				<tr>
 					<td>
-						<button type="submit" name="action" 
-							style="width: 46%;"
-							class="button okbutton margin-top-10" 
-							th:text="#{action.login}">
-							login
-						</button>
-						<button type="button"
-							style="width: 46%;"
-							class="button badbutton margin-top-10" 
-							th:text="#{action.clear}" 
-							onclick="clearFields()">
-							clear
-						</button>
+						<button type="submit" name="action" style="width: 46%;"
+							class="button okbutton margin-top-10" th:text="#{action.login}">
+							login</button>
+						<button type="button" style="width: 46%;"
+							class="button badbutton margin-top-10" th:text="#{action.clear}"
+							onclick="clearFields()">clear</button>
 					</td>
 				</tr>
 			</table>
 		</form>
 		<h1 th:text="#{login.title}">txt</h1>
 	</div>
+
 	<!-- /CONTENT -->
 	<!-- SCRIPT -->
 	<div layout:fragment="script">
 		<script>
-		$(document).ready(function() {
-			$(window).keydown(function(event) {
-				if (event.keyCode == 13) {
-						event.preventDefault();
-						return false;
-				}
-			});
-		});
-		
-		function clearFields(){
-			document.getElementById('username').value = '';
-			document.getElementById('password').value = '';
-			return false;
-		}
-		
-		/*	$(document).on("keypress", 'form', function(e) {
-				var code = e.keyCode || e.which;
-				if (code == 13) {
+
+			function blockEnter(e) {
+				var keycode;
+				if (window.event)
+					keycode = window.event.keyCode;
+				else if (e)
+					keycode = e.which;
+
+				if (keycode == 13) {
 					e.preventDefault();
 					return false;
 				}
-			});
-		)*/
+			}
+
+			function clearFields() {
+				document.getElementById('username').value = '';
+				document.getElementById('password').value = '';
+				return false;
+			}
+
 		</script>
 	</div>
 	<!-- /SCRIPT -->
