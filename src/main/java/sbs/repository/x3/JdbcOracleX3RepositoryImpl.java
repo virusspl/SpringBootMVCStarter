@@ -657,19 +657,38 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				
 				"SELECT "
 				+ company + ".YCHGSTKGX.CREDAT_0, "
+				+ company + ".YCHGSTKGX.VCRNUM_0, "
+				+ company + ".YCHGSTKGX.CRETIM_0, "
 				+ company + ".YCHGSTKGX.ITMREF_0, "
 				+ company + ".ITMMASTER.ITMDES1_0, "
 				+ company + ".ITMMASTER.TCLCOD_0, "
 				+ company + ".ITMMASTER.TSICOD_1, "
 				+ company + ".YCHGSTKGX.QTYSTU_0, "
-				+ company + ".ITMMVT.AVC_0 "
+				+ company + ".YCHGSTKGX.YWO_0, "
+				+ company + ".ITMMVT.AVC_0, "
+				+ "ORD.BPCORD_0, "
+				+ "ORD.BPCNAM_0 "
 				+ "FROM "
+				+ "( "	
+				+ "SELECT " 
+				+ company + ".SORDER.SOHNUM_0, "
+				+ company + ".SORDER.BPCORD_0, "
+				+ company + ".BPCUSTOMER.BPCNAM_0, "
+				+ company + ".SORDER.ORDDAT_0, "
+				+ company + ".SORDER.ORDSTA_0 "
+				+ "FROM " 
+				+ company + ".BPCUSTOMER INNER JOIN " + company + ".SORDER "
+				+ "ON "
+				+ company + ".BPCUSTOMER.BPCNUM_0 = " + company + ".SORDER.BPCORD_0 "
+				+ ") ORD "
+		+ "RIGHT JOIN ("
 				+ company + ".ITMMVT "
 				+ "INNER JOIN (" + company + ".YCHGSTKGX INNER JOIN " + company + ".ITMMASTER "
 				+ "ON "
 				+ company + ".YCHGSTKGX.ITMREF_0 = " + company + ".ITMMASTER.ITMREF_0) "
 				+ "ON "
 				+ company + ".ITMMVT.ITMREF_0 = " + company + ".YCHGSTKGX.ITMREF_0 "
+		+ ") ON ORD.SOHNUM_0 = " + company + ".YCHGSTKGX.YWO_0 "
 				+ "WHERE "
 				+ company + ".YCHGSTKGX.CREDAT_0 >= ? "
 				+ "AND "
@@ -684,7 +703,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "AND "
 				+ company + ".YCHGSTKGX.YFLGTRS_0 = 1 "
 				+ "AND "
-				+ company + ".YCHGSTKGX.YVCRTYP_0 > 0 "
+				+ company + ".YCHGSTKGX.YVCRTYP_0 = 2 "
 				+ "ORDER BY " 
 				+ company + ".YCHGSTKGX.CREDAT_0, " 
 				+ company + ".YCHGSTKGX.ITMREF_0",
@@ -698,16 +717,34 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         
 		List<X3ShipmentMovement> result = new ArrayList<>();
 		X3ShipmentMovement item = null;
-		
+		Calendar cal;
+		X3SalesOrder salesOrder;
         for(Map<String,Object> row: resultSet ){
         	item = new X3ShipmentMovement();
+        	item.setMovementNumber((String)row.get("VCRNUM_0"));
         	item.setItemCode((String)row.get("ITMREF_0"));
         	item.setItemDescription(((String)row.get("ITMDES1_0")));
         	item.setItemCategory(((String)row.get("TCLCOD_0")));
         	item.setGr2(((String)row.get("TSICOD_1")));
         	item.setQuantity(((BigDecimal)row.get("QTYSTU_0")).doubleValue());
         	item.setEmergencyAveragePrice(((BigDecimal)row.get("AVC_0")).doubleValue());
-        	item.setDate((Timestamp)row.get("CREDAT_0"));
+        	item.setDocument(((String)row.get("YWO_0")).trim());
+        	item.setClientCode((String)row.get("BPCORD_0"));
+        	item.setClientName((String)row.get("BPCNAM_0"));
+        	
+        	// set date/time
+        	try{
+	        	cal = Calendar.getInstance();
+	        	cal.setTime((Timestamp)row.get("CREDAT_0"));
+	        	String[] timeTab = ((String)row.get("CRETIM_0")).split(":");
+	        	cal.add(Calendar.HOUR_OF_DAY, Integer.parseInt(timeTab[0]));
+	        	cal.add(Calendar.MINUTE, Integer.parseInt(timeTab[1]));
+	        	cal.add(Calendar.SECOND, Integer.parseInt(timeTab[2]));
+	        	item.setDate(new Timestamp(cal.getTime().getTime()));
+        	}
+        	catch (Exception e){
+        		item.setDate((Timestamp)row.get("CREDAT_0"));
+        	}
         	
         	result.add(item);
         }

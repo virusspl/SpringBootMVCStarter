@@ -8,6 +8,10 @@ public class X3ShipmentMovement {
 	private String itemDescription;
 	private String itemCategory;
 	private String gr2;
+	private String document;
+	private String clientCode;
+	private String clientName;
+	private String movementNumber;
 	private Timestamp date;
 	private double quantity;
 	private double emergencyAveragePrice;
@@ -16,18 +20,6 @@ public class X3ShipmentMovement {
 	
 	
 	public X3ShipmentMovement() {
-		
-	}
-
-	public X3ShipmentMovement(String itemCode, String itemDescription, String itemCategory, Timestamp date, int quantity,
-			double emergencyAveragePrice) {
-		super();
-		this.itemCode = itemCode;
-		this.itemDescription = itemDescription;
-		this.itemCategory = itemCategory;
-		this.date = date;
-		this.quantity = quantity;
-		this.emergencyAveragePrice = emergencyAveragePrice;
 		
 	}
 
@@ -102,12 +94,46 @@ public class X3ShipmentMovement {
 	public void setGr2(String gr2) {
 		this.gr2 = gr2;
 	}
+	
+	public String getDocument() {
+		return document;
+	}
+
+	public void setDocument(String document) {
+		this.document = document;
+	}
+
+	public String getClientCode() {
+		return clientCode;
+	}
+
+	public void setClientCode(String clientCode) {
+		this.clientCode = clientCode;
+	}
+
+	public String getClientName() {
+		return clientName;
+	}
+
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
+	}
+
+	public String getMovementNumber() {
+		return movementNumber;
+	}
+
+	public void setMovementNumber(String movementNumber) {
+		this.movementNumber = movementNumber;
+	}
 
 	@Override
 	public String toString() {
 		return "X3ShipmentMovement [itemCode=" + itemCode + ", itemDescription=" + itemDescription + ", itemCategory="
-				+ itemCategory + ", date=" + date + ", quantity=" + quantity + ", emergencyAveragePrice="
-				+ emergencyAveragePrice + ", price=" + price + ", value=" + value + "]";
+				+ itemCategory + ", gr2=" + gr2 + ", document=" + document + ", clientCode=" + clientCode
+				+ ", clientName=" + clientName + ", movementNumber=" + movementNumber + ", date=" + date + ", quantity="
+				+ quantity + ", emergencyAveragePrice=" + emergencyAveragePrice + ", price=" + price + ", value="
+				+ value + "]";
 	}
 
 
