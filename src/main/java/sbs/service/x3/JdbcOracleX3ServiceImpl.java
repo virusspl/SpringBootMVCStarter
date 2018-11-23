@@ -2,6 +2,7 @@ package sbs.service.x3;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3ConsumptionProductInfo;
 import sbs.model.x3.X3ConsumptionSupplyInfo;
+import sbs.model.x3.X3CoverageData;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ProductSellDemand;
@@ -24,6 +26,8 @@ import sbs.model.x3.X3SalesOrder;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
 import sbs.model.x3.X3ShipmentStockLineWithPrice;
+import sbs.model.x3.X3Supplier;
+import sbs.model.x3.X3UsageDetail;
 import sbs.model.x3.X3UtrFault;
 import sbs.model.x3.X3UtrFaultLine;
 import sbs.model.x3.X3UtrMachine;
@@ -37,6 +41,20 @@ import sbs.repository.x3.JdbcOracleX3Repository;
 public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	@Autowired
 	JdbcOracleX3Repository jdbcOracleX3Repository;
+	
+	@Override
+	public String convertLocaleToX3Lang(Locale locale) {
+		String x3lang;
+		switch (locale.getLanguage()) {
+		case "en":
+			x3lang = "ENG";
+		case "it":
+			x3lang = "ITA";
+		default:
+			x3lang = "POL";
+		}
+		return x3lang;
+	}
 	
 	@Override
 	@Cacheable(value="x3AllUsers")
@@ -276,5 +294,28 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 		return jdbcOracleX3Repository.findPackageDescription(company, packageCode);
 	}
 
+	@Override
+	@Cacheable(value="x3Descriptions")
+	public Map<String, String> getDescriptionsByLanguage(String x3lang, String company) {
+		return jdbcOracleX3Repository.getDescriptionsByLanguage(x3lang, company);
+	}
+
+
+	@Override
+	@Cacheable(value="x3AcvUsageDetails")
+	public List<X3UsageDetail> getAcvUsageDetailsListByYear(int year, String company) {
+		return jdbcOracleX3Repository.getAcvUsageDetailsListByYear(year, company); 
+	}
+
+	@Override
+	public List<X3CoverageData> getCoverageInitialData(String company) {
+		return jdbcOracleX3Repository.getCoverageInitialData(company); 
+	}
+
+	@Override
+	@Cacheable(value="x3FirstSuppliers")
+	public Map<String, X3Supplier> getFirstAcvSuppliers(String company) {
+		return jdbcOracleX3Repository.getFirstAcvSuppliers(company);
+	}
 
 }

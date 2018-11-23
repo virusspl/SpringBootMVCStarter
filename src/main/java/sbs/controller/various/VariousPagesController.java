@@ -1,6 +1,8 @@
 package sbs.controller.various;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 /*
 import java.io.InputStream;
 import java.net.URL;
@@ -8,6 +10,7 @@ import java.net.URLConnection;
 import java.util.List;
 */
 import java.util.Locale;
+import java.util.Map;
 
 import javax.mail.MessagingException;
 
@@ -27,6 +30,9 @@ import sbs.model.qualitysurveys.QualitySurveyParameter;
 import sbs.model.tools.ToolsProjectState;
 import sbs.model.users.Role;
 import sbs.model.users.User;
+import sbs.model.x3.X3CoverageData;
+import sbs.model.x3.X3Supplier;
+import sbs.model.x3.X3UsageDetail;
 import sbs.service.bhptickets.BhpTicketStateService;
 import sbs.service.bhptickets.BhpTicketsService;
 import sbs.service.geode.JdbcOracleGeodeService;
@@ -152,91 +158,16 @@ public class VariousPagesController {
 	
 	
 	@RequestMapping("/test")
-	public String test(Model model) {
+	public String test(Model model, Locale locale) {
 
-		// URL url = new URL
-		// ("ftp://username:password@www.superland.example/server");
-		// URLConnection urlc = url.openConnection();
-		// InputStream is = urlc.getInputStream();
-
-		// List<BhpTicketState> listb = bhpTicketStateService.findAll();
-		// System.out.println(listb);
-
-		// X3Client result = jdbcOracleX3Service.findClientByCode("ATW",
-		// "cad40");
-		// X3SalesOrder result =
-		// jdbcOracleX3Service.findSalesOrderByNumber("ATW", "yza140099");
-		// X3Product result = jdbcOracleX3Service.findProductByCode("ATW",
-		// "98e01");
-		// X3ProductionOrderDetails result =
-		// jdbcOracleX3Service.getProductionOrderInfoByNumber("ATW",
-		// "X31121400099455");
-		// System.out.println(result);
-
-		/// List<X3BomItem> list =
-		/// jdbcOracleX3Service.findBomPartsByParent("ATW", "431S1001");
-		// model.addAttribute("list", listb);
-
-		/*
-		 * // CREATE DEMO SURVEY QualitySurvey qs = new QualitySurvey();
-		 * qs.setClientCode("CAD40"); qs.setClientName("ADR Uboldo");
-		 * qs.setCreationDate(new Timestamp(new java.util.Date().getTime()));
-		 * qs.setOperatorDepartment("Informatyka");
-		 * qs.setOperatorFirstName("Krzysztof"); qs.setOperatorId("1116");
-		 * qs.setOperatorLastName("Michalak");
-		 * qs.setOperatorPosition("Ciężko powiedzieć / programista");
-		 * qs.setOperatorRcpNo("BLABLABLA123"); qs.setParameterAnswers(new
-		 * HashSet<QualitySurveyParameterAnswer>()); qs.setProductCode("98E01");
-		 * qs.
-		 * setProductDescription("BLA.. blabla...bla bla bla bla (Gigi D'Agostino"
-		 * ); qs.setProductionOrder("X111111111111");
-		 * qs.setSalesOrder("ADASALES00001");
-		 * qs.setUser(userService.findByUsername("admin")); qs.setType("bom");
-		 * 
-		 * qualitySurveysService.save(qs); System.out.println(qs.getId());
-		 */
-
-		/*
-		 * // VARIOUS TESTS
-		 * model.addAttribute("resultOptima",jdbcAdrOptimaService.
-		 * findAllCurrentlyEmployed()); model.addAttribute("resultX3",
-		 * jdbcOracleX3Service.findAllUsers("ATW"));
-		 * model.addAttribute("geodeList",jdbcOracleGeodeService.
-		 * findLocationsOfProduct("836004"));
-		 */
-
-		/*
-		 * // TEST HR HrUserInfo hr =
-		 * jdbcAdrOptimaService.findCurrentlyEmployedById("1116"); if (hr !=
-		 * null) { System.out.println(" ==== HR INFO =====");
-		 * System.out.println(hr.getId());
-		 * System.out.println(hr.getFirstName());
-		 * System.out.println(hr.getLastName());
-		 * System.out.println(hr.getCurrentJobStart());
-		 * System.out.println(hr.getCurrentJobEnd());
-		 * System.out.println(hr.getEmployDate());
-		 * System.out.println(hr.getQuitDate());
-		 * System.out.println(hr.getDepartment());
-		 * System.out.println(hr.getPosition());
-		 * System.out.println(hr.getRcpNumber()); } else {
-		 * System.out.println("no current user HR info found by id"); }
-		 * 
-		 * HrUserInfo hr2 =
-		 * jdbcAdrOptimaService.findCurrentlyEmployedByCardNo("1600DFF297"); if
-		 * (hr2 != null) { System.out.println(" ==== HR INFO =====");
-		 * System.out.println(hr2.getId());
-		 * System.out.println(hr2.getFirstName());
-		 * System.out.println(hr2.getLastName());
-		 * System.out.println(hr2.getCurrentJobStart());
-		 * System.out.println(hr2.getCurrentJobEnd());
-		 * System.out.println(hr2.getEmployDate());
-		 * System.out.println(hr2.getQuitDate());
-		 * System.out.println(hr2.getDepartment());
-		 * System.out.println(hr2.getPosition());
-		 * System.out.println(hr2.getRcpNumber()); } else {
-		 * System.out.println("no current user HR info found by card no"); }
-		 */
-		// return "various/jdbc";
+		long start = System.currentTimeMillis();
+//    	List<X3CoverageData> initialData = jdbcOracleX3Service.getCoverageInitialData("ATW");
+//    	Map<String, String> descriptions = jdbcOracleX3Service.getDescriptionsByLanguage(jdbcOracleX3Service.convertLocaleToX3Lang(locale), "ATW");
+//		Map<String, Integer> demand = jdbcOracleX3Service.getAcvDemandList("ATW");
+//		List<X3UsageDetail> usage = jdbcOracleX3Service.getAcvUsageDetailsListByYear(2017, "ATW");
+		Map<String, X3Supplier> suppliers = jdbcOracleX3Service.getFirstAcvSuppliers("ATW");		
+		System.out.println("time: " + (System.currentTimeMillis()-start) + " ms");
+		
 		return "various/test";
 
 	}

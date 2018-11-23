@@ -1,86 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
-	
-	<!-- 
-	sec		1
-	min		60
-	h		3600
-	3h		10800
-	6h		21600
-	12h		43200
-	24h		86400
-	week	604800
-	-->
+
+<!-- 
+sec 1 
+min 60 
+h 3600 
+3h 10800 
+6h 21600 
+12h 43200 
+24h 86400 
+week 604800 	
+month 2419200
+6 months 14515200
+
+-->
 
 <ehcache>
 	<!-- NATIVE CACHE -->
-   <cache name="avatarByUsername"
-   maxBytesLocalHeap="10m"
-   timeToLiveSeconds="60">
-   </cache>
-   <cache name="avatarById"
-   maxBytesLocalHeap="10m"
-   timeToLiveSeconds="60">
-   </cache>
-   
-   <!-- OPTIMA CACHE -->
-   <cache name="allEmployed"
-   maxBytesLocalHeap="2m"
-   timeToLiveSeconds="3600">
-   </cache>
-   
-   <!-- X3 CACHE -->
-   <cache name="x3AllUsers"
-   maxBytesLocalHeap="1m"
-   timeToLiveSeconds="3600">
-   </cache>
-   <cache name="x3ItemDescByCode"
-   maxBytesLocalHeap="20m"
-   timeToLiveSeconds="604800"> 
-   </cache>
-   <cache name="x3AllClients"
-   maxBytesLocalHeap="5m"
-   timeToLiveSeconds="43200">
-   </cache>
-   <cache name="x3AllSalesOrders"
-   maxBytesLocalHeap="12m"
-   timeToLiveSeconds="3600">
-   </cache>
-   <cache name="x3OpenedSalesOrders"
-   maxBytesLocalHeap="12m"
-   timeToLiveSeconds="3600">
-   </cache>
-   <cache name="x3AllActiveProducts"
-   maxBytesLocalHeap="20m"
-   timeToLiveSeconds="43200">
-   </cache>
-   <cache name="x3AllUtrMachines"
-   maxBytesLocalHeap="1m"
-   timeToLiveSeconds="10800">
-   </cache>
-   <cache name="x3AllUtrWorkers"
-   maxBytesLocalHeap="1m"
-   timeToLiveSeconds="10800">
-   </cache>
-   <cache name="x3AllUtrFaults"
-   maxBytesLocalHeap="16m"
-   timeToLiveSeconds="10800">
-   </cache>
-   <cache name="x3AllUtrFaultLines"
-   maxBytesLocalHeap="32m"
-   timeToLiveSeconds="10800">
-   </cache>
-   <cache name="x3HistoryPriceMap"
-   maxBytesLocalHeap="5m"
-   timeToLiveSeconds="604800">
-   </cache>
-   <cache name="x3productFinalMachines"
-   maxBytesLocalHeap="23m"
-   timeToLiveSeconds="86400">
-   </cache>
-   <cache name="x3PendingProjectsProgress"
-   maxBytesLocalHeap="1m"
-   timeToLiveSeconds="86400">
-   </cache>
-   
+	<cache name="avatarByUsername" maxBytesLocalHeap="10m"
+		timeToLiveSeconds="60">
+	</cache>
+	<cache name="avatarById" maxBytesLocalHeap="10m"
+		timeToLiveSeconds="60">
+	</cache>
+
+	<!-- OPTIMA CACHE -->
+	<cache name="allEmployed" maxBytesLocalHeap="2m"
+		timeToLiveSeconds="3600">
+	</cache>
+
+	<!-- X3 CACHE -->
+	<cache name="x3AllUsers" maxBytesLocalHeap="1m"
+		timeToLiveSeconds="3600">
+	</cache>
+	<cache name="x3ItemDescByCode" maxBytesLocalHeap="25m"
+		timeToLiveSeconds="604800">
+	</cache>
+	<cache name="x3AllClients" maxBytesLocalHeap="5m"
+		timeToLiveSeconds="43200">
+	</cache>
+	<cache name="x3AllSalesOrders" maxBytesLocalHeap="12m"
+		timeToLiveSeconds="3600">
+	</cache>
+	<cache name="x3OpenedSalesOrders" maxBytesLocalHeap="12m"
+		timeToLiveSeconds="3600">
+	</cache>
+	<cache name="x3AllActiveProducts" maxBytesLocalHeap="20m"
+		timeToLiveSeconds="43200">
+	</cache>
+	<cache name="x3AllUtrMachines" maxBytesLocalHeap="1m"
+		timeToLiveSeconds="10800">
+	</cache>
+	<cache name="x3AllUtrWorkers" maxBytesLocalHeap="1m"
+		timeToLiveSeconds="10800">
+	</cache>
+	<cache name="x3AllUtrFaults" maxBytesLocalHeap="16m"
+		timeToLiveSeconds="10800">
+	</cache>
+	<cache name="x3AllUtrFaultLines" maxBytesLocalHeap="32m"
+		timeToLiveSeconds="10800">
+	</cache>
+	<cache name="x3HistoryPriceMap" maxBytesLocalHeap="5m"
+		timeToLiveSeconds="604800">
+	</cache>
+	<cache name="x3productFinalMachines" maxBytesLocalHeap="23m"
+		timeToLiveSeconds="86400">
+	</cache>
+	<cache name="x3PendingProjectsProgress" maxBytesLocalHeap="1m"
+		timeToLiveSeconds="86400">
+	</cache>
+	<cache name="x3Descriptions" maxBytesLocalHeap="99m"
+		timeToLiveSeconds="604800">
+	</cache>
+	<cache name="x3AcvUsageDetails" maxBytesLocalHeap="99m"
+		timeToLiveSeconds="14515200">
+	</cache>
+	<cache name="x3FirstSuppliers" maxBytesLocalHeap="5m"
+		timeToLiveSeconds="604800">
+	</cache>
+
 </ehcache>

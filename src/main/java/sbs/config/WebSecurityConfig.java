@@ -151,6 +151,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"ADMIN", 
 				"TIMERUSER"
 				)
+		.antMatchers("/consumption/**"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"CONSUMPTIONUSER"
+				)
 		.antMatchers(
 				"/phones/createentry/**",
 				"/phones/editentry/**",

@@ -11,6 +11,7 @@ import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3ConsumptionProductInfo;
 import sbs.model.x3.X3ConsumptionSupplyInfo;
+import sbs.model.x3.X3CoverageData;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ProductSellDemand;
@@ -20,6 +21,8 @@ import sbs.model.x3.X3SalesOrder;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
 import sbs.model.x3.X3ShipmentStockLineWithPrice;
+import sbs.model.x3.X3Supplier;
+import sbs.model.x3.X3UsageDetail;
 import sbs.model.x3.X3UtrFault;
 import sbs.model.x3.X3UtrFaultLine;
 import sbs.model.x3.X3UtrMachine;
@@ -75,6 +78,10 @@ public interface JdbcOracleX3Repository  {
 	public X3Workstation findWorkstationByCode(String company, String code);
 	public boolean checkIfLocationExist(String company, String location);
 	public String findPackageDescription(String company, String packageCode);
+	public Map<String, String> getDescriptionsByLanguage(String x3lang, String company);
+	public List<X3UsageDetail> getAcvUsageDetailsListByYear(int year, String company);
+	public List<X3CoverageData> getCoverageInitialData(String company);
+	public Map<String, X3Supplier> getFirstAcvSuppliers(String company);
 	
 	
 }

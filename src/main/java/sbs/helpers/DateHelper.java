@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 public class DateHelper {
 	
 	private SimpleDateFormat YyyyMmDdFormat;
+	private SimpleDateFormat YyyyMmDdFormatDot;
 	private SimpleDateFormat ddMmYyyyFormat;
 	private SimpleDateFormat ddMmYyFormat;
 	private SimpleDateFormat ddMmYyyyHhMmFormat;
@@ -18,10 +19,23 @@ public class DateHelper {
 	
 	public DateHelper(){
 		YyyyMmDdFormat = new SimpleDateFormat("yyyy/MM/dd");
+		YyyyMmDdFormatDot = new SimpleDateFormat("yyyy.MM.dd");
 		ddMmYyyyFormat = new SimpleDateFormat("dd/MM/yyyy");
 		ddMmYyFormat = new SimpleDateFormat("dd/MM/yy");
 		ddMmYyyyHhMmFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		YyyyMmDdHhMmFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+	}
+	
+	public int extractMonth12(Timestamp date){
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(date.getTime());
+		return (cal.get(Calendar.MONTH)+1);
+	}
+	
+	public int extractMonth12(Date date){
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(date.getTime());
+		return (cal.get(Calendar.MONTH)+1);
 	}
 	
 	public Timestamp getCurrentTime(){
@@ -48,10 +62,17 @@ public class DateHelper {
 		return YyyyMmDdFormat.format(date);
 	}
 	
+	public String formatYyyyMmDdDot(Date date){
+		return YyyyMmDdFormatDot.format(date);
+	}
+	
 	public String formatYyyyMmDd(Timestamp date){
 		return YyyyMmDdFormat.format(date);
 	}
 	
+	public String formatYyyyMmDdDot(Timestamp date){
+		return YyyyMmDdFormatDot.format(date);
+	}	
 
 	public String formatYyyyMmDdHhMm(Date date) {
 		return YyyyMmDdHhMmFormat.format(date);

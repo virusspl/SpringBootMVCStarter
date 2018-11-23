@@ -2,30 +2,12 @@ package sbs.service.x3;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import sbs.controller.dirrcpship.DirectReceptionsShipmentLine;
 import sbs.model.proprog.Project;
-import sbs.model.x3.X3BomItem;
-import sbs.model.x3.X3Client;
-import sbs.model.x3.X3ConsumptionProductInfo;
-import sbs.model.x3.X3ConsumptionSupplyInfo;
-import sbs.model.x3.X3Product;
-import sbs.model.x3.X3ProductFinalMachine;
-import sbs.model.x3.X3ProductSellDemand;
-import sbs.model.x3.X3ProductionOrderDetails;
-import sbs.model.x3.X3PurchaseOrder;
-import sbs.model.x3.X3SalesOrder;
-import sbs.model.x3.X3SalesOrderLine;
-import sbs.model.x3.X3ShipmentMovement;
-import sbs.model.x3.X3ShipmentStockLineWithPrice;
-import sbs.model.x3.X3UtrFault;
-import sbs.model.x3.X3UtrFaultLine;
-import sbs.model.x3.X3UtrMachine;
-import sbs.model.x3.X3UtrWorker;
-import sbs.model.x3.X3WarehouseWeightDetailLine;
-import sbs.model.x3.X3WarehouseWeightLine;
-import sbs.model.x3.X3Workstation;
+import sbs.model.x3.*;
 
 public interface JdbcOracleX3Service {
 	
@@ -34,6 +16,11 @@ public interface JdbcOracleX3Service {
 	public static final int WEIGHT_QUERY_SHIPMENT = 3;
 	public static final int WEIGHT_QUERY_SHIPMENT_DETAIL = 4;
 	
+	public static final String LANG_POLISH = "POL";
+	public static final String LANG_ENGLISH = "ENG";
+	public static final String LANG_ITALIAN = "ITA";
+	
+	public String convertLocaleToX3Lang(Locale locale);
     public List<String> findAllUsers(String company);
     public List<X3Product> findAllActiveProducts(String company);
 	public X3Product findProductByCode(String company, String code);
@@ -79,7 +66,8 @@ public interface JdbcOracleX3Service {
 	public X3Workstation findWorkstationByCode(String company, String code);
 	public boolean checkIfLocationExist(String company, String location);
 	public String findPackageDescription(String company, String packageCode);
-	
-
-
+	public Map<String, String> getDescriptionsByLanguage(String x3lang, String company);
+	public List<X3UsageDetail> getAcvUsageDetailsListByYear(int year, String company);
+	public List<X3CoverageData> getCoverageInitialData(String company);
+	public Map<String, X3Supplier> getFirstAcvSuppliers(String company);
 }

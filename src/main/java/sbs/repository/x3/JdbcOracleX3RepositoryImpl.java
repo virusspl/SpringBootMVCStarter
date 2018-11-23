@@ -25,6 +25,7 @@ import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3ConsumptionProductInfo;
 import sbs.model.x3.X3ConsumptionSupplyInfo;
+import sbs.model.x3.X3CoverageData;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ProductSellDemand;
@@ -34,6 +35,8 @@ import sbs.model.x3.X3SalesOrder;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
 import sbs.model.x3.X3ShipmentStockLineWithPrice;
+import sbs.model.x3.X3Supplier;
+import sbs.model.x3.X3UsageDetail;
 import sbs.model.x3.X3UtrFault;
 import sbs.model.x3.X3UtrFaultLine;
 import sbs.model.x3.X3UtrMachine;
@@ -718,7 +721,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		List<X3ShipmentMovement> result = new ArrayList<>();
 		X3ShipmentMovement item = null;
 		Calendar cal;
-		X3SalesOrder salesOrder;
+		
         for(Map<String,Object> row: resultSet ){
         	item = new X3ShipmentMovement();
         	item.setMovementNumber((String)row.get("VCRNUM_0"));
@@ -1579,7 +1582,9 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "FROM "
 				+ company + ".ORDERS ord "
 				+ "WHERE "
-				+ "ord.WIPTYP_0 = 1 OR ord.WIPTYP_0 = 6 "
+				+ "(ord.WIPTYP_0 = 1 OR ord.WIPTYP_0 = 6) "
+				+ "AND "
+				+ "ord.WIPSTA_0 <= 3 "
 				+ "GROUP BY "
 				+ "ord.ITMREF_0"	
 				,
@@ -1842,14 +1847,145 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		return result;
 	}
 
-
-
-
-
-
-
-
+	@Override
+	public Map<String, String> getDescriptionsByLanguage(String x3lang, String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(""
+				+ "SELECT "
+				+ "TXT.IDENT1_0, "
+				+ "TXT.TEXTE_0 "
+				+ "FROM "
+				+ company + ".ATEXTRA TXT "
+				+ "WHERE "
+				+ "TXT.CODFIC_0 = ? "
+				+ "AND TXT.LANGUE_0 = ? "
+				+ "AND TXT.ZONE_0 = ? "
+				,
+                new Object[]{"ITMMASTER", x3lang, "DES1AXX"}
+				);
 		
-	
+		Map <String, String> result = new HashMap<>();
+		for(Map<String,Object> row: resultSet ){
+				result.put((String)row.get("IDENT1_0"), ((String)row.get("TEXTE_0")));
+		}
+		
+		return result;
+	}
 
+	@Override
+	public List<X3UsageDetail> getAcvUsageDetailsListByYear(int year, String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(""
+				+ "SELECT "
+				+ "STJ.ITMREF_0, "
+				+ "STJ.CREDAT_0, "
+				+ "(-1*STJ.QTYSTU_0) AS QTY "
+				+ "FROM "
+				+ company + ".STOJOU STJ INNER JOIN " + company + ".ITMMASTER ITM "
+				+ "ON "
+				+ "STJ.ITMREF_0 = ITM.ITMREF_0 "
+				+ "WHERE ("
+				+ "STJ.TRSTYP_0 = 4 "
+				+ "OR "
+				+ "STJ.TRSTYP_0 = 6 "
+				+ ") "
+				+ "AND "
+				+ "EXTRACT(YEAR FROM STJ.CREDAT_0 ) = ? "
+				+ "AND "
+				+ "ITM.TCLCOD_0 = ? "
+				+ ""
+				,
+                new Object[]{year, "ACV"}
+				);
+		
+		List <X3UsageDetail> result = new ArrayList<>();
+		X3UsageDetail usage;
+		for(Map<String,Object> row: resultSet ){
+			usage = new X3UsageDetail();
+			usage.setProductCode((String)row.get("ITMREF_0"));			
+			usage.setUsageDate((Timestamp)row.get("CREDAT_0"));
+			usage.setUsage(((BigDecimal)row.get("QTY")).intValue());
+			result.add(usage);
+		}
+		
+		return result;
+	}
+
+	@Override
+	public List<X3CoverageData> getCoverageInitialData(String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(""
+				+ "SELECT "
+				+ "ITM.ITMREF_0, "
+				+ "ITM.TSICOD_1, "
+				+ "ITF.OFS_0, "
+				+ "ITF.REOPOL_0, "
+				+ "ITV.YQTAPRERIC_0, "
+				+ "ITV.PHYSTO_0, "
+				+ "ITV.ORDSTO_0, "
+				+ "ITF.BUY_0, "
+				+ "USR.NOMUSR_0 "
+				+ "FROM (("
+				+ company + ".ITMMASTER ITM INNER JOIN "
+				+ company + ".ITMMVT ITV ON ITM.ITMREF_0 = ITV.ITMREF_0) "
+				+ "INNER JOIN "
+				+ company + ".ITMFACILIT ITF ON "
+				+ "ITV.ITMREF_0 = ITF.ITMREF_0) "
+				+ "INNER JOIN "
+				+ company + ".AUTILIS USR ON "
+				+ "ITF.BUY_0 = USR.USR_0 "
+				+ "WHERE ITM.TCLCOD_0 = ? "
+				+ "ORDER BY ITM.ITMREF_0 ASC"
+				,
+                new Object[]{"ACV"}
+				);
+        
+        List<X3CoverageData> result = new ArrayList<>();
+        X3CoverageData data;
+        for(Map<String,Object> row: resultSet ){
+        	data = new X3CoverageData();
+        	data.setCode((String)row.get("ITMREF_0"));
+        	data.setBuyerCode((String)row.get("BUY_0"));
+        	data.setBuyerName((String)row.get("NOMUSR_0"));
+        	data.setGr2((String)row.get("TSICOD_1"));
+        	data.setReorderPolicy((String)row.get("REOPOL_0"));        	
+        	data.setInOrder(((BigDecimal)row.get("ORDSTO_0")).intValue());
+        	data.setStock(((BigDecimal)row.get("PHYSTO_0")).intValue());
+        	data.setTime(((BigDecimal)row.get("OFS_0")).intValue());
+        	data.setInRoute(((BigDecimal)row.get("YQTAPRERIC_0")).intValue());
+        	
+
+        	result.add(data);
+        }
+        
+		return result;
+	}
+
+	@Override
+	/*
+	 * Map <product code, first supplier>
+	 */
+	public Map<String, X3Supplier> getFirstAcvSuppliers(String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList( ""
+				+ "SELECT "
+				+ "POQ.ITMREF_0, "
+				+ "POQ.ORDDAT_0, "
+				+ "POQ.BPSNUM_0, "
+				+ "BPS.BPSNAM_0 "
+				+ "FROM "
+				+ company + ".PORDERQ POQ INNER JOIN " + company + ".BPSUPPLIER BPS "
+				+ "ON "
+				+ "POQ.BPSNUM_0 = BPS.BPSNUM_0 "
+				+ "ORDER BY POQ.ORDDAT_0 DESC"
+				,
+                new Object[]{});
+		
+        Map <String, X3Supplier> map = new HashMap<>();
+        X3Supplier supplier;
+        for(Map<String,Object> row: resultSet ){
+        	supplier = new X3Supplier();
+        	supplier.setCode((String)row.get("BPSNUM_0"));
+        	supplier.setName((String)row.get("BPSNAM_0"));
+        	supplier.setFirstOrderDate((Timestamp)row.get("ORDDAT_0"));
+        	map.put((String)row.get("ITMREF_0"), supplier);
+        }
+		return map;
+	}
 }

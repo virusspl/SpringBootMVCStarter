@@ -151,9 +151,8 @@
 				</a> <a th:href="@{/hrua/list}" class="btn btn-info btn-md margin-top-5">
 					<span class="glyphicon glyphicon-user"></span> <span
 					th:text="#{hrua.files}"></span>
-				</a> <a th:href="@{/consumption/export}"
-					class="btn btn-info btn-md margin-top-5"
-					sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_CONSUMPTIONUSER')">
+				</a> <a th:href="@{/consumption/dispatch}"
+					class="btn btn-info btn-md margin-top-5">
 					<span class="glyphicon glyphicon-export"></span> <span
 					th:text="#{consumption.consumptionacv}">consumption</span>
 				</a>

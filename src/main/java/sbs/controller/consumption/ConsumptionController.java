@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -13,11 +14,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import sbs.helpers.DateHelper;
 import sbs.helpers.ExcelContents;
 import sbs.helpers.ExcelExportHelper;
 import sbs.helpers.TextHelper;
 import sbs.model.x3.X3ConsumptionProductInfo;
 import sbs.model.x3.X3ConsumptionSupplyInfo;
+import sbs.model.x3.X3CoverageData;
+import sbs.model.x3.X3Supplier;
+import sbs.model.x3.X3UsageDetail;
 import sbs.service.x3.JdbcOracleX3Service;
 
 
@@ -31,13 +36,191 @@ public class ConsumptionController {
 	MessageSource messageSource;
 	@Autowired
 	TextHelper textHelper;
+	@Autowired
+	DateHelper dateHelper;
 
     public ConsumptionController() {
     	
     }
-	
-    @RequestMapping("/export")
-    public ModelAndView view(Model model, Locale locale){
+    
+    @RequestMapping("/dispatch")
+    public String dispatch(){
+    	return "consumption/dispatch";
+    }
+    
+    @RequestMapping("/exportCoverage")
+    public ModelAndView exportCoverage(Model model, Locale locale){
+    	Calendar cal = Calendar.getInstance();
+    	String stamp = dateHelper.formatYyyyMmDdDot(cal.getTime());
+    	cal.set(Calendar.YEAR, cal.get(Calendar.YEAR)-1);
+    	cal.set(Calendar.MONTH, Calendar.JANUARY);
+    	cal.set(Calendar.DAY_OF_MONTH, 1);
+    	
+    	List<X3CoverageData> initialData = x3Service.getCoverageInitialData("ATW");
+    	Map<String, String> descriptions = x3Service.getDescriptionsByLanguage(x3Service.convertLocaleToX3Lang(locale), "ATW");
+		Map<String, Integer> demand = x3Service.getAcvDemandList("ATW");
+		List<X3UsageDetail> usage = x3Service.getAcvUsageDetailsListByYear(cal.get(Calendar.YEAR), "ATW");
+		Map<String, X3Supplier> suppliers = x3Service.getFirstAcvSuppliers("ATW");
+    	
+		// create headers
+		ArrayList<String> headers = new ArrayList<>();
+		headers.add("Product");
+		headers.add("Description");
+		headers.add("Group 2");
+		headers.add("Reord. pol.");
+		headers.add("Time");
+		headers.add("Stock");
+		headers.add("Require.");
+		headers.add("Qty ord.");
+		headers.add("Available");
+		headers.add("Theor. st.");
+		headers.add("In route");
+		headers.add("Use in "+cal.get(Calendar.YEAR));		
+		headers.add("Av. month use");
+		headers.add("Av. Q I");
+		headers.add("Av. Q II");
+		headers.add("Av. Q III");
+		headers.add("Av. Q IV");
+		headers.add("How many months");
+		headers.add("Cover 1");
+		headers.add("Cover 2");
+		headers.add("Suppl. code");
+		headers.add("Oldest suppl. name");
+		headers.add("First supply date");
+		headers.add("Buyer code");
+		headers.add("Buyer name");
+
+		// create structure
+		ArrayList<ArrayList<Object>> rows = new ArrayList<>();
+		ArrayList<Object> lineValues;
+		CoverageLine cLine;
+
+		
+		for(X3CoverageData line: initialData){
+			cLine = makeLineFromData(line, descriptions, demand, usage, suppliers, cal.get(Calendar.YEAR));
+			lineValues = makeExcelLineFromCoverageLine(cLine);
+			rows.add(lineValues);
+		}
+		
+    	// create excel contents
+		ExcelContents contents = new ExcelContents();
+		
+		// set contents
+		contents.setFileName("COVERAGE_"+stamp+".xls");
+		contents.setSheetName(stamp);
+		contents.setHeaders(headers);
+		contents.setValues(rows);
+		
+		return new ModelAndView(new ExcelExportHelper(), "contents", contents);
+    	
+
+    }
+    
+
+	private CoverageLine makeLineFromData(X3CoverageData line, Map<String, String> descriptions,
+			Map<String, Integer> demand, List<X3UsageDetail> usage, Map<String, X3Supplier> suppliers, int year) {
+    	
+    	CoverageLine cLine = new CoverageLine();
+    	
+    	// base info
+    	cLine.setProductCode(line.getCode());
+    	cLine.setDescription(descriptions.containsKey(cLine.getProductCode()) ? descriptions.get(cLine.getProductCode()) : "-");
+    	cLine.setGr2(line.getGr2());
+    	cLine.setTime(line.getTime());
+    	cLine.setStock(line.getStock());
+    	cLine.setRequired(demand.containsKey(cLine.getProductCode()) ? demand.get(cLine.getProductCode()) : 0);
+    	cLine.setOrdered(line.getInOrder());
+    	cLine.setAvailable(cLine.getStock() - cLine.getRequired());
+    	cLine.setTheoretical(cLine.getAvailable() + cLine.getOrdered());
+    	cLine.setInRoute(line.getInRoute());
+    	cLine.setReorderPolicy(line.getReorderPolicy());
+    	if(suppliers.containsKey(cLine.getProductCode())){
+    		cLine.setSupplierCode(suppliers.get(cLine.getProductCode()).getCode());
+    		cLine.setSupplierName(suppliers.get(cLine.getProductCode()).getName());
+    		cLine.setFirstSupplyDate(suppliers.get(cLine.getProductCode()).getFirstOrderDate());
+    	}
+    	else{
+    		cLine.setSupplierCode("");
+    		cLine.setSupplierName("");
+    	}
+    	
+		
+    	// usage stat
+		int[] usedMonths = new int[] {0,0,0,0,0,0,0,0,0,0,0,0};
+		int currentMonth;
+		int totalUsage = 0;
+		int u1 = 0;
+		int u2 = 0;
+		int u3 = 0;
+		int u4 = 0;
+		
+		// loop usage
+		for (X3UsageDetail us : usage) {
+			if (us.getProductCode().equals(cLine.getProductCode())) {
+
+				currentMonth = dateHelper.extractMonth12(us.getUsageDate());
+				usedMonths[(currentMonth - 1)] = 1;
+				totalUsage += us.getUsage();
+				if (currentMonth <= 3) {
+					u1 += us.getUsage();
+				} else if (currentMonth <= 6) {
+					u2 += us.getUsage();
+				} else if (currentMonth <= 9) {
+					u3 += us.getUsage();
+				} else {
+					u4 += us.getUsage();
+				}
+			}
+		}
+		
+		// usage data
+		cLine.setUseInYear(totalUsage);
+		cLine.setAverageMonthUse(totalUsage*1.0/12);
+		cLine.setQ1(u1*1.0/3);
+		cLine.setQ2(u2*1.0/3);
+		cLine.setQ3(u3*1.0/3);
+		cLine.setQ4(u4*1.0/3);
+		cLine.setMonthsCount(IntStream.of(usedMonths).sum());
+		cLine.setCover1(cLine.getUseInYear() == 0 ? 0.0 : cLine.getTheoretical()*1.0/cLine.getAverageMonthUse());
+		cLine.setCover2(cLine.getUseInYear() == 0 ? 0.0 : (cLine.getAvailable()+cLine.getInRoute())*1.0/cLine.getAverageMonthUse());
+		cLine.setBuyerCode(line.getBuyerCode());
+		cLine.setBuyerName(line.getBuyerName());
+		
+		return cLine;
+	}
+
+	private ArrayList<Object> makeExcelLineFromCoverageLine(CoverageLine cLine) {
+    	ArrayList<Object> lineValues = new ArrayList<>();
+		lineValues.add(cLine.getProductCode());
+		lineValues.add(cLine.getDescription());			
+		lineValues.add(cLine.getGr2());
+		lineValues.add(cLine.getReorderPolicy());
+		lineValues.add(cLine.getTime());
+		lineValues.add(cLine.getStock());
+		lineValues.add(cLine.getRequired());
+		lineValues.add(cLine.getOrdered());
+		lineValues.add(cLine.getAvailable());
+		lineValues.add(cLine.getTheoretical());
+		lineValues.add(cLine.getInRoute());
+		lineValues.add(cLine.getUseInYear());
+		lineValues.add(cLine.getAverageMonthUse());
+		lineValues.add(cLine.getQ1());
+		lineValues.add(cLine.getQ2());
+		lineValues.add(cLine.getQ3());
+		lineValues.add(cLine.getQ4());
+		lineValues.add(cLine.getMonthsCount());
+		lineValues.add(cLine.getCover1());
+		lineValues.add(cLine.getCover2());
+		lineValues.add(cLine.getSupplierCode());
+		lineValues.add(cLine.getSupplierName());
+		lineValues.add(cLine.getFirstSupplyDate()!=null ? cLine.getFirstSupplyDate() : "");
+		lineValues.add(cLine.getBuyerCode());
+		lineValues.add(cLine.getBuyerName());
+		return lineValues;
+	}
+
+	@RequestMapping("/exportConsumption")
+    public ModelAndView exportConsumption(Model model, Locale locale){
     	
     	// get year
     	Calendar cal = Calendar.getInstance();
