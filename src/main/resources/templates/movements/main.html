@@ -477,12 +477,18 @@
 										<td><span th:text="${mvt.document}"></span></td>
 										<td><span th:text="${mvt.clientCode}"></span></td>
 										<td><span th:text="${mvt.clientName}"></span></td>
-										<td><span
-											th:text="${#numbers.formatDecimal(mvt.quantity, 0, 'DEFAULT', 2, 'DEFAULT')}"></span></td>
-										<td><span
-											th:text="${#numbers.formatDecimal(mvt.price, 0, 'DEFAULT', 2, 'DEFAULT')}"></span></td>
-										<td><span
-											th:text="${#numbers.formatDecimal(mvt.value, 0, 'DEFAULT', 2, 'DEFAULT')}"></span></td>
+										<td>
+										<!-- <span th:text="${#numbers.formatDecimal(mvt.quantity, 0, 'DEFAULT', 2, 'POINT')}"></span>  -->
+											<span th:text="${mvt.quantityFormat}"></span>
+										</td>
+										<td>
+										<!-- <span th:text="${#numbers.formatDecimal(mvt.price, 0, 'DEFAULT', 2, 'POINT')}"></span> -->
+											<span th:text="${mvt.priceFormat}"></span>
+										</td>
+										<td>
+										<!-- <span th:text="${#numbers.formatDecimal(mvt.value, 0, 'DEFAULT', 2, 'POINT')}"></span> -->
+											<span th:text="${mvt.valueFormat}"></span>
+										</td>
 									</tr>
 								</tbody>
 							</table>

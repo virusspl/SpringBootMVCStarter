@@ -1,11 +1,22 @@
 package sbs.helpers;
 
 import org.springframework.stereotype.Component;
+
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+
 import org.apache.commons.lang3.text.WordUtils;
 @Component
 public class TextHelper {
-
+	
+	NumberFormat formatter = new DecimalFormat("#0.00");     
+	
 	public TextHelper() {
+	}
+	
+	public String numberFormatDotNoSpace(double number){
+		return formatter.format(number).replace(',', '.');
 	}
 	
 	public String capitalize(String input){
