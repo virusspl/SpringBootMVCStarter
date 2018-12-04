@@ -24,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import sbs.helpers.ExcelContents;
 import sbs.helpers.ExcelExportHelper;
+import sbs.helpers.MathHelper;
 import sbs.model.bhptickets.BhpTicketState;
 import sbs.model.inventory.InventoryDataType;
 import sbs.model.qualitysurveys.QualitySurveyParameter;
@@ -78,6 +79,8 @@ public class VariousPagesController {
 	private LiveFeedSingleton liveFeedSingleton;
 	@Autowired
 	InventoryDataTypesService inventoryDataTypesService;
+	@Autowired 
+	MathHelper mathHelper;
 
 	@RequestMapping("/noaccess")
 	public String noAccess() {
@@ -158,16 +161,25 @@ public class VariousPagesController {
 	
 	
 	@RequestMapping("/test")
-	public String test(Model model, Locale locale) {
-
+	public String test(Model model, Locale locale) throws InterruptedException {
 		long start = System.currentTimeMillis();
 //    	List<X3CoverageData> initialData = jdbcOracleX3Service.getCoverageInitialData("ATW");
 //    	Map<String, String> descriptions = jdbcOracleX3Service.getDescriptionsByLanguage(jdbcOracleX3Service.convertLocaleToX3Lang(locale), "ATW");
 //		Map<String, Integer> demand = jdbcOracleX3Service.getAcvDemandList("ATW");
 //		List<X3UsageDetail> usage = jdbcOracleX3Service.getAcvUsageDetailsListByYear(2017, "ATW");
-		Map<String, X3Supplier> suppliers = jdbcOracleX3Service.getFirstAcvSuppliers("ATW");		
-		System.out.println("time: " + (System.currentTimeMillis()-start) + " ms");
+//		Map<String, X3Supplier> suppliers = jdbcOracleX3Service.getFirstAcvSuppliers("ATW");		
+	
 		
+		int min = 1;
+		int max = 100;
+		ArrayList<Integer> randomArray = new ArrayList<>();
+		
+		for(int i = 0; i<30; i++){
+			Thread.sleep(2100);
+			randomArray.add(mathHelper.randomInRange(1, 100));
+		}
+		model.addAttribute("numbers", randomArray);
+		System.out.println("time: " + (System.currentTimeMillis()-start) + " ms");
 		return "various/test";
 
 	}

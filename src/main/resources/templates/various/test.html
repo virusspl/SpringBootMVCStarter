@@ -21,12 +21,17 @@
 	<div layout:fragment="script">
 		<script th:src="@{/js/timer.js}" charset="UTF-8"
 			type="text/javascript"></script>
+		
 	</div>
 	<div layout:fragment="content">
-		<div class="alert alert-danger timerStyle">
-			<span id="timeLong" style="display: none;" th:text="${timerDate}"></span>
-			<span id="timer"></span>
-		</div>
+		
+		<table>
+		<tr th:each="nbr,iter : ${numbers}">
+			<!-- <td th:text="${iter.index}"></td>  -->
+			<td th:text="${nbr}"></td>
+		</tr>
+		</table>
+		
 	</div>
 </body>
 </html>
