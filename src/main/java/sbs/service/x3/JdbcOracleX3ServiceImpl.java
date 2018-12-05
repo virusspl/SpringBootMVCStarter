@@ -184,7 +184,7 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	}
 
 	@Override
-	@Cacheable(value="x3PendingProjectsProgress")
+	//@Cacheable(value="x3PendingProjectsProgress")
 	public List<Project> findPendingProjectsProgress() {
 		return jdbcOracleX3Repository.findPendingProjectsProgress();
 	}

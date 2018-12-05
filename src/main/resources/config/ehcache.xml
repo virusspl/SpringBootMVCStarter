@@ -66,9 +66,6 @@ month 2419200
 	<cache name="x3productFinalMachines" maxBytesLocalHeap="23m"
 		timeToLiveSeconds="86400">
 	</cache>
-	<cache name="x3PendingProjectsProgress" maxBytesLocalHeap="1m"
-		timeToLiveSeconds="86400">
-	</cache>
 	<cache name="x3Descriptions" maxBytesLocalHeap="99m"
 		timeToLiveSeconds="604800">
 	</cache>
@@ -78,5 +75,10 @@ month 2419200
 	<cache name="x3FirstSuppliers" maxBytesLocalHeap="5m"
 		timeToLiveSeconds="604800">
 	</cache>
+		<!-- 
+	<cache name="x3PendingProjectsProgress" maxBytesLocalHeap="1m"
+		timeToLiveSeconds="86400">
+	</cache>
+	 -->
 
 </ehcache>
