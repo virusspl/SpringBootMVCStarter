@@ -158,7 +158,7 @@ tr.columnsrow:nth-child(odd) {
 							<label for="description" th:text="#{general.description}">comment</label>
 							<textarea class="form-control"
 								th:placeholder="#{general.description}"
-								th:value="${inventory.description}"
+								th:text="${inventory.description}"
 								style="min-height: 200px; background-color: white;"
 								readonly="true"></textarea>
 						</div>
