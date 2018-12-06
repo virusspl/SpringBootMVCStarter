@@ -2,6 +2,7 @@ package sbs.repository.optima;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -85,18 +86,26 @@ public class JdbcAdrOptimaRepositoryImpl implements JdbcAdrOptimaRepository {
 				+ "	where "
 				+ " 	PRI_PraId = PRE_PraId "
 				+ "		and (PRE_DzlId = 3 or PRE_AdresDzialu like '1%') "
-				+ "		and PRE_DataOd < Convert(DATETIME,'2019-01-01 00:00:00',120) "
-				+ "		and PRE_DataDo >= Convert(DATETIME,'2018-12-01 00:00:00',120) "
+				+ "		and PRE_DataOd < ? "
+				+ "		and PRE_DataDo >= ? "
 				+ "	)  "
 				+ "	and PRI_Typ = 1  AND PRI_Archiwalny < 1  "
-				+ "	and Convert(DATETIME,'2018-12-05 00:00:00',120) >= PRE_DataOd "
-				+ "	and Convert(DATETIME,'2018-12-05 00:00:00',120) <= PRE_DataDo "
+				+ "	and ? >= PRE_DataOd "
+				+ "	and ? <= PRE_DataDo "
 				+ "))) "
 				+ "ORDER BY PRI_Nazwisko, PRI_Imie1;";
 		
+		Date today, currentMonthStart, nextMonthStart;
+		Calendar cal = Calendar.getInstance();
+		today = cal.getTime();
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		currentMonthStart = cal.getTime();
+		cal.add(Calendar.MONTH, 1);
+		nextMonthStart = cal.getTime();
+		
 		List<Map<String, Object>> resultSet = jdbc.queryForList(
 				query
-				, new Object[] {});
+				, new Object[] {nextMonthStart, currentMonthStart, today, today });
 		
 		ArrayList<HrUserInfo> hrList = new ArrayList<>();
 		HrUserInfo hr;
