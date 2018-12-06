@@ -25,9 +25,10 @@ month 2419200
 	</cache>
 
 	<!-- OPTIMA CACHE -->
-	<cache name="allEmployed" maxBytesLocalHeap="2m"
+	<!-- <cache name="allEmployed" maxBytesLocalHeap="2m"
 		timeToLiveSeconds="3600">
 	</cache>
+	-->
 
 	<!-- X3 CACHE -->
 	<cache name="x3AllUsers" maxBytesLocalHeap="1m"

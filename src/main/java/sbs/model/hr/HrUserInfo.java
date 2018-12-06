@@ -91,6 +91,7 @@ public class HrUserInfo {
 	}
 
 	/**
+	 * update: ComarchHR id, not RCP
 	 * @return the rcpNumber
 	 */
 	public String getRcpNumber() {
@@ -98,6 +99,7 @@ public class HrUserInfo {
 	}
 
 	/**
+	 * update: ComarchHR id, not RCP
 	 * @param rcpNumber the rcpNumber to set
 	 */
 	public void setRcpNumber(String rcpNumber) {

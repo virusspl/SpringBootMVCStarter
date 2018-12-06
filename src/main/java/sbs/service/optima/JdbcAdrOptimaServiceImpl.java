@@ -27,7 +27,7 @@ public class JdbcAdrOptimaServiceImpl implements JdbcAdrOptimaService {
 
 
 	@Override
-	@Cacheable(value="allEmployed")
+	//@Cacheable(value="allEmployed")
 	public List<HrUserInfo> findAllCurrentlyEmployed() {
 		return jdbcAdrOptimaRepository.findAllCurrentlyEmployed();
 	}

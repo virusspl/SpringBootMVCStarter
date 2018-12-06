@@ -141,7 +141,7 @@ public class DataSourceConfig {
 	public DataSource optimaAdrDataSource() throws SQLException {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName(SQLSERVER_DRIVER);
-		dataSource.setUrl("jdbc:sqlserver://ATWSRV-OPTIMA\\OPTIMA:50066;databaseName=CDN_ADR;");
+		dataSource.setUrl("jdbc:sqlserver://ATWSRV-OPTIMA\\OPTIMA:50066;databaseName=CDN_ADR_S_A_2017;");
 		dataSource.setUsername("sa");
         dataSource.setPassword("Optima123!");
 		return dataSource;
