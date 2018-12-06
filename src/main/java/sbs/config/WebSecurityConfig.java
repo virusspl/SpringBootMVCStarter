@@ -67,6 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/test/**",
 				"/proprog/**",
 				"/phones/list/**",
+				"/phones/print/**",
 				"/inventory/**",
 				"/terminal/**"
 				)
