@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -699,6 +700,41 @@ public class InventoryController {
 		model.addAttribute("inventory", inventory);
 		model.addAttribute("columns", columns);
 		model.addAttribute("lines", lines);
+
+		return "inventory/showinventory";
+	}
+	
+	@RequestMapping("/inventory/summary/{id}")
+	@Transactional
+	public String showInventorySummaryView(@PathVariable("id") int id, Model model, Locale locale) throws NotFoundException {
+		
+		Inventory inventory = inventoryService.findById(id);
+		
+		if (inventory == null) {
+			throw new NotFoundException("Inventory not found");
+		}
+		
+		List<InventoryEntry> entries = inventoryEntriesService.findByInventoryIdSortByLines(inventory.getId());
+		Map<String,String> descriptionsEn = x3Service.getDescriptionsByLanguage(JdbcOracleX3Service.LANG_ENGLISH, inventory.getCompany());
+		List<String> titles = new ArrayList<>();
+		List<List<String>> lines = new ArrayList<>();
+		List<String> lineValues;
+		
+		
+		titles.add(messageSource.getMessage("general.productCode", null, locale));
+		titles.add(messageSource.getMessage("general.productDescription", null, locale));
+		titles.add(messageSource.getMessage("general.productDescription", null, locale));
+		titles.add(messageSource.getMessage("general.category", null, locale));
+		titles.add(messageSource.getMessage("general.quantity", null, locale));
+		
+		
+		
+		for(InventoryEntry entry: entries){
+
+		}
+		
+		model.addAttribute("inventory", inventory);
+		//model.addAttribute("lines", values);
 
 		return "inventory/showinventory";
 	}
