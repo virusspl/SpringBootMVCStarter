@@ -18,6 +18,7 @@ import sbs.model.x3.X3ProductSellDemand;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3PurchaseOrder;
 import sbs.model.x3.X3SalesOrder;
+import sbs.model.x3.X3SalesOrderItemSum;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
 import sbs.model.x3.X3ShipmentStockLineWithPrice;
@@ -82,6 +83,7 @@ public interface JdbcOracleX3Repository  {
 	public List<X3UsageDetail> getAcvUsageDetailsListByYear(int year, String company);
 	public List<X3CoverageData> getCoverageInitialData(String company);
 	public Map<String, X3Supplier> getFirstAcvSuppliers(String company);
+	public List<X3SalesOrderItemSum> findAllSalesOrdersItemsInPeriod(Date startDate, Date endDate, String company);
 	
 	
 }

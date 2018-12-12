@@ -23,6 +23,7 @@ import sbs.model.x3.X3ProductSellDemand;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3PurchaseOrder;
 import sbs.model.x3.X3SalesOrder;
+import sbs.model.x3.X3SalesOrderItemSum;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
 import sbs.model.x3.X3ShipmentStockLineWithPrice;
@@ -316,6 +317,11 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	@Cacheable(value="x3FirstSuppliers")
 	public Map<String, X3Supplier> getFirstAcvSuppliers(String company) {
 		return jdbcOracleX3Repository.getFirstAcvSuppliers(company);
+	}
+
+	@Override
+	public List<X3SalesOrderItemSum> findAllSalesOrdersItemsInPeriod(Date startDate, Date endDate, String company) {
+		return jdbcOracleX3Repository.findAllSalesOrdersItemsInPeriod(startDate, endDate, company);
 	}
 
 }

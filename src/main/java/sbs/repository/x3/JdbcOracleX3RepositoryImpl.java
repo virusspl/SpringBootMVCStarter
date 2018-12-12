@@ -32,6 +32,7 @@ import sbs.model.x3.X3ProductSellDemand;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3PurchaseOrder;
 import sbs.model.x3.X3SalesOrder;
+import sbs.model.x3.X3SalesOrderItemSum;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
 import sbs.model.x3.X3ShipmentStockLineWithPrice;
@@ -1987,5 +1988,44 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         	map.put((String)row.get("ITMREF_0"), supplier);
         }
 		return map;
+	}
+
+	@Override
+	public List<X3SalesOrderItemSum> findAllSalesOrdersItemsInPeriod(Date startDate, Date endDate, String company) {
+
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "SOQ.SOHNUM_0, "
+				+ "SOQ.ITMREF_0, "
+				+ "ITM.ITMDES1_0, "
+				+ "Sum(SOQ.QTY_0) AS qtySum "
+				+ "FROM "
+				+ company + ".SORDERQ SOQ INNER JOIN " + company + ".ITMMASTER ITM "
+				+ "ON "
+				+ "SOQ.ITMREF_0 = ITM.ITMREF_0 "
+				+ "WHERE "
+				+ "SOQ.DEMDLVDAT_0 > = ? AND SOQ.DEMDLVDAT_0 <= ? "
+				+ "GROUP BY "
+				+ "SOQ.SOHNUM_0, "
+				+ "SOQ.ITMREF_0, "
+				+ "ITM.ITMDES1_0 "
+				+ "ORDER BY "
+				+ "SOQ.SOHNUM_0, "
+				+ "SOQ.ITMREF_0 ",
+                new Object[]{startDate, endDate});
+        
+		List<X3SalesOrderItemSum> result = new ArrayList<>();
+		X3SalesOrderItemSum order = null;
+		
+        for(Map<String,Object> row: resultSet ){
+        	order = new X3SalesOrderItemSum();
+        	order.setOrderNumber((String)row.get("SOHNUM_0"));
+        	order.setProductCode((String)row.get("ITMREF_0"));
+        	order.setProductDescription((String)row.get("ITMDES1_0"));
+        	order.setQuantityOrdered(((BigDecimal)row.get("qtySum")).intValue());
+        	result.add(order);
+        }
+        
+		return result;
 	}
 }

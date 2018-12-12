@@ -126,7 +126,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"ADMIN", 
 				"RCPMANAGER"
 				)
-		.antMatchers("/prodtosale/**")
+		.antMatchers(
+				"/prodtosale/**",
+				"/ordtools/**")
 		.hasAnyRole(
 				"ADMIN", 
 				"PRODTOSALEUSER"
