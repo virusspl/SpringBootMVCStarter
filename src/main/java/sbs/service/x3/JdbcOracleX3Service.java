@@ -71,4 +71,6 @@ public interface JdbcOracleX3Service {
 	public List<X3CoverageData> getCoverageInitialData(String company);
 	public Map<String, X3Supplier> getFirstAcvSuppliers(String company);
 	public List<X3SalesOrderItemSum> findAllSalesOrdersItemsInPeriod(Date startDate, Date endDate, String company);
+	public List<X3KeyValString> getAllToolsInRouting(String company);
+	public List<X3KeyValString> getAllBomPartsInBoms(String company);
 }

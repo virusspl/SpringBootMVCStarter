@@ -12,6 +12,7 @@ import sbs.model.x3.X3Client;
 import sbs.model.x3.X3ConsumptionProductInfo;
 import sbs.model.x3.X3ConsumptionSupplyInfo;
 import sbs.model.x3.X3CoverageData;
+import sbs.model.x3.X3KeyValString;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ProductSellDemand;
@@ -84,6 +85,8 @@ public interface JdbcOracleX3Repository  {
 	public List<X3CoverageData> getCoverageInitialData(String company);
 	public Map<String, X3Supplier> getFirstAcvSuppliers(String company);
 	public List<X3SalesOrderItemSum> findAllSalesOrdersItemsInPeriod(Date startDate, Date endDate, String company);
+	public List<X3KeyValString> getAllToolsInRouting(String company);
+	public List<X3KeyValString> getAllBomPartsInBoms(String company);
 	
 	
 }

@@ -17,6 +17,7 @@ import sbs.model.x3.X3Client;
 import sbs.model.x3.X3ConsumptionProductInfo;
 import sbs.model.x3.X3ConsumptionSupplyInfo;
 import sbs.model.x3.X3CoverageData;
+import sbs.model.x3.X3KeyValString;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ProductSellDemand;
@@ -323,5 +324,16 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	public List<X3SalesOrderItemSum> findAllSalesOrdersItemsInPeriod(Date startDate, Date endDate, String company) {
 		return jdbcOracleX3Repository.findAllSalesOrdersItemsInPeriod(startDate, endDate, company);
 	}
+
+	@Override
+	public List<X3KeyValString> getAllToolsInRouting(String company) {
+		return jdbcOracleX3Repository.getAllToolsInRouting(company);
+	}
+
+	@Override
+	public List<X3KeyValString> getAllBomPartsInBoms(String company) {
+		return jdbcOracleX3Repository.getAllBomPartsInBoms(company);
+	}
+
 
 }

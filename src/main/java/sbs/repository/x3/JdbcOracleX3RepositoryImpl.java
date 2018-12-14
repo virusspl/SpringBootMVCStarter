@@ -26,6 +26,7 @@ import sbs.model.x3.X3Client;
 import sbs.model.x3.X3ConsumptionProductInfo;
 import sbs.model.x3.X3ConsumptionSupplyInfo;
 import sbs.model.x3.X3CoverageData;
+import sbs.model.x3.X3KeyValString;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ProductSellDemand;
@@ -2028,4 +2029,42 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         
 		return result;
 	}
+
+	@Override
+	public List<X3KeyValString> getAllToolsInRouting(String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT " 
+                + company + ".ROUOPE.XATTR_0, "
+                + company + ".ROUOPE.ITMREF_0 "
+                + "FROM " + company + ".ROUOPE "
+            	+ "WHERE " 
+            	+ "LENGTH(TRIM(" + company + ".ROUOPE.XATTR_0)) > 0 ",
+                new Object[]{});
+        
+        List<X3KeyValString> result = new ArrayList<>();
+        for(Map<String,Object> row: resultSet ){
+        	result.add(new X3KeyValString((String)row.get("ITMREF_0"), (String)row.get("XATTR_0")));
+        }
+        
+		return result;
+	}
+
+	@Override
+	public List<X3KeyValString> getAllBomPartsInBoms(String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ company + ".BOMD.CPNITMREF_0, "
+				+ company + ".BOMD.ITMREF_0 "
+				+ "FROM "
+				+ company + ".BOMD ",
+                new Object[]{});
+        
+        List<X3KeyValString> result = new ArrayList<>();
+        for(Map<String,Object> row: resultSet ){
+        	result.add(new X3KeyValString((String)row.get("ITMREF_0"), (String)row.get("CPNITMREF_0")));
+        }
+        
+		return result;
+	}
+
 }

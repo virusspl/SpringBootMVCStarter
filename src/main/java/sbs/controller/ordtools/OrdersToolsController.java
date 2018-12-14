@@ -23,8 +23,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import sbs.helpers.DateHelper;
 import sbs.helpers.TextHelper;
+import sbs.model.x3.X3KeyValString;
 import sbs.model.x3.X3SalesOrderItemSum;
-import sbs.model.x3.X3SalesOrderLine;
 import sbs.service.x3.JdbcOracleX3Service;
 
 @Controller
@@ -40,15 +40,14 @@ public class OrdersToolsController {
 	@Autowired
 	DateHelper dateHelper;
 
-	
 	@RequestMapping("/main")
 	public String view(Model model, Locale locale) {
-		
+
 		OrdersToolsForm ordersToolsForm = new OrdersToolsForm();
 		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.MONTH, -3);
+		cal.add(Calendar.MONTH, -1);
 		ordersToolsForm.setStartDate(new Timestamp(cal.getTimeInMillis()));
-		
+
 		cal = Calendar.getInstance();
 		cal.add(Calendar.MONTH, 1);
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
@@ -65,26 +64,78 @@ public class OrdersToolsController {
 		}
 
 		// database list
-		Map<String, Integer> stock = x3Service.findGeneralStockForAllProducts("ATW");
-		List<X3SalesOrderItemSum> lines = x3Service.findAllSalesOrdersItemsInPeriod(ordersToolsForm.getStartDate(), ordersToolsForm.getEndDate(), "ATW");
+		//Map<String, Integer> stock = x3Service.findGeneralStockForAllProducts("ATW");
+		List<X3SalesOrderItemSum> lines = x3Service.findAllSalesOrdersItemsInPeriod(ordersToolsForm.getStartDate(),
+				ordersToolsForm.getEndDate(), "ATW");
 
-		
+		List<X3KeyValString> allBomParts = x3Service.getAllBomPartsInBoms("ATW");
+		List<X3KeyValString> allTools = x3Service.getAllToolsInRouting("ATW");
+		Map<String, Set<String>> bomPartsByCode = prepareMapByCode(allBomParts);
+		Map<String, Set<String>> toolsByCode = prepareMapByCode(allTools);
+
 		// loop through lines
 		OrdersToolsLine line;
-		int tmp;
 		List<OrdersToolsLine> list = new ArrayList<>();
+		Set<String> set;
+		
+		/* tmp */
+		//Set<String> setTmp = new HashSet<>();
+		//fillEmptySetWithToolsByProductCode("GH11N05", setTmp, bomPartsByCode, toolsByCode);
+		/* tmp */
+		
 		for (X3SalesOrderItemSum sois : lines) {
-			line = createOrdersToolsLineFromX3Info(sois);
-			line.setTool("");
-			list.add(line);
+			set = new HashSet<>();
+			fillEmptySetWithToolsByProductCode(sois.getProductCode(), set, bomPartsByCode, toolsByCode);
+			if (set.size() > 0) {
+				for (String tool : set) {
+					line = createOrdersToolsLineFromX3Info(sois);
+					line.setTool(tool);
+					list.add(line);
+				}
+			} else {
+				line = createOrdersToolsLineFromX3Info(sois);
+				line.setTool("");
+				list.add(line);
+			}
 		}
-		
-		
+
 		model.addAttribute("list", list);
 		model.addAttribute("startDate", ordersToolsForm.getStartDate());
 		model.addAttribute("endDate", ordersToolsForm.getEndDate());
 
 		return "ordtools/main";
+	}
+
+	private Map<String, Set<String>> prepareMapByCode(List<X3KeyValString> pairs) {
+		Map<String, Set<String>> map = new HashMap<>();
+		Set<String> set;
+		for (X3KeyValString pair : pairs) {
+			if (map.containsKey(pair.getKey())) {
+				map.get(pair.getKey()).add(pair.getValue());
+			} else {
+				set = new HashSet<>();
+				set.add(pair.getValue());
+				map.put(pair.getKey(), set);
+			}
+
+		}
+		return map;
+	}
+
+	private void fillEmptySetWithToolsByProductCode(String code, Set<String> set,
+			Map<String, Set<String>> bomPartsByCode, Map<String, Set<String>> toolsByCode) {
+		// Tools
+		if (toolsByCode.containsKey(code)) {
+			for (String tool : toolsByCode.get(code)) {
+				set.add(tool);
+			}
+		}
+		// BOM
+		if (bomPartsByCode.containsKey(code)) {
+			for (String cpnitmref : bomPartsByCode.get(code)) {
+				fillEmptySetWithToolsByProductCode(cpnitmref, set, bomPartsByCode, toolsByCode);
+			}
+		}
 	}
 
 	private OrdersToolsLine createOrdersToolsLineFromX3Info(X3SalesOrderItemSum sois) {
