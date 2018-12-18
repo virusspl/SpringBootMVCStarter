@@ -8,16 +8,41 @@
 <body>
 
 	<div layout:fragment="script">
+		<!-- DATATABLES -->
 		<script th:src="@{/datatables/jquery.dataTables.min.js}"
 			type="text/javascript"></script>
 		<script th:src="@{/datatables/dataTables.helper.js}"
 			type="text/javascript"></script>
+		<script th:src="@{/datatables/buttons.flash.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/buttons.html5.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/buttons.print.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/dataTables.buttons.min.js}"
+			type="text/javascript"></script>	
+		<script th:src="@{/datatables/jszip.min.js}" type="text/javascript"></script>
+		<script th:src="@{/datatables/pdfmake.min.js}" type="text/javascript"></script>
+		<script th:src="@{/datatables/vfs_fonts.js}" type="text/javascript"></script>		
+		<!-- entries table -->
 		<script th:if="__${#locale}__ == 'pl'">
 			$('#srv').DataTable({
 				language : {
 					url : getUrl() + "polish.json",
 				},
-				order : [ [ 1, 'asc' ] ]
+				order : [ [ 0, 'asc' ] ],
+				paging: true,
+				dom : 'Bfrtip',
+				buttons : [
+						{
+							extend : 'excel',
+							text : 'Excel'
+						},
+						{
+							extend: 'pdfHtml5',
+			                orientation: 'landscape'
+						}
+						]
 			});
 		</script>
 		<script th:if="__${#locale}__ == 'en'">
@@ -25,7 +50,19 @@
 				language : {
 					url : getUrl() + "english.json"
 				},
-				order : [ [ 1, 'asc' ] ]
+				order : [ [ 0, 'asc' ] ],
+				paging: true,
+				dom : 'Bfrtip',
+				buttons : [
+						{
+							extend : 'excel',
+							text : 'Excel'
+						},
+						{
+							extend: 'pdfHtml5',
+			                orientation: 'landscape'
+						}
+						]
 			});
 		</script>
 		<script th:if="__${#locale}__ == 'it'">
@@ -33,7 +70,19 @@
 				language : {
 					url : getUrl() + "italian.json"
 				},
-				order : [ [ 1, 'asc' ] ]
+				order : [ [ 0, 'asc' ] ],
+				paging: true,
+				dom : 'Bfrtip',
+				buttons : [
+						{
+							extend : 'excel',
+							text : 'Excel'
+						},
+						{
+							extend: 'pdfHtml5',
+			                orientation: 'landscape'
+						}
+						]
 			});
 		</script>
 	</div>
