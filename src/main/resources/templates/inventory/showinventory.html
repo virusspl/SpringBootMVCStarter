@@ -260,6 +260,11 @@ tr.columnsrow:nth-child(odd) {
 						class="glyphicon glyphicon-menu-left"></span> <span
 						th:text="#{action.back}">back</span>
 					</a>
+					<a th:href="|@{/inventory/summary/}${inventory.id}|" class="btn btn-link btn-sm"> <span
+						class="glyphicon glyphicon-th-list"></span> <span
+						th:text="#{general.summary}"></span>
+					</a>
+					
 				</div>
 			</div>
 			<!-- /back button -->

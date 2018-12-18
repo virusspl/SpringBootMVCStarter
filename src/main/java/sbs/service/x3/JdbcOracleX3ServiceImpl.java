@@ -28,6 +28,7 @@ import sbs.model.x3.X3SalesOrderItemSum;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
 import sbs.model.x3.X3ShipmentStockLineWithPrice;
+import sbs.model.x3.X3StoreInfo;
 import sbs.model.x3.X3Supplier;
 import sbs.model.x3.X3UsageDetail;
 import sbs.model.x3.X3UtrFault;
@@ -333,6 +334,11 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	@Override
 	public List<X3KeyValString> getAllBomPartsInBoms(String company) {
 		return jdbcOracleX3Repository.getAllBomPartsInBoms(company);
+	}
+
+	@Override
+	public Map<String, X3StoreInfo> getX3StoreInfoByCode(String company) {
+		return jdbcOracleX3Repository.getX3StoreInfoByCode(company);
 	}
 
 

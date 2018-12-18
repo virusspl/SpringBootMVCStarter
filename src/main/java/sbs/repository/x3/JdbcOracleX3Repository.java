@@ -23,6 +23,7 @@ import sbs.model.x3.X3SalesOrderItemSum;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
 import sbs.model.x3.X3ShipmentStockLineWithPrice;
+import sbs.model.x3.X3StoreInfo;
 import sbs.model.x3.X3Supplier;
 import sbs.model.x3.X3UsageDetail;
 import sbs.model.x3.X3UtrFault;
@@ -87,6 +88,7 @@ public interface JdbcOracleX3Repository  {
 	public List<X3SalesOrderItemSum> findAllSalesOrdersItemsInPeriod(Date startDate, Date endDate, String company);
 	public List<X3KeyValString> getAllToolsInRouting(String company);
 	public List<X3KeyValString> getAllBomPartsInBoms(String company);
+	public Map<String, X3StoreInfo> getX3StoreInfoByCode(String company);
 	
 	
 }

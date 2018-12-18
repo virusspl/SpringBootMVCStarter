@@ -2,6 +2,7 @@ package sbs.controller.inventory;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.Map;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import org.hibernate.jpa.internal.EntityManagerFactoryRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -30,6 +32,7 @@ import sbs.model.users.User;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3PurchaseOrder;
 import sbs.model.x3.X3SalesOrder;
+import sbs.model.x3.X3StoreInfo;
 import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.inventory.InventoryColumnsService;
 import sbs.service.inventory.InventoryDataTypesService;
@@ -706,7 +709,7 @@ public class InventoryController {
 	
 	@RequestMapping("/inventory/summary/{id}")
 	@Transactional
-	public String showInventorySummaryView(@PathVariable("id") int id, Model model, Locale locale) throws NotFoundException {
+	public String showInventorySummaryView(@PathVariable("id") int id, Model model, Locale locale, RedirectAttributes redirectAttrs) throws NotFoundException {
 		
 		Inventory inventory = inventoryService.findById(id);
 		
@@ -714,29 +717,62 @@ public class InventoryController {
 			throw new NotFoundException("Inventory not found");
 		}
 		
-		List<InventoryEntry> entries = inventoryEntriesService.findByInventoryIdSortByLines(inventory.getId());
-		Map<String,String> descriptionsEn = x3Service.getDescriptionsByLanguage(JdbcOracleX3Service.LANG_ENGLISH, inventory.getCompany());
-		List<String> titles = new ArrayList<>();
-		List<List<String>> lines = new ArrayList<>();
-		List<String> lineValues;
-		
-		
-		titles.add(messageSource.getMessage("general.productCode", null, locale));
-		titles.add(messageSource.getMessage("general.productDescription", null, locale));
-		titles.add(messageSource.getMessage("general.productDescription", null, locale));
-		titles.add(messageSource.getMessage("general.category", null, locale));
-		titles.add(messageSource.getMessage("general.quantity", null, locale));
-		
-		
-		
-		for(InventoryEntry entry: entries){
-
+		boolean codePresent = false;
+		boolean quantityPresent = false;
+		 
+		for(InventoryColumn col: inventory.getColumns()){
+			if(col.getInventoryDataType().getColumnTypeCode().equals("inventory.type.code")){
+				codePresent = true;
+			}
+			if(col.getInventoryDataType().getColumnTypeCode().equals("inventory.type.quantity")){
+				quantityPresent = true;
+			}
 		}
 		
+		if(!codePresent || !quantityPresent){
+			redirectAttrs.addFlashAttribute("warning", messageSource.getMessage("inventory.error.norequiredcolumns", null, locale));
+			return "redirect:/inventory/showinventory/" + inventory.getId();
+		}
+		
+		
+		
+		List<InventoryEntry> entries = inventoryEntriesService.findByInventoryIdSortByLines(inventory.getId());
+		
+		// count inventory result
+		Map<String, InventorySummaryInfo> inventorySum = new HashMap<>();
+		for(InventoryEntry entry: entries){
+			if(!inventorySum.containsKey(entry.getCode())){
+				inventorySum.put(entry.getCode(), new InventorySummaryInfo(entry.getCode()));
+			}
+			inventorySum.get(entry.getCode()).addQuantity((int)entry.getQuantity());
+		}
+		
+		// get store info from X3
+		Map<String, X3StoreInfo> storeInfo = x3Service.getX3StoreInfoByCode(inventory.getCompany());
+				
+		// prepare values
+		List<List<String>> lines = new ArrayList<>();
+		List<String> lineValues;
+		X3StoreInfo empty = new X3StoreInfo();
+		for(InventorySummaryInfo inf: inventorySum.values()){
+			lineValues = new ArrayList<>();
+			lineValues.add(inf.getProductCode());
+			lineValues.add(inf.getCounter()+"");
+			lineValues.add(inf.getQuantity()+"");
+			lineValues.add(storeInfo.getOrDefault(inf.getProductCode(), empty).getGeneralStore()+"");
+			lineValues.add((inf.getQuantity() - storeInfo.getOrDefault(inf.getProductCode(), empty).getGeneralStore())+"");
+			lineValues.add(storeInfo.getOrDefault(inf.getProductCode(), empty).getMag()+"");
+			lineValues.add(storeInfo.getOrDefault(inf.getProductCode(), empty).getQgx()+"");
+			lineValues.add(storeInfo.getOrDefault(inf.getProductCode(), empty).getWgx()+"");
+			lineValues.add(storeInfo.getOrDefault(inf.getProductCode(), empty).getGeode()+"");
+			lines.add(lineValues);
+		}
+		
+		
 		model.addAttribute("inventory", inventory);
-		//model.addAttribute("lines", values);
+		model.addAttribute("lines", lines);
 
-		return "inventory/showinventory";
+		return "inventory/summary";
 	}
 
 	private InventoryShowLine prepareShowLine(InventoryEntry entry, List<InventoryColumn> columns) throws UnknownDataTypeException {

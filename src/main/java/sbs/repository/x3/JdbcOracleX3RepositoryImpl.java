@@ -37,6 +37,7 @@ import sbs.model.x3.X3SalesOrderItemSum;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
 import sbs.model.x3.X3ShipmentStockLineWithPrice;
+import sbs.model.x3.X3StoreInfo;
 import sbs.model.x3.X3Supplier;
 import sbs.model.x3.X3UsageDetail;
 import sbs.model.x3.X3UtrFault;
@@ -2062,6 +2063,51 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         List<X3KeyValString> result = new ArrayList<>();
         for(Map<String,Object> row: resultSet ){
         	result.add(new X3KeyValString((String)row.get("ITMREF_0"), (String)row.get("CPNITMREF_0")));
+        }
+        
+		return result;
+	}
+
+	@Override
+	public Map<String, X3StoreInfo> getX3StoreInfoByCode(String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "STK.ITMREF_0, "
+				+ "STK.QTYSTU_0, "
+				+ "STK.LOC_0 "
+				+ "FROM " + company + ".STOCK STK",
+                new Object[]{});
+        
+		Map<String, X3StoreInfo> result = new HashMap<>();
+		String code;
+		int quantity;
+        for(Map<String,Object> row: resultSet ){
+        	code = (String)row.get("ITMREF_0");
+        	quantity = ((BigDecimal)row.get("QTYSTU_0")).intValue();
+        	
+        	// create entry if not exist
+        	if(!result.containsKey(code)){
+        		result.put(code, new X3StoreInfo(code));
+        	}
+        	
+        	// set quantity        	
+        	switch ((String)row.get("LOC_0")){
+        		case "MAG":
+        			result.get(code).addMag(quantity);
+        			break;
+        		case "QGX":
+        			result.get(code).addQgx(quantity);
+        			break;
+        		case "WGX01":
+        			result.get(code).addWgx(quantity);
+        			break;
+        		case "GEODE":
+        			result.get(code).addGeode(quantity);
+        			break;
+        		default:
+        			result.get(code).addGeneralStore(quantity);
+        			break;
+        	}
         }
         
 		return result;
