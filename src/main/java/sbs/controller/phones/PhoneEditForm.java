@@ -17,7 +17,7 @@ public class PhoneEditForm {
 	String name;
 	@Size(min=0, max = 50)
 	String position;
-	@Size(min=0, max = 50)
+	@Size(min=0, max = 75)
 	String email;
 	@Size(min=0, max = 20)
 	String voip;

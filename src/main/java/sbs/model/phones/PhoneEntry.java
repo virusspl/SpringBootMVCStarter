@@ -29,7 +29,7 @@ public class PhoneEntry {
 	@Column(name = "pe_position", length = 50, nullable = true)
 	private String position;
 	
-	@Column(name = "pe_email", length = 50, nullable = true)
+	@Column(name = "pe_email", length = 75, nullable = true)
 	private String email;
 	
 	@Column(name = "pe_note", length = 50, nullable = true)
