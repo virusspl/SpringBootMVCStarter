@@ -1,12 +1,17 @@
 package sbs.controller.ordtools;
 
+import java.sql.Timestamp;
+
+import sbs.model.x3.X3ToolEntry;
+
 public class OrdersToolsLine {
 
 	private String order;
 	private String productCode;
 	private String productDescription;
 	private int quantity;
-	private String tool;
+	private Timestamp demandedDate;
+	private X3ToolEntry tool;
 	
 	public OrdersToolsLine() {
 	
@@ -44,19 +49,30 @@ public class OrdersToolsLine {
 		this.quantity = quantity;
 	}
 
-	public String getTool() {
+	public X3ToolEntry getTool() {
 		return tool;
 	}
 
-	public void setTool(String tool) {
+	public void setTool(X3ToolEntry tool) {
 		this.tool = tool;
+	}
+
+	public Timestamp getDemandedDate() {
+		return demandedDate;
+	}
+
+	public void setDemandedDate(Timestamp demandedDate) {
+		this.demandedDate = demandedDate;
 	}
 
 	@Override
 	public String toString() {
 		return "OrdersToolsLine [order=" + order + ", productCode=" + productCode + ", productDescription="
-				+ productDescription + ", quantity=" + quantity + ", tool=" + tool + "]";
+				+ productDescription + ", quantity=" + quantity + ", demandedDate=" + demandedDate + ", tool=" + tool
+				+ "]";
 	}
+
+
 	
 	
 	

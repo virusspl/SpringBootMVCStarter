@@ -1,13 +1,15 @@
 package sbs.model.x3;
 
-public class X3SalesOrderItemSum {
+import java.sql.Timestamp;
+
+public class X3SalesOrderItem {
 	private String orderNumber;
-	
+	private Timestamp demandedDate;
 	private String productCode;
 	private String productDescription;
 	private int quantityOrdered;
 	
-	public X3SalesOrderItemSum() {
+	public X3SalesOrderItem() {
 		
 	}
 
@@ -43,14 +45,20 @@ public class X3SalesOrderItemSum {
 		this.quantityOrdered = quantityOrdered;
 	}
 
+	public Timestamp getDemandedDate() {
+		return demandedDate;
+	}
+
+	public void setDemandedDate(Timestamp demandedDate) {
+		this.demandedDate = demandedDate;
+	}
+
 	@Override
 	public String toString() {
-		return "X3SalesOrderItemSum [orderNumber=" + orderNumber + ", productCode=" + productCode
-				+ ", productDescription=" + productDescription + ", quantityOrdered=" + quantityOrdered + "]";
+		return "X3SalesOrderItem [orderNumber=" + orderNumber + ", demandedDate=" + demandedDate + ", productCode="
+				+ productCode + ", productDescription=" + productDescription + ", quantityOrdered=" + quantityOrdered
+				+ "]";
 	}
-	
-	
 
-	
 	
 }

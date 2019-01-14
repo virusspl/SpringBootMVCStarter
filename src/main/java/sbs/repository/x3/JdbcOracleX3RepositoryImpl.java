@@ -33,12 +33,13 @@ import sbs.model.x3.X3ProductSellDemand;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3PurchaseOrder;
 import sbs.model.x3.X3SalesOrder;
-import sbs.model.x3.X3SalesOrderItemSum;
+import sbs.model.x3.X3SalesOrderItem;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
 import sbs.model.x3.X3ShipmentStockLineWithPrice;
 import sbs.model.x3.X3StoreInfo;
 import sbs.model.x3.X3Supplier;
+import sbs.model.x3.X3ToolEntry;
 import sbs.model.x3.X3UsageDetail;
 import sbs.model.x3.X3UtrFault;
 import sbs.model.x3.X3UtrFaultLine;
@@ -1993,12 +1994,13 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	}
 
 	@Override
-	public List<X3SalesOrderItemSum> findAllSalesOrdersItemsInPeriod(Date startDate, Date endDate, String company) {
+	public List<X3SalesOrderItem> findAllSalesOrdersItemsInPeriod(Date startDate, Date endDate, String company) {
 
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ "SOQ.SOHNUM_0, "
 				+ "SOQ.ITMREF_0, "
+				+ "SOQ.DEMDLVDAT_0, "
 				+ "ITM.ITMDES1_0, "
 				+ "Sum(SOQ.QTY_0) AS qtySum "
 				+ "FROM "
@@ -2009,6 +2011,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "SOQ.DEMDLVDAT_0 > = ? AND SOQ.DEMDLVDAT_0 <= ? "
 				+ "GROUP BY "
 				+ "SOQ.SOHNUM_0, "
+				+ "SOQ.DEMDLVDAT_0, "
 				+ "SOQ.ITMREF_0, "
 				+ "ITM.ITMDES1_0 "
 				+ "ORDER BY "
@@ -2016,12 +2019,13 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "SOQ.ITMREF_0 ",
                 new Object[]{startDate, endDate});
         
-		List<X3SalesOrderItemSum> result = new ArrayList<>();
-		X3SalesOrderItemSum order = null;
+		List<X3SalesOrderItem> result = new ArrayList<>();
+		X3SalesOrderItem order = null;
 		
         for(Map<String,Object> row: resultSet ){
-        	order = new X3SalesOrderItemSum();
+        	order = new X3SalesOrderItem();
         	order.setOrderNumber((String)row.get("SOHNUM_0"));
+        	order.setDemandedDate((Timestamp)row.get("DEMDLVDAT_0"));
         	order.setProductCode((String)row.get("ITMREF_0"));
         	order.setProductDescription((String)row.get("ITMDES1_0"));
         	order.setQuantityOrdered(((BigDecimal)row.get("qtySum")).intValue());
@@ -2032,19 +2036,27 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	}
 
 	@Override
-	public List<X3KeyValString> getAllToolsInRouting(String company) {
+	public List<X3ToolEntry> getAllToolsInRouting(String company) {
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT " 
-                + company + ".ROUOPE.XATTR_0, "
-                + company + ".ROUOPE.ITMREF_0 "
+				+ company + ".ROUOPE.ITMREF_0, "
+				+ company + ".ROUOPE.XATTR_0, "
+				+ company + ".ROUOPE.OPENUM_0, "
+				+ company + ".ROUOPE.WST_0 "
                 + "FROM " + company + ".ROUOPE "
             	+ "WHERE " 
             	+ "LENGTH(TRIM(" + company + ".ROUOPE.XATTR_0)) > 0 ",
                 new Object[]{});
-        
-        List<X3KeyValString> result = new ArrayList<>();
+
+        List<X3ToolEntry> result = new ArrayList<>();
+        X3ToolEntry entry;
         for(Map<String,Object> row: resultSet ){
-        	result.add(new X3KeyValString((String)row.get("ITMREF_0"), (String)row.get("XATTR_0")));
+        	entry = new X3ToolEntry();
+        	entry.setCode((String)row.get("ITMREF_0"));
+        	entry.setTool((String)row.get("XATTR_0"));
+        	entry.setOperation(((BigDecimal)row.get("OPENUM_0")).intValue());
+        	entry.setMachine((String)row.get("WST_0"));
+        	result.add(entry);
         }
         
 		return result;

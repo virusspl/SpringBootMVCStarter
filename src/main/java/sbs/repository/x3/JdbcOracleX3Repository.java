@@ -19,12 +19,13 @@ import sbs.model.x3.X3ProductSellDemand;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3PurchaseOrder;
 import sbs.model.x3.X3SalesOrder;
-import sbs.model.x3.X3SalesOrderItemSum;
+import sbs.model.x3.X3SalesOrderItem;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
 import sbs.model.x3.X3ShipmentStockLineWithPrice;
 import sbs.model.x3.X3StoreInfo;
 import sbs.model.x3.X3Supplier;
+import sbs.model.x3.X3ToolEntry;
 import sbs.model.x3.X3UsageDetail;
 import sbs.model.x3.X3UtrFault;
 import sbs.model.x3.X3UtrFaultLine;
@@ -85,8 +86,8 @@ public interface JdbcOracleX3Repository  {
 	public List<X3UsageDetail> getAcvUsageDetailsListByYear(int year, String company);
 	public List<X3CoverageData> getCoverageInitialData(String company);
 	public Map<String, X3Supplier> getFirstAcvSuppliers(String company);
-	public List<X3SalesOrderItemSum> findAllSalesOrdersItemsInPeriod(Date startDate, Date endDate, String company);
-	public List<X3KeyValString> getAllToolsInRouting(String company);
+	public List<X3SalesOrderItem> findAllSalesOrdersItemsInPeriod(Date startDate, Date endDate, String company);
+	public List<X3ToolEntry> getAllToolsInRouting(String company);
 	public List<X3KeyValString> getAllBomPartsInBoms(String company);
 	public Map<String, X3StoreInfo> getX3StoreInfoByCode(String company);
 	

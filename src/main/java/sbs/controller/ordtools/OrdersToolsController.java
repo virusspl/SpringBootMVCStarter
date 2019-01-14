@@ -24,7 +24,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sbs.helpers.DateHelper;
 import sbs.helpers.TextHelper;
 import sbs.model.x3.X3KeyValString;
-import sbs.model.x3.X3SalesOrderItemSum;
+import sbs.model.x3.X3SalesOrderItem;
+import sbs.model.x3.X3ToolEntry;
 import sbs.service.x3.JdbcOracleX3Service;
 
 @Controller
@@ -64,37 +65,39 @@ public class OrdersToolsController {
 		}
 
 		// database list
-		//Map<String, Integer> stock = x3Service.findGeneralStockForAllProducts("ATW");
-		List<X3SalesOrderItemSum> lines = x3Service.findAllSalesOrdersItemsInPeriod(ordersToolsForm.getStartDate(),
+		// Map<String, Integer> stock =
+		// x3Service.findGeneralStockForAllProducts("ATW");
+		List<X3SalesOrderItem> lines = x3Service.findAllSalesOrdersItemsInPeriod(ordersToolsForm.getStartDate(),
 				ordersToolsForm.getEndDate(), "ATW");
 
 		List<X3KeyValString> allBomParts = x3Service.getAllBomPartsInBoms("ATW");
-		List<X3KeyValString> allTools = x3Service.getAllToolsInRouting("ATW");
+		List<X3ToolEntry> allTools = x3Service.getAllToolsInRouting("ATW");
 		Map<String, Set<String>> bomPartsByCode = prepareMapByCode(allBomParts);
-		Map<String, Set<String>> toolsByCode = prepareMapByCode(allTools);
-
+		Map<String, List<X3ToolEntry>> toolsOperations = prepareToolsOperations(allTools);
+		// ^List<X3ToolEntry>
 		// loop through lines
 		OrdersToolsLine line;
 		List<OrdersToolsLine> list = new ArrayList<>();
-		Set<String> set;
-		
+		Set<X3ToolEntry> set;
+
 		/* tmp */
-		//Set<String> setTmp = new HashSet<>();
-		//fillEmptySetWithToolsByProductCode("GH11N05", setTmp, bomPartsByCode, toolsByCode);
+		// Set<String> setTmp = new HashSet<>();
+		// fillEmptySetWithToolsByProductCode("GH11N05", setTmp, bomPartsByCode,
+		// toolsByCode);
 		/* tmp */
-		
-		for (X3SalesOrderItemSum sois : lines) {
+
+		for (X3SalesOrderItem sois : lines) {
 			set = new HashSet<>();
-			fillEmptySetWithToolsByProductCode(sois.getProductCode(), set, bomPartsByCode, toolsByCode);
+			fillEmptySetWithToolsByProductCode(sois.getProductCode(), set, bomPartsByCode, toolsOperations);
 			if (set.size() > 0) {
-				for (String tool : set) {
+				for (X3ToolEntry tool : set) {
 					line = createOrdersToolsLineFromX3Info(sois);
 					line.setTool(tool);
 					list.add(line);
 				}
 			} else {
 				line = createOrdersToolsLineFromX3Info(sois);
-				line.setTool("");
+				line.setTool(new X3ToolEntry());
 				list.add(line);
 			}
 		}
@@ -117,34 +120,53 @@ public class OrdersToolsController {
 				set.add(pair.getValue());
 				map.put(pair.getKey(), set);
 			}
+		}
+		return map;
+	}
+
+	private Map<String, List<X3ToolEntry>> prepareToolsOperations(List<X3ToolEntry> toolsList) {
+		Map<String, List<X3ToolEntry>> map = new HashMap<>();
+		List<X3ToolEntry> list;
+		for (X3ToolEntry entry : toolsList) {
+			if (map.containsKey(entry.getCode())) {
+				map.get(entry.getCode()).add(entry);
+			} else {
+				list = new ArrayList<>();
+				list.add(entry);
+				map.put(entry.getCode(), list);
+			}
 
 		}
 		return map;
 	}
 
-	private void fillEmptySetWithToolsByProductCode(String code, Set<String> set,
-			Map<String, Set<String>> bomPartsByCode, Map<String, Set<String>> toolsByCode) {
+	private void fillEmptySetWithToolsByProductCode(String code, Set<X3ToolEntry> set,
+			Map<String, Set<String>> bomPartsByCode, Map<String, List<X3ToolEntry>> toolsOperations) {
+		
 		// Tools
-		if (toolsByCode.containsKey(code)) {
-			for (String tool : toolsByCode.get(code)) {
+		if (toolsOperations.containsKey(code)) {
+			for (X3ToolEntry tool : toolsOperations.get(code)) {
 				set.add(tool);
 			}
 		}
+
 		// BOM
 		if (bomPartsByCode.containsKey(code)) {
 			for (String cpnitmref : bomPartsByCode.get(code)) {
-				fillEmptySetWithToolsByProductCode(cpnitmref, set, bomPartsByCode, toolsByCode);
+				fillEmptySetWithToolsByProductCode(cpnitmref, set, bomPartsByCode, toolsOperations);
 			}
 		}
 	}
 
-	private OrdersToolsLine createOrdersToolsLineFromX3Info(X3SalesOrderItemSum sois) {
+	private OrdersToolsLine createOrdersToolsLineFromX3Info(X3SalesOrderItem sois) {
 		OrdersToolsLine otl = new OrdersToolsLine();
 		otl.setOrder(sois.getOrderNumber());
+		otl.setDemandedDate(sois.getDemandedDate());
 		otl.setProductCode(sois.getProductCode());
 		otl.setProductDescription(sois.getProductDescription());
 		otl.setQuantity(sois.getQuantityOrdered());
 		return otl;
+
 	}
 
 }

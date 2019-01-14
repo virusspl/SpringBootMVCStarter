@@ -205,28 +205,40 @@
 							<thead>
 								<tr>
 									<th th:text="#{general.order}">head</th>
+									<th th:text="#{general.demandedDate.short}">head</th>
 									<th th:text="#{general.productCode}">head</th>
 									<th th:text="#{general.productDescription}">head</th>
 									<th th:text="#{prodtosale.ordered}">head</th>
+									<th th:text="#{general.code.sub}">head</th>
+									<th th:text="#{general.operation}">head</th>
+									<th th:text="#{general.machine}">head</th>
 									<th th:text="#{general.tool}">head</th>
 								</tr>
 							</thead>
 							<tfoot>
 								<tr>
 									<th th:text="#{general.order}">head</th>
+									<th th:text="#{general.demandedDate.short}">head</th>									
 									<th th:text="#{general.productCode}">head</th>
 									<th th:text="#{general.productDescription}">head</th>
 									<th th:text="#{prodtosale.ordered}">head</th>
+									<th th:text="#{general.code.sub}">head</th>
+									<th th:text="#{general.operation}">head</th>
+									<th th:text="#{general.machine}">head</th>
 									<th th:text="#{general.tool}">head</th>
 								</tr>
 							</tfoot>
 							<tbody>
 								<tr th:each="line : ${list}">
 									<td><span th:text="${line.order}"></span></td>
+									<td><span th:text="${#dates.format(line.demandedDate, 'yyyy.MM.dd')}"></span></td>
 									<td><span th:text="${line.productCode}"></span></td>
 									<td><span th:text="${line.productDescription}"></span></td>
 									<td><span th:text="${line.quantity}"></span></td>
-									<td><span th:text="${line.tool}"></span></td>
+									<td><span th:text="${line.tool.code}"></span></td>
+									<td><span th:text="${line.tool.operation}"></span></td>
+									<td><span th:text="${line.tool.machine}"></span></td>
+									<td><span th:text="${line.tool.tool}"></span></td>
 								</tr>
 							</tbody>
 						</table>

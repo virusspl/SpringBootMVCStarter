@@ -24,12 +24,13 @@ import sbs.model.x3.X3ProductSellDemand;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3PurchaseOrder;
 import sbs.model.x3.X3SalesOrder;
-import sbs.model.x3.X3SalesOrderItemSum;
+import sbs.model.x3.X3SalesOrderItem;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
 import sbs.model.x3.X3ShipmentStockLineWithPrice;
 import sbs.model.x3.X3StoreInfo;
 import sbs.model.x3.X3Supplier;
+import sbs.model.x3.X3ToolEntry;
 import sbs.model.x3.X3UsageDetail;
 import sbs.model.x3.X3UtrFault;
 import sbs.model.x3.X3UtrFaultLine;
@@ -322,12 +323,12 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	}
 
 	@Override
-	public List<X3SalesOrderItemSum> findAllSalesOrdersItemsInPeriod(Date startDate, Date endDate, String company) {
+	public List<X3SalesOrderItem> findAllSalesOrdersItemsInPeriod(Date startDate, Date endDate, String company) {
 		return jdbcOracleX3Repository.findAllSalesOrdersItemsInPeriod(startDate, endDate, company);
 	}
 
 	@Override
-	public List<X3KeyValString> getAllToolsInRouting(String company) {
+	public List<X3ToolEntry> getAllToolsInRouting(String company) {
 		return jdbcOracleX3Repository.getAllToolsInRouting(company);
 	}
 
