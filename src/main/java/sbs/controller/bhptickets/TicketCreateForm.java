@@ -13,7 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class TicketCreateForm {
 	
 	@NotEmpty
-	@Size(min = 3, max = 100)
+	@Size(min = 3, max = 200)
 	String title;
 	@NotEmpty
 	String description;
@@ -32,7 +32,7 @@ public class TicketCreateForm {
 	public TicketCreateForm() {
 		
 	}
-
+	
 	public String getTitle() {
 		return title;
 	}
@@ -90,7 +90,6 @@ public class TicketCreateForm {
 		this.stateDescription = stateDescription;
 	}
 
-	
 	public int getStateOrder() {
 		return stateOrder;
 	}

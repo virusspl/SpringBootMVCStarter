@@ -38,7 +38,7 @@ public class BhpTicket {
 	@Column(name = "bhpt_id")
 	private int id;
 	
-	@Column(name = "bhpt_title", length = 100, nullable = false)
+	@Column(name = "bhpt_title", length = 200, nullable = false)
 	private String title;
 	
 	@Column(name = "bhpt_description", nullable = false)
