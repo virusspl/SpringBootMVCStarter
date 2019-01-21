@@ -86,7 +86,7 @@ public interface JdbcOracleX3Repository  {
 	public List<X3UsageDetail> getAcvUsageDetailsListByYear(int year, String company);
 	public List<X3CoverageData> getCoverageInitialData(String company);
 	public Map<String, X3Supplier> getFirstAcvSuppliers(String company);
-	public List<X3SalesOrderItem> findAllSalesOrdersItemsInPeriod(Date startDate, Date endDate, String company);
+	public List<X3SalesOrderItem> findAllSalesOrdersAfvItemsInPeriod(Date startDate, Date endDate, String company);
 	public List<X3ToolEntry> getAllToolsInRouting(String company);
 	public List<X3KeyValString> getAllBomPartsInBoms(String company);
 	public Map<String, X3StoreInfo> getX3StoreInfoByCode(String company);

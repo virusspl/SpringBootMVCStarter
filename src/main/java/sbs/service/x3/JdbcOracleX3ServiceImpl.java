@@ -323,8 +323,8 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	}
 
 	@Override
-	public List<X3SalesOrderItem> findAllSalesOrdersItemsInPeriod(Date startDate, Date endDate, String company) {
-		return jdbcOracleX3Repository.findAllSalesOrdersItemsInPeriod(startDate, endDate, company);
+	public List<X3SalesOrderItem> findAllSalesOrdersAfvItemsInPeriod(Date startDate, Date endDate, String company) {
+		return jdbcOracleX3Repository.findAllSalesOrdersAfvItemsInPeriod(startDate, endDate, company);
 	}
 
 	@Override

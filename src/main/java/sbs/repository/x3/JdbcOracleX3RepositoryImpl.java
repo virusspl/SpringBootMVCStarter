@@ -1994,7 +1994,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	}
 
 	@Override
-	public List<X3SalesOrderItem> findAllSalesOrdersItemsInPeriod(Date startDate, Date endDate, String company) {
+	public List<X3SalesOrderItem> findAllSalesOrdersAfvItemsInPeriod(Date startDate, Date endDate, String company) {
 
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
@@ -2008,7 +2008,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "ON "
 				+ "SOQ.ITMREF_0 = ITM.ITMREF_0 "
 				+ "WHERE "
-				+ "SOQ.DEMDLVDAT_0 > = ? AND SOQ.DEMDLVDAT_0 <= ? "
+				+ "SOQ.DEMDLVDAT_0 > = ? AND SOQ.DEMDLVDAT_0 <= ? AND ITM.TCLCOD_0 = ?"
 				+ "GROUP BY "
 				+ "SOQ.SOHNUM_0, "
 				+ "SOQ.DEMDLVDAT_0, "
@@ -2017,7 +2017,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "ORDER BY "
 				+ "SOQ.SOHNUM_0, "
 				+ "SOQ.ITMREF_0 ",
-                new Object[]{startDate, endDate});
+                new Object[]{startDate, endDate, "AFV"});
         
 		List<X3SalesOrderItem> result = new ArrayList<>();
 		X3SalesOrderItem order = null;

@@ -67,7 +67,7 @@ public class OrdersToolsController {
 		// database list
 		// Map<String, Integer> stock =
 		// x3Service.findGeneralStockForAllProducts("ATW");
-		List<X3SalesOrderItem> lines = x3Service.findAllSalesOrdersItemsInPeriod(ordersToolsForm.getStartDate(),
+		List<X3SalesOrderItem> lines = x3Service.findAllSalesOrdersAfvItemsInPeriod(ordersToolsForm.getStartDate(),
 				ordersToolsForm.getEndDate(), "ATW");
 
 		List<X3KeyValString> allBomParts = x3Service.getAllBomPartsInBoms("ATW");
