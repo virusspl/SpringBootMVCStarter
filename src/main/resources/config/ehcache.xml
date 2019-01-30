@@ -16,19 +16,15 @@ month 2419200
 -->
 
 <ehcache>
-	<!-- NATIVE CACHE -->
+
+	<sizeOfPolicy maxDepth="1000" maxDepthExceededBehavior="abort"/>
+	
 	<cache name="avatarByUsername" maxBytesLocalHeap="10m"
 		timeToLiveSeconds="60">
 	</cache>
 	<cache name="avatarById" maxBytesLocalHeap="10m"
 		timeToLiveSeconds="60">
 	</cache>
-
-	<!-- OPTIMA CACHE -->
-	<!-- <cache name="allEmployed" maxBytesLocalHeap="2m"
-		timeToLiveSeconds="3600">
-	</cache>
-	-->
 
 	<!-- X3 CACHE -->
 	<cache name="x3AllUsers" maxBytesLocalHeap="1m"
@@ -76,10 +72,13 @@ month 2419200
 	<cache name="x3FirstSuppliers" maxBytesLocalHeap="5m"
 		timeToLiveSeconds="604800">
 	</cache>
-		<!-- 
-	<cache name="x3PendingProjectsProgress" maxBytesLocalHeap="1m"
+	<!-- <cache name="x3PendingProjectsProgress" maxBytesLocalHeap="1m"
 		timeToLiveSeconds="86400">
 	</cache>
 	 -->
+	<!-- <cache name="allEmployed" maxBytesLocalHeap="2m"
+		timeToLiveSeconds="3600">
+	</cache>
+	-->
 
 </ehcache>
