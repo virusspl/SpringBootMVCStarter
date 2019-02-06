@@ -1,8 +1,6 @@
 package sbs.controller.various;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 /*
 import java.io.InputStream;
 import java.net.URL;
@@ -10,7 +8,6 @@ import java.net.URLConnection;
 import java.util.List;
 */
 import java.util.Locale;
-import java.util.Map;
 
 import javax.mail.MessagingException;
 
@@ -31,9 +28,6 @@ import sbs.model.qualitysurveys.QualitySurveyParameter;
 import sbs.model.tools.ToolsProjectState;
 import sbs.model.users.Role;
 import sbs.model.users.User;
-import sbs.model.x3.X3CoverageData;
-import sbs.model.x3.X3Supplier;
-import sbs.model.x3.X3UsageDetail;
 import sbs.service.bhptickets.BhpTicketStateService;
 import sbs.service.bhptickets.BhpTicketsService;
 import sbs.service.geode.JdbcOracleGeodeService;
@@ -170,8 +164,8 @@ public class VariousPagesController {
 //		Map<String, X3Supplier> suppliers = jdbcOracleX3Service.getFirstAcvSuppliers("ATW");		
 	
 		
-		int min = 1;
-		int max = 100;
+		//int min = 1;
+		//int max = 100;
 		ArrayList<Integer> randomArray = new ArrayList<>();
 		
 		for(int i = 0; i<30; i++){

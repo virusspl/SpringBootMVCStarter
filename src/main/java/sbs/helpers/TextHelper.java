@@ -1,12 +1,10 @@
 package sbs.helpers;
 
-import org.springframework.stereotype.Component;
-
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 
 import org.apache.commons.lang3.text.WordUtils;
+import org.springframework.stereotype.Component;
 @Component
 public class TextHelper {
 	

@@ -10,7 +10,6 @@ import java.util.Map;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
-import org.hibernate.jpa.internal.EntityManagerFactoryRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
