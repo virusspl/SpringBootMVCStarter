@@ -15,6 +15,7 @@ public class DateHelper {
 	private SimpleDateFormat ddMmYyFormat;
 	private SimpleDateFormat ddMmYyyyHhMmFormat;
 	private SimpleDateFormat YyyyMmDdHhMmFormat;
+	private SimpleDateFormat YyyyMmDdHhMmSsNoSpecialFormat;
 	
 	
 	public DateHelper(){
@@ -24,6 +25,7 @@ public class DateHelper {
 		ddMmYyFormat = new SimpleDateFormat("dd/MM/yy");
 		ddMmYyyyHhMmFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		YyyyMmDdHhMmFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+		YyyyMmDdHhMmSsNoSpecialFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 	}
 	
 	public int extractMonth12(Timestamp date){
@@ -80,6 +82,10 @@ public class DateHelper {
 
 	public String formatYyyyMmDdHhMm(Timestamp date) {
 		return YyyyMmDdHhMmFormat.format(date);
+	}
+
+	public String formatYyyyMmDdHhMmSsNoSpecial(Date date) {
+		return YyyyMmDdHhMmSsNoSpecialFormat.format(date);
 	}
 	
 	public String formatDdMmYy(Date date){

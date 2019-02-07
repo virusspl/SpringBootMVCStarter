@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
 
 import javax.imageio.ImageIO;
@@ -34,6 +35,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javassist.NotFoundException;
 import sbs.config.UploadProperties;
+import sbs.helpers.DateHelper;
 import sbs.helpers.ImageHelper;
 import sbs.model.tools.ToolsProject;
 import sbs.model.users.User;
@@ -63,6 +65,8 @@ public class UploadController {
 	ServletContext servletContext;
 	@Autowired
 	ToolsProjectService toolsProjectService;
+	@Autowired
+	DateHelper dateHelper;
 
     @Autowired
     public UploadController(UploadProperties uploadProperties) {
@@ -220,7 +224,7 @@ public class UploadController {
 		// copy file
 		try {
 			String fileExtension = getFileExtension(file.getOriginalFilename());
-			File tempFile = File.createTempFile("bhp_" + id + "_", fileExtension,
+			File tempFile = File.createTempFile("bhp_" + id + "_" + dateHelper.formatYyyyMmDdHhMmSsNoSpecial(Calendar.getInstance().getTime())+ "_", fileExtension,
 					(new DefaultResourceLoader()).getResource(bhpPhotoPath).getFile());
 			try (InputStream in = file.getInputStream(); OutputStream out = new FileOutputStream(tempFile)) {
 				IOUtils.copy(in, out);
