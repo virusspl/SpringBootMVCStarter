@@ -244,7 +244,7 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	}
 
 	@Override
-	public Map<String, Integer> getAcvConsumptionListForYear(int year, String company) {
+	public Map<String, Map<Integer, Integer>> getAcvConsumptionListForYear(int year, String company) {
 		return jdbcOracleX3Repository.getAcvConsumptionListForYear(year, company);
 	}
 

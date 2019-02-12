@@ -1555,7 +1555,37 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	}
 
 	@Override
-	public Map<String, Integer> getAcvConsumptionListForYear(int year, String company) {
+	public Map<String, Map<Integer, Integer>> getAcvConsumptionListForYear(int year, String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "xcs.XART_0, "
+				+ "xcs.XPER_0, "
+				+ "xcs.XQTY_0 "
+				+ "FROM " 
+				+ company+ ".XCSMED xcs "
+				+ "WHERE "
+				+ "xcs.XPER_0 >= ? AND xcs.XPER_0 <= ? "
+				,
+                new Object[]{year+"01", year+"12"}
+				);
+		
+		Map <String, Map<Integer, Integer>> result = new HashMap<>();
+		String code;
+		int period, qty;
+		for(Map<String, Object> row: resultSet ){
+			code = (String)row.get("XART_0");
+			period = ((BigDecimal)row.get("XPER_0")).intValue();
+			qty = ((BigDecimal)row.get("XQTY_0")).intValue();
+
+			if(!result.containsKey(code)){
+				result.put(code, new HashMap<Integer, Integer>());
+			}
+			result.get(code).put(period, qty);	
+		}
+		
+		return result;
+	}
+	/*public Map<String, Integer> getAcvConsumptionListForYear(int year, String company) {
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ "xcs.XART_0, "
@@ -1575,7 +1605,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		}
 	
 		return result;
-	}
+	}*/
 
 	@Override
 	public Map<String, Integer> getAcvDemandList(String company) {

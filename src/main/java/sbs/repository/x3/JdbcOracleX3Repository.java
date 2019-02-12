@@ -72,7 +72,7 @@ public interface JdbcOracleX3Repository  {
 	public Map<String, Integer> findAcvShipStock(String company);
 	public List<X3ShipmentStockLineWithPrice> findAllShipStockWithAveragePrice(String company);
 	public List<DirectReceptionsShipmentLine> findDirectReceptionsShipmentLines(Date startDate, Date endDate, String company);
-	public Map<String, Integer> getAcvConsumptionListForYear(int year, String company);
+	public Map<String, Map<Integer, Integer>> getAcvConsumptionListForYear(int year, String company);
 	public Map<String, Integer> getAcvDemandList(String company);
 	public Map<String, X3ConsumptionSupplyInfo> getAcvListOfLastSupplyInfo(String company);
 	public List<X3ConsumptionProductInfo> getAcvListForConsumptionReport(String company);

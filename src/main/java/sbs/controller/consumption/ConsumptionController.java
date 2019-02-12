@@ -227,8 +227,8 @@ public class ConsumptionController {
     	int consInitYear = cal.get(Calendar.YEAR);
     	
     	// get data
-    	Map<String, Integer> consumption1 = x3Service.getAcvConsumptionListForYear((consInitYear-1), "ATW");
-    	Map<String, Integer> consumption2 = x3Service.getAcvConsumptionListForYear(consInitYear, "ATW");
+    	Map<String, Map<Integer, Integer>> consumption1 = x3Service.getAcvConsumptionListForYear((consInitYear-1), "ATW");
+    	Map<String, Map<Integer, Integer>> consumption2 = x3Service.getAcvConsumptionListForYear(consInitYear, "ATW");
     	Map<String, Integer> demand = x3Service.getAcvDemandList("ATW");
     	Map<String, String> enDescriptions = x3Service.getAcvProductsEnglishDescriptions("ATW");
     	Map<String, X3ConsumptionSupplyInfo> lastSupply = x3Service.getAcvListOfLastSupplyInfo("ATW");
@@ -247,8 +247,16 @@ public class ConsumptionController {
 		headers.add("Last suppl.");
 		headers.add("Last suppl. nam.");
 		headers.add("Last suppl. date");
+		for(int i = 1; i<=12; i++){
+			headers.add((consInitYear-1) +"." + textHelper.fillWithLeadingZero(i+"", 2));
+		}
+		for(int i = 1; i<=12; i++){
+			headers.add((consInitYear) +"." + textHelper.fillWithLeadingZero(i+"", 2));
+		}
 		headers.add("Consumption " + (consInitYear-1));
 		headers.add("Consumption " + consInitYear);
+		
+		
 		
 		
 		// create structure
@@ -268,8 +276,40 @@ public class ConsumptionController {
 			lineValues.add(lastSupply.containsKey(product.getProductCode()) ? lastSupply.get(product.getProductCode()).getSupplierCode() : "" );
 			lineValues.add(lastSupply.containsKey(product.getProductCode()) ? lastSupply.get(product.getProductCode()).getName() : "" );
 			lineValues.add(lastSupply.containsKey(product.getProductCode()) ? lastSupply.get(product.getProductCode()).getDate() : "" );
-			lineValues.add(consumption1.containsKey(product.getProductCode()) ? consumption1.get(product.getProductCode()) : "" );
-			lineValues.add(consumption2.containsKey(product.getProductCode()) ? consumption2.get(product.getProductCode()) : "" );
+			int tmpPeriod; 
+			int prevSum = 0;
+			int currSum = 0;
+			for (int i = 1; i <= 12; i++) {
+				if (consumption1.containsKey(product.getProductCode())) {
+					tmpPeriod = Integer.parseInt((consInitYear - 1) + textHelper.fillWithLeadingZero(i + "", 2));
+					if (consumption1.get(product.getProductCode()).containsKey(tmpPeriod)) {
+						lineValues.add(consumption1.get(product.getProductCode()).get(tmpPeriod));
+						prevSum += consumption1.get(product.getProductCode()).get(tmpPeriod);
+					} else {
+						lineValues.add("");
+					}
+				}
+				else{
+					lineValues.add("");
+				}
+			}
+			for (int i = 1; i <= 12; i++) {
+				if (consumption2.containsKey(product.getProductCode())) {
+					tmpPeriod = Integer.parseInt(consInitYear + textHelper.fillWithLeadingZero(i + "", 2));
+					if (consumption2.get(product.getProductCode()).containsKey(tmpPeriod)) {
+						lineValues.add(consumption2.get(product.getProductCode()).get(tmpPeriod));
+						currSum += consumption2.get(product.getProductCode()).get(tmpPeriod);
+					} else {
+						lineValues.add("");
+					}
+				}
+				else{
+					lineValues.add("");
+				}
+			}
+			lineValues.add(prevSum);
+			lineValues.add(currSum);
+
 			rows.add(lineValues);
 		}
 		
