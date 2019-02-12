@@ -1676,7 +1676,8 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "itm.ITMDES1_0, "
 				+ "itv.PHYSTO_0, "
 				+ "itv.ORDSTO_0, "
-				+ "itv.AVC_0 "
+				+ "itv.AVC_0,"
+				+ "itf.BUY_0 "
 				+ "FROM ("
 				+ company + ".ITMMASTER itm INNER JOIN " + company + ".ITMMVT itv "
 				+ "ON itm.ITMREF_0 = itv.ITMREF_0"
@@ -1698,6 +1699,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			info.setStock(((BigDecimal)row.get("PHYSTO_0")).intValue());
 			info.setInOrder(((BigDecimal)row.get("ORDSTO_0")).intValue());
 			info.setAverageCost(((BigDecimal)row.get("AVC_0")).doubleValue());
+			info.setBuyerCode((String)row.get("BUY_0"));
 
 			list.add(info);
 		}

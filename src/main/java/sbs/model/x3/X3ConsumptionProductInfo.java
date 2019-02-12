@@ -6,6 +6,7 @@ public class X3ConsumptionProductInfo {
 	private int stock;
 	private int inOrder;
 	private double averageCost;
+	private String buyerCode;
 	
 	public X3ConsumptionProductInfo() {
 	
@@ -49,6 +50,14 @@ public class X3ConsumptionProductInfo {
 
 	public void setAverageCost(double averageCost) {
 		this.averageCost = averageCost;
+	}
+
+	public String getBuyerCode() {
+		return buyerCode;
+	}
+
+	public void setBuyerCode(String buyerCode) {
+		this.buyerCode = buyerCode;
 	}
 
 	@Override

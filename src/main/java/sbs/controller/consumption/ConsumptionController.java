@@ -243,6 +243,7 @@ public class ConsumptionController {
 		headers.add("Avg cost");
 		headers.add("Demand");
 		headers.add("In order");
+		headers.add("Buyer");
 		headers.add("Last suppl.");
 		headers.add("Last suppl. nam.");
 		headers.add("Last suppl. date");
@@ -263,6 +264,7 @@ public class ConsumptionController {
 			lineValues.add(product.getAverageCost());
 			lineValues.add(demand.containsKey(product.getProductCode()) ? demand.get(product.getProductCode()) : "" );
 			lineValues.add(product.getInOrder());
+			lineValues.add(product.getBuyerCode());
 			lineValues.add(lastSupply.containsKey(product.getProductCode()) ? lastSupply.get(product.getProductCode()).getSupplierCode() : "" );
 			lineValues.add(lastSupply.containsKey(product.getProductCode()) ? lastSupply.get(product.getProductCode()).getName() : "" );
 			lineValues.add(lastSupply.containsKey(product.getProductCode()) ? lastSupply.get(product.getProductCode()).getDate() : "" );
