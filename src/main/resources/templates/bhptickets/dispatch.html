@@ -47,13 +47,17 @@
 					class="glyphicon glyphicon-envelope" style="margin-right: 10px;"></span>
 					<span th:text="#{bhp.tickets.send.emails}">begin</span>
 				</a>
-				
-				
-				 
 				<a class="btn btn-info btn-md margin-top-5"
 					th:href="@{/bhptickets/list}"> <span
 					class="glyphicon glyphicon-tasks" style="margin-right: 10px;"></span>
 					<span th:text="#{action.list}">list</span>
+				</a>
+			</div>
+			<div class="col-xs-12 margin-top-10">
+			<a class="btn btn-warning btn-md margin-top-5"
+					href="http://192.168.1.23/DOCS/bhptickets.pdf" target="_blank"> <span
+					class="glyphicon glyphicon-folder-open" style="margin-right: 10px;"></span>
+					<span th:text="#{general.usermanual}">CRM Manual</span>
 				</a>
 			</div>
 		</div>
