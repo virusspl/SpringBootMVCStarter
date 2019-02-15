@@ -90,6 +90,7 @@ public interface JdbcOracleX3Repository  {
 	public List<X3ToolEntry> getAllToolsInRouting(String company);
 	public List<X3KeyValString> getAllBomPartsInBoms(String company);
 	public Map<String, X3StoreInfo> getX3StoreInfoByCode(String company);
+	public Map<String, String> getVariousTableData(String company, String table, String x3language);
 	
 	
 }

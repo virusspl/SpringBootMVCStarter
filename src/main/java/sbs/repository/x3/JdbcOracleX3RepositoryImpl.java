@@ -1703,6 +1703,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ "itm.ITMREF_0, "
+				+ "itm.YFAMGROUP_0, "
 				+ "itm.ITMDES1_0, "
 				+ "itv.PHYSTO_0, "
 				+ "itv.ORDSTO_0, "
@@ -1730,7 +1731,8 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			info.setInOrder(((BigDecimal)row.get("ORDSTO_0")).intValue());
 			info.setAverageCost(((BigDecimal)row.get("AVC_0")).doubleValue());
 			info.setBuyerCode((String)row.get("BUY_0"));
-
+			info.setBuyGroupCode((String)row.get("YFAMGROUP_0"));
+			
 			list.add(info);
 		}
 			
@@ -2155,6 +2157,29 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         }
         
 		return result;
+	}
+
+	@Override
+	public Map<String, String> getVariousTableData(String company, String table, String x3language) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList( ""
+				+ "SELECT "
+				+ "TXT.IDENT2_0, "
+				+ "TXT.TEXTE_0 "
+				+ "FROM "
+				+ company + ".ATEXTRA TXT "
+				+ "WHERE "
+				+ "TXT.CODFIC_0 = ? "
+				+ "AND TXT.ZONE_0 = ? "
+				+ "AND TXT.LANGUE_0 = ? "
+				+ "AND TXT.IDENT1_0 = ?"
+				,
+                new Object[]{"ATABDIV", "LNGDES", x3language, table });
+		
+        Map <String, String> map = new HashMap<>();
+        for(Map<String,Object> row: resultSet ){
+        	map.put((String)row.get("IDENT2_0"), (String)row.get("TEXTE_0"));
+        }
+		return map;
 	}
 
 }

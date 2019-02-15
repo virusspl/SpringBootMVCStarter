@@ -233,12 +233,16 @@ public class ConsumptionController {
     	Map<String, String> enDescriptions = x3Service.getAcvProductsEnglishDescriptions("ATW");
     	Map<String, X3ConsumptionSupplyInfo> lastSupply = x3Service.getAcvListOfLastSupplyInfo("ATW");
     	List<X3ConsumptionProductInfo> productsList = x3Service.getAcvListForConsumptionReport("ATW");
+    	Map<String, String> buyGroups = x3Service.getVariousTableData("ATW", "6050", JdbcOracleX3Service.LANG_ITALIAN);
 
+    	
 		// create headers
 		ArrayList<String> headers = new ArrayList<>();
 		headers.add("Product");
 		headers.add("Descr PL");
 		headers.add("Descr EN");
+		headers.add("Pur. Fam. Code");
+		headers.add("Purchasing family");
 		headers.add("Stock");
 		headers.add("Avg cost");
 		headers.add("Demand");
@@ -262,12 +266,14 @@ public class ConsumptionController {
 		// create structure
 		ArrayList<ArrayList<Object>> rows = new ArrayList<>();
 		ArrayList<Object> lineValues;
-		
+
 		for(X3ConsumptionProductInfo product: productsList){
 			lineValues = new ArrayList<>();
 			lineValues.add(product.getProductCode());
 			lineValues.add(product.getProductDescriptionPl());
 			lineValues.add(enDescriptions.containsKey(product.getProductCode()) ? enDescriptions.get(product.getProductCode()) : "" );
+			lineValues.add(product.getBuyGroupCode());
+			lineValues.add(buyGroups.containsKey(product.getBuyGroupCode()) ? buyGroups.get(product.getBuyGroupCode()) : "" );
 			lineValues.add(product.getStock());
 			lineValues.add(product.getAverageCost());
 			lineValues.add(demand.containsKey(product.getProductCode()) ? demand.get(product.getProductCode()) : "" );

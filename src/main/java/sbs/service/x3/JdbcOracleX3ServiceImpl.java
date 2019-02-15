@@ -342,5 +342,10 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 		return jdbcOracleX3Repository.getX3StoreInfoByCode(company);
 	}
 
+	@Override
+	public Map<String, String> getVariousTableData(String company, String table, String x3language) {
+		return jdbcOracleX3Repository.getVariousTableData(company, table, x3language);
+	}
+
 
 }

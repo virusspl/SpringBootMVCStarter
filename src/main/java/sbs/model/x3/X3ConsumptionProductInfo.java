@@ -7,6 +7,7 @@ public class X3ConsumptionProductInfo {
 	private int inOrder;
 	private double averageCost;
 	private String buyerCode;
+	private String buyGroupCode;
 	
 	public X3ConsumptionProductInfo() {
 	
@@ -58,6 +59,15 @@ public class X3ConsumptionProductInfo {
 
 	public void setBuyerCode(String buyerCode) {
 		this.buyerCode = buyerCode;
+	}
+	
+
+	public String getBuyGroupCode() {
+		return buyGroupCode;
+	}
+
+	public void setBuyGroupCode(String buyGroupCode) {
+		this.buyGroupCode = buyGroupCode;
 	}
 
 	@Override
