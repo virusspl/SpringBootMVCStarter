@@ -184,7 +184,9 @@
 						th:text="#{action.back}">back</span>
 					</a>
 					<button class="btn btn-primary btn-sm" type="submit"
-						name="viewlist">
+						name="viewlist"
+						data-toggle="tooltip" data-placement="bottom" th:title="#{general.warning.longtask}"
+						>
 						<span class="glyphicon glyphicon-search"></span> <span
 							th:text="#{prodtosale.makelist}">search</span>
 					</button>

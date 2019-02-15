@@ -37,7 +37,7 @@
 			<div class="col-xs-12 margin-top-10">
 				<a class="btn btn-info btn-md margin-top-5"
 					th:onclick="|return confirm('#{general.areyousure}')|"
-					data-toggle="tooltip" data-placement="bottom" th:title="#{consumption.warning.longtask}"
+					data-toggle="tooltip" data-placement="bottom" th:title="#{general.warning.longtask}"
 					th:href="@{/consumption/exportConsumption}"> <span
 					class="glyphicon glyphicon-save-file" style="margin-right: 10px;"></span>
 					<span th:text="#{consumption.export.consumption}">begin</span>
@@ -45,7 +45,7 @@
 				</a> 
 				<a class="btn btn-info btn-md margin-top-5"
 					th:onclick="|return confirm('#{general.areyousure}')|"
-					data-toggle="tooltip" data-placement="bottom" th:title="#{consumption.warning.longtask}"
+					data-toggle="tooltip" data-placement="bottom" th:title="#{general.warning.longtask}"
 					th:href="@{/consumption/exportCoverage}"> <span
 					class="glyphicon glyphicon-save-file" style="margin-right: 10px;"></span>
 					<span th:text="#{consumption.export.coverage}">begin</span>
