@@ -2182,4 +2182,27 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		return map;
 	}
 
+	@Override
+	public Map<String, Integer> findStockByLocation(String company, String location) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList( ""
+				+ "SELECT "
+				+ "STK.ITMREF_0, "
+				+ "Sum(STK.QTYSTU_0) AS QTY "
+				+ "FROM "
+				+ company + ".STOCK STK "
+				+ "WHERE"
+				+ " STK.LOC_0 = ? "
+				+ "GROUP BY "
+				+ "STK.ITMREF_0"
+				,
+                new Object[]{"GEODE"});
+		
+        Map <String, Integer> map = new HashMap<>();
+        for(Map<String,Object> row: resultSet ){
+        	map.put((String)row.get("ITMREF_0"), ((BigDecimal)row.get("QTY")).intValue());
+        }
+        
+        return map;
+	}
+
 }

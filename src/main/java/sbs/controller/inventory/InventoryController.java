@@ -706,6 +706,74 @@ public class InventoryController {
 		return "inventory/showinventory";
 	}
 	
+	@RequestMapping("/inventory/shipmentsummary/{id}")
+	@Transactional
+	public String showInventoryShipmentView(@PathVariable("id") int id, Model model, Locale locale, RedirectAttributes redirectAttrs) throws NotFoundException {
+
+		Inventory inventory = inventoryService.findById(id);
+		
+		if (inventory == null) {
+			throw new NotFoundException("Inventory not found");
+		}
+		
+		boolean codePresent = false;
+		boolean quantityPresent = false;
+		 
+		for(InventoryColumn col: inventory.getColumns()){
+			if(col.getInventoryDataType().getColumnTypeCode().equals("inventory.type.code")){
+				codePresent = true;
+			}
+			if(col.getInventoryDataType().getColumnTypeCode().equals("inventory.type.quantity")){
+				quantityPresent = true;
+			}
+		}
+		
+		if(!codePresent || !quantityPresent){
+			redirectAttrs.addFlashAttribute("warning", messageSource.getMessage("inventory.error.norequiredcolumns", null, locale));
+			return "redirect:/inventory/showinventory/" + inventory.getId();
+		}
+		
+		List<X3Product> allProducts = x3Service.findAllActiveProducts("ATW");
+		List<InventoryEntry> entries = inventoryEntriesService.findByInventoryIdSortByLines(inventory.getId());
+		Map<String, Integer> shipmentStock = x3Service.findStockByLocation("ATW", "GEODE");
+		Map<String, Integer> inventoryStock = new HashMap<>();
+		
+		
+		for(InventoryEntry entry: entries){
+			if(!inventoryStock.containsKey(entry.getCode())){
+				inventoryStock.put(entry.getCode(), (int)entry.getQuantity());
+			}
+			else{
+				inventoryStock.put(entry.getCode(), (int)(inventoryStock.get(entry.getCode())+ entry.getQuantity()));
+			}
+		}
+		
+		List<List<String>> lines = new ArrayList<>();
+		List<String> lineValues;
+		int invQty;
+		int x3Qty;
+		
+		for(X3Product product: allProducts){
+			invQty = inventoryStock.getOrDefault(product.getCode(), 0);
+			x3Qty = shipmentStock.getOrDefault(product.getCode(), 0);
+			
+			if(invQty > 0 || x3Qty > 0){
+				lineValues = new ArrayList<>();
+				lineValues.add(product.getCode());
+				lineValues.add(product.getDescription());
+				lineValues.add(product.getCategory());
+				lineValues.add(""+(invQty));
+				lineValues.add(""+x3Qty);
+				lineValues.add(""+ (invQty - x3Qty));
+				lines.add(lineValues);
+			}
+		}		
+		
+		model.addAttribute("inventory", inventory);
+		model.addAttribute("shiplines", lines);
+
+		return "inventory/summary";
+	}
 	@RequestMapping("/inventory/summary/{id}")
 	@Transactional
 	public String showInventorySummaryView(@PathVariable("id") int id, Model model, Locale locale, RedirectAttributes redirectAttrs) throws NotFoundException {

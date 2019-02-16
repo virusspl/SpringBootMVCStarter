@@ -1,6 +1,7 @@
 package sbs.controller.various;
 
 import java.util.ArrayList;
+import java.util.List;
 /*
 import java.io.InputStream;
 import java.net.URL;
@@ -28,6 +29,7 @@ import sbs.model.qualitysurveys.QualitySurveyParameter;
 import sbs.model.tools.ToolsProjectState;
 import sbs.model.users.Role;
 import sbs.model.users.User;
+import sbs.model.x3.X3Product;
 import sbs.service.bhptickets.BhpTicketStateService;
 import sbs.service.bhptickets.BhpTicketsService;
 import sbs.service.geode.JdbcOracleGeodeService;
@@ -166,7 +168,7 @@ public class VariousPagesController {
 		
 		//int min = 1;
 		//int max = 100;
-		ArrayList<Integer> randomArray = new ArrayList<>();
+		/*(ArrayList<Integer> randomArray = new ArrayList<>();
 		
 		for(int i = 0; i<30; i++){
 			Thread.sleep(2100);
@@ -174,6 +176,13 @@ public class VariousPagesController {
 		}
 		model.addAttribute("numbers", randomArray);
 		System.out.println("time: " + (System.currentTimeMillis()-start) + " ms");
+		*/
+		
+		List<X3Product> allProducts = jdbcOracleX3Service.findAllActiveProducts("ATW");
+		System.out.println("===");
+		//System.out.println(allProducts);
+		
+		
 		return "various/test";
 
 	}

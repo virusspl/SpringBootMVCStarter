@@ -17,7 +17,9 @@ month 2419200
 
 <ehcache>
 
+	
 	<sizeOfPolicy maxDepth="1000" maxDepthExceededBehavior="abort"/>
+	 
 	
 	<cache name="avatarByUsername" maxBytesLocalHeap="10m"
 		timeToLiveSeconds="60">

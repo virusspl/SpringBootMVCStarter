@@ -111,10 +111,10 @@
 				</div>
 			</div>
 			
-			<div class="row margin-top-10" th:if="${lines}">
+			<div class="row margin-top-10">
 				<div class="col-xs-12">
 					<div class="table-responsive margin-top-10">
-						<table id="srv" class="display">
+						<table id="srv" class="display" th:if="${lines}">
 							<thead>
 								<tr>
 									<th th:text="#{general.productCode}|"></th>
@@ -142,6 +142,38 @@
 							 -->							
 							<tbody>
 								<tr th:each="line: ${lines}">							
+									<td th:each="value: ${line}">
+										<span th:text="${value}"></span>
+									</td>
+									
+								</tr>
+							</tbody>
+						</table>
+						<table id="srv" class="display" th:if="${shiplines}">
+							<thead>
+								<tr>
+									<th th:text="#{general.productCode}|"></th>
+									<th th:text="#{general.productDescription}|"></th>
+									<th th:text="#{general.category}|"></th>
+									<th th:text="#{general.sum}"></th>
+									<th th:text="|#{general.stock} GEODE|"></th>										
+									<th th:text="#{general.difference}"></th>					
+									
+								</tr>
+							</thead>
+							<!-- 
+							<tfoot>
+								<tr>
+									<th th:text="|#id|"></th>
+									<th th:text="#{inventory.inventoryDate}|"></th>
+									<th th:text="#{general.title}"></th>
+									<th th:text="#{inventory.nextline.short}"></th>
+									<th th:text="#{general.date.creation}"></th>
+								</tr>
+							</tfoot>
+							 -->							
+							<tbody>
+								<tr th:each="line: ${shiplines}">							
 									<td th:each="value: ${line}">
 										<span th:text="${value}"></span>
 									</td>

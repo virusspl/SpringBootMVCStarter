@@ -264,6 +264,10 @@ tr.columnsrow:nth-child(odd) {
 						class="glyphicon glyphicon-th-list"></span> <span
 						th:text="#{general.summary}"></span>
 					</a>
+					<a th:href="|@{/inventory/shipmentsummary/}${inventory.id}|" class="btn btn-link btn-sm"> <span
+						class="glyphicon glyphicon-indent-left"></span> <span
+						th:text="#{department.shipments.warehouse}"></span>
+					</a>
 					
 				</div>
 			</div>
