@@ -361,7 +361,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ company + ".ITMMASTER.ITMDES1_0, "
 				+ company + ".ITMMASTER.ITMDES2_0, "
 				+ company + ".SORDER.SOHNUM_0, "
-				+ company + ".MFGITM.BPCNUM_0, "
+				+ company + ".SORDER.XCLIORI_0, "
 				+ company + ".BPARTNER.BPRNAM_0, "
 				+ company + ".BPARTNER.BPRNAM_1 "
 				+ "FROM (( " 
@@ -374,7 +374,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ company + ".MFGITM.PJT_0 = " + company + ".SORDER.SOHNUM_0) "
 				+ "INNER JOIN "
 				+ company + ".BPARTNER ON "
-				+ company + ".MFGITM.BPCNUM_0 = " + company + ".BPARTNER.BPRNUM_0 "
+				+ company + ".SORDER.XCLIORI_0 = " + company + ".BPARTNER.BPRNUM_0 "
 				+ "WHERE UPPER("
 				+ company + ".MFGITM.MFGNUM_0) = ? ",
         new Object[]{number.toUpperCase()});
@@ -384,7 +384,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		for(Map<String,Object> row: resultSet ){
 			order = new X3ProductionOrderDetails();
 			order.setProductionOrderNumber((String)row.get("MFGNUM_0"));
-			order.setClientCode((String)row.get("BPCNUM_0"));
+			order.setClientCode((String)row.get("XCLIORI_0"));
 			order.setClientName(((String)row.get("BPRNAM_0")) + ((String)row.get("BPRNAM_1")));
 			order.setProductCode((String)row.get("ITMREF_0"));
 			order.setProductDescription(((String)row.get("ITMDES1_0")) + ((String)row.get("ITMDES2_0")));
