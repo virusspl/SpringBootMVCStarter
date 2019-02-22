@@ -155,7 +155,7 @@
 					class="glyphicon glyphicon-screenshot"></span> <span
 					th:text="#{ordtools.ordtools}"></span>
 				</a> 
-				<a th:href="@{/hrua/list}" class="btn btn-info btn-md margin-top-5">
+				<a th:if="${CANCEL_THIS}" th:href="@{/hrua/list}" class="btn btn-info btn-md margin-top-5">
 					<span class="glyphicon glyphicon-user"></span> <span
 					th:text="#{hrua.files}"></span>
 				</a> <a th:href="@{/consumption/dispatch}"
