@@ -117,6 +117,8 @@
 							th:text="#{quality.surveys.cancel.survey}">back</span>
 						</a>
 						<button class="btn btn-primary btn-sm" type="submit"
+						th:onclick="|return confirm('#{general.areyousure}')|"
+						data-toggle="tooltip" data-placement="bottom" th:title="#{general.warning.longtask}"
 							name="summaryBeforeStart">
 							<span class="glyphicon glyphicon-ok"></span> <span
 								th:text="#{action.submit}">search</span>
