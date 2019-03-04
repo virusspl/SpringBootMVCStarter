@@ -20,6 +20,6 @@ public class QSurveyBomAnswersServiceImpl extends GenericServiceAdapter<QSurveyB
 			super(genericRepository);
 			this.qSurveyBomAnswersRepository = (QSurveyBomAnswersRepository) genericRepository;
 	}
-	
+
 
 }

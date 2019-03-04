@@ -14,12 +14,12 @@ public class QSurveyQuestionsServiceImpl extends GenericServiceAdapter<QSurveyQu
 	
 	@SuppressWarnings("unused")
 	private QSurveyQuestionsRepository qSurveyQuestionsRepository;
-	
+
     @Autowired
 	public QSurveyQuestionsServiceImpl(@Qualifier("qSurveyQuestionsRepositoryImpl") GenericRepository<QSurveyQuestion, Integer> genericRepository) {
 			super(genericRepository);
 			this.qSurveyQuestionsRepository = (QSurveyQuestionsRepository) genericRepository;
 	}
-	
+
 
 }

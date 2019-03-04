@@ -15,11 +15,10 @@ public class QSurveyAnswersServiceImpl extends GenericServiceAdapter<QSurveyAnsw
 	@SuppressWarnings("unused")
 	private QSurveyAnswersRepository qSurveyAnswersRepository;
 	
-    @Autowired
+	@Autowired
 	public QSurveyAnswersServiceImpl(@Qualifier("qSurveyAnswersRepositoryImpl") GenericRepository<QSurveyAnswer, Integer> genericRepository) {
 			super(genericRepository);
 			this.qSurveyAnswersRepository = (QSurveyAnswersRepository) genericRepository;
 	}
-	
 
 }

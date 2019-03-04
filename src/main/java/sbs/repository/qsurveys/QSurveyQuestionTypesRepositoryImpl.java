@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import sbs.model.qsurveys.QSurveyQuestionType;
 import sbs.repository.GenericRepositoryAdapter;
 
-@Repository
+@Repository("qSurveyQuestionTypesRepositoryImpl")
 @Transactional
 public class QSurveyQuestionTypesRepositoryImpl extends GenericRepositoryAdapter<QSurveyQuestionType, Integer>
 		implements QSurveyQuestionTypesRepository {

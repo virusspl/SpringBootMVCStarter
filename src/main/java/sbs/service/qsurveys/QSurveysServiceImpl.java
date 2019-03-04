@@ -20,6 +20,5 @@ public class QSurveysServiceImpl extends GenericServiceAdapter<QSurvey, Integer>
 			super(genericRepository);
 			this.qSurveysRepository = (QSurveysRepository) genericRepository;
 	}
-	
 
 }
