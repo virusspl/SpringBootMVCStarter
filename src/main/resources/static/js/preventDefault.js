@@ -18,6 +18,10 @@ $(document).ready(function() {
 					window.location.href.indexOf("inventory/editinventory") > -1
 					||
 					window.location.href.indexOf("inventory/createinventory") > -1
+					||
+					window.location.href.indexOf("qsurveys/templates/create") > -1
+					||
+					window.location.href.indexOf("qsurveys/templates/edit") > -1
 					) {
 				return;
 			}
