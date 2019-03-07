@@ -1,5 +1,7 @@
 package sbs.service.qsurveys;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -12,13 +14,17 @@ import sbs.service.GenericServiceAdapter;
 @Service
 public class QSurveyTemplatesServiceImpl extends GenericServiceAdapter<QSurveyTemplate, Integer> implements QSurveyTemplatesService{
 	
-	@SuppressWarnings("unused")
 	private QSurveyTemplatesRepository qSurveyTemplatesRepository;
 
     @Autowired
 	public QSurveyTemplatesServiceImpl(@Qualifier("qSurveyTemplatesRepositoryImpl") GenericRepository<QSurveyTemplate, Integer> genericRepository) {
 			super(genericRepository);
 			this.qSurveyTemplatesRepository = (QSurveyTemplatesRepository) genericRepository;
+	}
+
+	@Override
+	public List<QSurveyTemplate> findAllActiveAscByTitle() {
+		return qSurveyTemplatesRepository.findAllActiveAscByTitle();
 	}
 
 

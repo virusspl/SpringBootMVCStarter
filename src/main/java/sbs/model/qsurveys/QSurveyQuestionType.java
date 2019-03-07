@@ -19,7 +19,7 @@ public class QSurveyQuestionType {
 	@Column(name = "qsqt_title", length = 255, nullable = false)
 	private String title;
 	
-	@Column(name = "qsqt_type_code", length = 10, nullable = false)
+	@Column(name = "qsqt_type_code", length = 50, nullable = false)
 	private String code;
 
 	public QSurveyQuestionType() {

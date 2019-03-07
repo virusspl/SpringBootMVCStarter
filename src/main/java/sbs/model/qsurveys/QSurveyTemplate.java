@@ -86,6 +86,22 @@ public class QSurveyTemplate {
 		this.active = active;
 	}
 
+	public Set<QSurvey> getSurveys() {
+		return surveys;
+	}
+
+	public void setSurveys(Set<QSurvey> surveys) {
+		this.surveys = surveys;
+	}
+
+	public Set<QSurveyQuestion> getQuestions() {
+		return questions;
+	}
+
+	public void setQuestions(Set<QSurveyQuestion> questions) {
+		this.questions = questions;
+	}
+
 	@Override
 	public String toString() {
 		return "QSurveyTemplate [id=" + id + ", title=" + title + ", description=" + description + ", comment="

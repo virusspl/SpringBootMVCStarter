@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script">
+
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h1 th:text="#{qsurveys.create.template}" class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{qsurveys.create.template.message}"> Welcome message
+				</span>
+			</div>
+			<a th:href="@{/qsurveys/templates}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+		<div class="underline margin-top-10"></div>
+		<!-- FORM -->
+		<form th:action="@{/qsurveys/templates/create}" method="post"
+			th:object="${formTemplateCreate}">
+			<div class="row margin-top-20">
+				<div class="col-xs-12 col-sm-9">
+					<div class="form-group">
+						<!-- title -->
+						<label for="title" th:text="#{general.title}">lbl</label> <input
+							type="text" class="form-control" id="title" name="title"
+							th:placeholder="#{general.title}" th:field="*{title}"
+							autocomplete="off" />
+						<div th:errors="*{title}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-9">
+					<div class="form-group">
+						<!-- description -->
+						<label for="description" th:text="#{general.description}">comment</label>
+						<textarea class="form-control" id="description" name="description"
+							th:placeholder="#{general.description}" th:field="*{description}"
+							style="min-height: 150px;"></textarea>
+						<div th:errors="*{description}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-9">
+					<div class="form-group">
+						<!-- comment -->
+						<label for="comment" th:text="|#{general.comment} (#{general.formanageronly})|">comment</label>
+						<textarea class="form-control" id="comment" name="comment"
+							th:placeholder="#{general.comment}" th:field="*{comment}"
+							style="min-height: 100px;"></textarea>
+						<div th:errors="*{comment}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="row margin-top-10">
+				<div class="col-xs-12">
+					<a th:href="@{/qsurveys/templates}" class="btn btn-link btn-sm"> <span
+						class="glyphicon glyphicon-menu-left"></span> <span
+						th:text="#{action.back}">back</span>
+					</a>
+					<button class="btn btn-primary btn-sm" type="submit" name="save">
+						<span class="glyphicon glyphicon-ok"></span> <span
+							th:text="#{action.save}">create</span>
+					</button>
+				</div>
+			</div>
+		</form>
+		<!-- /FORM -->
+	</div>
+</body>
+</html>

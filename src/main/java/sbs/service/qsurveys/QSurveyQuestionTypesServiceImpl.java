@@ -12,13 +12,17 @@ import sbs.service.GenericServiceAdapter;
 @Service
 public class QSurveyQuestionTypesServiceImpl extends GenericServiceAdapter<QSurveyQuestionType, Integer> implements QSurveyQuestionTypesService{
 	
-	@SuppressWarnings("unused")
 	private QSurveyQuestionTypesRepository qSurveyQuestionTypesRepository;
 
     @Autowired
 	public QSurveyQuestionTypesServiceImpl(@Qualifier("qSurveyQuestionTypesRepositoryImpl") GenericRepository<QSurveyQuestionType, Integer> genericRepository) {
 			super(genericRepository);
 			this.qSurveyQuestionTypesRepository = (QSurveyQuestionTypesRepository) genericRepository;
+	}
+
+	@Override
+	public QSurveyQuestionType findByCode(String code) {
+		return qSurveyQuestionTypesRepository.findByCode(code);
 	}
 
 
