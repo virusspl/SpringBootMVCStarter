@@ -19,7 +19,6 @@ public class PhoneCategoriesRepositoryImpl extends GenericRepositoryAdapter<Phon
 
 	@SuppressWarnings("unchecked")
 	@Override
-	@Transactional
 	public List<PhoneCategory> findAllByAscOrder(String version) {
 		Criteria crit = currentSession().createCriteria(PhoneCategory.class, "category");
 		//crit.createAlias("project.state", "state");
