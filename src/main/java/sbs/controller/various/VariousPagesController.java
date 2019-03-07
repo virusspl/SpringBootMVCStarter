@@ -25,6 +25,7 @@ import sbs.helpers.ExcelExportHelper;
 import sbs.helpers.MathHelper;
 import sbs.model.bhptickets.BhpTicketState;
 import sbs.model.inventory.InventoryDataType;
+import sbs.model.qsurveys.QSurveyQuestionType;
 import sbs.model.qualitysurveys.QualitySurveyParameter;
 import sbs.model.tools.ToolsProjectState;
 import sbs.model.users.Role;
@@ -36,6 +37,7 @@ import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.inventory.InventoryDataTypesService;
 import sbs.service.mail.MailService;
 import sbs.service.optima.JdbcAdrOptimaService;
+import sbs.service.qsurveys.QSurveyQuestionTypesService;
 import sbs.service.qualitysurveys.QualitySurveyParametersService;
 import sbs.service.qualitysurveys.QualitySurveysService;
 import sbs.service.tools.ToolsProjectStateService;
@@ -71,6 +73,8 @@ public class VariousPagesController {
 	ToolsProjectStateService toolsProjectStateService;
 	@Autowired
 	MailService mailService;
+	@Autowired
+	QSurveyQuestionTypesService qSurveyQuestionTypesService;
 	@Autowired
 	private LiveFeedSingleton liveFeedSingleton;
 	@Autowired
@@ -741,6 +745,25 @@ public class VariousPagesController {
 			toolsProjectStateService.save(toolsState);
 			msg += "[tps_param: " + toolsState.getOrder() + " " + toolsState.getDescription() + "], ";
 		}
+		
+		QSurveyQuestionType qSurveyQuestionType;
+		
+		if (qSurveyQuestionTypesService.findByCode("qsurveys.type.parameter") == null) {
+			qSurveyQuestionType = new QSurveyQuestionType();
+			qSurveyQuestionType.setCode("qsurveys.type.parameter");
+			qSurveyQuestionType.setTitle("parameter");
+			qSurveyQuestionTypesService.save(qSurveyQuestionType);
+			msg += "[qsurvey_question_type: " + qSurveyQuestionType.getCode() + " " + qSurveyQuestionType.getTitle() + "], ";
+		}
+		
+		if (qSurveyQuestionTypesService.findByCode("qsurveys.type.boolean") == null) {
+			qSurveyQuestionType = new QSurveyQuestionType();
+			qSurveyQuestionType.setCode("qsurveys.type.boolean");
+			qSurveyQuestionType.setTitle("boolean");
+			qSurveyQuestionTypesService.save(qSurveyQuestionType);
+			msg += "[qsurvey_question_type: " + qSurveyQuestionType.getCode() + " " + qSurveyQuestionType.getTitle() + "], ";
+		}	 
+				 
 		
 		InventoryDataType invDataType;
 		// i18n codes
