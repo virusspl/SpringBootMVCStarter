@@ -1,15 +1,29 @@
 package sbs.controller.qsurveys;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class FormSurveyCreate {
 	
+	@NotNull
 	private int templateId;
+	@NotEmpty
 	private String operatorId;
+	@NotEmpty
 	private String orderNumberAndOperation;
 	
 	private boolean operatorManual;
 	private String manualOperatorId;
 	private String manualOperatorFirstName;
 	private String manualOperatorLastName;
+	
+	@NotNull
+	@Min(1)
+	private int quantityChecked;
+	
+	private String comment;
 	
 	public FormSurveyCreate() {
 	
@@ -57,13 +71,33 @@ public class FormSurveyCreate {
 	public void setManualOperatorLastName(String manualOperatorLastName) {
 		this.manualOperatorLastName = manualOperatorLastName;
 	}
+	public int getQuantityChecked() {
+		return quantityChecked;
+	}
+	public void setQuantityChecked(int quantityChecked) {
+		this.quantityChecked = quantityChecked;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
 	@Override
 	public String toString() {
-		return "FormSurveyMain [templateId=" + templateId + ", operatorId=" + operatorId + ", orderNumberAndOperation="
-				+ orderNumberAndOperation + ", operatorManual=" + operatorManual + ", manualOperatorId="
-				+ manualOperatorId + ", manualOperatorFirstName=" + manualOperatorFirstName
-				+ ", manualOperatorLastName=" + manualOperatorLastName + "]";
+		return "FormSurveyCreate [templateId=" + templateId + ", operatorId=" + operatorId
+				+ ", orderNumberAndOperation=" + orderNumberAndOperation + ", operatorManual=" + operatorManual
+				+ ", manualOperatorId=" + manualOperatorId + ", manualOperatorFirstName=" + manualOperatorFirstName
+				+ ", manualOperatorLastName=" + manualOperatorLastName + ", quantityChecked=" + quantityChecked + "]";
 	}
+	
+	
+	
+	
+
 	
 	
 	

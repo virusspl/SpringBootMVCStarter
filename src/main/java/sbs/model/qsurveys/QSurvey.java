@@ -78,6 +78,9 @@ public class QSurvey {
 	@Column(name = "qs_order_operation", length = 10, nullable = false)
 	private String orderOperation;
 	
+	@Column(name = "qs_order_operation_description", length = 45, nullable = false)
+	private String orderOperationDescription;
+	
 	@Column(name = "qs_order_product", length = 30, nullable = false)
 	private String orderProduct;
 	
@@ -236,6 +239,14 @@ public class QSurvey {
 		this.orderOperation = orderOperation;
 	}
 
+	public String getOrderOperationDescription() {
+		return orderOperationDescription;
+	}
+
+	public void setOrderOperationDescription(String orderOperationDescription) {
+		this.orderOperationDescription = orderOperationDescription;
+	}
+
 	public String getOrderProduct() {
 		return orderProduct;
 	}
@@ -289,7 +300,5 @@ public class QSurvey {
 		return "QSurvey [id=" + id + ", creationDate=" + creationDate + "]";
 	}
 
-	
-	
 	
 }

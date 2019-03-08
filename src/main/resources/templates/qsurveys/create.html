@@ -21,16 +21,20 @@
 			$('#template').selectize();
 		</script>
 		<script>
+			function showhide() {
+				if ($('#operatorManualCheckbox').is(':checked')) {
+					$('.inithide').show("slide");
+					$('.initshow').hide("slide");
+				} else {
+					$('.inithide').hide("slide");
+					$('.initshow').show("slide");
+				}
+			}
 			$(document).ready(function() {
 				$('#operatorManualCheckbox').click(function() {
-					if ($('#operatorManualCheckbox').is(':checked')) {
-						$('.inithide').show("slide");
-						$('.initshow').hide("slide");
-					} else {
-						$('.inithide').hide("slide");
-						$('.initshow').show("slide");
-					}
+					showhide()
 				});
+				showhide()
 			});
 		</script>
 	</div>
@@ -44,19 +48,21 @@
 				<span th:text="#{qsurveys.startnew.description}"> Welcome
 					message </span>
 			</div>
-				<!-- BACK TO MAIN PAGE -->
-				<a th:href="@{/qsurveys/dispatch}" class="btn btn-link btn-sm"> <span
-					class="glyphicon glyphicon-menu-left"></span> <span
-					th:text="#{action.back}">back</span>
-				</a>
+			<!-- BACK TO MAIN PAGE -->
+			<a th:href="@{/qsurveys/dispatch}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
 		</div>
 		<div class="row">
-			<div class="col-xs-12 col-xs-offset-0">
-				<div class="col-xs-12">
-					<form th:action="@{/qsurveys/create}" method="post"
-						th:object="${formSurveyCreate}">
-						<h3 th:text="#{qsurveys.template}" class="text-primary underline"></h3>
-						<div class="form-group margin-top-10">
+			<div class="col-xs-12">
+				<!-- FORM -->
+				<form th:action="@{/qsurveys/create}" method="post"
+					th:object="${formSurveyCreate}">
+					<!-- TEMPLATE -->
+					<h3 th:text="#{qsurveys.template}" class="text-primary underline"></h3>
+					<div class="row margin-top-10">
+						<div class="col-xs-12">
 							<label for="template" th:text="#{qsurveys.template}">User</label>
 							<select class="form-control" id="template" name="template"
 								th:placeholder="#{qsurveys.template}" th:field="*{templateId}">
@@ -65,15 +71,17 @@
 									th:title="${sessionInfo.templates[__${stat.index}__].description}"
 									th:text="|
 								${sessionInfo.templates[__${stat.index}__].title} /  
-								${sessionInfo.templates[__${stat.index}__].id}|"
-								
-								>template</option>
+								${sessionInfo.templates[__${stat.index}__].id}|">template</option>
 							</select>
 							<div th:errors="*{templateId}"
 								class="alert alert-danger margin-top-5">error</div>
 						</div>
-						<h3 th:text="#{qsurveys.operator}" class="text-primary underline"></h3>
-						<div class="form-group margin-top-10">
+					</div>
+					<!-- /TEMPLATE -->
+					<!-- OPERATOR -->
+					<h3 th:text="#{qsurveys.operator}" class="text-primary underline"></h3>
+					<div class="row margin-top-10">
+						<div class="col-xs-12">
 							<div class="initshow">
 								<label for="operator" th:text="#{qsurveys.select.user.title}">User</label>
 								<select class="form-control" id="operator" name="operator"
@@ -88,13 +96,11 @@
 								${sessionInfo.workers[__${stat.index}__].id}
 								|">User</option>
 								</select>
-								<div th:errors="*{operatorId}"
-									class="alert alert-danger margin-top-5">error</div>
 							</div>
 							<div class="inithide">
 								<div class="row">
 									<div class="col-lg-2 col-sm-3 col-xs-6">
-										<div class="form-group">
+										<div class="form-group margin-top-5">
 											<label for="manualOperatorId"
 												th:text="#{qsurveys.operator.id}">number</label> <input
 												type="text" class="form-control" id="manualOperatorId"
@@ -120,58 +126,91 @@
 									</div>
 									<div class="col-sm-4 col-xs-12">
 										<div class="form-group">
-											<label for="manualOperatorLasttName"
-												th:text="#{qsurveys.operator.first.name}">number</label> <input
-												type="text" class="form-control"
-												id="manualOperatorFirstName" name="manualOperatorFirstName"
-												th:field="*{manualOperatorFirstName}"
-												th:placeholder="#{qsurveys.operator.first.name}" />
+											<label for="manualOperatorLastName"
+												th:text="#{qsurveys.operator.last.name}">number</label> <input
+												type="text" class="form-control" id="manualOperatorLastName"
+												name="manualOperatorLastName"
+												th:field="*{manualOperatorLastName}"
+												th:placeholder="#{qsurveys.operator.last.name}" />
 										</div>
-										<div th:errors="*{manualOperatorFirstName}"
+										<div th:errors="*{manualOperatorLastName}"
 											class="alert alert-danger margin-top-5">error</div>
 									</div>
-
 								</div>
 							</div>
-							<div class="form-group margin-top-10">
+							<div th:errors="*{operatorId}"
+								class="alert alert-danger margin-top-5">error</div>
+							
 								<div id="operatorManual" class="checkbox">
 									<label><input type="checkbox"
 										id="operatorManualCheckbox" th:field="*{operatorManual}" /><span
 										th:text="#{qsurveys.operatormanual}"></span></label>
 								</div>
-							</div>
 						</div>
+					</div>
+					<!-- /OPERATOR -->
+					<!-- PRODUCTION ORDER -->
+					<h3 th:text="#{qsurveys.production.order.and.operation}"
+						class="text-primary underline"></h3>
+					<span th:text="#{qsurveys.combine.number.and.operation}"> </span>
+					<div class="row margin-top-10">
+						<div class="col-sm-6 col-xs-12">
+							<label for="number"
+								th:text="#{qsurveys.production.order.and.operation}">number</label>
+							<input type="text" class="form-control"
+								id="orderNumberAndOperation" name="orderNumberAndOperation"
+								th:placeholder="#{qsurveys.production.order.and.operation}"
+								th:field="*{orderNumberAndOperation}" />
 
-						<h3 th:text="#{qsurveys.production.order.and.operation}"
-							class="text-primary underline"></h3>
-						<span th:text="#{qsurveys.combine.number.and.operation}"> </span>
-						<div class="form-group margin-top-10 row">
-							<div class="col-sm-6 col-xs-12">
-								<div class="form-group">
-									<!--  autocomplete="off" ? -->
-									<label for="number"
-										th:text="#{qsurveys.production.order.and.operation}">number</label>
-									<input type="text" class="form-control"
-										id="orderNumberAndOperation" name="orderNumberAndOperation"
-										th:placeholder="#{qsurveys.production.order.and.operation}"
-										th:field="*{orderNumberAndOperation}" />
-								</div>
-								<div th:errors="*{orderNumberAndOperation}"
-									class="alert alert-danger margin-top-5">error</div>
-							</div>
+							<div th:errors="*{orderNumberAndOperation}"
+								class="alert alert-danger margin-top-5">error</div>
 						</div>
-						<a th:href="@{/qsurveys/dispatch}"
-							class="btn btn-link btn-sm text-danger"> <span
-							class="glyphicon glyphicon-remove"></span> <span
-							th:text="#{qsurveys.cancel.survey}">back</span>
-						</a>
-						<button class="btn btn-primary btn-sm" type="submit" name="ok">
-							<span class="glyphicon glyphicon-ok"></span> <span
-								th:text="#{action.submit}">search</span>
-						</button>
+						<div class="col-sm-2 col-xs-6">
 
-					</form>
-				</div>
+							<label for="number" th:text="#{qsurveys.quantity.checked}">number</label>
+							<input type="number" min="0" max="100" class="form-control"
+								id="quantityChecked" name="quantityChecked"
+								th:placeholder="#{qsurveys.quantity.checked}"
+								th:field="*{quantityChecked}" />
+
+							<div th:errors="*{quantityChecked}"
+								class="alert alert-danger margin-top-5">error</div>
+						</div>
+					</div>
+					<!-- /PRODUCTION ORDER -->
+					<!-- COMMENT -->
+					<h3 th:text="#{general.comment}" class="text-primary underline"></h3>
+					<div class="row margin-top-10">
+						<div class="col-xs-12">
+
+							<!-- description -->
+							<label for="comment" th:text="#{general.comment}">comment</label>
+							<textarea class="form-control" id="comment" name="comment"
+								th:placeholder="#{general.comment}" th:field="*{comment}"
+								style="min-height: 150px;"></textarea>
+							<div th:errors="*{comment}"
+								class="alert alert-danger margin-top-5">error</div>
+
+						</div>
+					</div>
+					<!-- COMMENT -->
+					<!-- BUTTONS -->
+					<div class="row margin-top-10">
+						<div class="col-xs-12">
+							<a th:href="@{/qsurveys/dispatch}"
+								class="btn btn-link btn-sm text-danger"> <span
+								class="glyphicon glyphicon-remove"></span> <span
+								th:text="#{qsurveys.cancel.survey}">back</span>
+							</a>
+							<button class="btn btn-primary btn-sm" type="submit" name="ok">
+								<span class="glyphicon glyphicon-ok"></span> <span
+									th:text="#{action.submit}">search</span>
+							</button>
+						</div>
+					</div>
+					<!-- /BUTTONS -->
+				</form>
+				<!-- /FORM -->
 			</div>
 		</div>
 
