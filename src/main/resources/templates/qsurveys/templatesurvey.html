@@ -10,87 +10,89 @@
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-xs-12 col-xs-offset-0">
-				<h2 th:text="#{quality.surveys.parameters.title}"
+				<h2 th:text="#{qsurveys.survey.template.title}"
 					class="text-primary">Hello on a page</h2>
 			</div>
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
-				<span th:text="#{quality.surveys.parameters.message}">
+				<span th:text="#{qsurveys.survey.template.message}">
 					Welcome message </span>
 			</div>
 
 		</div>
+		<div class="row">
+			<a th:href="|@{/qsurveys/show/}${surveyInfo.id}|"
+				class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
 		<div class="row margin-top-10">
 			<div class="col-xs-12">
-				<h3 class="text-primary" th:text="${surveyInfo.productCode}">code</h3>
-				<i th:text="${surveyInfo.productDescription}">description</i>
+				<h3 class="text-primary" th:text="${surveyInfo.orderProduct}">code</h3>
+				<i th:text="${surveyInfo.orderProductDescription}">description</i>
 			</div>
-
 		</div>
 
 		<div class="row">
 			<div class="col-xs-12 col-xs-offset-0">
-				<h3 th:text="#{quality.surveys.parameters.list}"
+				<h3 th:text="#{qsurveys.template}"
 					class="text-primary"></h3>
-				<div th:errors="${parameterSurveyForm}"
+				<div th:errors="${formTemplate}"
 					class="alert alert-warning text-center"></div>
-				<form th:action="@{/qualitysurveys/create}"
-					th:object="${parameterSurveyForm}" method="post">
-
-					<button class="btn btn-link btn-sm" type="submit"
-						name="changeSurveyType">
-						<span class="glyphicon glyphicon-refresh"></span> <span
-							th:text="#{quality.surveys.change.survey.type}">change
-							type</span>
-					</button>
+				<form th:action="@{/qsurveys/savetemplate}"
+					th:object="${formTemplate}" method="post">
 
 					<div class="table-responsive">
 						<table class="table table-hover">
 							<thead>
 								<tr>
 									<th th:text="#{line.number}">lp</th>
-									<th th:text="#{quality.surveys.parameter.title}">param</th>
+									<th th:text="#{qsurveys.parameter.title}">param</th>
 									<th class="text-center"
-										th:utext="|#{quality.surveys.model.answer} /&lt;br /&gt;#{qualitu.survey.confirmation}|">model
+										th:utext="|#{qsurveys.model.answer} /&lt;br /&gt;#{qualitu.survey.confirmation}|">model
 										answer / confirm</th>
-									<th class="text-center" th:text="#{quality.surveys.answer}"></th>
-									<th th:text="#{quality.surveys.comment}">comment</th>
+									<th class="text-center" th:text="#{qsurveys.answer}"></th>
+									<th th:text="#{qsurveys.comment}">comment</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr th:each="item,stat : *{items}">
 									<td style="font-size: 120%;">
-										<!-- SURVIVE HIDDEN DATA --> <input type="hidden"
-										th:field="*{items[__${stat.index}__].title}"></input> <input
-										type="hidden" th:field="*{items[__${stat.index}__].type}"></input>
-										<input type="hidden"
-										th:field="*{items[__${stat.index}__].parameterId}"></input> <!-- LINE NUMBER -->
+										<!-- SURVIVE HIDDEN DATA --> 
+										<input type="hidden" th:field="*{items[__${stat.index}__].typeId}"></input>
+										<input type="hidden" th:field="*{items[__${stat.index}__].typeCode}"></input>
+										<input type="hidden" th:field="*{items[__${stat.index}__].order}"></input>
+										<input type="hidden" th:field="*{items[__${stat.index}__].ShortText}"></input>
+										<input type="hidden" th:field="*{items[__${stat.index}__].longText}"></input>
+
 										<span th:text="${stat.index} + 1">lp</span>
 									</td>
 									<td style="font-size: 120%;">
 										<!-- PARAMETER TITLE --> <span class="text-lg"
-										th:text="*{items[__${stat.index}__].title}"></span>
+										th:text="*{items[__${stat.index}__].longText}"></span>
 									</td>
 									<td>
 										<!-- MODEL ANSWER --> <input autocomplete="off"
-										th:if="${parameterSurveyForm.booleanType} != *{items[__${stat.index}__].type}"
+										th:if="*{items[__${stat.index}__].typeCode} == 'qsurveys.type.parameter'" 
 										type="text" class="form-control" style="text-align: center;"
-										th:field="*{items[__${stat.index}__].modelAnswer}"></input>
-										<div th:errors="*{items[__${stat.index}__].modelAnswer}"
-											class="alert alert-danger margin-top-5">error</div> <!-- YESNO ANSWER -->
+										th:field="*{items[__${stat.index}__].referenceValue}"></input>
+										<div th:errors="*{items[__${stat.index}__].referenceValue}"
+											class="alert alert-danger margin-top-5">error</div> 
+										<!-- YESNO ANSWER -->
 										<input
-										th:if="${parameterSurveyForm.booleanType} == *{items[__${stat.index}__].type}"
+										th:if="*{items[__${stat.index}__].typeCode} == 'qsurveys.type.boolean'"
 										type="checkbox" class="form-control"
 										style="text-align: center;"
-										th:field="*{items[__${stat.index}__].yesnoAnswer}"></input>
-										<div th:errors="*{items[__${stat.index}__].yesnoAnswer}"
+										th:field="*{items[__${stat.index}__].booleanValue}"></input>
+										<div th:errors="*{items[__${stat.index}__].booleanValue}"
 											class="alert alert-danger margin-top-5">error</div>
 									</td>
 									<td>
 										<!-- ANSWER --> <input autocomplete="off"
-										th:if="${parameterSurveyForm.booleanType} != *{items[__${stat.index}__].type}"
+										th:if="*{items[__${stat.index}__].typeCode} == 'qsurveys.type.parameter'"
 										type="text" class="form-control" style="text-align: center;"
-										th:field="*{items[__${stat.index}__].answer}"></input>
-										<div th:errors="*{items[__${stat.index}__].answer}"
+										th:field="*{items[__${stat.index}__].currentValue}"></input>
+										<div th:errors="*{items[__${stat.index}__].currentValue}"
 											class="alert alert-danger margin-top-5">error</div>
 									</td>
 									<td>
@@ -103,19 +105,17 @@
 							</tbody>
 						</table>
 					</div>
-					<a th:href="@{/qualitysurveys/dispatch}" class="btn btn-link btn-sm text-danger"> <span
+					<a th:href="|@{/qsurveys/show/}${surveyInfo.id}|" class="btn btn-link btn-sm text-danger"> <span
 						class="glyphicon glyphicon-remove"></span> <span
-						th:text="#{quality.surveys.cancel.survey}">back</span>
+						th:text="#{qsurveys.cancel.survey}">back</span>
 					</a>
 					<button class="btn btn-primary btn-sm" type="submit"
-						name="finishParametersSurvey">
+						name="template" th:value="${surveyInfo.id}">
 						<span class="glyphicon glyphicon-ok"></span> <span
 							th:text="#{action.submit}">search</span>
 					</button>
 
 				</form>
-
-
 
 
 			</div>

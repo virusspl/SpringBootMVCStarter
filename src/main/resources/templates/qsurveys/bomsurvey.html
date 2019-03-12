@@ -16,18 +16,18 @@
 				<span th:text="#{qsurveys.bom.message}"> Welcome message </span>
 			</div>
 		</div>
-		<div class="row margin-top-10">
-			<div class="col-xs-12">
-				<h3 class="text-primary" th:text="${surveyInfo.orderProduct}">code</h3>
-				<i th:text="${surveyInfo.orderProductDescription}">description</i>
-			</div>
-		</div>
 		<div class="row">
 			<a th:href="|@{/qsurveys/show/}${surveyInfo.id}|"
 				class="btn btn-link btn-sm"> <span
 				class="glyphicon glyphicon-menu-left"></span> <span
 				th:text="#{action.back}">back</span>
 			</a>
+		</div>		
+		<div class="row margin-top-10">
+			<div class="col-xs-12">
+				<h3 class="text-primary" th:text="${surveyInfo.orderProduct}">code</h3>
+				<i th:text="${surveyInfo.orderProductDescription}">description</i>
+			</div>
 		</div>
 		<div class="row">
 			<div class="col-xs-12 col-xs-offset-0">

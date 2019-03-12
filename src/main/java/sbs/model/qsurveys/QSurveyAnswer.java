@@ -28,7 +28,7 @@ public class QSurveyAnswer {
 	private int id;
 	
 	@Column(name = "qsa_order", nullable = false)
-	private int bomSeq;
+	private int order;
 	
 	@Column(name = "qsa_long_text", length = 255, nullable = false)
 	private String longQuestionText;
@@ -76,12 +76,12 @@ public class QSurveyAnswer {
 		this.id = id;
 	}
 
-	public int getBomSeq() {
-		return bomSeq;
+	public int getOrder() {
+		return order;
 	}
 
-	public void setBomSeq(int bomSeq) {
-		this.bomSeq = bomSeq;
+	public void setOrder(int order) {
+		this.order = order;
 	}
 
 	public String getLongQuestionText() {
@@ -134,7 +134,7 @@ public class QSurveyAnswer {
 
 	@Override
 	public String toString() {
-		return "QSurveyAnswer [type=" + type + ", id=" + id + ", bomSeq=" + bomSeq + ", longQuestionText="
+		return "QSurveyAnswer [type=" + type + ", id=" + id + ", order=" + order + ", longQuestionText="
 				+ longQuestionText + ", shortQuestionText=" + shortQuestionText + ", referenceValue=" + referenceValue
 				+ ", value=" + value + ", booleanValue=" + booleanValue + ", comment=" + comment + "]";
 	}

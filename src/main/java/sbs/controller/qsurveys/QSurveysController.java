@@ -8,6 +8,7 @@ import java.util.Locale;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
@@ -26,6 +27,7 @@ import javassist.NotFoundException;
 import sbs.helpers.TextHelper;
 import sbs.model.hr.HrUserInfo;
 import sbs.model.qsurveys.QSurvey;
+import sbs.model.qsurveys.QSurveyAnswer;
 import sbs.model.qsurveys.QSurveyBomAnswer;
 import sbs.model.qsurveys.QSurveyQuestion;
 import sbs.model.qsurveys.QSurveyQuestionType;
@@ -33,6 +35,7 @@ import sbs.model.qsurveys.QSurveyTemplate;
 import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.service.optima.JdbcAdrOptimaService;
+import sbs.service.qsurveys.QSurveyAnswersService;
 import sbs.service.qsurveys.QSurveyBomAnswersService;
 import sbs.service.qsurveys.QSurveyQuestionTypesService;
 import sbs.service.qsurveys.QSurveyQuestionsService;
@@ -60,6 +63,8 @@ public class QSurveysController {
 	@Autowired
 	QSurveyBomAnswersService bomAnswersService;
 	@Autowired
+	QSurveyAnswersService answersService;
+	@Autowired
 	JdbcOracleX3Service x3Service;
 	@Autowired
 	JdbcAdrOptimaService hrService;
@@ -67,7 +72,8 @@ public class QSurveysController {
 	MessageSource messageSource;
 	@Autowired
 	TextHelper textHelper;
-
+ 
+	// TODO PHOTOS
 	@ModelAttribute("sessionInfo")
 	public QSurveySessionInfo sessionInfo() {
 		return sessionInfo;
@@ -95,13 +101,25 @@ public class QSurveysController {
 			throw new NotFoundException(messageSource.getMessage("qsurveys.error.survey.not.found", null, locale));
 		}
 		
+		// bom answers
 		if(survey.getBomSurveyDate()==null){
 			noBomDate = true;
 			model.addAttribute("noBomDate", noBomDate);
+		}else{
+			// TODO ORDER
+			Hibernate.initialize(survey.getBomAnswers());
+			model.addAttribute("bomAnswers", survey.getBomAnswers());
 		}
+		
+		// template answers
 		if(survey.getTemplateSurveyDate()==null){
 			noTemplateDate = true;
 			model.addAttribute("noTemplateDate", noTemplateDate);
+		}
+		else{
+			// TODO ORDER
+			Hibernate.initialize(survey.getAnswers());
+			model.addAttribute("answers", survey.getAnswers());
 		}
 		
 		model.addAttribute("surveyInfo",survey);
@@ -182,7 +200,7 @@ public class QSurveysController {
 				bsa.setModelUnit(bsi.getModelUnit());
 				bsa.setModelQuantity(bsi.getModelQuantity());
 				bsa.setAnswerQuantity(answer);
-				bsa.setComment(bsi.getComment());
+				bsa.setComment(bsi.getComment().trim());
 				
 				// survey one-to-many
 				bsa.setSurvey(survey);
@@ -197,7 +215,7 @@ public class QSurveysController {
 				continue;
 			}
 			
-			if(bsi.getComment().length()>100) {
+			if(bsi.getComment().trim().length()>100) {
 				bindingResult.rejectValue("items[" + i + "].comment", "error.bad.length",
 						"ERROR");
 				continue;
@@ -227,10 +245,6 @@ public class QSurveysController {
 	}
 	
 	
-	
-	
-	
-	
 	@RequestMapping(value = "/make", params = { "template" }, method = RequestMethod.POST)
 	@Transactional
 	public String showMakeTemplateSurvey(@RequestParam String template, RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
@@ -239,13 +253,116 @@ public class QSurveysController {
 		if (survey == null) {
 			throw new NotFoundException("Survey not found");
 		}
+		Hibernate.initialize(survey.getTemplate().getQuestions());
 
-		System.out.println("Template");
+		List<QSurveyQuestion> questions = questionsService.findListByTemplateIdAsc(survey.getTemplate().getId());
+		FormTemplate formTemplate = new FormTemplate();
+		QuestionItem qi;
+		for (QSurveyQuestion question : questions) {
+			qi = new QuestionItem(question);
+			formTemplate.getItems().add(qi);
+		}
+
+		model.addAttribute("formTemplate", formTemplate);
+		model.addAttribute("surveyInfo", survey);
+
+		return "qsurveys/templatesurvey";
 		
+	}
+	
+	@RequestMapping(value = "/savetemplate", params = { "template" }, method = RequestMethod.POST)
+	@Transactional
+	public String finishTemplateSurvey(@RequestParam String template, FormTemplate formTemplate, BindingResult bindingResult, Locale locale,
+			RedirectAttributes redirectAttrs, Model model) throws NotFoundException {
+
+		QSurvey survey = surveysService.findById(Integer.parseInt(template));
+		if (survey == null) {
+			throw new NotFoundException("Survey not found");
+		}
+		
+		QSurveyQuestionType type;
+		QSurveyAnswer sa;
+		QuestionItem qi;
+		ArrayList<QSurveyAnswer> answers = new ArrayList<>();
+		boolean answerPresent;
+
+		for (int i = 0; i < formTemplate.items.size(); i++) {
+			answerPresent= false;
+			qi = formTemplate.getItems().get(i);
+			sa = new QSurveyAnswer();
+
+			type =  questionTypesService.findById(qi.getTypeId());
+			if (type == null) {
+				throw new NotFoundException("No question type for id = " + qi.getTypeId());
+			}
+			
+			// save survive data
+			sa.setSurvey(survey);
+			sa.setType(type);
+			sa.setOrder(qi.getOrder());
+			sa.setShortQuestionText(qi.getShortText());
+			sa.setLongQuestionText(qi.getLongText());
+			if(qi.getComment().trim().length()<=100){
+				sa.setComment(qi.getComment().trim());
+			}
+			else{
+				bindingResult.rejectValue("items[" + i + "].comment", "error.bad.length",
+						"ERROR");
+			}
+			
+			// save answers
+			if(type.getCode().equals("qsurveys.type.parameter")){
+				if (qi.getReferenceValue().trim().length() > 0 || qi.getCurrentValue().trim().length() > 0) {
+					if (qi.getReferenceValue().trim().length() > 0 && qi.getCurrentValue().trim().length() > 0) {
+						answerPresent = true;
+						sa.setReferenceValue(qi.getReferenceValue().trim());
+						sa.setValue(qi.getCurrentValue().trim());
+						sa.setBooleanValue(false);
+					} else {
+						bindingResult.rejectValue("items[" + i + "].referenceValue", "qsurveys.error.both.values", "ERROR");
+						bindingResult.rejectValue("items[" + i + "].currentValue", "qsurveys.error.both.values", "ERROR");
+					}
+				}
+			}
+			else if(type.getCode().equals("qsurveys.type.boolean")){
+				if(qi.isBooleanValue()){
+					answerPresent = true;
+					sa.setReferenceValue("");
+					sa.setValue("");
+					sa.setBooleanValue(qi.isBooleanValue());
+				}
+			}
+			else{
+				throw new NotFoundException("No validator for type = " + qi.getTypeCode());
+			}
+			
+			if(answerPresent){
+				survey.getAnswers().add(sa);
+				answers.add(sa);
+			}
+
+		}
+
+		if (answers.size() < 2) {
+			bindingResult.reject("qsurveys.error.not.enough.answers");
+		}
+
+		if (bindingResult.hasErrors()) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			model.addAttribute("surveyInfo", survey);
+			return "qsurveys/templatesurvey";
+		}
+
+		// save
+		survey.setTemplateSurveyDate(new Timestamp(new java.util.Date().getTime()));
+		surveysService.save(survey);
+		for (QSurveyAnswer ans : answers) {
+			answersService.save(ans);
+		}
+
 		// redirect
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
-		return "redirect:/qsurveys/show/" + survey.getId();
-		
+		return "redirect:/qsurveys/show/"+survey.getId();
 	}
 	
 
