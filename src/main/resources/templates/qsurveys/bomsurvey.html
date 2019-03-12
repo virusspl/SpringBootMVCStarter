@@ -1,0 +1,112 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/main">
+<head>
+</head>
+<body>
+	<div layout:fragment="script"></div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12 col-xs-offset-0">
+				<h2 th:text="#{qsurveys.bom.title}" class="text-primary">Hello
+					on a page</h2>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{qsurveys.bom.message}"> Welcome message </span>
+			</div>
+		</div>
+		<div class="row margin-top-10">
+			<div class="col-xs-12">
+				<h3 class="text-primary" th:text="${surveyInfo.orderProduct}">code</h3>
+				<i th:text="${surveyInfo.orderProductDescription}">description</i>
+			</div>
+		</div>
+		<div class="row">
+			<a th:href="|@{/qsurveys/show/}${surveyInfo.id}|"
+				class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-xs-offset-0">
+				<h3 th:text="#{qsurveys.bom.list}" class="text-primary"></h3>
+				<div th:errors="${formBom}" class="alert alert-warning text-center"></div>
+				<form th:action="@{/qsurveys/savebom}" th:object="${formBom}"
+					method="post">
+					<div class="table-responsive">
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th th:text="#{qsurveys.bom.seq}">lp</th>
+									<th th:text="#{qsurveys.bom.part.code}">part</th>
+									<th th:text="#{qsurveys.bom.part.description}">desc</th>
+									<th th:text="#{qsurveys.bom.model.unit} " class="text-center">unit</th>
+									<th th:text="#{qsurveys.bom.answer.quantity}"
+										class="text-center">quantity</th>
+									<th th:text="#{qsurveys.comment}">comment</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="item,stat : *{items}">
+									<td style="font-size: 110%;">
+										<!-- SURVIVE HIDDEN DATA --> <input type="hidden"
+										th:field="*{items[__${stat.index}__].sequence}"></input> <input
+										type="hidden" th:field="*{items[__${stat.index}__].partCode}"></input>
+										<input type="hidden"
+										th:field="*{items[__${stat.index}__].partDescription}"></input>
+										<input type="hidden"
+										th:field="*{items[__${stat.index}__].modelUnit}"></input> <input
+										type="hidden"
+										th:field="*{items[__${stat.index}__].modelQuantity}"></input>
+										<!-- SEQUENCE --> <span
+										th:text="*{items[__${stat.index}__].sequence}">sequence</span>
+									</td>
+									<td style="font-size: 110%;">
+										<!-- PART CODE --> <span class="text-lg"
+										th:text="*{items[__${stat.index}__].partCode}"></span>
+									</td>
+									<td style="font-size: 110%;">
+										<!-- PART DESCRIPTION --> <span class="text-lg"
+										th:text="*{items[__${stat.index}__].partDescription}"></span>
+									</td>
+									<td style="font-size: 110%;" class="text-center">
+										<!-- MODEL UNIT --> <span class="text-lg"
+										th:text="*{items[__${stat.index}__].modelUnit}"></span>
+									</td>
+									<td>
+										<!-- ANSWER --> <input autocomplete="off" type="text"
+										class="form-control" style="text-align: center;"
+										th:field="*{items[__${stat.index}__].answerQuantity}"></input>
+										<div th:errors="*{items[__${stat.index}__].answerQuantity}"
+											class="alert alert-danger margin-top-5">error</div>
+									</td>
+									<td>
+										<!-- COMMENT --> <input autocomplete="off" type="text"
+										class="form-control"
+										th:field="*{items[__${stat.index}__].comment}"></input>
+										<div th:errors="*{items[__${stat.index}__].comment}"
+											class="alert alert-danger margin-top-5">error</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<a th:href="|@{/qsurveys/show/}${surveyInfo.id}|"
+						class="btn btn-link btn-sm text-danger"> <span
+						class="glyphicon glyphicon-remove"></span> <span
+						th:text="#{qsurveys.cancel.survey}">back</span>
+					</a>
+					<button class="btn btn-primary btn-sm" type="submit"
+					name="bom" th:value="${surveyInfo.id}">
+						<span class="glyphicon glyphicon-ok"></span> <span
+							th:text="#{action.submit}">search</span>
+					</button>
+
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

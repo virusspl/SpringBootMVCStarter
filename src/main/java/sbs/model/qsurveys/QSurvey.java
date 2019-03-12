@@ -22,7 +22,7 @@ import sbs.model.users.User;
 @Table(name = "qsurvey_surveys")
 public class QSurvey {
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "qs_auth_user_id", nullable = false)
 	private User user;
 	
@@ -93,11 +93,14 @@ public class QSurvey {
 	@Column(name = "qs_order_client_name", length = 70, nullable = false)
 	private String orderClientName;
 
-	@Column(name = "qs_order_quantity_ordered", nullable = false)
-	private int orderQuantityOrdered;
+	@Column(name = "qs_order_quantity_produced", nullable = false)
+	private int orderQuantityProduced;
 	
 	@Column(name = "qs_quantity_checked", nullable = false)
 	private int orderQuantityChecked;
+	
+	@Column(name = "qs_order_sales_number", length = 25, nullable = false)
+	private String orderSalesNumber;
 	
 	public QSurvey() {
 	
@@ -279,12 +282,12 @@ public class QSurvey {
 		this.orderClientName = orderClientName;
 	}
 
-	public int getOrderQuantityOrdered() {
-		return orderQuantityOrdered;
+	public int getOrderQuantityProduced() {
+		return orderQuantityProduced;
 	}
 
-	public void setOrderQuantityOrdered(int orderQuantityOrdered) {
-		this.orderQuantityOrdered = orderQuantityOrdered;
+	public void setOrderQuantityProduced(int orderQuantityProduced) {
+		this.orderQuantityProduced = orderQuantityProduced;
 	}
 
 	public int getOrderQuantityChecked() {
@@ -293,6 +296,14 @@ public class QSurvey {
 
 	public void setOrderQuantityChecked(int orderQuantityChecked) {
 		this.orderQuantityChecked = orderQuantityChecked;
+	}
+	
+	public String getOrderSalesNumber() {
+		return orderSalesNumber;
+	}
+
+	public void setOrderSalesNumber(String orderSalesNumber) {
+		this.orderSalesNumber = orderSalesNumber;
 	}
 
 	@Override
