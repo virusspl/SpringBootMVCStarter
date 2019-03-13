@@ -1,7 +1,6 @@
 package sbs.controller.various;
 
 import java.util.ArrayList;
-import java.util.List;
 /*
 import java.io.InputStream;
 import java.net.URL;
@@ -30,7 +29,6 @@ import sbs.model.qualitysurveys.QualitySurveyParameter;
 import sbs.model.tools.ToolsProjectState;
 import sbs.model.users.Role;
 import sbs.model.users.User;
-import sbs.model.x3.X3Product;
 import sbs.service.bhptickets.BhpTicketStateService;
 import sbs.service.bhptickets.BhpTicketsService;
 import sbs.service.geode.JdbcOracleGeodeService;
@@ -162,7 +160,7 @@ public class VariousPagesController {
 	
 	@RequestMapping("/test")
 	public String test(Model model, Locale locale) throws InterruptedException {
-		long start = System.currentTimeMillis();
+		//long start = System.currentTimeMillis();
 //    	List<X3CoverageData> initialData = jdbcOracleX3Service.getCoverageInitialData("ATW");
 //    	Map<String, String> descriptions = jdbcOracleX3Service.getDescriptionsByLanguage(jdbcOracleX3Service.convertLocaleToX3Lang(locale), "ATW");
 //		Map<String, Integer> demand = jdbcOracleX3Service.getAcvDemandList("ATW");
@@ -182,7 +180,7 @@ public class VariousPagesController {
 		System.out.println("time: " + (System.currentTimeMillis()-start) + " ms");
 		*/
 		
-		List<X3Product> allProducts = jdbcOracleX3Service.findAllActiveProducts("ATW");
+		//List<X3Product> allProducts = jdbcOracleX3Service.findAllActiveProducts("ATW");
 		System.out.println("===");
 		//System.out.println(allProducts);
 		
