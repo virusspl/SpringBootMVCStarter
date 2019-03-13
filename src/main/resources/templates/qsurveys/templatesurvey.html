@@ -57,7 +57,7 @@
 							</thead>
 							<tbody>
 								<tr th:each="item,stat : *{items}">
-									<td style="font-size: 120%;">
+									<td style="font-size: 100%;">
 										<!-- SURVIVE HIDDEN DATA --> 
 										<input type="hidden" th:field="*{items[__${stat.index}__].typeId}"></input>
 										<input type="hidden" th:field="*{items[__${stat.index}__].typeCode}"></input>

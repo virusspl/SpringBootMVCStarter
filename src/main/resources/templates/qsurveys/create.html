@@ -202,7 +202,11 @@
 								class="glyphicon glyphicon-remove"></span> <span
 								th:text="#{qsurveys.cancel.survey}">back</span>
 							</a>
-							<button class="btn btn-primary btn-sm" type="submit" name="ok">
+							<button class="btn btn-primary btn-sm" type="submit" name="ok"
+							th:onclick="|return confirm('#{general.warning.longtask} (~40s). #{general.areyousure}')|"
+							data-toggle="tooltip" data-placement="bottom" 
+							th:title="|#{general.warning.longtask} ( ~40s )|"
+							>
 								<span class="glyphicon glyphicon-ok"></span> <span
 									th:text="#{action.submit}">search</span>
 							</button>
