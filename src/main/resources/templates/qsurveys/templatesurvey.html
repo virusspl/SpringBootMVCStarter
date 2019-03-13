@@ -11,7 +11,7 @@
 		<div class="row">
 			<div class="col-xs-12 col-xs-offset-0">
 				<h2 th:text="#{qsurveys.survey.template.title}"
-					class="text-primary">Hello on a page</h2>
+					class="text-primary">Hello on a page</h2>		 
 			</div>
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
 				<span th:text="#{qsurveys.survey.template.message}">
@@ -35,7 +35,7 @@
 
 		<div class="row">
 			<div class="col-xs-12 col-xs-offset-0">
-				<h3 th:text="#{qsurveys.template}"
+				<h3 th:text="${surveyInfo.template.title}"
 					class="text-primary"></h3>
 				<div th:errors="${formTemplate}"
 					class="alert alert-warning text-center"></div>

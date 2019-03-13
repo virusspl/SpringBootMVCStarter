@@ -106,9 +106,7 @@ public class QSurveysController {
 			noBomDate = true;
 			model.addAttribute("noBomDate", noBomDate);
 		}else{
-			// TODO ORDER
-			Hibernate.initialize(survey.getBomAnswers());
-			model.addAttribute("bomAnswers", survey.getBomAnswers());
+			model.addAttribute("bomAnswers", bomAnswersService.findBySurveyId(survey.getId()));
 		}
 		
 		// template answers
@@ -117,9 +115,7 @@ public class QSurveysController {
 			model.addAttribute("noTemplateDate", noTemplateDate);
 		}
 		else{
-			// TODO ORDER
-			Hibernate.initialize(survey.getAnswers());
-			model.addAttribute("answers", survey.getAnswers());
+			model.addAttribute("answers", answersService.findBySurveyId(survey.getId()));
 		}
 		
 		model.addAttribute("surveyInfo",survey);
