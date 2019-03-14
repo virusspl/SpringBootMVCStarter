@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javassist.NotFoundException;
+import sbs.controller.upload.UploadController;
 import sbs.helpers.TextHelper;
 import sbs.model.hr.HrUserInfo;
 import sbs.model.qsurveys.QSurvey;
@@ -72,8 +73,9 @@ public class QSurveysController {
 	MessageSource messageSource;
 	@Autowired
 	TextHelper textHelper;
+	@Autowired 
+	UploadController uploadController;
  
-	// TODO PHOTOS
 	@ModelAttribute("sessionInfo")
 	public QSurveySessionInfo sessionInfo() {
 		return sessionInfo;
@@ -118,6 +120,7 @@ public class QSurveysController {
 			model.addAttribute("answers", answersService.findBySurveyId(survey.getId()));
 		}
 		
+		model.addAttribute("photos", uploadController.listFiles(uploadController.getqSurveysPhotoPath()+"/"+survey.getId()));
 		model.addAttribute("surveyInfo",survey);
 		return "qsurveys/show";
 	}
@@ -672,6 +675,17 @@ public class QSurveysController {
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/qsurveys/show/" + survey.getId();
 
+	}
+	
+	@RequestMapping("/photos/{id}")
+	@Transactional
+	public String showPhotosForm(@PathVariable("id") int id, Model model, Locale locale) throws NotFoundException {
+		QSurvey survey = surveysService.findById(id);
+		if(survey == null){
+			throw new NotFoundException(messageSource.getMessage("qsurveys.error.survey.not.found", null, locale));
+		}
+		model.addAttribute("survey", survey);
+		return "qsurveys/photos";
 	}
 
 }

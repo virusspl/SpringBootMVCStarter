@@ -82,5 +82,26 @@ public class ImageHelper {
         // Get the image's color model
         return pg.getColorModel().hasAlpha();
     }
+    
+    public double getDimensionMultiplier(int currentWidth, int currentHeight, int maxWidth, int maxHeight){
+
+    	if(currentWidth<currentHeight){
+    		int tmp = currentWidth;
+    		currentWidth = currentHeight;
+    		currentHeight = tmp;
+    	}
+    	
+    	double widthMulti = maxWidth*1.0/currentWidth*1.0;
+    	double heightMulti = maxHeight*1.0/currentHeight*1.0;
+      	
+    	if(widthMulti>heightMulti){
+    		return heightMulti;
+    	}
+    	else{
+    		return widthMulti;
+    	}
+    }
+    
+    
 	
 }

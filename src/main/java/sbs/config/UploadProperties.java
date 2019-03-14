@@ -9,6 +9,7 @@ public class UploadProperties {
 	private String bhpPhotoPath;
 	private String toolsPhotoPath;
 	private String mapPhotoPath;
+	private String qSurveysPhotoPath;
 	
 
 	public String getUploadPath() {
@@ -50,7 +51,16 @@ public class UploadProperties {
 	public void setMapPhotoPath(String mapPhotoPath) {
 		this.mapPhotoPath = mapPhotoPath;
 	}
-	
+
+	public String getqSurveysPhotoPath() {
+		return qSurveysPhotoPath;
+	}
+
+	public void setqSurveysPhotoPath(String qSurveysPhotoPath) {
+		this.qSurveysPhotoPath = qSurveysPhotoPath;
+	}
+
+
 
 
 	

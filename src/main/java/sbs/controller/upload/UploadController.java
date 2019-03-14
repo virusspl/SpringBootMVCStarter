@@ -51,6 +51,7 @@ public class UploadController {
 	private final String avatarUploadPath;
 	private final String bhpPhotoPath;
 	private final String toolsPhotoPath;
+	private final String qSurveysPhotoPath;	
 	private final String mapPhotoPath;
 	
 	@Autowired 
@@ -75,6 +76,7 @@ public class UploadController {
     	bhpPhotoPath = uploadProperties.getBhpPhotoPath();
     	toolsPhotoPath = uploadProperties.getToolsPhotoPath();
     	mapPhotoPath = uploadProperties.getMapPhotoPath();
+    	qSurveysPhotoPath = uploadProperties.getqSurveysPhotoPath();
     }
 
 	public String getAvatarUploadPath() {
@@ -93,6 +95,10 @@ public class UploadController {
 		return mapPhotoPath;
 	}
 
+	public String getqSurveysPhotoPath() {
+		return qSurveysPhotoPath;
+	}
+
 	public ArrayList<String> listFiles(String path){
 		ArrayList<String> files = new ArrayList<>();
 		try {
@@ -101,7 +107,10 @@ public class UploadController {
 				files.add(file.getName());
 			}
 		} catch (IOException e) {
+		} catch (NullPointerException np){
+			files.clear();
 		}
+		
 		return files;
 	}
 	
@@ -290,6 +299,63 @@ public class UploadController {
 		}
 		
 		return "redirect:/tools/editproject/" + id;
+	}
+	
+	
+	@RequestMapping(value = "/upload/qsurveys/{id}",  method = RequestMethod.POST)
+	public String onQSurveysPhotoUpload(@PathVariable("id") int id, MultipartFile file, RedirectAttributes redirectAttrs,
+			Locale locale) throws IOException {
+		
+		// is image?
+		if (file.isEmpty() || !isImage(file)) {
+			redirectAttrs.addFlashAttribute("error", messageSource.getMessage("upload.bad.file.type", null, locale));
+			return "redirect:/qsurveys/photos/" + id;
+		}
+		
+		
+		BufferedImage img = null;
+		BufferedImage scale = null;
+		String fileExtension;
+		try {
+			File dir = null;
+			try{
+				System.out.println(qSurveysPhotoPath+"/"+id);
+				dir = (new DefaultResourceLoader()).getResource(qSurveysPhotoPath+"/"+id).getFile();
+				if(!dir.exists()){
+					dir.mkdir();
+				}
+			}
+			catch (IOException io){
+				System.out.println("IOERROR");
+				
+			}
+			img = ImageIO.read(file.getInputStream());
+						
+			double dimensionMultiplier = imageHelper.getDimensionMultiplier(
+					img.getWidth(), img.getHeight(), 800, 600);
+			
+			scale = imageHelper.toBufferedImage(
+					img.getScaledInstance(
+							(int)(img.getWidth()*dimensionMultiplier), 
+							(int)(img.getHeight()*dimensionMultiplier), 
+							Image.SCALE_SMOOTH));
+			
+			fileExtension = getFileExtension(file.getOriginalFilename());
+			File tempFile = File.createTempFile("qs_" + id + "_", fileExtension, dir);
+			try (OutputStream out = new FileOutputStream(tempFile)) {
+				ImageIO.write(scale, "png", tempFile);
+			}
+			
+			
+			// say ok
+			redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("upload.success", null, locale));
+			
+		} catch (IOException ioex) {
+			redirectAttrs.addFlashAttribute("error", messageSource.getMessage("upload.io.exception", null, locale));
+			return "redirect:/qsurveys/photos/" + id;
+		}
+		
+		return "redirect:/qsurveys/photos/" + id;
 	}
 		
 	/*
