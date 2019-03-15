@@ -3,8 +3,6 @@ package sbs.controller.qsurveys;
 import java.util.ArrayList;
 import java.util.List;
 
-import sbs.model.qsurveys.QSurvey;
-
 public class FormBom {
 
 	List<BomItem> items;
