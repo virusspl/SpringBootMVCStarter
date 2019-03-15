@@ -88,6 +88,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"BHPSUPERVISOR", 
 				"BHPTICKETSUSER"
 				)
+		/*
+		 * ** qualitysurveys to be deleted **
+		 */
+		.antMatchers("/qualitysurveys/**")
+		.hasAnyRole(
+				"ADMIN"
+				)
+		/*
+		 * ** qualitysurveys to be deleted **
+		 */		
 		.antMatchers("/qsurveys/templates/**", "/qsurveys/questions/**")
 		.hasAnyRole(
 				"ADMIN",
