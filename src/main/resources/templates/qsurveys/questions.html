@@ -51,7 +51,7 @@
 				<h1 th:text="#{qsurveys.manage.questions}" class="text-primary"></h1>
 			</div>
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
-				<span th:text="#{qsurveys.manage.questions.message}"> Welcome
+				<span th:text="|#{qsurveys.manage.questions.message}|"> Welcome
 					message </span>
 			</div>
 			<a th:href="|@{/qsurveys/templates/edit/}${template.id}|" class="btn btn-link btn-sm">
@@ -118,6 +118,7 @@
 								<td><span th:text="${question.id}"></span></td>
 								<td><a
 									th:href="|@{/qsurveys/questions/delete/}${template.id}/${question.id}|"
+									th:onclick="|return confirm('#{action.remove}: &quot;${question.shortText}&quot;?')|"
 									class="btn btn-danger btn-sm"> <span
 										class="glyphicon glyphicon-remove"></span> <span
 										th:text="#{action.remove}">back</span>

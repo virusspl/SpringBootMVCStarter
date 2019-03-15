@@ -38,11 +38,11 @@
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-xs-12">
-				<h1 th:text="#{general.manage.photos}"
+				<h1 th:text="#{action.manage.photos}"
 					class="text-primary"></h1>
 			</div>
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
-				<span th:text="|#{qsurveys.photos.manage.message} #${survey.id}|">
+				<span th:text="|#{qsurveys.photos.manage.message} #${survey.id}: ${survey.template.title}|">
 					Welcome message </span>
 			</div>
 			<a th:href="@{'/qsurveys/show/' + ${survey.id}}"
