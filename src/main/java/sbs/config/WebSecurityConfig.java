@@ -39,40 +39,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.logout().logoutSuccessUrl("/logout").and()
 		.exceptionHandling().accessDeniedPage("/noaccess").and()
 		.authorizeRequests()
-		.antMatchers("/", "/init",
-				"/bootstrap/**",
-				"/lightbox2/**",
-				"/datepicker/**",
-				"/html2canvas/**",
-				"/selectize/**",
-				"/datatables/**",
-				"/sbs-websocket/**",
-				"/css/**",
-				"/images/**",
-				"/js/**",
-				"/error", 
-				"/expired", 
-				"/login",
-				"/tlogin",
-				"/logout",
-				"/contact/**",
+		.antMatchers(
 				"/users/showcurrent",
-				"/nameplates/list",
-				"/geolook/**",
-				"/wpslook/**",
-				"/bhptickets/show/**",
-				"/bhptickets/getphoto/**",
 				"/wakesurvey/dosurvey/**",
-				"/weldlog/**",
-				"/test/**",
-				"/proprog/**",
-				"/phones/list/**",
-				"/phones/print/**",
-				"/inventory/**",
-				"/terminal/**"
+				"/bhptickets/show/**",
+				"/bhptickets/getphoto/**"
 				)
 		.permitAll()
-		.antMatchers("/bhptickets/edit/**", 
+		.antMatchers(
+				"/bhptickets/edit/**", 
 				"/bhptickets/create/**",
 				"/bhptickets/sendemails/**",
 				"/wakesurvey/**",
@@ -81,62 +56,55 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"ADMIN",
 				"BHPMANAGER"
 				)
-		.antMatchers("/bhptickets/**")
+		.antMatchers(
+				"/bhptickets/**")
 		.hasAnyRole(
 				"ADMIN",
 				"BHPMANAGER", 
 				"BHPSUPERVISOR", 
 				"BHPTICKETSUSER"
-				)
-		/*
-		 * ** qualitysurveys to be deleted **
-		 */
-		.antMatchers("/qualitysurveys/**")
-		.hasAnyRole(
-				"ADMIN"
-				)
-		/*
-		 * ** qualitysurveys to be deleted **
-		 */		
-		.antMatchers("/qsurveys/templates/**", "/qsurveys/questions/**")
+				)	
+		.antMatchers(
+				"/qsurveys/templates/**", 
+				"/qsurveys/questions/**")
 		.hasAnyRole(
 				"ADMIN",
 				"QSURVEYMANAGER"
 				)
-		.antMatchers("/qsurveys/**")
+		.antMatchers(
+				"/qsurveys/**")
 		.hasAnyRole(
 				"ADMIN",
 				"QSURVEYMANAGER", 
 				"QSURVEYUSER"
 				)
-		.antMatchers("/hrua/**")
-		.hasAnyRole(
-				"ADMIN", 
-				"HRUAMANAGER"
-				)
-		.antMatchers("/buyorders/**")
+		.antMatchers(
+				"/buyorders/**")
 		.hasAnyRole(
 				"ADMIN", 
 				"BUYORDMANAGER"
 				)
-		.antMatchers("/movements/**")
+		.antMatchers(
+				"/movements/**")
 		.hasAnyRole(
 				"ADMIN", 
-				"MOVEMENTSSUPERUSER",
-				"MOVEMENTSSHIPUSER",
-				"MOVEMENTSRCPUSER"
+				"MOVEMENTSUSER",
+				"MOVEMENTSSUPERUSER"
 				)
-		.antMatchers("/proprog/sendemails/**")
+		.antMatchers(
+				"/proprog/sendemails/**")
 		.hasAnyRole(
 				"ADMIN", 
 				"PROPROGSUPERVISOR"
 				)
-		.antMatchers("/utr/**")
+		.antMatchers(
+				"/utr/**")
 		.hasAnyRole(
 				"ADMIN", 
 				"UTR_NORMALUSER"
 				)
-		.antMatchers("/dirrcpship/**")
+		.antMatchers(
+				"/dirrcpship/**")
 		.hasAnyRole(
 				"ADMIN", 
 				"RCPMANAGER"
@@ -148,7 +116,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"ADMIN", 
 				"PRODTOSALEUSER"
 				)
-		.antMatchers("/tools/**")
+		.antMatchers(
+				"/tools/editproject/**", 
+				"/tools/createproject/**"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"TOOLSMANAGER"
+				)
+		.antMatchers(
+				"/tools/**")
 		.hasAnyRole(
 				"ADMIN", 
 				"TOOLSMANAGER",
@@ -156,20 +133,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"TOOLSNORMALUSER",
 				"TOOLSMAILINGUSER"
 				)
-		.antMatchers("/toools/editproject/**", 
-				"/tools/createproject/**"
-				)
-		.hasAnyRole(
-				"ADMIN", 
-				"TOOLSMANAGER"
-				)
-		.antMatchers("/timer/**"
+		.antMatchers(
+				"/timer/**"
 				)
 		.hasAnyRole(
 				"ADMIN", 
 				"TIMERUSER"
 				)
-		.antMatchers("/consumption/**"
+		.antMatchers(
+				"/consumption/**"
 				)
 		.hasAnyRole(
 				"ADMIN", 
@@ -192,8 +164,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/inventory/createinventory/**",
 				"/inventory/editinventory/**",
 				"/inventory/managecollumns/**"
-				)
+				)		
 		.hasRole("ADMIN")
+		 // ** old modules to del **
+		.antMatchers(
+				"/qualitysurveys/**")
+		.hasAnyRole(
+				"ADMIN"
+				)
+		.antMatchers(
+				"/hrua/**")
+		.hasAnyRole(
+				"ADMIN"
+				)		
+		 // ^^ old modules to del ^^
+		.antMatchers("/**")
+		.permitAll()
 		.anyRequest().authenticated().and()
 		.csrf().and()
 		.rememberMe().tokenRepository(persistentTokenRepository)
