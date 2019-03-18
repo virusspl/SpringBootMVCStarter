@@ -298,6 +298,7 @@ public class QSurveysController {
 			// save survive data
 			sa.setSurvey(survey);
 			sa.setType(type);
+			sa.setQuestionId(qi.getQuestionId());
 			sa.setOrder(qi.getOrder());
 			sa.setShortQuestionText(qi.getShortText());
 			sa.setLongQuestionText(qi.getLongText());

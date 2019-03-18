@@ -5,6 +5,7 @@ import sbs.model.qsurveys.QSurveyQuestion;
 public class QuestionItem {
 	
 	private int typeId;
+	private int questionId;
 	private String typeCode;
 	private int order;
 	private String shortText;
@@ -24,6 +25,7 @@ public class QuestionItem {
 		this.order = surveyQuestion.getOrder();
 		this.shortText = surveyQuestion.getShortText();
 		this.longText = surveyQuestion.getLongText();
+		this.questionId = surveyQuestion.getId();
 	}
 
 	public int getTypeId() {
@@ -97,6 +99,15 @@ public class QuestionItem {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+
+	public int getQuestionId() {
+		return questionId;
+	}
+
+	public void setQuestionId(int questionId) {
+		this.questionId = questionId;
+	}
+	
 	
 	
 		

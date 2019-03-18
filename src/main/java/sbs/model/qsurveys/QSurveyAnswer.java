@@ -29,6 +29,9 @@ public class QSurveyAnswer {
 	
 	@Column(name = "qsa_order", nullable = false)
 	private int order;
+
+	@Column(name = "qsa_question_id", nullable = false)
+	private int questionId;
 	
 	@Column(name = "qsa_long_text", length = 255, nullable = false)
 	private String longQuestionText;
@@ -130,6 +133,14 @@ public class QSurveyAnswer {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public int getQuestionId() {
+		return questionId;
+	}
+
+	public void setQuestionId(int questionId) {
+		this.questionId = questionId;
 	}
 
 	@Override
