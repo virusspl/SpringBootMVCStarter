@@ -36,6 +36,13 @@
 				});
 				showhide()
 			});
+			
+			function doSubmit(text) {
+				alert(text);
+				$("#submitbutton").attr("disabled", true);	
+			}
+			
+			
 		</script>
 	</div>
 	<div layout:fragment="content">
@@ -202,8 +209,8 @@
 								class="glyphicon glyphicon-remove"></span> <span
 								th:text="#{qsurveys.cancel.survey}">back</span>
 							</a>
-							<button class="btn btn-primary btn-sm" type="submit" name="ok"
-							th:onclick="|return confirm('#{general.warning.longtask} (~40s). #{general.areyousure}')|"
+							<button id="submitbutton" class="btn btn-primary btn-sm" type="submit" name="ok"
+						 	th:onclick="|doSubmit('#{general.warning.longtask} (~40s)');|"
 							data-toggle="tooltip" data-placement="bottom" 
 							th:title="|#{general.warning.longtask} ( ~40s )|"
 							>
