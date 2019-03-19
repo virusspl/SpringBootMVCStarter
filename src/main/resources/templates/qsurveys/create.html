@@ -210,10 +210,11 @@
 								th:text="#{qsurveys.cancel.survey}">back</span>
 							</a>
 							<button id="submitbutton" class="btn btn-primary btn-sm" type="submit" name="ok"
-						 	th:onclick="|doSubmit('#{general.warning.longtask} (~40s)');|"
+						 	th:onclick="|confirm('#{general.warning.longtask} (~40s)');|"
 							data-toggle="tooltip" data-placement="bottom" 
 							th:title="|#{general.warning.longtask} ( ~40s )|"
 							>
+							<!-- 			th:onclick="|doSubmit('#{general.warning.longtask} (~40s)');|" -->
 								<span class="glyphicon glyphicon-ok"></span> <span
 									th:text="#{action.submit}">search</span>
 							</button>
