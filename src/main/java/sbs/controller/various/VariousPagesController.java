@@ -412,6 +412,14 @@ public class VariousPagesController {
 			roleService.save(terminalRole);
 			msg += "[role: " + terminalRole.getName() + "], ";
 		}
+		
+		Role componentsRole = roleService.findByName("ROLE_COMPONENTSUSER");
+		if (componentsRole == null) {
+			componentsRole = new Role();
+			componentsRole.setName("ROLE_COMPONENTSUSER");
+			roleService.save(componentsRole);
+			msg += "[role: " + componentsRole.getName() + "], ";
+		}
 
 		System.out.println("get users:");
 		User admin = userService.findByUsername("Admin");
