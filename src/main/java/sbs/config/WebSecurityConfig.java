@@ -159,6 +159,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"PHONESMANAGER"
 				)
 		.antMatchers(
+				"/prodcomp/**"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"COMPONENTSUSER"
+				)
+		.antMatchers(
 				"/admin", 
 				"/users/**",
 				"/inventory/createinventory/**",

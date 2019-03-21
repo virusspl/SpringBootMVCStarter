@@ -352,5 +352,11 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 		return jdbcOracleX3Repository.findStockByLocation(company, location);
 	}
 
+	@Override
+	@Cacheable(value="x3AllBomPartsTopLevel")
+	public Map<String, List<X3BomItem>> getAllBomPartsTopLevel(String company) {
+		return jdbcOracleX3Repository.getAllBomPartsTopLevel(company);
+	}
+
 
 }

@@ -2205,4 +2205,63 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         return map;
 	}
 
+	@Override
+	public Map<String, List<X3BomItem>> getAllBomPartsTopLevel(String company) {
+		
+		Timestamp now = dateHelper.getCurrentTime();
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ company + ".BOMD.ITMREF_0, "
+			    + company + ".BOMD.BOMSEQ_0, "
+				+ company + ".BOMD.CPNITMREF_0, "
+				+ company + ".BOMD.LIKQTY_0, "
+				+ company + ".BOMD.BOMUOM_0, "
+				+ company + ".BOMD.BOMSTRDAT_0, "
+				+ company + ".BOMD.BOMENDDAT_0, "
+				+ company + ".ITMMASTER.ITMDES1_0, "
+				+ company + ".ITMMASTER.ITMDES2_0 "
+				+ "FROM "
+				+ company + ".ITMMASTER INNER JOIN " + company + ".BOMD "
+				+ "ON "
+				+ company + ".ITMMASTER.ITMREF_0 = " + company + ".BOMD.CPNITMREF_0 "
+				+ "WHERE "
+				+ company + ".BOMD.BOMALT_0 = 1 "
+				+ "AND ("
+					+ company + ".BOMD.BOMSTRDAT_0 < ? "
+					+ "OR "
+					+ company + ".BOMD.BOMSTRDAT_0 = TO_TIMESTAMP('1599/12/31 00:00:00')"
+				+ ")"
+				+ "AND ("
+					+ company + ".BOMD.BOMENDDAT_0 > ? "
+					+ "OR "
+					+ company + ".BOMD.BOMENDDAT_0 = TO_TIMESTAMP('1599/12/31 00:00:00')"
+				+ ") "
+				+ "ORDER BY "
+				+ company + ".BOMD.BOMSEQ_0",
+                new Object[]{now, now});
+        
+
+		Map<String, List<X3BomItem>> map = new HashMap<>();
+		X3BomItem item;
+		String parent;
+		
+        for(Map<String,Object> row: resultSet ){
+        	parent = (String)row.get("ITMREF_0");
+        	item = new X3BomItem();
+        	item.setSequence(((BigDecimal)row.get("BOMSEQ_0")).intValue());
+        	item.setPartCode((String)row.get("CPNITMREF_0"));
+        	item.setPartDescription(((String)row.get("ITMDES1_0")) + " " +  ((String)row.get("ITMDES2_0")));
+        	item.setModelUnit((String)row.get("BOMUOM_0"));
+        	item.setModelQuantity(((BigDecimal)row.get("LIKQTY_0")).doubleValue());
+        	
+        	if(!map.containsKey(parent)){
+        		map.put(parent, new ArrayList<X3BomItem>());
+        	}
+        	
+        	map.get(parent).add(item);
+        }
+        
+        return map;
+	}
+
 }

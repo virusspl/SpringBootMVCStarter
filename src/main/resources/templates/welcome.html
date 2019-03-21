@@ -43,11 +43,11 @@
 				<a class="btn btn-link btn-md margin-top-5"
 					href="http://192.168.1.33:8082" target="_blank"> <span
 					class="glyphicon glyphicon-link" style="margin-right: 10px;"></span>
-					<span th:text="|Comarch ePracownik ADR|">Phone numbers</span>
+					<span th:text="|Comarch HRM ADR|">Phone numbers</span>
 				</a> <a class="btn btn-link btn-md margin-top-5"
 					href="http://192.168.1.33:8081" target="_blank"> <span
 					class="glyphicon glyphicon-link" style="margin-right: 10px;"></span>
-					<span th:text="|Comarch ePracownik WPS|">Phone numbers</span>
+					<span th:text="|Comarch HRM WPS|">Phone numbers</span>
 				</a> <a class="btn btn-link btn-md margin-top-5"
 					href="http://192.168.1.23/DOCS/calendar.pdf" target="_blank"> <span
 					class="glyphicon glyphicon-calendar" style="margin-right: 10px;"></span>
@@ -154,6 +154,11 @@
 					class="btn btn-info btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-screenshot"></span> <span
 					th:text="#{ordtools.ordtools}"></span>
+				</a> 
+				<a th:href="@{/prodcomp/main}"
+					class="btn btn-info btn-md margin-top-5"> <span
+					class="glyphicon glyphicon-check"></span> <span
+					th:text="#{prodcomp.title}"></span>
 				</a> 
 				<a th:if="${CANCEL_THIS}" th:href="@{/hrua/list}" class="btn btn-info btn-md margin-top-5">
 					<span class="glyphicon glyphicon-user"></span> <span

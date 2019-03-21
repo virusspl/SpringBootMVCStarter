@@ -53,7 +53,7 @@ public class X3BomItem {
 
 	@Override
 	public String toString() {
-		return "BomSurveyItem [sequence=" + sequence + ", partCode=" + partCode + ", partDescription=" + partDescription
+		return "X3BomItem [sequence=" + sequence + ", partCode=" + partCode + ", partDescription=" + partDescription
 				+ ", modelUnit=" + modelUnit + ", modelQuantity=" + modelQuantity + "]";
 	}
 	
