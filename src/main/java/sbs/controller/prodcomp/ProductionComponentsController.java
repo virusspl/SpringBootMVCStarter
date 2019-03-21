@@ -40,6 +40,8 @@ public class ProductionComponentsController {
 		// Map<String, Double> result =
 		// getComponentsQuantitiesMultilevel(allBoms, "GSK225095P5P");
 		// System.out.println(result);
+		//Map<String, String> descriptions = x3Service.getDescriptionsByLanguage(JdbcOracleX3Service.LANG_POLISH, "ATW");
+		//System.out.println(descriptions);
 		System.out.println((System.currentTimeMillis() - start) / 1000);
 		return "prodcomp/main";
 	}
@@ -118,7 +120,7 @@ public class ProductionComponentsController {
 					}
 				}
 			}
-			
+
 			model.addAttribute("components", allComponents);
 		} else {
 			// no file
