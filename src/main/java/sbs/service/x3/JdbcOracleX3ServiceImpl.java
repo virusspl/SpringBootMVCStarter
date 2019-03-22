@@ -95,6 +95,12 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	public List<X3Product> findAllActiveProducts(String company) {
 		return jdbcOracleX3Repository.findAllActiveProducts(company);
 	}
+	
+	@Override
+	@Cacheable(value="x3AllActiveProductsMap")
+	public Map<String, X3Product> findAllActiveProductsMap(String company) {
+		return jdbcOracleX3Repository.findAllActiveProductsMap(company);
+	}
 
 	@Override
 	public X3Product findProductByCode(String company, String code) {
@@ -356,6 +362,11 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	@Cacheable(value="x3AllBomPartsTopLevel")
 	public Map<String, List<X3BomItem>> getAllBomPartsTopLevel(String company) {
 		return jdbcOracleX3Repository.getAllBomPartsTopLevel(company);
+	}
+
+	@Override
+	public Map<String, Double> getAllProductsQuantities(String company) {
+		return jdbcOracleX3Repository.getAllProductsQuantities(company);
 	}
 
 

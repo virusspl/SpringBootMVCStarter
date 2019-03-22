@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import sbs.model.x3.X3BomItem;
+import sbs.model.x3.X3Product;
 import sbs.service.x3.JdbcOracleX3Service;
 
 @Controller
@@ -109,14 +110,19 @@ public class ProductionComponentsController {
 				}
 			}
 
-			Map<String, String> descriptions = x3Service.getDescriptionsByLanguage(JdbcOracleX3Service.LANG_POLISH, "ATW");
+			//Map<String, String> descriptions = x3Service.getDescriptionsByLanguage(JdbcOracleX3Service.LANG_POLISH, "ATW");
+			Map<String, X3Product> products =  x3Service.findAllActiveProductsMap("ATW");
+			Map<String, Double> quantities = x3Service.getAllProductsQuantities("ATW");
+			
 			List<List<String>> table = new ArrayList<>();
 			List<String> line;
 			
 			for(Map.Entry<String, Double> entry: allComponents.entrySet()){
 				line = new ArrayList<>();
 				line.add(entry.getKey());
-				line.add(descriptions.containsKey(entry.getKey()) ? descriptions.get(entry.getKey()) : "-");
+				line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getDescription() : "-");
+				line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getCategory() : "-");
+				line.add(quantities.containsKey(entry.getKey()) ? quantities.get(entry.getKey()).toString() : "-");				
 				line.add(entry.getValue().toString());
 				table.add(line);
 			}

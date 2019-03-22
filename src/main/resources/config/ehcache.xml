@@ -16,7 +16,7 @@ month 2419200
 
 <ehcache>
 
- 	<sizeOfPolicy maxDepth="1500" maxDepthExceededBehavior="abort"/>
+
 	
 	<cache name="avatarByUsername" maxBytesLocalHeap="10m"
 		timeToLiveSeconds="2419200">
@@ -42,7 +42,10 @@ month 2419200
 		timeToLiveSeconds="3600">
 	</cache>
 	<cache name="x3AllActiveProducts" maxBytesLocalHeap="20m"
-		timeToLiveSeconds="43200">
+		timeToLiveSeconds="604800">
+	</cache>
+	<cache name="x3AllActiveProductsMap" maxBytesLocalHeap="20m"
+		timeToLiveSeconds="604800">
 	</cache>
 	<cache name="x3AllUtrMachines" maxBytesLocalHeap="1m"
 		timeToLiveSeconds="10800">

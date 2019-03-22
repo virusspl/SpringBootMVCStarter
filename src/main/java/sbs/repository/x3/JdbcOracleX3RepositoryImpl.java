@@ -321,6 +321,59 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		
 		return result;
 	}
+	
+	@Override
+	public Map<String, X3Product> findAllActiveProductsMap(String company) {
+		
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT " 
+						+ company + ".ITMMASTER.ITMREF_0, "
+						+ company + ".ITMMASTER.ITMDES1_0, "
+						+ company + ".ITMMASTER.ITMDES2_0, "
+						+ company + ".ITMMASTER.TCLCOD_0 "
+						+ "FROM " 
+						+ company + ".ITMMASTER "						
+						+ "WHERE "
+						+ company + ".ITMMASTER.ITMSTA_0 = 1",
+						new Object[]{});
+		
+		Map<String, X3Product> result = new HashMap<>();
+		X3Product product = null;
+		
+		for(Map<String,Object> row: resultSet ){
+			product = new X3Product();
+			product.setCode((String)row.get("ITMREF_0"));
+			product.setDescription(((String)row.get("ITMDES1_0")) + " " +  ((String)row.get("ITMDES2_0")));
+			product.setCategory((String)row.get("TCLCOD_0"));
+			result.put(product.getCode(), product);
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public Map<String, Double> getAllProductsQuantities(String company) {
+		
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT " 
+						+ company + ".ITMMVT.ITMREF_0, "
+						+ company + ".ITMMVT.PHYSTO_0 "
+						+ "FROM " 
+						+ company + ".ITMMVT "
+						,
+						new Object[]{});
+		
+		Map<String, Double> result = new HashMap<>();
+		
+		for(Map<String,Object> row: resultSet ){
+			result.put(
+					(String)row.get("ITMREF_0"), 
+					((BigDecimal)row.get("PHYSTO_0")).doubleValue()
+					);
+		}
+		
+		return result;
+	}
 
 	@Override
 	public X3Product findProductByCode(String company, String code) {

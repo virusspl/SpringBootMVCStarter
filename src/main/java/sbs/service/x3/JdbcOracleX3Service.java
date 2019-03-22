@@ -23,6 +23,7 @@ public interface JdbcOracleX3Service {
 	public String convertLocaleToX3Lang(Locale locale);
     public List<String> findAllUsers(String company);
     public List<X3Product> findAllActiveProducts(String company);
+    public Map<String, X3Product> findAllActiveProductsMap(String company);
 	public X3Product findProductByCode(String company, String code);
     public String findItemDescription(String company, String code);
 	public List<X3Client> findAllClients(String company);
@@ -77,4 +78,5 @@ public interface JdbcOracleX3Service {
 	public Map<String, String> getVariousTableData(String company, String table, String x3language);
 	public Map<String, Integer> findStockByLocation(String company, String location);
 	public Map<String, List<X3BomItem>> getAllBomPartsTopLevel(String company);
+	public Map<String, Double> getAllProductsQuantities(String company);
 }

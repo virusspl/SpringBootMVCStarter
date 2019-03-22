@@ -142,7 +142,7 @@ public class UploadController {
 			redirectAttrs.addFlashAttribute("file", convFile);
 			return "redirect:/prodcomp/make";
 		} catch (IOException ioex) {
-			redirectAttrs.addFlashAttribute("error", messageSource.getMessage("upload.io.exception", null, locale));
+			redirectAttrs.addFlashAttribute("error", messageSource.getMessage("upload.io.exception", null, locale) + ": " + ioex.getMessage());
 			return "redirect:/prodcomp/main";
 		}
 		

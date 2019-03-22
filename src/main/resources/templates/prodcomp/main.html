@@ -148,22 +148,20 @@
 							<tr>
 								<th th:text="#{general.productCode}">head</th>
 								<th th:text="#{general.productDescription}">head</th>
+								<th th:text="#{general.category}">head</th>
+								<th th:text="|#{general.stock} X3|">head</th>
 								<th th:text="#{general.quantity}">head</th>
 							</tr>
 						</thead>
-						<tfoot>
-							<tr>
-								<th th:text="#{general.productCode}">head</th>
-								<th th:text="#{general.productDescription}">head</th>
-								<th th:text="#{general.quantity}">head</th>
-							</tr>
-						</tfoot>
 						<tbody>
 							<tr th:each="line : ${components}">
 								<td><span th:text="${line[0]}"></span></td>
 								<td><span th:text="${line[1]}"></span></td>
+								<td><span th:text="${line[2]}"></span></td>
 								<td><span
-									th:text="${#numbers.formatDecimal(line[2], 1, 'DEFAULT', 0, 'DEFAULT')}"></span></td>
+									th:text="${#numbers.formatDecimal(line[3], 1, 'DEFAULT', 0, 'DEFAULT')}"></span></td>
+								<td><span
+									th:text="${#numbers.formatDecimal(line[4], 1, 'DEFAULT', 0, 'DEFAULT')}"></span></td>
 
 							</tr>
 
