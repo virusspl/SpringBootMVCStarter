@@ -209,8 +209,9 @@
 								class="glyphicon glyphicon-remove"></span> <span
 								th:text="#{qsurveys.cancel.survey}">back</span>
 							</a>
+							<!-- th:onclick="|confirm('#{general.warning.longtask} (~40s)');|" -->
 							<button id="submitbutton" class="btn btn-primary btn-sm" type="submit" name="ok"
-						 	th:onclick="|confirm('#{general.warning.longtask} (~40s)');|"
+						 	onClick="this.disabled=true;"
 							data-toggle="tooltip" data-placement="bottom" 
 							th:title="|#{general.warning.longtask} ( ~40s )|"
 							>

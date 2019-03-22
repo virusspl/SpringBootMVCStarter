@@ -136,6 +136,7 @@
 					</label>
 					<button class="btn btn-primary" type="submit" name="upload"
 						th:title="|#{general.warning.longtask} ~60-120s|"
+						onClick="this.disabled=true;"
 							data-toggle="tooltip" data-placement="bottom"
 					>
 						<span th:text="#{action.upload}">upload</span>
