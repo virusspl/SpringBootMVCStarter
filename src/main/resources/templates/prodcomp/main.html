@@ -20,7 +20,7 @@
 				if (!input.files[0]) {
 					return;
 				}
-				if(input.files[0].size > 2097000){
+				if (input.files[0].size > 2097000) {
 					alert("limit 2MB")
 				}
 				var reader = new FileReader();
@@ -53,18 +53,15 @@
 					url : getUrl() + "polish.json",
 				},
 				order : [ [ 0, 'asc' ] ],
-				paging: true,
+				paging : true,
 				dom : 'Bfrtip',
-				buttons : [
-						{
-							extend : 'excel',
-							text : 'Excel'
-						},
-						{
-							extend: 'pdfHtml5',
-			                orientation: 'portrait'
-						}
-						]
+				buttons : [ {
+					extend : 'excel',
+					text : 'Excel'
+				}, {
+					extend : 'pdfHtml5',
+					orientation : 'portrait'
+				} ]
 			});
 		</script>
 		<script th:if="__${#locale}__ == 'en'">
@@ -73,18 +70,15 @@
 					url : getUrl() + "english.json"
 				},
 				order : [ [ 0, 'asc' ] ],
-				paging: true,
+				paging : true,
 				dom : 'Bfrtip',
-				buttons : [
-						{
-							extend : 'excel',
-							text : 'Excel'
-						},
-						{
-							extend: 'pdfHtml5',
-			                orientation: 'portrait'
-						}
-						]
+				buttons : [ {
+					extend : 'excel',
+					text : 'Excel'
+				}, {
+					extend : 'pdfHtml5',
+					orientation : 'portrait'
+				} ]
 			});
 		</script>
 		<script th:if="__${#locale}__ == 'it'">
@@ -93,18 +87,15 @@
 					url : getUrl() + "italian.json"
 				},
 				order : [ [ 0, 'asc' ] ],
-				paging: true,
+				paging : true,
 				dom : 'Bfrtip',
-				buttons : [
-						{
-							extend : 'excel',
-							text : 'Excel'
-						},
-						{
-							extend: 'pdfHtml5',
-			                orientation: 'portrait'
-						}
-						]
+				buttons : [ {
+					extend : 'excel',
+					text : 'Excel'
+				}, {
+					extend : 'pdfHtml5',
+					orientation : 'portrait'
+				} ]
 			});
 		</script>
 	</div>
@@ -136,9 +127,7 @@
 					</label>
 					<button class="btn btn-primary" type="submit" name="upload"
 						th:title="|#{general.warning.longtask} ~60-120s|"
-						onClick="this.disabled=true;"
-							data-toggle="tooltip" data-placement="bottom"
-					>
+						data-toggle="tooltip" data-placement="bottom">
 						<span th:text="#{action.upload}">upload</span>
 					</button>
 
@@ -173,8 +162,9 @@
 							<tr th:each="line : ${components}">
 								<td><span th:text="${line[0]}"></span></td>
 								<td><span th:text="${line[1]}"></span></td>
-								<td><span th:text="${#numbers.formatDecimal(line[2], 1, 'DEFAULT', 0, 'DEFAULT')}"></span></td>
-	
+								<td><span
+									th:text="${#numbers.formatDecimal(line[2], 1, 'DEFAULT', 0, 'DEFAULT')}"></span></td>
+
 							</tr>
 
 						</tbody>
