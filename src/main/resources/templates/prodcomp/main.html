@@ -135,7 +135,7 @@
 						th:text="#{action.choose}"></span>
 					</label>
 					<button class="btn btn-primary" type="submit" name="upload"
-						th:title="|#{general.warning.longtask} ~30-60s|"
+						th:title="|#{general.warning.longtask} ~60-120s|"
 							data-toggle="tooltip" data-placement="bottom"
 					>
 						<span th:text="#{action.upload}">upload</span>
@@ -172,7 +172,7 @@
 							<tr th:each="line : ${components}">
 								<td><span th:text="${line[0]}"></span></td>
 								<td><span th:text="${line[1]}"></span></td>
-								<td><span th:text="${#numbers.formatDecimal(line[2], 1, 'DEFAULT', 2, 'DEFAULT')}"></span></td>
+								<td><span th:text="${#numbers.formatDecimal(line[2], 1, 'DEFAULT', 0, 'DEFAULT')}"></span></td>
 	
 							</tr>
 

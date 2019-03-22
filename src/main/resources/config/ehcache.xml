@@ -12,13 +12,12 @@ h 3600
 week 604800 	
 month 2419200
 6 months 14515200
-
 -->
 
 <ehcache>
 
 	
-	<!-- <sizeOfPolicy maxDepth="1000" maxDepthExceededBehavior="abort"/>  -->
+ 	<sizeOfPolicy maxDepth="1000" maxDepthExceededBehavior="abort"/>
 	 
 	
 	<cache name="avatarByUsername" maxBytesLocalHeap="10m"
@@ -65,17 +64,17 @@ month 2419200
 	<cache name="x3productFinalMachines" maxBytesLocalHeap="23m"
 		timeToLiveSeconds="86400">
 	</cache>
-	<cache name="x3Descriptions" maxBytesLocalHeap="99m"
+	<cache name="x3Descriptions" maxBytesLocalHeap="115m"
 		timeToLiveSeconds="604800">
 	</cache>
-	<cache name="x3AcvUsageDetails" maxBytesLocalHeap="99m"
+	<cache name="x3AcvUsageDetails" maxBytesLocalHeap="115m"
 		timeToLiveSeconds="14515200">
 	</cache>
 	<cache name="x3FirstSuppliers" maxBytesLocalHeap="5m"
 		timeToLiveSeconds="604800">
 	</cache>
 	<cache name="x3AllBomPartsTopLevel" maxBytesLocalHeap="115m"
-		timeToLiveSeconds="86400">
+		timeToLiveSeconds="604800">
 	</cache>
 	<!-- <cache name="x3PendingProjectsProgress" maxBytesLocalHeap="1m"
 		timeToLiveSeconds="86400">
