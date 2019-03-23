@@ -134,8 +134,10 @@ public class UploadController {
 		}
 		// copy file
 		try {
-		    File convFile = new File(file.getOriginalFilename());
-		    convFile.createNewFile();
+		    File convFile = File.createTempFile("prodcom", ".tmp");
+		    convFile.deleteOnExit();
+		    		//new File(file.getOriginalFilename());
+		    //convFile.createNewFile();
 		    FileOutputStream fos = new FileOutputStream(convFile); 
 		    fos.write(file.getBytes());
 		    fos.close(); 
