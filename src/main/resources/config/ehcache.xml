@@ -12,11 +12,14 @@ h 3600
 week 604800 	
 month 2419200
 6 months 14515200
+
+ 	<sizeOfPolicy maxDepth="1500" maxDepthExceededBehavior="abort"/>
+
 -->
 
 <ehcache>
 
-
+ 	<sizeOfPolicy maxDepth="1500" maxDepthExceededBehavior="abort"/>
 	
 	<cache name="avatarByUsername" maxBytesLocalHeap="10m"
 		timeToLiveSeconds="2419200">

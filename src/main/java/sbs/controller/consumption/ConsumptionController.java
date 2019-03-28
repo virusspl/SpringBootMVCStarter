@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -219,21 +220,27 @@ public class ConsumptionController {
 		return lineValues;
 	}
 
-	@RequestMapping("/exportConsumption")
-    public ModelAndView exportConsumption(Model model, Locale locale){
+	@RequestMapping("/exportConsumption/{company}")
+    public ModelAndView exportConsumption(@PathVariable("company") String company, Model model, Locale locale){
     	
+		if(!company.equals("ATW") && !company.equals("WPS")){
+			model.addAttribute("error",  messageSource.getMessage("error.company.unknown", null, locale) + ": " + company);
+			return new ModelAndView("consumption/dispatch");
+		}
+		
     	// get year
     	Calendar cal = Calendar.getInstance();
     	int consInitYear = cal.get(Calendar.YEAR);
     	
     	// get data
-    	Map<String, Map<Integer, Integer>> consumption1 = x3Service.getAcvConsumptionListForYear((consInitYear-1), "ATW");
-    	Map<String, Map<Integer, Integer>> consumption2 = x3Service.getAcvConsumptionListForYear(consInitYear, "ATW");
-    	Map<String, Integer> demand = x3Service.getAcvDemandList("ATW");
-    	Map<String, String> enDescriptions = x3Service.getAcvProductsEnglishDescriptions("ATW");
-    	Map<String, X3ConsumptionSupplyInfo> lastSupply = x3Service.getAcvListOfLastSupplyInfo("ATW");
-    	List<X3ConsumptionProductInfo> productsList = x3Service.getAcvListForConsumptionReport("ATW");
-    	Map<String, String> buyGroups = x3Service.getVariousTableData("ATW", "6050", JdbcOracleX3Service.LANG_ITALIAN);
+    	Map<String, Map<Integer, Integer>> consumption0 = x3Service.getAcvConsumptionListForYear((consInitYear-2), company);
+    	Map<String, Map<Integer, Integer>> consumption1 = x3Service.getAcvConsumptionListForYear((consInitYear-1), company);
+    	Map<String, Map<Integer, Integer>> consumption2 = x3Service.getAcvConsumptionListForYear(consInitYear, company);
+    	Map<String, Integer> demand = x3Service.getAcvDemandList(company);
+    	Map<String, String> enDescriptions = x3Service.getAcvProductsEnglishDescriptions(company);
+    	Map<String, X3ConsumptionSupplyInfo> lastSupply = x3Service.getAcvListOfLastSupplyInfo(company);
+    	List<X3ConsumptionProductInfo> productsList = x3Service.getAcvListForConsumptionReport(company);
+    	Map<String, String> buyGroups = x3Service.getVariousTableData(company, "6050", JdbcOracleX3Service.LANG_ITALIAN);
 
     	
 		// create headers
@@ -242,12 +249,18 @@ public class ConsumptionController {
 		headers.add("Descr PL");
 		headers.add("Descr EN");
 		headers.add("Pur. Fam. Code");
-		headers.add("Purchasing family");
+		headers.add("Purchasing family");		
+		headers.add("Reorder point");
+		headers.add("Safety stock");
+		headers.add("Max stock");
+		headers.add("EWZ");
+		headers.add("Techn. lot");
 		headers.add("Stock");
 		headers.add("Avg cost");
 		headers.add("Demand");
 		headers.add("In order");
 		headers.add("Buyer");
+		headers.add("Last issue");
 		headers.add("Last suppl.");
 		headers.add("Last suppl. nam.");
 		headers.add("Last suppl. date");
@@ -257,16 +270,16 @@ public class ConsumptionController {
 		for(int i = 1; i<=12; i++){
 			headers.add((consInitYear) +"." + textHelper.fillWithLeadingZero(i+"", 2));
 		}
+		headers.add("Consumption " + (consInitYear-2));
 		headers.add("Consumption " + (consInitYear-1));
 		headers.add("Consumption " + consInitYear);
-		
-		
-		
-		
+
 		// create structure
 		ArrayList<ArrayList<Object>> rows = new ArrayList<>();
 		ArrayList<Object> lineValues;
-
+		Calendar date1600 = Calendar.getInstance();
+		date1600.set(Calendar.YEAR, 1600);
+		
 		for(X3ConsumptionProductInfo product: productsList){
 			lineValues = new ArrayList<>();
 			lineValues.add(product.getProductCode());
@@ -274,15 +287,34 @@ public class ConsumptionController {
 			lineValues.add(enDescriptions.containsKey(product.getProductCode()) ? enDescriptions.get(product.getProductCode()) : "" );
 			lineValues.add(product.getBuyGroupCode());
 			lineValues.add(buyGroups.containsKey(product.getBuyGroupCode()) ? buyGroups.get(product.getBuyGroupCode()) : "" );
+			lineValues.add(product.getReorderPoint());
+			lineValues.add(product.getSafetyStock());
+			lineValues.add(product.getMaxStsock());
+			lineValues.add(product.getEwz());
+			lineValues.add(product.getTechnicalLot());
 			lineValues.add(product.getStock());
 			lineValues.add(product.getAverageCost());
 			lineValues.add(demand.containsKey(product.getProductCode()) ? demand.get(product.getProductCode()) : "" );
 			lineValues.add(product.getInOrder());
 			lineValues.add(product.getBuyerCode());
+			if(product.getLastIssueDate().before(date1600.getTime())){
+				lineValues.add("");
+			}
+			else{
+				lineValues.add(product.getLastIssueDate());
+			}
 			lineValues.add(lastSupply.containsKey(product.getProductCode()) ? lastSupply.get(product.getProductCode()).getSupplierCode() : "" );
 			lineValues.add(lastSupply.containsKey(product.getProductCode()) ? lastSupply.get(product.getProductCode()).getName() : "" );
 			lineValues.add(lastSupply.containsKey(product.getProductCode()) ? lastSupply.get(product.getProductCode()).getDate() : "" );
 			int tmpPeriod; 
+			int prevPrevSum = 0;
+			// y -2 sum
+			if (consumption0.containsKey(product.getProductCode())) {
+				for(Map.Entry<Integer, Integer> entry: consumption0.get(product.getProductCode()).entrySet()){
+					prevPrevSum+= entry.getValue();
+				}
+			}
+
 			int prevSum = 0;
 			int currSum = 0;
 			for (int i = 1; i <= 12; i++) {
@@ -313,6 +345,7 @@ public class ConsumptionController {
 					lineValues.add("");
 				}
 			}
+			lineValues.add(prevPrevSum);
 			lineValues.add(prevSum);
 			lineValues.add(currSum);
 
@@ -323,7 +356,7 @@ public class ConsumptionController {
 		ExcelContents contents = new ExcelContents();
 		
 		// set contents
-		contents.setFileName("CONS_"+consInitYear+"_EXPORT.xls");
+		contents.setFileName("CONS_" + company + "_" +consInitYear+"_EXPORT.xls");
 		contents.setSheetName(consInitYear+"");
 		contents.setHeaders(headers);
 		contents.setValues(rows);

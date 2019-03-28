@@ -1761,7 +1761,14 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "itv.PHYSTO_0, "
 				+ "itv.ORDSTO_0, "
 				+ "itv.AVC_0,"
-				+ "itf.BUY_0 "
+				+ "itf.BUY_0, "
+				+ "itf.SAFSTO_0, "
+				+ "itf.REOTSD_0, "
+				+ "itf.MAXSTO_0, "
+				+ "itf.REOMINQTY_0, "
+				+ "itf.MFGLOTQTY_0, "
+				+ "itv.LASRCPDAT_0, "
+				+ "itv.LASISSDAT_0 "
 				+ "FROM ("
 				+ company + ".ITMMASTER itm INNER JOIN " + company + ".ITMMVT itv "
 				+ "ON itm.ITMREF_0 = itv.ITMREF_0"
@@ -1773,7 +1780,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				,
                 new Object[]{"ACV"}
 				);
-		
+		// TODO
 		List<X3ConsumptionProductInfo> list = new ArrayList<>();
 		X3ConsumptionProductInfo info;
 		for(Map<String,Object> row: resultSet ){
@@ -1785,6 +1792,15 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			info.setAverageCost(((BigDecimal)row.get("AVC_0")).doubleValue());
 			info.setBuyerCode((String)row.get("BUY_0"));
 			info.setBuyGroupCode((String)row.get("YFAMGROUP_0"));
+			
+			info.setSafetyStock(((BigDecimal)row.get("SAFSTO_0")).intValue());
+			info.setReorderPoint(((BigDecimal)row.get("REOTSD_0")).intValue());
+			info.setMaxStsock(((BigDecimal)row.get("MAXSTO_0")).intValue());
+			info.setEwz(((BigDecimal)row.get("REOMINQTY_0")).intValue());
+			info.setTechnicalLot(((BigDecimal)row.get("MFGLOTQTY_0")).intValue());
+			info.setLastReceptionDate(((Timestamp)row.get("LASRCPDAT_0")));
+			info.setLastIssueDate(((Timestamp)row.get("LASISSDAT_0")));
+			
 			
 			list.add(info);
 		}

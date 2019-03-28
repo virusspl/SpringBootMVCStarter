@@ -278,7 +278,7 @@ public class QSurveysController {
 		if (survey == null) {
 			throw new NotFoundException("Survey not found");
 		}
-		
+		  
 		QSurveyQuestionType type;
 		QSurveyAnswer sa;
 		QuestionItem qi;
