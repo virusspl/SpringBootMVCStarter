@@ -1762,6 +1762,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "itv.ORDSTO_0, "
 				+ "itv.AVC_0,"
 				+ "itf.BUY_0, "
+				+ "itf.OFS_0, "
 				+ "itf.SAFSTO_0, "
 				+ "itf.REOTSD_0, "
 				+ "itf.MAXSTO_0, "
@@ -1792,7 +1793,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			info.setAverageCost(((BigDecimal)row.get("AVC_0")).doubleValue());
 			info.setBuyerCode((String)row.get("BUY_0"));
 			info.setBuyGroupCode((String)row.get("YFAMGROUP_0"));
-			
+			info.setLeadTime(((BigDecimal)row.get("OFS_0")).intValue());
 			info.setSafetyStock(((BigDecimal)row.get("SAFSTO_0")).intValue());
 			info.setReorderPoint(((BigDecimal)row.get("REOTSD_0")).intValue());
 			info.setMaxStsock(((BigDecimal)row.get("MAXSTO_0")).intValue());

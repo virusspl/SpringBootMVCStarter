@@ -260,6 +260,7 @@ public class ConsumptionController {
 		headers.add("Demand");
 		headers.add("In order");
 		headers.add("Buyer");
+		headers.add("Lead time");
 		headers.add("Last issue");
 		headers.add("Last suppl.");
 		headers.add("Last suppl. nam.");
@@ -297,6 +298,7 @@ public class ConsumptionController {
 			lineValues.add(demand.containsKey(product.getProductCode()) ? demand.get(product.getProductCode()) : "" );
 			lineValues.add(product.getInOrder());
 			lineValues.add(product.getBuyerCode());
+			lineValues.add(product.getLeadTime());
 			if(product.getLastIssueDate().before(date1600.getTime())){
 				lineValues.add("");
 			}

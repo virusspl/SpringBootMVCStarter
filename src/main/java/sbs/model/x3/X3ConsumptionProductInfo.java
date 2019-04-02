@@ -17,6 +17,7 @@ public class X3ConsumptionProductInfo {
 	private int maxStsock;
 	private int ewz;
 	private int technicalLot;
+	private int leadTime;
 	
 	
 	public X3ConsumptionProductInfo() {
@@ -137,15 +138,23 @@ public class X3ConsumptionProductInfo {
 		this.technicalLot = technicalLot;
 	}
 
+	public int getLeadTime() {
+		return leadTime;
+	}
+
+	public void setLeadTime(int leadTime) {
+		this.leadTime = leadTime;
+	}
+
 	@Override
 	public String toString() {
 		return "X3ConsumptionProductInfo [productCode=" + productCode + ", productDescriptionPl=" + productDescriptionPl
-				+ ", stock=" + stock + ", inOrder=" + inOrder + ", averageCost=" + averageCost + "]";
+				+ ", stock=" + stock + ", inOrder=" + inOrder + ", averageCost=" + averageCost + ", buyerCode="
+				+ buyerCode + ", buyGroupCode=" + buyGroupCode + ", lastIssueDate=" + lastIssueDate
+				+ ", lastReceptionDate=" + lastReceptionDate + ", reorderPoint=" + reorderPoint + ", safetyStock="
+				+ safetyStock + ", maxStsock=" + maxStsock + ", ewz=" + ewz + ", technicalLot=" + technicalLot
+				+ ", leadTime=" + leadTime + "]";
 	}
 
-
-	
-	
-	
 	
 }
