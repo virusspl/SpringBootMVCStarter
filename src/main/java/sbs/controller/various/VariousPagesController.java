@@ -24,6 +24,7 @@ import sbs.helpers.ExcelExportHelper;
 import sbs.helpers.MathHelper;
 import sbs.model.bhptickets.BhpTicketState;
 import sbs.model.inventory.InventoryDataType;
+import sbs.model.qcheck.QCheckState;
 import sbs.model.qsurveys.QSurveyQuestionType;
 import sbs.model.qualitysurveys.QualitySurveyParameter;
 import sbs.model.tools.ToolsProjectState;
@@ -35,6 +36,7 @@ import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.inventory.InventoryDataTypesService;
 import sbs.service.mail.MailService;
 import sbs.service.optima.JdbcAdrOptimaService;
+import sbs.service.qcheck.QCheckStatesService;
 import sbs.service.qsurveys.QSurveyQuestionTypesService;
 import sbs.service.qualitysurveys.QualitySurveyParametersService;
 import sbs.service.qualitysurveys.QualitySurveysService;
@@ -73,6 +75,8 @@ public class VariousPagesController {
 	MailService mailService;
 	@Autowired
 	QSurveyQuestionTypesService qSurveyQuestionTypesService;
+	@Autowired
+	QCheckStatesService qCheckStatesService;
 	@Autowired
 	private LiveFeedSingleton liveFeedSingleton;
 	@Autowired
@@ -768,7 +772,50 @@ public class VariousPagesController {
 			qSurveyQuestionType.setTitle("boolean");
 			qSurveyQuestionTypesService.save(qSurveyQuestionType);
 			msg += "[qsurvey_question_type: " + qSurveyQuestionType.getCode() + " " + qSurveyQuestionType.getTitle() + "], ";
-		}	 
+		}	
+		
+		QCheckState qCheckState;
+		
+		if (qCheckStatesService.findByOrder(10) == null) {
+			qCheckState = new QCheckState();
+			qCheckState.setOrder(10);
+			qCheckState.setTitle("new");
+			qCheckState.setCode("qcheck.state.new");
+			qCheckStatesService.save(qCheckState);
+			msg += "[qcheckstate: " + qCheckState.getOrder() + " " + qCheckState.getTitle() + "], ";
+		}
+		if (qCheckStatesService.findByOrder(20) == null) {
+			qCheckState = new QCheckState();
+			qCheckState.setOrder(20);
+			qCheckState.setTitle("in progress");
+			qCheckState.setCode("qcheck.state.inprogress");
+			qCheckStatesService.save(qCheckState);
+			msg += "[qcheckstate: " + qCheckState.getOrder() + " " + qCheckState.getTitle() + "], ";
+		}
+		if (qCheckStatesService.findByOrder(30) == null) {
+			qCheckState = new QCheckState();
+			qCheckState.setOrder(30);
+			qCheckState.setTitle("to correct");
+			qCheckState.setCode("qcheck.state.tocorrect");
+			qCheckStatesService.save(qCheckState);
+			msg += "[qcheckstate: " + qCheckState.getOrder() + " " + qCheckState.getTitle() + "], ";
+		}
+		if (qCheckStatesService.findByOrder(40) == null) {
+			qCheckState = new QCheckState();
+			qCheckState.setOrder(40);
+			qCheckState.setTitle("checked");
+			qCheckState.setCode("qcheck.state.checked");
+			qCheckStatesService.save(qCheckState);
+			msg += "[qcheckstate: " + qCheckState.getOrder() + " " + qCheckState.getTitle() + "], ";
+		}
+		if (qCheckStatesService.findByOrder(90) == null) {
+			qCheckState = new QCheckState();
+			qCheckState.setOrder(90);
+			qCheckState.setTitle("rejected");
+			qCheckState.setCode("qcheck.state.rejected");
+			qCheckStatesService.save(qCheckState);
+			msg += "[qcheckstate: " + qCheckState.getOrder() + " " + qCheckState.getTitle() + "], ";
+		}
 				 
 		
 		InventoryDataType invDataType;

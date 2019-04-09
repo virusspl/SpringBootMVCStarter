@@ -22,6 +22,12 @@ $(document).ready(function() {
 					window.location.href.indexOf("qsurveys/templates/create") > -1
 					||
 					window.location.href.indexOf("qsurveys/templates/edit") > -1
+					||
+					window.location.href.indexOf("qcheck/create") > -1
+					||
+					window.location.href.indexOf("qcheck/edit") > -1
+					||
+					window.location.href.indexOf("qcheck/show") > -1
 					) {
 				return;
 			}

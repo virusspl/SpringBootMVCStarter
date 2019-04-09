@@ -5,5 +5,7 @@ import sbs.repository.GenericRepository;
 
 public interface QCheckStatesRepository extends GenericRepository<QCheckState,Integer> {
 
+	QCheckState findByOrder(int order);
+
 }
 

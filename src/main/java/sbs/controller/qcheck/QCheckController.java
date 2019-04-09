@@ -1,14 +1,27 @@
 package sbs.controller.qcheck;
 
-import javax.transaction.Transactional;
+import java.sql.Timestamp;
+import java.util.Locale;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
+import javax.transaction.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import sbs.service.buyorders.BuyOrdersService;
+import javassist.NotFoundException;
+import sbs.model.qcheck.QCheck;
+import sbs.model.qcheck.QCheckState;
+import sbs.model.x3.X3Product;
+import sbs.service.qcheck.QCheckService;
+import sbs.service.qcheck.QCheckStatesService;
 import sbs.service.users.UserService;
 import sbs.service.x3.JdbcOracleX3Service;
 
@@ -17,92 +30,97 @@ import sbs.service.x3.JdbcOracleX3Service;
 public class QCheckController {
 
 	@Autowired
-	BuyOrdersService buyOrdersService;
-	@Autowired
 	UserService userService;
+	@Autowired
+	QCheckService checksService;
+	@Autowired
+	QCheckStatesService statesService;
 	@Autowired
 	MessageSource messageSource;
 	@Autowired 
 	JdbcOracleX3Service jdbcOracleX3Service;
 	
+	/*
+	+ @RequestMapping("/list")
+	+ @RequestMapping("/archive")
+	@RequestMapping("/create")
+	@RequestMapping("/edit")
+	@RequestMapping("/show")
+	*/
+	
 	
 	@RequestMapping("/list")
-	public String search(Model model) {
-		model.addAttribute("orders",buyOrdersService.findAllDesc());
-		return "buyorders/list";
+	public String current(Model model) {
+		model.addAttribute("list",checksService.findAllPending());
+		return "qcheck/list";
+	}
+	
+	@RequestMapping("/archive")
+	public String closed(Model model) {
+		model.addAttribute("list",checksService.findAllClosed());
+		return "qcheck/list";
 	}
 	
 	@RequestMapping(value = "/create")
 	@Transactional
 	public String create(Model model) {
-		model.addAttribute("form", new QCheckCreateForm());
-		return "buyorders/create";
+		model.addAttribute("QCheckCreateForm", new QCheckCreateForm());
+		return "qcheck/create";
 	}
-	
-	/*
 	
 	@RequestMapping(value = "/create", params = { "save" }, method = RequestMethod.POST)
 	@Transactional
 	public String save(@Valid QCheckCreateForm qCheckCreateForm, BindingResult bindingResult,
 			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
-
-		String itemDesc;
-		X3Client client;
-		String clientCode;
 		
 		// validate
 		if (bindingResult.hasErrors()) {
-			return "buyorders/create";
-		}
-
-		// product ODBC
-		qCheckCreateForm.setProduct(qCheckCreateForm.getProductCode().toUpperCase());
-		itemDesc = jdbcOracleX3Service.findItemDescription("ATW", buyOrderCreateForm.getProduct());
-		if(itemDesc == null){
-			bindingResult.rejectValue("product", "error.no.such.product", "ERROR");
-			return "buyorders/create";
+			return "qcheck/create";
 		}
 		
-		// order ODBC
-		buyOrderCreateForm.setOrder(buyOrderCreateForm.getOrder().toUpperCase());
-		clientCode = jdbcOracleX3Service.findFinalClientByOrder("ATW", buyOrderCreateForm.getOrder());
-		
-		if(clientCode == null){
-			bindingResult.rejectValue("order", "error.no.such.order", "ERROR");
-			return "buyorders/create";
+		X3Product product = jdbcOracleX3Service.findProductByCode("ATW", qCheckCreateForm.getProductCode().trim());
+		if(product == null){
+			bindingResult.rejectValue("productCode", "error.no.such.product", "ERROR");
+			return "qcheck/create";
 		}
 
-		// client ODBC - always exists if there is code in order - no validation		
-		client = jdbcOracleX3Service.findClientByCode("ATW", clientCode);
-
+		QCheckState stateNew = statesService.findByOrder(10);
+		if(stateNew == null){
+			throw new NotFoundException("state \"new\" not found");
+		}
 		
-		BuyOrder buyOrder = new BuyOrder();
-		buyOrder.setCreationDate(new Timestamp(new java.util.Date().getTime()));
-		buyOrder.setCreator(userService.getAuthenticatedUser());
-		buyOrder.setItemCode(buyOrderCreateForm.getProduct().toUpperCase());
-		buyOrder.setItemDescription(itemDesc);
-		buyOrder.setQuantity(buyOrderCreateForm.getQuantity());
-		buyOrder.setCreatorComment(buyOrderCreateForm.getComment());
-		buyOrder.setOrderNumber(buyOrderCreateForm.getOrder());
-		buyOrder.setClientCode(clientCode);
-		buyOrder.setClientName(client.getName());
-		buyOrdersService.saveOrUpdate(buyOrder);
+		QCheck check = new QCheck();
+		check.setProductCode(product.getCode());
+		check.setProductDescription(product.getDescription());
+		check.setContents(qCheckCreateForm.getContents().trim());
+		check.setCreator(userService.getAuthenticatedUser());
+		check.setCreationDate(new Timestamp(new java.util.Date().getTime()));
+		check.setState(stateNew);
+		checksService.save(check);
+		
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
-		
-		return "redirect:/buyorders/list/";
+		return "redirect:/qcheck/show/"+check.getId();
 	}
 	
-	@RequestMapping(value = "/answer/{id}")
+	@RequestMapping(value = "/show/{id}")
 	@Transactional
 	public String answer(@PathVariable("id") int id,  ResponseForm responseForm, Model model, Locale locale) throws NotFoundException {
-		BuyOrder order = buyOrdersService.findById(id);
-		if(order == null){
-			throw new NotFoundException(messageSource.getMessage("buyorders.notfound", null, locale));
+		QCheck check = checksService.findById(id);
+		if(check == null){
+			throw new NotFoundException(messageSource.getMessage("qcheck.notfound", null, locale));
 		}
-		model.addAttribute("order", order);
-		model.addAttribute("responseForm", responseForm);
-		return "buyorders/answer";
+		model.addAttribute("check", check);
+		System.out.println(check);
+		// TODO show view, answer, mails
+		return "qcheck/show";
 	}
+	
+	
+	/*
+	 
+	
+	
+
 	
 	@RequestMapping(value = "/answer/{id}", params = { "save" }, method = RequestMethod.POST)
 	@Transactional

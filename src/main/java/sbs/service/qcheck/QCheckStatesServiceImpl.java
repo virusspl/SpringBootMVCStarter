@@ -12,13 +12,17 @@ import sbs.service.GenericServiceAdapter;
 @Service
 public class QCheckStatesServiceImpl extends GenericServiceAdapter<QCheckState, Integer> implements QCheckStatesService{
 	
-	@SuppressWarnings("unused")
 	private QCheckStatesRepository qCheckStatesRepository;
 	
     @Autowired
 	public QCheckStatesServiceImpl(@Qualifier("qCheckStatesRepositoryImpl") GenericRepository<QCheckState, Integer> genericRepository) {
 			super(genericRepository);
 			this.qCheckStatesRepository = (QCheckStatesRepository) genericRepository;
+	}
+
+	@Override
+	public QCheckState findByOrder(int order) {
+		return qCheckStatesRepository.findByOrder(order);
 	}
 
 
