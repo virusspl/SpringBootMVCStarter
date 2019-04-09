@@ -17,7 +17,18 @@
 			</div>
 		</div>
 		<!-- MODULES -->
-		<div class="row margin-top-20">
+		<div class="row margin-top-10">
+			<!-- HANDY LINKS -->
+			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
+				<h3 class="text-primary" th:text="|#{welcome.dontforget}!|">tickets</h3>
+			</div>
+			<div class="col-xs-12 margin-top-10" style="margin-left: 5px;">
+				<span class="btn-sm glyphicon glyphicon-calendar"></span>
+				<span th:utext="|#{welcome.todaywegot} &lt;b&gt;#{${dayCode}}&lt;/b&gt;, ${today}.|"></span>
+				<br/>
+				<span class="btn-sm glyphicon glyphicon-gift"></span>
+				<span th:utext="|#{welcome.nameday} &lt;b&gt;${nameDay}&lt;/b&gt;|"></span>
+			</div>
 			<!-- HANDY LINKS -->
 			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
 				<h3 class="text-primary" th:text="#{handy.links}">tickets</h3>
@@ -183,6 +194,10 @@
 					class="btn btn-info btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-link"></span> <span
 					th:text="#{qsurveys.title}">quality surveys</span>
+				</a> <a th:href="@{/qcheck/list}"
+					class="btn btn-info btn-md margin-top-5"> <span
+					class="glyphicon glyphicon-link"></span> <span
+					th:text="#{qcheck.title}">quality surveys</span>
 				</a> <a th:href="@{/utr/stats}" class="btn btn-info btn-md margin-top-5">
 					<span class="glyphicon glyphicon-stats"></span> <span
 					th:text="#{utr.stats}">bhp tickets</span>
@@ -200,7 +215,7 @@
 					th:text="#{weldlog.title}">Weldlog Log</span>
 				</a> <a th:href="@{/wakesurvey/dosurvey/1}"
 					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-pencil"></span> <span
+					class="glyphicon glyphicon-ok"></span> <span
 					th:text="#{wakesurvey.title}">bhp tickets</span>
 				</a>
 			</div>

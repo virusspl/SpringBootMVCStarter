@@ -12,6 +12,7 @@ public class DateHelper {
 	private SimpleDateFormat YyyyMmDdFormat;
 	private SimpleDateFormat YyyyMmDdFormatDot;
 	private SimpleDateFormat ddMmYyyyFormat;
+	private SimpleDateFormat ddMmYyyyFormatDot;
 	private SimpleDateFormat ddMmYyFormat;
 	private SimpleDateFormat ddMmYyyyHhMmFormat;
 	private SimpleDateFormat YyyyMmDdHhMmFormat;
@@ -22,6 +23,7 @@ public class DateHelper {
 		YyyyMmDdFormat = new SimpleDateFormat("yyyy/MM/dd");
 		YyyyMmDdFormatDot = new SimpleDateFormat("yyyy.MM.dd");
 		ddMmYyyyFormat = new SimpleDateFormat("dd/MM/yyyy");
+		ddMmYyyyFormatDot = new SimpleDateFormat("dd.MM.yyyy");
 		ddMmYyFormat = new SimpleDateFormat("dd/MM/yy");
 		ddMmYyyyHhMmFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		YyyyMmDdHhMmFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
@@ -56,8 +58,16 @@ public class DateHelper {
 		return ddMmYyyyFormat.format(date);
 	}
 	
+	public String formatDdMmYyyyDot(Date date){
+		return ddMmYyyyFormatDot.format(date);
+	}
+	
 	public String formatDdMmYyyy(Timestamp date){
 		return ddMmYyyyFormat.format(date);
+	}
+	
+	public String formatDdMmYyyyDot(Timestamp date){
+		return ddMmYyyyFormatDot.format(date);
 	}
 	
 	public String formatYyyyMmDd(Date date){
