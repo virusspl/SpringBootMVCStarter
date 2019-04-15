@@ -58,6 +58,10 @@
 					<span class="glyphicon glyphicon-list-alt"></span> <span
 					th:text="#{qcheck.list.pending}">list</span>
 				</a>
+				<a th:href="@{/qcheck/tocorrect}" class="btn btn-warning btn-sm">
+					<span class="glyphicon glyphicon-refresh"></span> <span
+					th:text="#{qcheck.state.tocorrect}">list</span>
+				</a>
 				<a th:href="@{/qcheck/archive}" class="btn btn-success btn-sm">
 					<span class="glyphicon glyphicon-ok"></span> <span
 					th:text="#{qcheck.list.closed}">list</span>
@@ -79,9 +83,7 @@
 								<th th:text="#{general.creator}">head</th>
 								<th th:text="#{general.productCode}">head</th>
 								<th th:text="#{general.productDescription}">head</th>
-								<th th:text="#{general.state}">head</th>
-								<th th:text="#{general.date.finish}">head</th>
-								<th th:text="#{general.user.assigned}">head</th>							
+								<th th:text="#{general.state}">head</th>				
 							</tr>
 						</thead>
 						<tfoot>
@@ -92,26 +94,20 @@
 								<th th:text="#{general.productCode}">head</th>
 								<th th:text="#{general.productDescription}">head</th>
 								<th th:text="#{general.state}">head</th>
-								<th th:text="#{general.date.finish}">head</th>
-								<th th:text="#{general.user.assigned}">head</th>
 							</tr>
 						</tfoot>
 						<tbody>
 							<tr th:each="check : ${list}">
-								<td>
-								<a th:href="|@{/qcheck/edit/}${check.id}|"
-									data-toggle="tooltip" data-placement="top"
-									th:title="#{action.edit}">#<span th:text="${check.id}"></span></a>
-								</td>
+								<td><span th:text="|#${check.id}|"></span></td>
 								<td><span th:text="${#dates.format(check.creationDate, 'yyyy.MM.dd HH:mm')}"></span></td>
 								<td><span th:text="${check.creator.name}"></span></td>
-								<td><span th:text="${check.productCode}"></span></td>
+								<td><a th:href="|@{/qcheck/show/}${check.id}|"
+									data-toggle="tooltip" data-placement="top"
+									th:title="#{action.show}"><span th:text="${check.productCode}"></span></a>
+								</td>
+								<!-- <td><span th:text="${check.productCode}"></span></td>-->
 								<td><span th:text="${check.productDescription}"></span></td>
-								<td><span th:text="#{${check.state.code}}"></span></td>
-								<td th:if="${check.endDate} != null"><span th:text="${#dates.format(check.endDate, 'yyyy.MM.dd HH:mm')}"></span></td>
-								<td th:if="${check.endDate} == null"></td>
-								<td th:if="${check.assignedUser} != null"><span th:text="${check.assignedUser.name}"></span></td>
-								<td th:if="${check.assignedUser} == null"></td>
+								<td><span th:text="#{${check.currentState.code}}"></span></td>
 							</tr>
 						</tbody>
 					</table>

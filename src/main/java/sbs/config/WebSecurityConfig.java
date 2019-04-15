@@ -166,6 +166,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"COMPONENTSUSER"
 				)
 		.antMatchers(
+				"/qcheck/**"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"QCHECKMANAGER",
+				"QCHECKUSER"
+				)
+		.antMatchers(
 				"/admin", 
 				"/users/**",
 				"/inventory/createinventory/**",

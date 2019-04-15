@@ -1,6 +1,8 @@
 package sbs.model.qcheck;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
@@ -17,20 +20,23 @@ import org.hibernate.annotations.Type;
 import sbs.model.users.User;
 
 @Entity
-@Table(name = "qchecks")
+@Table(name = "qcheck")
 public class QCheck {
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "qc_creation_user_id", nullable = false)
 	private User creator;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "qc_current_state_id", nullable = false)
+	private QCheckState currentState;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "qc_assigned_user_id", nullable = true)
-	private User assignedUser;
+	@JoinColumn(name = "qc_current_user_id", nullable = true)
+	private User currentUser;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "qc_state_id", nullable = false)
-	private QCheckState state;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "check")
+	private Set<QCheckAction> actions;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,12 +45,6 @@ public class QCheck {
 	
 	@Column(name = "qc_creation_date", nullable = false)
 	private Timestamp creationDate;
-	
-	@Column(name = "qc_start_date", nullable = true)
-	private Timestamp startDate;
-	
-	@Column(name = "qc_end_date", nullable = true)
-	private Timestamp endDate;
 	
 	@Column(name = "qc_product_code", length = 30, nullable = false)
 	private String productCode;
@@ -56,13 +56,9 @@ public class QCheck {
 	@Type(type="text")
 	private String contents;
 	
-	@Column(name = "qc_result")
-	@Type(type="text")
-	private String result;
-
 	
 	public QCheck() {
-
+		actions = new HashSet<>();
 	}
 
 
@@ -75,24 +71,24 @@ public class QCheck {
 		this.creator = creator;
 	}
 
-
-	public User getAssignedUser() {
-		return assignedUser;
+	
+	public User getCurrentUser() {
+		return currentUser;
 	}
 
 
-	public void setAssignedUser(User assignedUser) {
-		this.assignedUser = assignedUser;
+	public void setCurrentUser(User currentUser) {
+		this.currentUser = currentUser;
 	}
 
 
-	public QCheckState getState() {
-		return state;
+	public QCheckState getCurrentState() {
+		return currentState;
 	}
 
 
-	public void setState(QCheckState state) {
-		this.state = state;
+	public void setCurrentState(QCheckState currentState) {
+		this.currentState = currentState;
 	}
 
 
@@ -113,26 +109,6 @@ public class QCheck {
 
 	public void setCreationDate(Timestamp creationDate) {
 		this.creationDate = creationDate;
-	}
-
-
-	public Timestamp getStartDate() {
-		return startDate;
-	}
-
-
-	public void setStartDate(Timestamp startDate) {
-		this.startDate = startDate;
-	}
-
-
-	public Timestamp getEndDate() {
-		return endDate;
-	}
-
-
-	public void setEndDate(Timestamp endDate) {
-		this.endDate = endDate;
 	}
 
 
@@ -164,28 +140,25 @@ public class QCheck {
 	public void setContents(String contents) {
 		this.contents = contents;
 	}
+	
 
-
-	public String getResult() {
-		return result;
+	public Set<QCheckAction> getActions() {
+		return actions;
 	}
 
 
-	public void setResult(String result) {
-		this.result = result;
+	public void setActions(Set<QCheckAction> actions) {
+		this.actions = actions;
 	}
 
 
 	@Override
 	public String toString() {
-		return "QCheck [id=" + id + ", creationDate=" + creationDate + ", startDate=" + startDate + ", endDate="
-				+ endDate + ", productCode=" + productCode + ", productDescription=" + productDescription
-				+ ", contents=" + contents + ", result=" + result + "]";
+		return "QCheck [creator=" + creator + ", currentState=" + currentState + ", actions=" + actions + ", id=" + id
+				+ ", creationDate=" + creationDate + ", productCode=" + productCode + ", productDescription="
+				+ productDescription + ", contents=" + contents + "]";
 	}
-	
-	
-	
-	
-	
-	
+
+
+
 }

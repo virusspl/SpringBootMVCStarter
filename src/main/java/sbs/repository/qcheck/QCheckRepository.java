@@ -9,7 +9,7 @@ public interface QCheckRepository extends GenericRepository<QCheck,Integer> {
 
 	List<QCheck> findAllPending();
 	List<QCheck> findAllClosed();
-
+	List<QCheck> findAllWithStateOrder(int order);
 	
 }
 

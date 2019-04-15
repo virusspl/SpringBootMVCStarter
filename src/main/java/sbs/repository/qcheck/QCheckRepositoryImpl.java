@@ -16,7 +16,7 @@ public class QCheckRepositoryImpl extends GenericRepositoryAdapter<QCheck, Integ
 	
 	@Override
 	public List<QCheck> findAllPending() {
-		String hql = "from QCheck c where c.state.order < :ord";
+		String hql = "from QCheck c where c.currentState.order < :ord";
 		@SuppressWarnings("unchecked")
 		List<QCheck> result = (List<QCheck>) 
 		currentSession()
@@ -26,16 +26,29 @@ public class QCheckRepositoryImpl extends GenericRepositoryAdapter<QCheck, Integ
 		
 		return result;
 	}
-
-
+	
 	@Override
-	public List<QCheck> findAllClosed() {
-		String hql = "from QCheck c where c.state.order >= :ord";
+	public List<QCheck> findAllWithStateOrder(int order) {
+		String hql = "from QCheck c where c.currentState.order = :ord";
 		@SuppressWarnings("unchecked")
 		List<QCheck> result = (List<QCheck>) 
 		currentSession()
 		.createQuery(hql)
-		.setInteger("ord", 40)
+		.setInteger("ord", order)
+		.list();
+		
+		return result;
+	}
+
+
+	@Override
+	public List<QCheck> findAllClosed() {
+		String hql = "from QCheck c where c.currentState.order = :ord";
+		@SuppressWarnings("unchecked")
+		List<QCheck> result = (List<QCheck>) 
+		currentSession()
+		.createQuery(hql)
+		.setInteger("ord", 50)
 		.list();
 		
 		return result;

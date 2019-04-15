@@ -424,6 +424,22 @@ public class VariousPagesController {
 			roleService.save(componentsRole);
 			msg += "[role: " + componentsRole.getName() + "], ";
 		}
+		
+		Role qcheckUser = roleService.findByName("ROLE_QCHECKUSER");
+		if (qcheckUser == null) {
+			qcheckUser = new Role();
+			qcheckUser.setName("ROLE_QCHECKUSER");
+			roleService.save(qcheckUser);
+			msg += "[role: " + qcheckUser.getName() + "], ";
+		}
+		
+		Role qcheckManager = roleService.findByName("ROLE_QCHECKMANAGER");
+		if (qcheckManager == null) {
+			qcheckManager = new Role();
+			qcheckManager.setName("ROLE_QCHECKMANAGER");
+			roleService.save(qcheckManager);
+			msg += "[role: " + qcheckManager.getName() + "], ";
+		}
 
 		System.out.println("get users:");
 		User admin = userService.findByUsername("Admin");
@@ -779,8 +795,8 @@ public class VariousPagesController {
 		if (qCheckStatesService.findByOrder(10) == null) {
 			qCheckState = new QCheckState();
 			qCheckState.setOrder(10);
-			qCheckState.setTitle("new");
-			qCheckState.setCode("qcheck.state.new");
+			qCheckState.setTitle("tocheck");
+			qCheckState.setCode("qcheck.state.tocheck");
 			qCheckStatesService.save(qCheckState);
 			msg += "[qcheckstate: " + qCheckState.getOrder() + " " + qCheckState.getTitle() + "], ";
 		}
@@ -795,14 +811,22 @@ public class VariousPagesController {
 		if (qCheckStatesService.findByOrder(30) == null) {
 			qCheckState = new QCheckState();
 			qCheckState.setOrder(30);
-			qCheckState.setTitle("to correct");
-			qCheckState.setCode("qcheck.state.tocorrect");
+			qCheckState.setTitle("suspended");
+			qCheckState.setCode("qcheck.state.suspended");
 			qCheckStatesService.save(qCheckState);
 			msg += "[qcheckstate: " + qCheckState.getOrder() + " " + qCheckState.getTitle() + "], ";
 		}
 		if (qCheckStatesService.findByOrder(40) == null) {
 			qCheckState = new QCheckState();
 			qCheckState.setOrder(40);
+			qCheckState.setTitle("to correct");
+			qCheckState.setCode("qcheck.state.tocorrect");
+			qCheckStatesService.save(qCheckState);
+			msg += "[qcheckstate: " + qCheckState.getOrder() + " " + qCheckState.getTitle() + "], ";
+		}
+		if (qCheckStatesService.findByOrder(50) == null) {
+			qCheckState = new QCheckState();
+			qCheckState.setOrder(50);
 			qCheckState.setTitle("checked");
 			qCheckState.setCode("qcheck.state.checked");
 			qCheckStatesService.save(qCheckState);

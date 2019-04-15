@@ -32,4 +32,9 @@ public class QCheckServiceImpl extends GenericServiceAdapter<QCheck, Integer> im
 		return qCheckRepository.findAllClosed();
 	}
 
+	@Override
+	public List<QCheck> findAllWithStateOrder(int order) {
+		return qCheckRepository.findAllWithStateOrder(order);
+	}
+
 }

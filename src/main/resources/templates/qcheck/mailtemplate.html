@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"></meta>
+<style>
+table {
+	width: 100%;
+}
+
+.color {
+	background: #5AC4F2;
+	color: #F3FBFE;
+	font-weight: bold;
+}
+
+a {
+	color: #3AA4D2;
+}
+
+td {
+	padding: 5px 10px 5px 10px;
+	border: 1px solid gray;
+}
+
+.idcell {
+	width: 30%;
+}
+
+.titlecell {
+	width: 70%;
+}
+
+#footer {
+	font-size: 80%;
+}
+</style>
+</head>
+<body>
+	<table>
+		<!-- PAGE TITLE -->
+		<tr class="color">
+			<td>
+				<h1>
+					<span th:text="|Nowy status pomiaru #${check.id} - #{${check.currentState.code}}|"></span>
+				</h1>
+			</td>
+		</tr>
+		<tr>
+			<td><span
+				th:text="|Pomiar #${check.id} (${check.productCode}) uzyskał nowy status. 
+				Szczegóły można sprawdzić w aplikacji webowej ADR Polska S.A.|"></span>
+				</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td class="color" colspan="4"><span
+				th:text="|Informacje ogólne|"></span></td>
+		</tr>
+		<!-- TICKETS LOOP -->
+		<tr>
+			<td class="idcell"><span th:text="|#id|"></span></td>
+			<td class="titlecell"><span th:text="|#${check.id}|"></span></td>
+		</tr>
+		<tr>
+			<td class="idcell"><span th:text="|Kod produktu|"></span></td>
+			<td class="datecell"><span
+				th:text="${check.productCode}"></span></td>
+		</tr>		
+		<tr>
+			<td class="idcell"><span th:text="|Czas zmiany|"></span></td>
+			<td class="datecell"><span
+				th:text="${#dates.format(time, 'yyyy.MM.dd HH:mm')}"></span></td>
+		</tr>
+		<tr>
+			<td class="idcell"><span th:text="|Aktualny status|"></span></td>
+			<td class="datecell"><span
+				th:text="#{${check.currentState.code}}"></span></td>
+		</tr>
+		<tr>
+			<td class="idcell"><span th:text="|Komentarz do statusu|"></span></td>
+			<td class="datecell"><span
+				th:text="${comment}"></span></td>
+		</tr>
+		<tr>
+			<td class="idcell"><span th:text="|Link do zgłoszenia|"></span></td>
+			<td class="datecell"><a th:href="|${host}:8080@{'~/adr/qcheck/show/' + ${check.id}}|">
+					<span th:text="|QCheck / #${check.id}|"></span>
+			</a></td>
+		</tr>
+	</table>
+	<!-- FOOTER -->
+	<table>
+		<tr id="footer">
+			<td class="color"><span>Mail został wygenerowany
+					automatycznie przez aplikację webową ADR Polska S.A., moduł
+					zgłoszeń BHP. Proszę nie odpowiadać na tę wiadomość.</span></td>
+		</tr>
+	</table>
+</body>
+</html>
