@@ -107,7 +107,27 @@
 								</td>
 								<!-- <td><span th:text="${check.productCode}"></span></td>-->
 								<td><span th:text="${check.productDescription}"></span></td>
-								<td><span th:text="#{${check.currentState.code}}"></span></td>
+								<td>
+								<span
+									th:if="${check.currentState.code}=='qcheck.state.tocheck'"
+									class="glyphicon glyphicon-plus"></span> 
+								<span
+									th:if="${check.currentState.code}=='qcheck.state.rejected'"
+									class="glyphicon glyphicon-ban-circle"></span> 
+								<span
+									th:if="${check.currentState.code}=='qcheck.state.inprogress'"
+									class="glyphicon glyphicon-forward"></span> 
+								<span
+									th:if="${check.currentState.code}=='qcheck.state.suspended'"
+									class="glyphicon glyphicon-pause"></span> 
+								<span
+									th:if="${check.currentState.code}=='qcheck.state.checked'"
+									class="glyphicon glyphicon-ok"></span> 
+								<span
+									th:if="${check.currentState.code}=='qcheck.state.tocorrect'"
+									class="glyphicon glyphicon-refresh"></span> 
+								<span th:text="#{${check.currentState.code}}"></span>
+								</td>
 							</tr>
 						</tbody>
 					</table>

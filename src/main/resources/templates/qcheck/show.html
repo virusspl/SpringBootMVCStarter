@@ -164,12 +164,12 @@
 					</button>
 					<button th:if="${markok}" name="markok" th:value="${check.id}"
 						class="btn btn-success btn-sm" type="submit">
-						<span class="glyphicon glyphicon-align-justify"></span> <span
+						<span class="glyphicon glyphicon-ok"></span> <span
 							th:text="|#{qcheck.mark.ok}|">search</span>
 					</button>
 					<button th:if="${markbad}" name="markbad" th:value="${check.id}"
 						class="btn btn-warning btn-sm" type="submit">
-						<span class="glyphicon glyphicon-align-justify"></span> <span
+						<span class="glyphicon glyphicon-remove"></span> <span
 							th:text="|#{qcheck.mark.bad}|">search</span>
 					</button>
 					<button th:if="${checkagain}" name="checkagain"
@@ -218,7 +218,27 @@
 								<td><span
 									th:text="${#dates.format(action.time, 'yyyy.MM.dd HH:mm')}"></span></td>
 								<td><span th:text="${action.user.name}"></span></td>
-								<td><span th:text="#{${action.state.code}}"></span></td>
+								<td>
+								<span
+									th:if="${action.state.code}=='qcheck.state.tocheck'"
+									class="glyphicon glyphicon-plus"></span> 
+								<span
+									th:if="${action.state.code}=='qcheck.state.rejected'"
+									class="glyphicon glyphicon-ban-circle"></span> 
+								<span
+									th:if="${action.state.code}=='qcheck.state.inprogress'"
+									class="glyphicon glyphicon-forward"></span> 
+								<span
+									th:if="${action.state.code}=='qcheck.state.suspended'"
+									class="glyphicon glyphicon-pause"></span> 
+								<span
+									th:if="${action.state.code}=='qcheck.state.checked'"
+									class="glyphicon glyphicon-ok"></span> 
+								<span
+									th:if="${action.state.code}=='qcheck.state.tocorrect'"
+									class="glyphicon glyphicon-refresh"></span> 
+								<span
+									th:text="#{${action.state.code}}"></span></td>
 								<td><span th:text="${action.comment}"></span></td>
 							</tr>
 						</tbody>

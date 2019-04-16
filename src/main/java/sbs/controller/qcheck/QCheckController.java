@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
@@ -27,7 +26,6 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import javassist.NotFoundException;
-import sbs.controller.bhptickets.UserTicketsHolder;
 import sbs.model.qcheck.QCheck;
 import sbs.model.qcheck.QCheckAction;
 import sbs.model.qcheck.QCheckState;
