@@ -19,6 +19,7 @@
 		<!-- MODULES -->
 		<div class="row margin-top-10">
 			<!-- HANDY LINKS -->
+			<div id="social" th:if="${dayCode}">
 			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
 				<h3 class="text-primary" th:text="|#{welcome.dontforget}!|">tickets</h3>
 			</div>
@@ -28,6 +29,7 @@
 				<br/>
 				<span class="btn-sm glyphicon glyphicon-gift"></span>
 				<span th:utext="|#{welcome.nameday} &lt;b&gt;${nameDay}&lt;/b&gt;|"></span>
+			</div>
 			</div>
 			<!-- HANDY LINKS -->
 			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
