@@ -18,8 +18,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import sbs.helpers.TextHelper;
 import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3Product;
+import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.x3.JdbcOracleX3Service;
 
 @Controller
@@ -30,6 +32,10 @@ public class ProductionComponentsController {
 	MessageSource messageSource;
 	@Autowired
 	JdbcOracleX3Service x3Service;
+	@Autowired
+	JdbcOracleGeodeService geodeService;
+	@Autowired
+	TextHelper textHelper;
 
 	@RequestMapping("/main")
 	public String view() {
@@ -111,19 +117,33 @@ public class ProductionComponentsController {
 			}
 
 			//Map<String, String> descriptions = x3Service.getDescriptionsByLanguage(JdbcOracleX3Service.LANG_POLISH, "ATW");
-			Map<String, X3Product> products =  x3Service.findAllActiveProductsMap("ATW");
 			Map<String, Double> quantities = x3Service.getAllProductsQuantities("ATW");
+			Map<String, Double> geodeStock = geodeService.getStockOnProductionAndReceptions();
+			Map<String, X3Product> products =  x3Service.findAllActiveProductsMap("ATW");
 			
 			List<List<String>> table = new ArrayList<>();
 			List<String> line;
-			
+			double x3, qty, geode;
 			for(Map.Entry<String, Double> entry: allComponents.entrySet()){
+
+				x3 = quantities.getOrDefault(entry.getKey(), 0.0);
+						//quantities.containsKey(entry.getKey()) ? quantities.get(entry.getKey()) : 0;
+				qty = entry.getValue();
+				geode = geodeStock.getOrDefault(entry.getKey(), 0.0);
+
 				line = new ArrayList<>();
 				line.add(entry.getKey());
 				line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getDescription() : "-");
 				line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getCategory() : "-");
-				line.add(quantities.containsKey(entry.getKey()) ? quantities.get(entry.getKey()).toString() : "-");				
-				line.add(entry.getValue().toString());
+				line.add(textHelper.numberFormatIntegerRoundSpace(x3));				
+				line.add(textHelper.numberFormatIntegerRoundSpace(geode));												
+				line.add(textHelper.numberFormatIntegerRoundSpace(qty));
+				if(x3-qty >= 0){
+					line.add(textHelper.numberFormatIntegerRoundSpace(0.0));
+				}
+				else{
+					line.add(textHelper.numberFormatIntegerRoundSpace(Math.abs(x3-qty)));
+				}
 				table.add(line);
 			}
 			model.addAttribute("components", table);

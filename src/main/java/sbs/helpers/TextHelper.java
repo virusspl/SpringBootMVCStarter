@@ -8,14 +8,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class TextHelper {
 	
-	NumberFormat formatter = new DecimalFormat("#0.00");     
+	NumberFormat formatterDotTwoDigits = new DecimalFormat("#0.00");     
+	NumberFormat formatterIntegerRoundNoSpace = new DecimalFormat("#0");     
 	
 	public TextHelper() {
 	}
 	
 	public String numberFormatDotNoSpace(double number){
-		return formatter.format(number).replace(',', '.');
+		return formatterDotTwoDigits.format(number).replace(',', '.');
 	}
+	
+	public String numberFormatIntegerRoundSpace(double number){
+		return formatterIntegerRoundNoSpace.format(number);
+	}
+	
 	
 	public String capitalize(String input){
 		return WordUtils.capitalize(input);

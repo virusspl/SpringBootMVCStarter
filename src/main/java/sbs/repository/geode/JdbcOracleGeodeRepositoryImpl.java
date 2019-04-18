@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -140,6 +141,34 @@ public class JdbcOracleGeodeRepositoryImpl implements JdbcOracleGeodeRepository 
 
 		return !resultSet.isEmpty();
 		
+	}
+
+
+	@Override
+	public Map<String, Double> getStockOnProductionAndReceptions() {
+
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "GEOATW.STOCKOBJ.ITM_0, "
+				+ "Sum(GEOATW.STOCKOBJ.CSUQTY_0) AS STOCK "
+				+ "FROM "
+				+ "GEOATW.STOCKOBJ "
+				+ "WHERE "
+				+ "GEOATW.STOCKOBJ.STO_0 <> ? "
+				+ "AND "
+				+ "GEOATW.STOCKOBJ.STO_0 <> ? "
+				+ "GROUP BY "
+				+ "GEOATW.STOCKOBJ.ITM_0"
+				,
+                new Object[]{"TMP","J00"});
+        
+		Map<String, Double> result = new HashMap<>();
+
+        for(Map<String,Object> row: resultSet ){
+        	result.put((String)row.get("ITM_0"), ((BigDecimal)row.get("STOCK")).doubleValue());
+        }
+        
+		return result;
 	}
 
 }

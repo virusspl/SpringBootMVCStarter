@@ -74,4 +74,10 @@ public class JdbcOracleGeodeServiceImpl implements JdbcOracleGeodeService {
 	public boolean checkIfAddressExist(String address) {
 		return jdbcOracleGeodeRepository.checkIfAddressExist(address);
 	}
+
+
+	@Override
+	public Map<String, Double> getStockOnProductionAndReceptions() {
+		return jdbcOracleGeodeRepository.getStockOnProductionAndReceptions();
+	}
 }

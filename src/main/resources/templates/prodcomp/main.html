@@ -150,7 +150,9 @@
 								<th th:text="#{general.productDescription}">head</th>
 								<th th:text="#{general.category}">head</th>
 								<th th:text="|#{general.stock} X3|">head</th>
+								<th th:text="|GEO Prd/Rcp|">head</th>
 								<th th:text="#{general.quantity}">head</th>
+								<th th:text="#{general.demand.short}">head</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -158,11 +160,10 @@
 								<td><span th:text="${line[0]}"></span></td>
 								<td><span th:text="${line[1]}"></span></td>
 								<td><span th:text="${line[2]}"></span></td>
-								<td><span
-									th:text="${#numbers.formatDecimal(line[3], 1, 'DEFAULT', 0, 'DEFAULT')}"></span></td>
-								<td><span
-									th:text="${#numbers.formatDecimal(line[4], 1, 'DEFAULT', 0, 'DEFAULT')}"></span></td>
-
+								<td><span th:text="${line[3]}"></span></td>
+								<td><span th:text="${line[4]}"></span></td>
+								<td><span th:text="${line[5]}"></span></td>
+								<td><span th:text="${line[6]}"></span></td>
 							</tr>
 
 						</tbody>
