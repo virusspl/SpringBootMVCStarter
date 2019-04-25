@@ -132,27 +132,69 @@
 		</script>
 		<!-- TABLE 2 -->
 		<script th:if="__${#locale}__ == 'pl'">
-			var table2 = $('#srv2').DataTable({
+   			var table = $('#srv2').DataTable({
 				language : {
 					url : getUrl() + "polish.json",
 				},
-				order : [ [ 0, 'desc' ] ]
+				order : [ [ 0, 'desc' ] ],
+				dom : 'Bfrtip',
+				buttons : [ {
+					extend : 'copy',
+					text : 'Kopiuj do schowka'
+				}, {
+					extend : 'csv',
+					text : 'CSV'
+				}, {
+					extend : 'excel',
+					text : 'Excel'
+				}, {
+					extend : 'pdfHtml5',
+					orientation : 'landscape'
+				} ]
 			});
 		</script>
 		<script th:if="__${#locale}__ == 'en'">
-			var table2 = $('#srv2').DataTable({
+   			var table = $('#srv2').DataTable({
 				language : {
 					url : getUrl() + "english.json"
 				},
-				order : [ [ 0, 'desc' ] ]
+				order : [ [ 0, 'desc' ] ],
+				dom : 'Bfrtip',
+				buttons : [ {
+					extend : 'copy',
+					text : 'Kopiuj do schowka'
+				}, {
+					extend : 'csv',
+					text : 'CSV'
+				}, {
+					extend : 'excel',
+					text : 'Excel'
+				}, {
+					extend : 'pdfHtml5',
+					orientation : 'landscape'
+				} ]
 			});
 		</script>
 		<script th:if="__${#locale}__ == 'it'">
-			var table2 = $('#srv2').DataTable({
+   			var table = $('#srv2').DataTable({
 				language : {
 					url : getUrl() + "italian.json"
 				},
-				order : [ [ 0, 'desc' ] ]
+				order : [ [ 0, 'desc' ] ],
+				dom : 'Bfrtip',
+				buttons : [ {
+					extend : 'copy',
+					text : 'Kopiuj do schowka'
+				}, {
+					extend : 'csv',
+					text : 'CSV'
+				}, {
+					extend : 'excel',
+					text : 'Excel'
+				}, {
+					extend : 'pdfHtml5',
+					orientation : 'landscape'
+				} ]
 			});
 		</script>
 		<!-- TABLE 3 -->
