@@ -1,6 +1,8 @@
 package sbs.repository.x3;
 
 import java.math.BigDecimal;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -14,6 +16,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -37,6 +40,7 @@ import sbs.model.x3.X3SalesOrderItem;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
 import sbs.model.x3.X3ShipmentStockLineWithPrice;
+import sbs.model.x3.X3StandardCostEntry;
 import sbs.model.x3.X3StoreInfo;
 import sbs.model.x3.X3Supplier;
 import sbs.model.x3.X3ToolEntry;
@@ -1781,7 +1785,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				,
                 new Object[]{"ACV"}
 				);
-		// TODO
+
 		List<X3ConsumptionProductInfo> list = new ArrayList<>();
 		X3ConsumptionProductInfo info;
 		for(Map<String,Object> row: resultSet ){
@@ -2333,5 +2337,144 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         
         return map;
 	}
+
+	@Override
+	public Map<String, X3StandardCostEntry> getLastStandardCostsListFromCalculationTable(String company) {
+	
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT  "
+				+ "x.code, "
+				+ "x.calcdate, "
+				+ "x.totalcost, "
+				+ "x.materialcost, "
+				+ "x.machinecost, "
+				+ "x.labourcost "
+				+ "FROM "
+				+ "	(SELECT "
+				+ "		ITMREF_0 as code, "
+				+ "		ITCDAT_0 as calcdate,"
+				+ "		CSTTOT_0 as totalcost, "
+				+ "		MATTOT_0 as materialcost, "
+				+ "		MACTOT_0 as machinecost, "
+				+ "		LABTOT_0 as labourcost, "
+				+ "		rank() over (partition by ITMREF_0 order by ITCDAT_0 desc) as rank "
+				+ "	FROM "
+				+ "		" + company + ".ITMCOST "
+				+ "	WHERE "
+				+ "		CSTTYP_0 = 1"
+				+ "	) x "
+				+ "WHERE x.rank = 1"
+				,
+                new Object[]{});
+        
+		Map<String, X3StandardCostEntry> costs = new HashMap<>();
+		X3StandardCostEntry entry;
+        String code;
+		for(Map<String,Object> row: resultSet ){
+			code = (String)row.get("code");
+			entry = new X3StandardCostEntry();
+			entry.setCode(code);
+			entry.setDate((Timestamp)row.get("calcdate"));
+			entry.setLabourCost(((BigDecimal)row.get("labourcost")).doubleValue());
+			entry.setMachineCost(((BigDecimal)row.get("machinecost")).doubleValue());
+			entry.setMaterialCost(((BigDecimal)row.get("materialcost")).doubleValue());
+			entry.setTotalCost(((BigDecimal)row.get("totalcost")).doubleValue());
+        	costs.put(code, entry);
+        }
+		return costs;
+	}
+	
+	@Override
+	public Map<String, X3StandardCostEntry> getStandardCostsMap(String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "VCSAT.ITMREF_0, "
+				+ "VCSAT.TOTAL_0, "
+				+ "VCSAT.MATERIAL_0, "
+				+ "VCSAT.MACHINE_0, "
+				+ "VCSAT.LABOUR_0, "
+				+ "VCSAT.CSTDATE_0 "
+				+ "FROM "
+				+ company + ".VSTDCST VCSAT",
+                new Object[]{});
+        
+		Map<String, X3StandardCostEntry> costs = new HashMap<>();
+		X3StandardCostEntry entry;
+        String code;
+		for(Map<String,Object> row: resultSet ){
+			code = (String)row.get("ITMREF_0");
+			entry = new X3StandardCostEntry();
+			entry.setCode(code);
+			entry.setDate((Timestamp)row.get("CSTDATE_0"));
+			entry.setLabourCost(((BigDecimal)row.get("LABOUR_0")).doubleValue());
+			entry.setMachineCost(((BigDecimal)row.get("MACHINE_0")).doubleValue());
+			entry.setMaterialCost(((BigDecimal)row.get("MATERIAL_0")).doubleValue());
+			entry.setTotalCost(((BigDecimal)row.get("TOTAL_0")).doubleValue());
+        	costs.put(code, entry);
+        }
+		
+		return costs;
+	}
+
+	@Override
+	public void insertStandardCostsInQuickTable(List<X3StandardCostEntry> updateList,
+			List<X3StandardCostEntry> insertList, String company) {
+
+		String sql = "INSERT INTO " 
+						+ company + ".VSTDCST"
+						+ "(ITMREF_0, TOTAL_0, MATERIAL_0, MACHINE_0, LABOUR_0, CSTDATE_0) "
+						+ "VALUES (?, ?, ?, ?, ?, ?)";
+		jdbc.batchUpdate(sql, new BatchPreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement ps, int i) throws SQLException {
+				X3StandardCostEntry entry = insertList.get(i);
+				ps.setString(1, entry.getCode());
+				ps.setDouble(2, entry.getTotalCost());
+				ps.setDouble(3, entry.getMaterialCost());
+				ps.setDouble(4, entry.getMachineCost());
+				ps.setDouble(5, entry.getLabourCost());
+				ps.setTimestamp(6, entry.getDate());
+			}
+			@Override
+			public int getBatchSize() {
+				return insertList.size();
+			}
+		});
+		
+		sql = "UPDATE " 
+				+ company + ".VSTDCST SET "
+				+ "ITMREF_0 = ?, "
+				+ "TOTAL_0 = ?, "
+				+ "MATERIAL_0 = ?, "
+				+ "MACHINE_0 = ?, "
+				+ "LABOUR_0 = ?, "
+				+ "CSTDATE_0 = ? "
+				+ "WHERE "
+				+ "ITMREF_0 = ?";
+		jdbc.batchUpdate(sql, new BatchPreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement ps, int i) throws SQLException {
+				X3StandardCostEntry entry = insertList.get(i);
+				ps.setString(1, entry.getCode());
+				ps.setDouble(2, entry.getTotalCost());
+				ps.setDouble(3, entry.getMaterialCost());
+				ps.setDouble(4, entry.getMachineCost());
+				ps.setDouble(5, entry.getLabourCost());
+				ps.setTimestamp(6, entry.getDate());
+				ps.setString(7, entry.getCode());
+			}
+			@Override
+			public int getBatchSize() {
+				return insertList.size();
+			}
+		});
+		
+	}
+	
+
+
+
+
+
 
 }

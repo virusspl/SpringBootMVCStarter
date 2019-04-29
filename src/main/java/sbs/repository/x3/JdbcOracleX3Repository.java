@@ -23,6 +23,7 @@ import sbs.model.x3.X3SalesOrderItem;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
 import sbs.model.x3.X3ShipmentStockLineWithPrice;
+import sbs.model.x3.X3StandardCostEntry;
 import sbs.model.x3.X3StoreInfo;
 import sbs.model.x3.X3Supplier;
 import sbs.model.x3.X3ToolEntry;
@@ -95,6 +96,10 @@ public interface JdbcOracleX3Repository  {
 	public Map<String, String> getVariousTableData(String company, String table, String x3language);
 	public Map<String, List<X3BomItem>> getAllBomPartsTopLevel(String company);
 	public Map<String, Double> getAllProductsQuantities(String company);
+	public Map<String, X3StandardCostEntry> getLastStandardCostsListFromCalculationTable(String company);
+	public Map<String, X3StandardCostEntry> getStandardCostsMap(String company);
+	public void insertStandardCostsInQuickTable(List<X3StandardCostEntry> updateList,
+			List<X3StandardCostEntry> insertList, String company);
 	
 	
 }

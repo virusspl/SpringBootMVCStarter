@@ -1,9 +1,11 @@
 package sbs.service.x3;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -28,6 +30,7 @@ import sbs.model.x3.X3SalesOrderItem;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
 import sbs.model.x3.X3ShipmentStockLineWithPrice;
+import sbs.model.x3.X3StandardCostEntry;
 import sbs.model.x3.X3StoreInfo;
 import sbs.model.x3.X3Supplier;
 import sbs.model.x3.X3ToolEntry;
@@ -367,6 +370,32 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	@Override
 	public Map<String, Double> getAllProductsQuantities(String company) {
 		return jdbcOracleX3Repository.getAllProductsQuantities(company);
+	}
+
+	@Override
+	public String updateStandardCostsTable(String company) {
+		Map<String, X3StandardCostEntry> stdCostsUpdate = jdbcOracleX3Repository.getLastStandardCostsListFromCalculationTable(company);
+		Map<String, X3StandardCostEntry> stdCostsCurrent = jdbcOracleX3Repository.getStandardCostsMap(company);
+		List<X3StandardCostEntry> updateList = new ArrayList<>();
+		List<X3StandardCostEntry> insertList = new ArrayList<>();
+		
+		for(Entry<String, X3StandardCostEntry> entry: stdCostsUpdate.entrySet()){
+			if(stdCostsCurrent.containsKey(entry.getKey())){
+				updateList.add(entry.getValue());
+			}
+			else{
+				insertList.add(entry.getValue());
+			}
+		}
+
+		jdbcOracleX3Repository.insertStandardCostsInQuickTable(updateList, insertList, company);
+		
+		return "Finished standard costs update for " + company + " (update: " + updateList.size() + ", insert: " + insertList.size()  + ")";		
+	}
+
+	@Override
+	public Map<String, X3StandardCostEntry> getStandardCostsMap(String company) {
+		return jdbcOracleX3Repository.getStandardCostsMap(company);
 	}
 
 
