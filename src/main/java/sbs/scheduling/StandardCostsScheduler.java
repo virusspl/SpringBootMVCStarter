@@ -24,7 +24,7 @@ public class StandardCostsScheduler {
 		logger.info(result);
 	}
 
-	// each Monday at 2 o'clock
+	// each Monday at 3 o'clock
 	@Scheduled(cron = "0 0 3 * * MON")
 	public void updateATW() {
 		String result = x3Service.updateStandardCostsTable("ATW");
