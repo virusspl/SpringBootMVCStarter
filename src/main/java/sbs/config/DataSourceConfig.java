@@ -42,7 +42,7 @@ public class DataSourceConfig {
 	  public DataSource dataSource() {
 	    DriverManagerDataSource dataSource = new DriverManagerDataSource();
 	    dataSource.setDriverClassName(MYSQL_DRIVER);
-	    dataSource.setUrl("jdbc:mysql://localhost:3306/adrp");
+	    dataSource.setUrl("jdbc:mysql://localhost:3306/adrp?useSSL=false");
 	    dataSource.setUsername("root");
 	    dataSource.setPassword("pass");
 	    return dataSource;
