@@ -29,7 +29,7 @@ public class MessagingController {
 	@MessageMapping("/postmessage")
     public void message(InfoMessage message) throws Exception {
 		
-		System.out.println(message.getContent());
+		//System.out.println(message.getContent());
 		if(message.getContent().startsWith("timer:")){
 			String[] val = message.getContent().split(":");
 			Calendar cal = Calendar.getInstance();
