@@ -56,7 +56,7 @@ function sendMessage() {
 function showMessage(sender, message) {
 	alert(message);
 	$("#liveContainer").html(
-			"<div id='live' class='alert alert-info'> <span> " + message + "</span>"
+			"<div id='live' class='alert alert-info bold'> <span> " + message + "</span>"
 						);
 }
 
