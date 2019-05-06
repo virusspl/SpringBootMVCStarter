@@ -17,7 +17,8 @@ month 2419200
 
 -->
 
-<ehcache>
+<ehcache name="eh1"
+    maxBytesLocalHeap="1000M">
 
  	<sizeOfPolicy maxDepth="1500" maxDepthExceededBehavior="abort"/>
 	
