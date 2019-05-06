@@ -57,11 +57,11 @@ import sbs.service.x3.JdbcOracleX3Service;
 @Repository
 public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
-	 @Autowired 
-	 @Qualifier("oracleX3JdbcTemplate") 
-	 protected JdbcTemplate jdbc;
-	 @Autowired
-	 private DateHelper dateHelper; 
+	@Autowired 
+	@Qualifier("oracleX3JdbcTemplate") 
+	protected JdbcTemplate jdbc;
+	@Autowired
+	private DateHelper dateHelper; 
 	 
 	@Override
 	public List<String> findAllUsers(String company) {
