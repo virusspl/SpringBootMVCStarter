@@ -140,7 +140,11 @@ public class MovementsController {
 			totalValue += mvt.getValue();
 			counter++;
 		}
+		
+		
+		Map<String, String> gr2dict = x3Service.getVariousTableData("ATW","21",JdbcOracleX3Service.LANG_POLISH);
 
+		model.addAttribute("gr2", gr2dict);
 		model.addAttribute("startDate", movementsForm.getStartDate());
 		model.addAttribute("endDate", movementsForm.getEndDate());
 		model.addAttribute("counter", counter);

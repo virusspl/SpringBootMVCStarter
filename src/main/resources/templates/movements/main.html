@@ -136,7 +136,7 @@
 				language : {
 					url : getUrl() + "polish.json",
 				},
-				order : [ [ 0, 'desc' ] ],
+				order : [ [ 0, 'asc' ] ],
 				dom : 'Bfrtip',
 				buttons : [ {
 					extend : 'copy',
@@ -158,7 +158,7 @@
 				language : {
 					url : getUrl() + "english.json"
 				},
-				order : [ [ 0, 'desc' ] ],
+				order : [ [ 0, 'asc' ] ],
 				dom : 'Bfrtip',
 				buttons : [ {
 					extend : 'copy',
@@ -180,7 +180,7 @@
 				language : {
 					url : getUrl() + "italian.json"
 				},
-				order : [ [ 0, 'desc' ] ],
+				order : [ [ 0, 'asc' ] ],
 				dom : 'Bfrtip',
 				buttons : [ {
 					extend : 'copy',
@@ -468,8 +468,8 @@
 					<span th:text="${unassignedMachines}" class="bold">value</span>
 				</div>
 			</div>
-			<div class="DETAILS"
-				sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MOVEMENTSSUPERUSER')">
+			<div class="DETAILS" >
+				<!-- sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MOVEMENTSSUPERUSER')"> -->
 				<div class="row margin-top-10">
 					<div class="col-xs-12">
 						<h3 class="text-primary" th:text="#{movements.list}">list</h3>
@@ -531,6 +531,34 @@
 										<!-- <span th:text="${#numbers.formatDecimal(mvt.value, 0, 'DEFAULT', 2, 'POINT')}"></span> -->
 											<span th:text="${mvt.valueFormat}"></span>
 										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				
+				
+				
+				<div class="row margin-top-10">
+					<div class="col-xs-12">
+						<h3 class="text-primary" th:text="#{general.productGr2}">list</h3>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="table-responsive">
+							<table id="srv2" class="display">
+								<thead>
+									<tr>
+										<th th:text="#{movements.code}">head</th>
+										<th th:text="#{movements.description}">head</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="gr : ${gr2}">
+										<td><span th:text="${gr.key}"></span></td>
+										<td><span th:text="${gr.value}"></span></td>
 									</tr>
 								</tbody>
 							</table>
