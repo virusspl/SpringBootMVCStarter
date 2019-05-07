@@ -23,6 +23,11 @@ public class ExceptionHandlers {
 		return "redirect:/uploadError";
 	}
 	
+	@ExceptionHandler(value = org.springframework.web.socket.sockjs.SockJsTransportFailureException.class)
+	public void MessageBrokerExceptionHandler(HttpServletRequest req, Exception e) throws Exception {
+		/* ignore */
+	}
+	
 	@ExceptionHandler(value = Exception.class)
 	public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
 		// If the exception is annotated with @ResponseStatus rethrow it and let the framework handle it

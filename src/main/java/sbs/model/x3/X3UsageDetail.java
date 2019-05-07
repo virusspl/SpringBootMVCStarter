@@ -1,15 +1,18 @@
 package sbs.model.x3;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class X3UsageDetail {
+public class X3UsageDetail implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	String productCode;
 	int usage;
 	Timestamp usageDate;
 	
 	public X3UsageDetail() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public String getProductCode() {

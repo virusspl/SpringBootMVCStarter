@@ -2,11 +2,17 @@
 <!DOCTYPE xml>
 
 <!-- sec 1 min 60 h 3600 3h 10800 6h 21600 12h 43200 24h 86400 week 604800 
-	month 2419200 6 months 14515200 <sizeOfPolicy maxDepth="1500" maxDepthExceededBehavior="abort"/> -->
+	month 2419200 6 months 14515200 -->
+
+<!-- 
+	<sizeOfPolicy maxDepth="5500" maxDepthExceededBehavior="abort"/> 
+-->
 
 <ehcache name="eh1" maxBytesLocalHeap="1000M">
 
-	<sizeOfPolicy maxDepth="5000" maxDepthExceededBehavior="abort" />
+	<sizeOfPolicy maxDepth="5500" maxDepthExceededBehavior="abort"/> 
+
+	<diskStore path="C:/_APACHE_TOMCAT/adr-app.cache" />
 
 	<cache name="avatarByUsername" maxBytesLocalHeap="10m"
 		timeToLiveSeconds="2419200">
@@ -58,13 +64,13 @@
 	<cache name="x3Descriptions" maxBytesLocalHeap="115m"
 		timeToLiveSeconds="604800">
 	</cache>
-	<cache name="x3AcvUsageDetails" maxBytesLocalHeap="115m"
-		timeToLiveSeconds="14515200">
-	</cache>
 	<cache name="x3FirstSuppliers" maxBytesLocalHeap="5m"
 		timeToLiveSeconds="604800">
 	</cache>
-	<cache name="x3AllBomPartsTopLevel" maxBytesLocalHeap="115m"
+	<cache name="x3AcvUsageDetails" maxBytesLocalDisk="115m"
+		timeToLiveSeconds="14515200">
+	</cache>	
+	<cache name="x3AllBomPartsTopLevel" maxBytesLocalDisk="150m"
 		timeToLiveSeconds="604800">
 	</cache>
 	<!-- <cache name="x3PendingProjectsProgress" maxBytesLocalHeap="1m" timeToLiveSeconds="86400"> 

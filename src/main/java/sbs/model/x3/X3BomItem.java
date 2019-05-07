@@ -1,6 +1,13 @@
 package sbs.model.x3;
 
-public class X3BomItem {
+import java.io.Serializable;
+
+public class X3BomItem implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private int sequence;
 	private String partCode;
 	private String partDescription;
