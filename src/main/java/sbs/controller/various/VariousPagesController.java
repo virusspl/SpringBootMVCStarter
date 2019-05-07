@@ -8,7 +8,6 @@ import java.net.URLConnection;
 import java.util.List;
 */
 import java.util.Locale;
-import java.util.Map;
 
 import javax.mail.MessagingException;
 
@@ -31,7 +30,6 @@ import sbs.model.qualitysurveys.QualitySurveyParameter;
 import sbs.model.tools.ToolsProjectState;
 import sbs.model.users.Role;
 import sbs.model.users.User;
-import sbs.model.x3.X3StandardCostEntry;
 import sbs.service.bhptickets.BhpTicketStateService;
 import sbs.service.bhptickets.BhpTicketsService;
 import sbs.service.geode.JdbcOracleGeodeService;
@@ -173,7 +171,7 @@ public class VariousPagesController {
 //		List<X3UsageDetail> usage = jdbcOracleX3Service.getAcvUsageDetailsListByYear(2017, "ATW");
 //		Map<String, X3Supplier> suppliers = jdbcOracleX3Service.getFirstAcvSuppliers("ATW");		
 	
-		jdbcOracleX3Service.updateStandardCostsTable("WPS");
+		//jdbcOracleX3Service.updateStandardCostsTable("WPS");
 		
 		//int min = 1;
 		//int max = 100;
@@ -188,7 +186,7 @@ public class VariousPagesController {
 		*/
 		
 		//List<X3Product> allProducts = jdbcOracleX3Service.findAllActiveProducts("ATW");
-		System.out.println("===");
+		System.out.println(" <===> ");
 		//System.out.println(allProducts);
 		
 		
