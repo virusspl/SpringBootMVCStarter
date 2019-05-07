@@ -1,27 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
 
-<!-- 
-sec 1 
-min 60 
-h 3600 
-3h 10800 
-6h 21600 
-12h 43200 
-24h 86400 
-week 604800 	
-month 2419200
-6 months 14515200
+<!-- sec 1 min 60 h 3600 3h 10800 6h 21600 12h 43200 24h 86400 week 604800 
+	month 2419200 6 months 14515200 <sizeOfPolicy maxDepth="1500" maxDepthExceededBehavior="abort"/> -->
 
- 	<sizeOfPolicy maxDepth="1500" maxDepthExceededBehavior="abort"/>
+<ehcache name="eh1" maxBytesLocalHeap="1000M">
 
--->
+	<sizeOfPolicy maxDepth="5000" maxDepthExceededBehavior="abort" />
 
-<ehcache name="eh1"
-    maxBytesLocalHeap="1000M">
-
- 	<sizeOfPolicy maxDepth="1500" maxDepthExceededBehavior="abort"/>
-	
 	<cache name="avatarByUsername" maxBytesLocalHeap="10m"
 		timeToLiveSeconds="2419200">
 	</cache>
@@ -81,13 +67,9 @@ month 2419200
 	<cache name="x3AllBomPartsTopLevel" maxBytesLocalHeap="115m"
 		timeToLiveSeconds="604800">
 	</cache>
-	<!-- <cache name="x3PendingProjectsProgress" maxBytesLocalHeap="1m"
-		timeToLiveSeconds="86400">
-	</cache>
-	 -->
-	<!-- <cache name="allEmployed" maxBytesLocalHeap="2m"
-		timeToLiveSeconds="3600">
-	</cache>
-	-->
+	<!-- <cache name="x3PendingProjectsProgress" maxBytesLocalHeap="1m" timeToLiveSeconds="86400"> 
+		</cache> -->
+	<!-- <cache name="allEmployed" maxBytesLocalHeap="2m" timeToLiveSeconds="3600"> 
+		</cache> -->
 
 </ehcache>
