@@ -2,7 +2,8 @@ package sbs.controller.home;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.Calendar;
 
 import org.slf4j.Logger;
@@ -29,7 +30,7 @@ public class HomeController {
 		model.addAttribute("today", dateHelper.formatDdMmYyyyDot(cal.getTime()));
 		model.addAttribute("nameDay", getNameDay(cal.get(Calendar.DAY_OF_MONTH) + "." + (cal.get(Calendar.MONTH) + 1)));
 		model.addAttribute("dayCode", "general.calendar.day" + cal.get(Calendar.DAY_OF_WEEK));
-		
+
 		return "welcome";
 	}
 
@@ -43,7 +44,8 @@ public class HomeController {
 		try {
 			File resource = new ClassPathResource("data/namedays.dat").getFile();
 
-			BufferedReader br = new BufferedReader(new FileReader(resource));
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(resource), "UTF8"));
+
 			String st;
 			while ((st = br.readLine()) != null) {
 				if (st.split(";")[0].equals(key)) {
