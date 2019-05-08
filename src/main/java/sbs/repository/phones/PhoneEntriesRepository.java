@@ -11,6 +11,7 @@ public interface PhoneEntriesRepository extends GenericRepository<PhoneEntry,Int
 
 	List<PhoneEntry> findAllOrderByCategoryAndNumber(String version);
 
-	
+	List<PhoneEntry> findAllActiveOrderByCategoryAndNumber(String version);
+
 }
 

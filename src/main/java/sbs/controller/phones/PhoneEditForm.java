@@ -26,6 +26,7 @@ public class PhoneEditForm {
 	Integer categoryId;
 	String version;
 	int id;
+	boolean active;
 	
 
 	
@@ -127,7 +128,16 @@ public class PhoneEditForm {
 
 	public void setNumberInternalPortable(String numberInternalPortable) {
 		this.numberInternalPortable = numberInternalPortable;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}	
+	
 
 	
 

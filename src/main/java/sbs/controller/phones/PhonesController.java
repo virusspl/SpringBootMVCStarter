@@ -25,6 +25,7 @@ import sbs.model.phones.PhoneCategory;
 import sbs.model.phones.PhoneEntry;
 import sbs.service.phones.PhoneCategoriesService;
 import sbs.service.phones.PhoneEntriesService;
+import sbs.service.users.UserService;
 
 @Controller
 @RequestMapping("phones")
@@ -39,6 +40,19 @@ public class PhonesController {
 	PhoneEntriesService phoneEntriesService;
 	@Autowired
 	PhoneCategoriesService phoneCategoriesService;
+	@Autowired
+	UserService userService;
+	
+	List<String> managerRoles;
+
+	
+	
+	public PhonesController() {
+		managerRoles = new ArrayList<>();
+		managerRoles.add("ROLE_ADMIN");
+		managerRoles.add("ROLE_LIGHT_ADMIN");
+		managerRoles.add("ROLE_PHONESMANAGER");
+	}
 
 	@RequestMapping(value = "/list")
 	public String defaultList(Model model, Locale locale) {
@@ -52,7 +66,12 @@ public class PhonesController {
 	@RequestMapping(value = "/list/{ver}")
 	@Transactional
 	public String list(@PathVariable("ver") String version, Model model) {
-		model.addAttribute("list", phoneEntriesService.findAllOrderByCategoryAndNumber(version));
+		if(userService.getAuthenticatedUser()!= null && userService.hasAnyRole(userService.getAuthenticatedUser(), managerRoles)){
+			model.addAttribute("list", phoneEntriesService.findAllOrderByCategoryAndNumber(version));
+		}
+		else{
+			model.addAttribute("list", phoneEntriesService.findAllActiveOrderByCategoryAndNumber(version));
+		}
 		model.addAttribute("version", version);
 		return "phones/list";
 	}
@@ -60,7 +79,7 @@ public class PhonesController {
 	@RequestMapping(value = "/print/{ver}")
 	@Transactional
 	public String print(@PathVariable("ver") String version, Model model) {
-		List<PhoneEntry> entries = phoneEntriesService.findAllOrderByCategoryAndNumber(version);
+		List<PhoneEntry> entries = phoneEntriesService.findAllActiveOrderByCategoryAndNumber(version);
 		List<PhoneColumnLine> list = new ArrayList<>();
 
 		String currentCategory = "";
@@ -137,6 +156,7 @@ public class PhonesController {
 		form.setVoip(entry.getVoip());
 		form.setNote(entry.getNote());
 		form.setId(entry.getId());
+		form.setActive(entry.isActive());
 
 		return form;
 	}
@@ -175,6 +195,7 @@ public class PhonesController {
 		entry.setVersion(phoneEditForm.getVersion());
 		entry.setNote(phoneEditForm.getNote());
 		entry.setVoip(phoneEditForm.getVoip());
+		entry.setActive(phoneEditForm.isActive());
 
 		phoneEntriesService.save(entry);
 
@@ -226,6 +247,7 @@ public class PhonesController {
 		entry.setVersion(phoneEditForm.getVersion());
 		entry.setNote(phoneEditForm.getNote());
 		entry.setVoip(phoneEditForm.getVoip());
+		entry.setActive(phoneEditForm.isActive());
 
 		phoneEntriesService.update(entry);
 

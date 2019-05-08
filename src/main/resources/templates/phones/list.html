@@ -175,7 +175,8 @@
 								<th th:if="${version} != 'pl'" th:text="#{phones.note}"></th>
 								<th th:if="${version} == 'pl'" th:text="#{general.department}"></th>
 								<th th:if="${version} != 'pl'" th:text="#{general.category}"></th>
-								<th th:if="${version} == 'pl'" th:text="|E-Mail|"></th>								
+								<th th:if="${version} == 'pl'" th:text="|E-Mail|"></th>
+								<th sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIGHT_ADMIN', 'ROLE_PHONESMANAGER')" th:text="#{general.active}"></th>								
 							</tr>
 						</thead>
 						<tfoot>
@@ -192,6 +193,7 @@
 								<th th:if="${version} == 'pl'" th:text="#{general.department}"></th>
 								<th th:if="${version} != 'pl'" th:text="#{general.category}"></th>
 								<th th:if="${version} == 'pl'" th:text="|E-Mail|"></th>
+								<th sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIGHT_ADMIN', 'ROLE_PHONESMANAGER')" th:text="#{general.active}"></th>
 							</tr>
 						</tfoot>
 						<tbody>
@@ -219,6 +221,7 @@
 								<td th:if="${version} == 'pl'"><a
 									th:href="|mailto:${entry.email}|"><span
 										th:text="${entry.email}"></span></a></td>
+								<td sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIGHT_ADMIN', 'ROLE_PHONESMANAGER')"><span th:text="${entry.active}"></span></td>
 							</tr>
 						</tbody>
 					</table>

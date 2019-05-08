@@ -52,6 +52,9 @@ public class PhoneEntry {
 	
 	@Column(name = "pc_version", length = 5, nullable= false)
 	private String version;
+	
+	@Column(name = "pc_active", nullable= false)
+	private boolean active;
 
 	public PhoneCategory getCategory() {
 		return category;
@@ -147,6 +150,14 @@ public class PhoneEntry {
 
 	public void setNote(String note) {
 		this.note = note;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	@Override

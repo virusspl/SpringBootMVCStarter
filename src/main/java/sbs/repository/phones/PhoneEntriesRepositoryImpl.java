@@ -41,6 +41,20 @@ public class PhoneEntriesRepositoryImpl extends GenericRepositoryAdapter<PhoneEn
 		return crit.list();
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public List<PhoneEntry> findAllActiveOrderByCategoryAndNumber(String version) {
+		Criteria crit = currentSession().createCriteria(PhoneEntry.class, "entry");
+		crit.createAlias("entry.category", "category");
+		crit.add(Restrictions.eq("entry.version", version));
+		crit.add(Restrictions.eq("entry.active", true));
+		crit.addOrder(Order.asc("category.order"));
+		crit.addOrder(Order.asc("category.name"));
+		crit.addOrder(Order.asc("entry.number"));
+		return crit.list();
+	}
+
 	/*@Override
 	@SuppressWarnings("unchecked")
 	@Transactional

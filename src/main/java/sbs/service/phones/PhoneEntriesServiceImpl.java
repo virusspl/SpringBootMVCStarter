@@ -29,6 +29,11 @@ public class PhoneEntriesServiceImpl extends GenericServiceAdapter<PhoneEntry, I
 	}
 
 	@Override
+	public List<PhoneEntry> findAllActiveOrderByCategoryAndNumber(String version) {
+		return phoneEntriesRepository.findAllActiveOrderByCategoryAndNumber(version);
+	}
+	
+	@Override
 	public List<PhoneEntry> findAllOrderByCategoryAndNumber(String version) {
 		return phoneEntriesRepository.findAllOrderByCategoryAndNumber(version);
 	}

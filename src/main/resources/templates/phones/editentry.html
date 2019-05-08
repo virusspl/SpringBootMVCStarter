@@ -139,6 +139,18 @@
 											class="alert alert-danger margin-top-5">error</div>
 									</div>
 								</div>								
+								<div class="col-xs-5">
+									<div class="form-group">
+										<label for="ph_active" th:text="#{user.active}">Username</label>
+										<div id="ph_active" class="checkbox">
+											<label><input type="checkbox"
+												th:field="*{active}" /><span
+												th:text="#{general.active}"></span></label>
+										</div>
+										<div th:errors="*{active}"
+											class="alert alert-danger margin-top-5">error</div>
+									</div>
+								</div>								
 							</div>
 							<div class="row">
 								<div class="col-xs-12">
