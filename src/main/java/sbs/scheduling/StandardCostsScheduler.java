@@ -5,12 +5,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import sbs.service.system.SystemInfoParametersService;
 import sbs.service.x3.JdbcOracleX3Service;
 
 public class StandardCostsScheduler {
 
 	@Autowired
 	JdbcOracleX3Service x3Service;
+	@Autowired
+	SystemInfoParametersService parametersService;
+	
 	Logger logger;
 	
 	public StandardCostsScheduler() {
@@ -21,6 +25,7 @@ public class StandardCostsScheduler {
 	@Scheduled(cron = "0 0 2 * * MON")
 	public void updateWPS() {
 		String result = x3Service.updateStandardCostsTable("WPS");
+		parametersService.storeSystemInfoParameter("SCHDL-STDCST-WPS", "Std cost update", result);
 		logger.info(result);
 	}
 
@@ -28,6 +33,7 @@ public class StandardCostsScheduler {
 	@Scheduled(cron = "0 0 3 * * MON")
 	public void updateATW() {
 		String result = x3Service.updateStandardCostsTable("ATW");
+		parametersService.storeSystemInfoParameter("SCHDL-STDCST-ATW", "Std cost update", result);		
 		logger.info(result);
 	}
 	
