@@ -2454,7 +2454,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		jdbc.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
-				X3StandardCostEntry entry = insertList.get(i);
+				X3StandardCostEntry entry = updateList.get(i);
 				ps.setString(1, entry.getCode());
 				ps.setDouble(2, entry.getTotalCost());
 				ps.setDouble(3, entry.getMaterialCost());
@@ -2465,7 +2465,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			}
 			@Override
 			public int getBatchSize() {
-				return insertList.size();
+				return updateList.size();
 			}
 		});
 		
