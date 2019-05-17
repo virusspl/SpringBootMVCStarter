@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script">
+		<!-- DATATABLES -->
+		<script th:src="@{/datatables/jquery.dataTables.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/dataTables.helper.js}"
+			type="text/javascript"></script>
+		<script th:if="__${#locale}__ == 'pl'">
+			$('#srv').DataTable({
+				language : {
+					url : getUrl() + "polish.json",
+				},
+				order : [ [ 0, 'asc' ] ],
+				paging : false,
+				info : false,
+				searching : false
+			});
+		</script>
+		<script th:if="__${#locale}__ == 'en'">
+			$('#srv').DataTable({
+				language : {
+					url : getUrl() + "english.json"
+				},
+				order : [ [ 0, 'asc' ] ],
+				paging : false,
+				info : false
+			});
+		</script>
+		<script th:if="__${#locale}__ == 'it'">
+			$('#srv').DataTable({
+				language : {
+					url : getUrl() + "italian.json"
+				},
+				order : [ [ 0, 'asc' ] ],
+				paging : false,
+				info : false,
+				searching : false
+			});
+		</script>
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h1 th:text="|Twoje zamówienie|" class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span
+					th:utext="|Aplikacja wspólnego zaufania - nie ma setki zabezpieczeń i kontroli poprawności danych :)|">
+					Welcome message </span>
+			</div>
+			<a th:href="@{/}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+
+		<div class="underline margin-top-10"></div>
+
+		<div th:if="!${active}">
+			<h1 th:text="|Nikt nie zbiera|" class="text-primary"></h1>
+			<div sec:authorize="hasAnyRole('ROLE_CEBSMANAGER', 'ROLE_ADMIN')">
+			<a th:href="@{/cebs/manage/start}"
+				class="btn btn-success btn-md margin-top-5"> <span
+				class="glyphicon glyphicon-ok"></span> <span th:text="|Zbieraj!|"></span>
+			</a>
+			</div>
+		</div>
+
+		<div th:if="${active}">
+			<h1 th:text="|Akcja trwa! Zbiera: ${organizer} ;)|"
+				class="text-primary"></h1>
+			<div sec:authorize="hasAnyRole('ROLE_CEBSMANAGER', 'ROLE_ADMIN')">
+			<a th:href="@{/cebs/manage}"
+				class="btn btn-success btn-md margin-top-5"> <span
+				class="glyphicon glyphicon-th-list"></span> <span th:text="|Zbiorczy podgląd|"></span>
+			</a>
+			<a th:href="@{/cebs/manage/cancel}"
+				class="btn btn-danger btn-md margin-top-5"
+				th:onclick="|return confirm('Na pewno anulować akcję? :(')|"
+				> <span
+				class="glyphicon glyphicon-remove"></span> <span th:text="|Anuluj wszystko!|"></span>
+			</a> 
+		</div>
+			<div class="underline margin-top-10"></div>
+			<h1 th:text="|Do zapłaty: ${amount} PLN|"
+				class="text-primary"></h1>
+			<div class="row">
+				<div class="col-xs-12 margin-top-10">
+					<div class="table-responsive">
+						<table id="srv" class="display">
+							<thead>
+								<tr>
+									<th th:text="|Nazwa|">head</th>
+									<th th:text="|Ile|">head</th>
+									<th th:text="|Suma [PLN]|">head</th>
+									<th th:text="|Uwagi|">head</th>
+									<th th:text="|Anuluj? :(|">head</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="item : ${items}">
+									<td><span th:text="${item.item}">txt</span></td>
+									<td><span th:text="${item.quantity}"></span></td>
+									<td><span th:text="${item.amount}"></span></td>
+									<td><span th:text="${item.comment}"></span></td>
+									<td><a th:href="|@{/cebs/order/delete/}${item.id}|"
+										th:onclick="|return confirm('Rezygnujesz z &quot;${item.item}&quot;?')|"
+										class="btn btn-danger btn-sm"> <span
+											class="glyphicon glyphicon-remove"></span> <span
+											th:text="#{action.remove}">back</span>
+									</a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="underline margin-top-10"></div>
+			<h1 th:text="|Dodaj do swojej listy|" class="text-primary"></h1>
+
+			<form th:action="@{/cebs/order/add}" method="post"
+				th:object="${cebsOrderForm}">
+
+				<div class="row">
+					<div class="col-xs-9 col-sm-3">
+						<div class="form-group">
+							<!-- comment -->
+							<label for="quantity" th:text="|Ile|"></label> <input
+								type="range" min="1" max="10" value="1" step="1" size="10"
+								class="form-control" id="quantity" name="quantity"
+								th:placeholder="|Ile|" th:field="*{quantity}"
+								oninput="result.value = quantity.value"></input> <input
+								style="text-align: center; font-weight: bold;" id="result"
+								value="1" type="text" readonly="true" size="2"></input>
+
+						</div>
+
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-9 col-sm-3">
+						<div class="form-group">
+							<!-- comment -->
+							<label for="contents" th:text="|Uwagi|"></label> <input
+								type="text" class="form-control" id="comment" name="comment"
+								th:placeholder="|Uwagi|" th:field="*{comment}"></input>
+						</div>
+
+					</div>
+
+				</div>
+
+
+				<div class="row">
+					<div class="col-xs-12">
+						<table class="table-hover"
+							style="border: 1px solid black; background: white;">
+							<thead>
+								<tr>
+									<th style="padding: 8px">Produkt</th>
+									<th style="padding: 8px">Cena</th>
+									<th style="padding: 8px">Dodaj</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="mi: ${menu}">
+									<td style="padding: 8px"><span th:text="${mi.text}"></span></td>
+									<td style="padding: 8px"><span th:text="${mi.price}"></span></td>
+									<td style="padding: 8px">
+										<button class="btn btn-success btn-sm" type="submit"
+											name="add" th:value="${mi.id}">
+											<span class="glyphicon glyphicon-ok"></span> <span
+												th:text="#{action.add}">create</span>
+										</button>
+									</td>
+								</tr>
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

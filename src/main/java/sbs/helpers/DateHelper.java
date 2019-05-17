@@ -110,6 +110,10 @@ public class DateHelper {
 		return ddMmYyyyHhMmFormat.format(date);
 	}
 	
+	public String formatDdMmYyyyHhMm(Date date){
+		return ddMmYyyyHhMmFormat.format(date);
+	}
+	
 	public boolean dateBeforeOrEqual(Calendar date, Calendar reference) {
 		return (date.before(reference) || date.equals(reference));
 	}
