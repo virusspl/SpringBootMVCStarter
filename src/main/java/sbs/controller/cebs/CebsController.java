@@ -5,12 +5,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -25,7 +23,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javassist.NotFoundException;
 import sbs.helpers.DateHelper;
-import sbs.model.qsurveys.QSurvey;
 import sbs.model.users.User;
 import sbs.service.users.UserService;
 
@@ -39,8 +36,6 @@ public class CebsController {
 	UserService userService;
 
 	private boolean active;
-	private Calendar initDate;
-	private Calendar endDate;
 	private Map<Long, CebsItem> items;
 	private String organizer;
 
@@ -48,15 +43,11 @@ public class CebsController {
 	public void addAttributes(Model model) {
 		model.addAttribute("organizer", organizer);
 		model.addAttribute("active", active);
-		model.addAttribute("init", dateHelper.formatDdMmYyyyHhMm(initDate.getTime()));
-		model.addAttribute("end", dateHelper.formatDdMmYyyyHhMm(endDate.getTime()));
 	}
 
 	public CebsController() {
 		active = false;
 		items = new TreeMap<>();
-		initDate = Calendar.getInstance();
-		endDate = Calendar.getInstance();
 	}
 
 	@RequestMapping("/order")
@@ -74,11 +65,9 @@ public class CebsController {
 			List<CebsItem> myItems = new ArrayList<>();
 			Double amount = 0.0;
 			for (CebsItem item : this.items.values()) {
-				System.out.println(item);
 				if (item.getUser().getId().equals(currentUser.getId())) {
 					myItems.add(item);
 					amount += item.getAmount();
-					System.out.println("added!");
 				}
 			}
 
@@ -123,8 +112,6 @@ public class CebsController {
 	@RequestMapping(value = "/order/add", params = { "add" }, method = RequestMethod.POST)
 	public String showMakeBomSurvey(@RequestParam String add, CebsOrderForm cebsOrderFom, RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
 		List<MenuItem> menu = getMenuList();
-		System.out.println(menu);
-		System.out.println(add);
 		for(MenuItem item: menu){
 			if(item.getId().equals(add)){
 				CebsItem ci = new CebsItem(userService.getAuthenticatedUser());
@@ -135,8 +122,6 @@ public class CebsController {
 				this.items.put(ci.getId(), ci);
 			}
 		}
-		
-		
 		return "redirect:/cebs/order";
 	}
 	
@@ -159,14 +144,17 @@ public class CebsController {
 	public String manage(Model model) {
 		Double amount = 0.0;
 		List<CebsItem> currentItems = new ArrayList<>();
-
+		Map<String, Integer> summary = new TreeMap<>();
+		
 		for (CebsItem item : items.values()) {
 			currentItems.add(item);
 			amount += item.getAmount();
+			summary.put(item.getItem(), item.getQuantity() + summary.getOrDefault(item.getItem(), 0));
 		}
 
 		model.addAttribute("items", currentItems);
 		model.addAttribute("amount", amount);
+		model.addAttribute("summary", summary);
 
 		return "cebs/manage";
 	}

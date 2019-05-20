@@ -441,6 +441,22 @@ public class VariousPagesController {
 			roleService.save(qcheckManager);
 			msg += "[role: " + qcheckManager.getName() + "], ";
 		}
+		
+		Role cebsManager = roleService.findByName("ROLE_CEBSMANAGER");
+		if (cebsManager == null) {
+			cebsManager = new Role();
+			cebsManager.setName("ROLE_CEBSMANAGER");
+			roleService.save(cebsManager);
+			msg += "[role: " + cebsManager.getName() + "], ";
+		}
+		
+		Role cebsUser = roleService.findByName("ROLE_CEBSUSER");
+		if (cebsUser == null) {
+			cebsUser = new Role();
+			cebsUser.setName("ROLE_CEBSUSER");
+			roleService.save(cebsUser);
+			msg += "[role: " + cebsUser.getName() + "], ";
+		}
 
 		System.out.println("get users:");
 		User admin = userService.findByUsername("Admin");

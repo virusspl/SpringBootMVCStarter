@@ -64,7 +64,7 @@
 		<div class="underline margin-top-10"></div>
 
 		<div th:if="!${active}">
-			<h1 th:text="|Nikt nie zbiera|" class="text-primary"></h1>
+			<h1 th:text="|Nikt nie zbiera ;(|" class="text-primary"></h1>
 			<div sec:authorize="hasAnyRole('ROLE_CEBSMANAGER', 'ROLE_ADMIN')">
 			<a th:href="@{/cebs/manage/start}"
 				class="btn btn-success btn-md margin-top-5"> <span

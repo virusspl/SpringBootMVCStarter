@@ -174,6 +174,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"QCHECKUSER"
 				)
 		.antMatchers(
+				"/cebs/order/**"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"CEBSUSER",
+				"CEBSMANAGER"
+				)
+		.antMatchers(
+				"/cebs/manage/**"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"CEBSMANAGER"
+				)
+		.antMatchers(
 				"/admin", 
 				"/users/**",
 				"/system/**",
