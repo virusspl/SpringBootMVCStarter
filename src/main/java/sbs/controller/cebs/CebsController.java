@@ -4,11 +4,17 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+
+import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -20,10 +26,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import javassist.NotFoundException;
 import sbs.helpers.DateHelper;
+import sbs.model.qcheck.QCheck;
 import sbs.model.users.User;
+import sbs.service.mail.MailService;
 import sbs.service.users.UserService;
 
 @Controller
@@ -34,20 +44,29 @@ public class CebsController {
 	DateHelper dateHelper;
 	@Autowired
 	UserService userService;
+	@Autowired
+	MailService mailService;
+	@Autowired
+	TemplateEngine templateEngine;
 
 	private boolean active;
 	private Map<Long, CebsItem> items;
 	private String organizer;
+	private Calendar actionDate;
+	private String dayCode;
 
 	@ModelAttribute
 	public void addAttributes(Model model) {
 		model.addAttribute("organizer", organizer);
 		model.addAttribute("active", active);
+		model.addAttribute("actionDate", dateHelper.formatDdMmYyyy(actionDate.getTime()));
+		model.addAttribute("dayCode", dayCode);
 	}
 
 	public CebsController() {
 		active = false;
 		items = new TreeMap<>();
+		actionDate = Calendar.getInstance();
 	}
 
 	@RequestMapping("/order")
@@ -126,15 +145,44 @@ public class CebsController {
 	}
 	
 
-	@RequestMapping("/manage/start")
-	public String start(Model model) {
+	@RequestMapping("/manage/starttoday")
+	public String startToday(Model model) throws UnknownHostException, MessagingException {
 		this.active = true;
+		this.actionDate = Calendar.getInstance();
+		this.dayCode = "general.calendar.day" + actionDate.get(Calendar.DAY_OF_WEEK);
 		this.organizer = userService.getAuthenticatedUser().getName();
+		String title = "Zbieramy zamówienia na DZISIAJ!";
+		String message = "Jeżeli wszystko się uda, zamówienie będzie relizowane DZISIAJ, "+ dateHelper.formatDdMmYyyy(actionDate.getTime()) +". <br/>Proszę wejść na stronę z linku poniżej i dopisać się do listy ;)";
+		this.sendMail(title, message);
 		return "redirect:/cebs/order";
 	}
+	
+	@RequestMapping("/manage/starttomorrow")
+	public String startTomorrow(Model model) throws UnknownHostException, MessagingException {
+		this.active = true;
+		this.actionDate = Calendar.getInstance();
+		this.actionDate.add(Calendar.DAY_OF_MONTH, 1);
+		this.dayCode = "general.calendar.day" + actionDate.get(Calendar.DAY_OF_WEEK); 
+		this.organizer = userService.getAuthenticatedUser().getName();
+		String title = "Zbieramy zamówienia na JUTRO!";
+		String message = "Jeżeli wszystko się uda, zamówienie będzie relizowane JUTRO, "+ dateHelper.formatDdMmYyyy(actionDate.getTime()) +". <br/>Proszę wejść na stronę z linku poniżej i dopisać się do listy ;)";
+		this.sendMail(title, message);
+		return "redirect:/cebs/order";
+	}
+	
 
 	@RequestMapping("/manage/cancel")
-	public String cancel(Model model) {
+	public String cancel(Model model) throws UnknownHostException, MessagingException {
+		this.active = false;
+		this.items.clear();
+		String title = "Przerywamy akcję zamawiania";
+		String message = "Anulujemy akcję zamawiania - może innym razem";
+		this.sendMail(title, message);
+		return "redirect:/cebs/order";
+	}
+	
+	@RequestMapping("/manage/finish")
+	public String finish(Model model) throws UnknownHostException, MessagingException {
 		this.active = false;
 		this.items.clear();
 		return "redirect:/cebs/order";
@@ -157,6 +205,24 @@ public class CebsController {
 		model.addAttribute("summary", summary);
 
 		return "cebs/manage";
+	}
+	
+	private void sendMail(String title, String message)
+			throws UnknownHostException, MessagingException {
+
+		List<User> cebsUsers = userService.findByAnyRole(new String[]{"ROLE_CEBSMANAGER", "ROLE_CEBSUSER", "ROLE_ADMIN"});
+		ArrayList<String> mailTo = new ArrayList<>();
+		for (User user : cebsUsers) {
+			mailTo.add(user.getEmail());
+		}
+
+		Context context = new Context();
+		context.setVariable("host", InetAddress.getLocalHost().getHostAddress());
+		context.setVariable("title", title);
+		context.setVariable("message", message);
+		String body = templateEngine.process("cebs/mailtemplate", context);
+		mailService.sendEmail("webapp@atwsystem.pl", mailTo.toArray(new String[0]), new String[0],
+				title, body);
 	}
 
 }

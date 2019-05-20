@@ -48,7 +48,7 @@
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-xs-12">
-				<h1 th:text="|Twoje zamówienie|" class="text-primary"></h1>
+				<h1 th:text="|Lista zamówień osób zaufanych|" class="text-primary"></h1>
 			</div>
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
 				<span
@@ -66,32 +66,49 @@
 		<div th:if="!${active}">
 			<h1 th:text="|Nikt nie zbiera ;(|" class="text-primary"></h1>
 			<div sec:authorize="hasAnyRole('ROLE_CEBSMANAGER', 'ROLE_ADMIN')">
-				<a th:href="@{/cebs/manage/start}"
-					class="btn btn-success btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-ok"></span> <span th:text="|Zbieraj!|"></span>
+				<a th:href="@{/cebs/manage/starttoday}"
+					class="btn btn-success btn-md margin-top-5"
+					th:onclick="|return confirm('Chcesz rozpocząć zbieranie na DZISIAJ?')|"
+					> <span
+					class="glyphicon glyphicon-ok"></span> <span th:text="|Zbieraj na dziś!|"></span>
+				</a>
+				<a th:href="@{/cebs/manage/starttomorrow}"
+					class="btn btn-warning btn-md margin-top-5"
+					th:onclick="|return confirm('Chcesz rozpocząć zbieranie na JUTRO?')|"
+					> <span
+					class="glyphicon glyphicon-ok"></span> <span th:text="|Zbieraj jutro!|"></span>
 				</a>
 			</div>
 		</div>
 
 		<div th:if="${active}">
-			<h1 th:text="|Akcja trwa! Zbiera: ${organizer} ;)|"
-				class="text-primary"></h1>
+			<h3 th:utext="|Zbieramy na dzień: &lt;b&gt;#{${dayCode}}&lt;/b&gt;, ${actionDate}. Organizator: &lt;b&gt;${organizer}&lt;/b&gt; ;)|"
+				class="text-primary"></h3>
 			<div sec:authorize="hasAnyRole('ROLE_CEBSMANAGER', 'ROLE_ADMIN')">
 				<a th:href="@{/cebs/manage}"
 					class="btn btn-success btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-th-list"></span> <span
 					th:text="|Zbiorczy podgląd|"></span>
-				</a> <a th:href="@{/cebs/manage/cancel}"
+				</a>
+				<a th:href="@{/cebs/manage/finish}"
+					class="btn btn-warning btn-md margin-top-5"
+					th:onclick="|return confirm('Czy zamykasz akcję bez powiadomień?')|">
+					<span class="glyphicon glyphicon-ok"></span> <span
+					th:text="|Zakończ pomyślnie|"></span>
+				</a> 
+				<a th:href="@{/cebs/manage/cancel}"
 					class="btn btn-danger btn-md margin-top-5"
 					th:onclick="|return confirm('Na pewno anulować akcję? :(')|">
 					<span class="glyphicon glyphicon-remove"></span> <span
 					th:text="|Anuluj wszystko!|"></span>
 				</a>
+				
 			</div>
-			<div class="underline margin-top-10"></div>
-			<h1 th:text="|Do zapłaty: ${amount} PLN|" class="text-primary"></h1>
+			<div class="underline margin-top-20"></div>
+			
+			<h3 th:text="|Twoje zamówienie|" class="text-primary"></h3>
 			<div class="row">
-				<div class="col-xs-12 margin-top-10">
+				<div class="col-xs-12 margin-top-00">
 					<div class="table-responsive">
 						<table id="srv" class="display">
 							<thead>
@@ -119,17 +136,16 @@
 							</tbody>
 						</table>
 					</div>
+					<h3 th:text="|Do zapłaty: ${amount} PLN|" class="text-danger"></h3>
 				</div>
 			</div>
-
-
 			<div class="underline margin-top-10"></div>
-			<h1 th:text="|Dodaj do swojej listy|" class="text-primary"></h1>
-
+			<h3 th:text="|Dodaj do swojego zamówienia|" class="text-primary"></h3>
+			
 			<form th:action="@{/cebs/order/add}" method="post"
 				th:object="${cebsOrderForm}">
 
-				<div class="row">
+				<div class="row margin-top-10">
 					<div class="col-xs-9 col-sm-3">
 						<div class="form-group">
 							<!-- comment -->

@@ -46,10 +46,4 @@ public class MenuItem {
 		return "MenuItem [id=" + id + ", text=" + text + ", price=" + price + "]";
 	}
 	
-	
-	
-
-	
-	
-	
 }

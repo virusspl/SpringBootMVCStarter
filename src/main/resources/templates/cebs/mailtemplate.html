@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"></meta>
+<style>
+table {
+	width: 100%;
+}
+
+.color {
+	background: #5AC4F2;
+	color: #F3FBFE;
+	font-weight: bold;
+}
+
+a {
+	color: #3AA4D2;
+}
+
+td {
+	padding: 5px 10px 5px 10px;
+	border: 1px solid gray;
+}
+
+.idcell {
+	width: 30%;
+}
+
+.titlecell {
+	width: 70%;
+}
+
+#footer {
+	font-size: 80%;
+}
+</style>
+</head>
+<body>
+	<table>
+		<!-- PAGE TITLE -->
+		<tr class="color">
+			<td>
+				<h1>
+					<span th:text="|${title}|"></span>
+				</h1>
+			</td>
+		</tr>
+		<tr>
+			<td style="padding-bottom: 10px;"><span
+				th:utext="|${message}|"></span><br/>
+				<a th:href="|${host}:8080@{'~/adr/cebs/order'}|">Sprawdź tutaj!</a>
+				<br/><br/>
+				<img src="http://192.168.1.23/APACHE_IMG/cebs/cebs.png" alt="foto"></img>
+				</td>
+		</tr>
+	</table>
+	<!-- FOOTER -->
+	<table>
+		<tr id="footer">
+			<td class="color"><span>Mail został wygenerowany automatycznie przez tajny moduł aplikacji webowej ADR Polska S.A. Proszę nie odpowiadać na tę wiadomość.</span></td>
+		</tr>
+	</table>
+</body>
+</html>
