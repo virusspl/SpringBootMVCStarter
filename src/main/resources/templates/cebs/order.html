@@ -66,10 +66,10 @@
 		<div th:if="!${active}">
 			<h1 th:text="|Nikt nie zbiera ;(|" class="text-primary"></h1>
 			<div sec:authorize="hasAnyRole('ROLE_CEBSMANAGER', 'ROLE_ADMIN')">
-			<a th:href="@{/cebs/manage/start}"
-				class="btn btn-success btn-md margin-top-5"> <span
-				class="glyphicon glyphicon-ok"></span> <span th:text="|Zbieraj!|"></span>
-			</a>
+				<a th:href="@{/cebs/manage/start}"
+					class="btn btn-success btn-md margin-top-5"> <span
+					class="glyphicon glyphicon-ok"></span> <span th:text="|Zbieraj!|"></span>
+				</a>
 			</div>
 		</div>
 
@@ -77,20 +77,19 @@
 			<h1 th:text="|Akcja trwa! Zbiera: ${organizer} ;)|"
 				class="text-primary"></h1>
 			<div sec:authorize="hasAnyRole('ROLE_CEBSMANAGER', 'ROLE_ADMIN')">
-			<a th:href="@{/cebs/manage}"
-				class="btn btn-success btn-md margin-top-5"> <span
-				class="glyphicon glyphicon-th-list"></span> <span th:text="|Zbiorczy podgląd|"></span>
-			</a>
-			<a th:href="@{/cebs/manage/cancel}"
-				class="btn btn-danger btn-md margin-top-5"
-				th:onclick="|return confirm('Na pewno anulować akcję? :(')|"
-				> <span
-				class="glyphicon glyphicon-remove"></span> <span th:text="|Anuluj wszystko!|"></span>
-			</a> 
-		</div>
+				<a th:href="@{/cebs/manage}"
+					class="btn btn-success btn-md margin-top-5"> <span
+					class="glyphicon glyphicon-th-list"></span> <span
+					th:text="|Zbiorczy podgląd|"></span>
+				</a> <a th:href="@{/cebs/manage/cancel}"
+					class="btn btn-danger btn-md margin-top-5"
+					th:onclick="|return confirm('Na pewno anulować akcję? :(')|">
+					<span class="glyphicon glyphicon-remove"></span> <span
+					th:text="|Anuluj wszystko!|"></span>
+				</a>
+			</div>
 			<div class="underline margin-top-10"></div>
-			<h1 th:text="|Do zapłaty: ${amount} PLN|"
-				class="text-primary"></h1>
+			<h1 th:text="|Do zapłaty: ${amount} PLN|" class="text-primary"></h1>
 			<div class="row">
 				<div class="col-xs-12 margin-top-10">
 					<div class="table-responsive">
@@ -134,14 +133,19 @@
 					<div class="col-xs-9 col-sm-3">
 						<div class="form-group">
 							<!-- comment -->
-							<label for="quantity" th:text="|Ile|"></label> <input
-								type="range" min="1" max="10" value="1" step="1" size="10"
-								class="form-control" id="quantity" name="quantity"
-								th:placeholder="|Ile|" th:field="*{quantity}"
-								oninput="result.value = quantity.value"></input> <input
-								style="text-align: center; font-weight: bold;" id="result"
-								value="1" type="text" readonly="true" size="2"></input>
-
+							<label for="quantity" th:text="|Ile|"></label> <select
+								class="form-control" id="quantity" th:field="*{quantity}">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="10">10</option>
+							</select>
 						</div>
 
 					</div>
