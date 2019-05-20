@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -31,7 +30,6 @@ import org.thymeleaf.context.Context;
 
 import javassist.NotFoundException;
 import sbs.helpers.DateHelper;
-import sbs.model.qcheck.QCheck;
 import sbs.model.users.User;
 import sbs.service.mail.MailService;
 import sbs.service.users.UserService;
