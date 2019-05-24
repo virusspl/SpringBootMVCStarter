@@ -88,19 +88,19 @@
 				<a th:href="@{/cebs/manage}"
 					class="btn btn-success btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-th-list"></span> <span
-					th:text="|Zbiorczy podgląd|"></span>
+					th:text="|Zbiorczy podgląd zamówień|"></span>
 				</a>
 				<a th:href="@{/cebs/manage/finish}"
 					class="btn btn-warning btn-md margin-top-5"
-					th:onclick="|return confirm('Czy zamykasz akcję bez powiadomień?')|">
+					th:onclick="|return confirm('Wszystkie dotychczasowe zamówienia zostaną skasowane, akcja zbierania zostanie zatrzymana')|">
 					<span class="glyphicon glyphicon-ok"></span> <span
-					th:text="|Zakończ pomyślnie|"></span>
+					th:text="|Zakończ zbieranie zamówień i skasuj listę|"></span>
 				</a> 
 				<a th:href="@{/cebs/manage/cancel}"
 					class="btn btn-danger btn-md margin-top-5"
-					th:onclick="|return confirm('Na pewno anulować akcję? :(')|">
+					th:onclick="|return confirm('Rezygnujemy ze zbierania? Zamówienia zostaną skasowane, akcja odwołana, a użytkownicy powiadomieni mailowo')|">
 					<span class="glyphicon glyphicon-remove"></span> <span
-					th:text="|Anuluj wszystko!|"></span>
+					th:text="|Anuluj akcję i powiadom wszystkich o odwołaniu|"></span>
 				</a>
 				
 			</div>
