@@ -10,10 +10,12 @@ public class CebsItem {
 	String comment;
 	int quantity;
 	Double amount;
+	boolean paid;
 	
 	public CebsItem(User user) {
 		this.id = new java.util.Date().getTime();
 		this.user = user;
+		this.paid = false;
 	}
 
 	public Long getId() {
@@ -62,6 +64,14 @@ public class CebsItem {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public boolean isPaid() {
+		return paid;
+	}
+
+	public void setPaid(boolean payed) {
+		this.paid = payed;
 	}
 
 	@Override

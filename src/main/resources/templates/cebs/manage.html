@@ -4,6 +4,16 @@
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
 	layout:decorator="layout/main">
 <head lang="pl">
+
+<style>
+.red {
+	color: #F50000;
+}
+.neutral {
+	
+}
+</style>
+
 </head>
 <body>
 	<div layout:fragment="script">
@@ -103,19 +113,28 @@
 							<thead>
 								<tr>
 									<th th:text="|Kto|">head</th>
+									<th style="text-align: center;" th:text="|Zapłacone|">head</th>
 									<th th:text="|Co|">head</th>
 									<th th:text="|Ile|">head</th>
 									<th th:text="|Suma [PLN]|">head</th>
 									<th th:text="|Uwagi|">head</th>
+									
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:each="item : ${items}">
+								<tr th:each="item : ${items}" th:classappend="${item.paid} ? neutral : red">
 									<td><span th:text="${item.user.name}">txt</span></td>
-									<td><span th:text="${item.item}">txt</span></td>
+									<td><a th:href="|@{/cebs/manage/paid/}${item.id}|" style="text-align: center; display:block; width:100%;">
+									<span th:if="${item.paid}" class="glyphicon glyphicon-ok"></span>
+									<span th:if="!${item.paid}" class="glyphicon glyphicon-remove"></span>
+									
+									</a></td>
+									<td><span th:text="${item.item}"></span></td>
 									<td><span th:text="${item.quantity}"></span></td>
 									<td><span th:text="${item.amount}"></span></td>
+									
 									<td><span th:text="${item.comment}"></span></td>
+									
 								</tr>
 							</tbody>
 						</table>
