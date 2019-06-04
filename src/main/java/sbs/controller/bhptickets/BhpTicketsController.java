@@ -50,68 +50,67 @@ public class BhpTicketsController {
 	MessageSource messageSource;
 	@Autowired
 	UploadController uploadController;
-	@Autowired 
+	@Autowired
 	MailService mailService;
-	@Autowired 
+	@Autowired
 	TemplateEngine templateEngine;
-	@Autowired 
+	@Autowired
 	TextHelper textHelper;
-	
+
 	@RequestMapping(value = "/dispatch")
 	public String dispatch() {
 		return "bhptickets/dispatch";
-	 }
+	}
 
 	@RequestMapping("/sendemails")
 	@Transactional
-	public String sendEmails(HttpServletRequest request, RedirectAttributes redirectAttrs, Locale locale) throws MessagingException, UnknownHostException {
+	public String sendEmails(HttpServletRequest request, RedirectAttributes redirectAttrs, Locale locale)
+			throws MessagingException, UnknownHostException {
 		Set<User> users = bhpTicketsService.findAllPendingTicketsUsers();
 		ArrayList<UserTicketsHolder> holders = new ArrayList<>();
 		ArrayList<String> mailingList = new ArrayList<>();
 		UserTicketsHolder holder;
-		for(User user: users){
+		for (User user : users) {
 			holder = new UserTicketsHolder();
 			holder.setUser(user);
 			holder.setTickets(bhpTicketsService.findPendingTicketsByUser(user));
 			holders.add(holder);
 			mailingList.add(user.getEmail());
 		}
-		
-		List<User> supervisors = userService.findByAnyRole(new String[]{"ROLE_BHPMANAGER", "ROLE_BHPSUPERVISOR","ROLE_BHPTICKETSUTRUSER"});
+
+		List<User> supervisors = userService
+				.findByAnyRole(new String[] { "ROLE_BHPMANAGER", "ROLE_BHPSUPERVISOR", "ROLE_BHPTICKETSUTRUSER" });
 		ArrayList<String> supervisorsMailingList = new ArrayList<>();
-		for(User sprv: supervisors){
+		for (User sprv : supervisors) {
 			supervisorsMailingList.add(sprv.getEmail());
 		}
-		  	Context context = new Context();
-	        context.setVariable("loop", holders);
-			context.setVariable("host", InetAddress.getLocalHost().getHostAddress());
-	        String body = templateEngine.process("bhptickets/mailtemplate", context);
-	        mailService.sendEmail("webapp@atwsystem.pl", mailingList.toArray(new String[0]), supervisorsMailingList.toArray(new String[0]), "ADR Polska S.A. - BHP", body);
-	        
-	        redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("email.sent", null, locale));
-	        
+		Context context = new Context();
+		context.setVariable("loop", holders);
+		context.setVariable("host", InetAddress.getLocalHost().getHostAddress());
+		String body = templateEngine.process("bhptickets/mailtemplate", context);
+		mailService.sendEmail("webapp@atwsystem.pl", mailingList.toArray(new String[0]),
+				supervisorsMailingList.toArray(new String[0]), "ADR Polska S.A. - BHP", body);
+
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("email.sent", null, locale));
+
 		return "redirect:/bhptickets/dispatch";
 	}
-	
+
 	@RequestMapping(value = "/list")
 	@Transactional
 	public String listAllPending(Model model) {
 		User user = userService.getAuthenticatedUser();
-		if(userService.hasAnyRole(
-				user, 
-				Arrays.asList("ROLE_ADMIN","ROLE_BHPMANAGER","ROLE_BHPSUPERVISOR"))){
+		if (userService.hasAnyRole(user, Arrays.asList("ROLE_ADMIN", "ROLE_BHPMANAGER", "ROLE_BHPSUPERVISOR"))) {
 			model.addAttribute("tickets", bhpTicketsService.findAllNotArchivedTickets());
-		}
-		else if (userService.hasAnyRole(user, Arrays.asList("ROLE_BHPTICKETSUTRUSER"))){
+		} else if (userService.hasAnyRole(user, Arrays.asList("ROLE_BHPTICKETSUTRUSER"))) {
 			model.addAttribute("tickets", bhpTicketsService.findPendingUtrTickets());
-		}
-		else{
+		} else {
 			model.addAttribute("tickets", bhpTicketsService.findPendingTicketsByUser(user));
 		}
-		
+
 		return "bhptickets/list";
 	}
-	
+
 	@RequestMapping(value = "/archive")
 	@Transactional
 	public String listAll(Model model) {
@@ -124,6 +123,41 @@ public class BhpTicketsController {
 		model.addAttribute("bhpUsers", userService.findByRole("ROLE_BHPTICKETSUSER"));
 		model.addAttribute("ticketCreateForm", new TicketCreateForm());
 		return "bhptickets/create";
+	}
+
+	@RequestMapping(value = "/create/transfer")
+	public String createTransfer(Model model, Locale locale) {
+		model.addAttribute("bhpUsers", userService.findByRole("ROLE_BHPTICKETSUSER"));
+		model.addAttribute("transferCreateForm", new TransferCreateForm());
+		return "bhptickets/transfer";
+	}
+
+	@RequestMapping(value = "/create/transfer", method = RequestMethod.POST)
+	@Transactional
+	public String createTransferPost(@Valid TransferCreateForm transferCreateForm, BindingResult bindingResult,
+			RedirectAttributes redirectAttrs, Locale locale, Model model) {
+
+		// validate
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("bhpUsers", userService.findByRole("ROLE_BHPTICKETSUSER"));
+			return "bhptickets/create";
+		}
+
+		User from = userService.findById(transferCreateForm.getFromUserId());
+		User to = userService.findById(transferCreateForm.getToUserId());
+
+		for (BhpTicket ticket : from.getAssignedBhpTickets()) {
+			if (ticket.getState().getOrder() < 90) {
+				ticket.setAssignedUser(to);
+				to.getAssignedBhpTickets().add(ticket);
+			}
+		}
+
+		System.out.println(transferCreateForm.getFromUserId() + " --> " + transferCreateForm.getToUserId());
+
+		// redirect
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/bhptickets/create/transfer";
 	}
 
 	@RequestMapping("/edit/{id}")
@@ -230,7 +264,7 @@ public class BhpTicketsController {
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/bhptickets/list";
 	}
-	
+
 	@RequestMapping(value = "/edit", params = { "reopen" }, method = RequestMethod.POST)
 	@Transactional
 	public String reopen(@Valid TicketCreateForm ticketEditForm, BindingResult bindingResult,
@@ -243,7 +277,7 @@ public class BhpTicketsController {
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/bhptickets/list";
 	}
-	
+
 	@RequestMapping(value = "/edit", params = { "archive" }, method = RequestMethod.POST)
 	@Transactional
 	public String archive(@Valid TicketCreateForm ticketEditForm, BindingResult bindingResult,
@@ -255,7 +289,7 @@ public class BhpTicketsController {
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/bhptickets/list";
 	}
-	
+
 	@RequestMapping(value = "/edit", params = { "save" }, method = RequestMethod.POST)
 	@Transactional
 	public String edit(@Valid TicketCreateForm ticketEditForm, BindingResult bindingResult,
@@ -296,7 +330,7 @@ public class BhpTicketsController {
 	@RequestMapping("/show/{id}")
 	@Transactional
 	public String showBhpTicket(@PathVariable("id") int id, Model model) throws NotFoundException {
-		
+
 		// get ticket
 		BhpTicket ticket = bhpTicketsService.findById(id);
 		if (ticket == null) {
@@ -309,10 +343,11 @@ public class BhpTicketsController {
 		responseForm.setComment(ticket.getComment());
 		responseForm.setUtrComment(ticket.getUtrComment());
 		responseForm.setUtrCommentNeeded(ticket.isUtrCommentNeeded());
-		
+
 		// get user
 		User authUser = userService.getAuthenticatedUser();
-		// set viewed state and view date + decide of modification for user response part
+		// set viewed state and view date + decide of modification for user
+		// response part
 		if (authUser == null || (authUser.getId() != ticket.getAssignedUser().getId())
 				|| (ticket.getState().getOrder() >= 40)) {
 			responseForm.setTicketsUserModificationAllowed(false);
@@ -326,14 +361,13 @@ public class BhpTicketsController {
 			}
 		}
 		// set modification for utr user response part
-		if (authUser == null || (!authUser.hasRole("ROLE_BHPTICKETSUTRUSER")) 
-				|| (ticket.getState().getOrder() != 32)) {
+		if (authUser == null || (!authUser.hasRole("ROLE_BHPTICKETSUTRUSER")) || (ticket.getState().getOrder() != 32)) {
 			responseForm.setUtrUserModificationAllowed(false);
 		} else {
 			responseForm.setUtrUserModificationAllowed(true);
-			
+
 		}
-		
+
 		// get photos list
 		ArrayList<String> fileList = uploadController.listFiles(uploadController.getBhpPhotoPath());
 		for (int i = fileList.size() - 1; i >= 0; i--) {
@@ -346,17 +380,17 @@ public class BhpTicketsController {
 		model.addAttribute("ticket", ticket);
 		return "bhptickets/show";
 	}
-	
+
 	@RequestMapping("/print/{id}")
 	@Transactional
 	public String printBhpTicket(@PathVariable("id") int id, Model model) throws NotFoundException {
-		
+
 		// get ticket
 		BhpTicket ticket = bhpTicketsService.findById(id);
 		if (ticket == null) {
 			throw new NotFoundException("Ticket not found");
 		}
-		
+
 		// get photos list
 		ArrayList<String> fileList = uploadController.listFiles(uploadController.getBhpPhotoPath());
 		for (int i = fileList.size() - 1; i >= 0; i--) {
@@ -364,7 +398,7 @@ public class BhpTicketsController {
 				fileList.remove(i);
 			}
 		}
-		
+
 		model.addAttribute("photos", fileList);
 		model.addAttribute("ticket", ticket);
 		return "bhptickets/print";
@@ -374,7 +408,7 @@ public class BhpTicketsController {
 	@Transactional
 	public String passTicket(@Valid TicketResponseForm ticketResponseForm, BindingResult bindingResult, Model model,
 			RedirectAttributes redirectAttrs, Locale locale) {
-		if(ticketResponseForm.getComment().trim().length() == 0){
+		if (ticketResponseForm.getComment().trim().length() == 0) {
 			bindingResult.rejectValue("comment", "NotEmpty.ticketResponseForm.comment", "ERROR");
 		}
 		// get ticket
@@ -399,12 +433,12 @@ public class BhpTicketsController {
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("bhp.tickets.confirm.pass", null, locale));
 		return "redirect:/bhptickets/list";
 	}
-	
+
 	@RequestMapping(value = "/response", params = { "passtickettour" }, method = RequestMethod.POST)
 	@Transactional
 	public String passTicketToUr(@Valid TicketResponseForm ticketResponseForm, BindingResult bindingResult, Model model,
 			RedirectAttributes redirectAttrs, Locale locale) {
-		if(ticketResponseForm.getComment().trim().length() == 0){
+		if (ticketResponseForm.getComment().trim().length() == 0) {
 			bindingResult.rejectValue("comment", "NotEmpty.ticketResponseForm.comment", "ERROR");
 		}
 		// get ticket
@@ -434,7 +468,7 @@ public class BhpTicketsController {
 	@Transactional
 	public String closeTicket(@Valid TicketResponseForm ticketResponseForm, BindingResult bindingResult, Model model,
 			RedirectAttributes redirectAttrs, Locale locale) {
-		if(ticketResponseForm.getComment().trim().length() == 0){
+		if (ticketResponseForm.getComment().trim().length() == 0) {
 			bindingResult.rejectValue("comment", "NotEmpty.ticketResponseForm.comment", "ERROR");
 		}
 		// get ticket
@@ -460,12 +494,12 @@ public class BhpTicketsController {
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("bhp.tickets.confirm.success", null, locale));
 		return "redirect:/bhptickets/list";
 	}
-	
+
 	@RequestMapping(value = "/response", params = { "commentutr" }, method = RequestMethod.POST)
 	@Transactional
 	public String commentUtr(@Valid TicketResponseForm ticketResponseForm, BindingResult bindingResult, Model model,
 			RedirectAttributes redirectAttrs, Locale locale) {
-		if(ticketResponseForm.getUtrComment().trim().length() == 0){
+		if (ticketResponseForm.getUtrComment().trim().length() == 0) {
 			bindingResult.rejectValue("utrComment", "NotEmpty.ticketResponseForm.utrComment", "ERROR");
 		}
 		// get ticket
@@ -486,7 +520,8 @@ public class BhpTicketsController {
 		utrComment.getTickets().add(ticket);
 		ticket.setState(utrComment);
 		ticket.setUpdateDate(new Timestamp(new java.util.Date().getTime()));
-		ticket.setUtrComment(ticketResponseForm.getUtrComment().trim() + textHelper.newLine() + "[" + userService.getAuthenticatedUser().getName() + "]");
+		ticket.setUtrComment(ticketResponseForm.getUtrComment().trim() + textHelper.newLine() + "["
+				+ userService.getAuthenticatedUser().getName() + "]");
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/bhptickets/list";
 	}
