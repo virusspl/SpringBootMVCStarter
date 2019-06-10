@@ -232,6 +232,18 @@ public class UserController {
 		return "redirect:/users/edit/" + userId;
 	}
 	
+	@RequestMapping(value = "/manageroles/remove/{userId}/{roleId}")
+	@Transactional
+	public String removeRoleShort(@PathVariable("userId") long userId, @PathVariable("roleId") long roleId, RedirectAttributes redirectAttrs,
+			Locale locale) {
+		Role role = roleService.findById(roleId);
+		User user = userService.findById(userId);
+		user.getRoles().remove(role);
+		role.getUsers().remove(user);
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/users/edit/" + userId;
+	}
+	
 	
 	@RequestMapping("/create")
 	@Transactional
