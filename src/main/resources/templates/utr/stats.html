@@ -178,16 +178,18 @@
 						class="glyphicon glyphicon-menu-left"></span> <span
 						th:text="#{action.back}">back</span>
 					</a>
-					<button class="btn btn-primary btn-sm" type="submit" name="stats" value="1">
+					<button class="btn btn-primary btn-sm" type="submit" name="stats" value="1"
+					 onclick="disableLong(this)">
 						<span class="glyphicon glyphicon-search"></span> <span
 							th:text="|#{utr.indicators} ADRP|">search</span>
 					</button>
-					<button class="btn btn-primary btn-sm" type="submit" name="stats" value="2">
+					<button class="btn btn-primary btn-sm" type="submit" name="stats" value="2"
+					 onclick="disableLong(this)">
 						<span class="glyphicon glyphicon-search"></span> <span
 							th:text="|#{utr.indicators} WPS|">search</span>
 					</button>
 					<button class="btn btn-primary btn-sm" type="submit"
-						name="machines">
+						name="machines" onclick="disableLong(this)">
 						<span class="glyphicon glyphicon-time"></span> <span
 							th:text="#{utr.machines}">search</span>
 					</button>

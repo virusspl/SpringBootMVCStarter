@@ -37,12 +37,6 @@
 				showhide()
 			});
 			
-			function doSubmit(text) {
-				alert(text);
-				$("#submitbutton").attr("disabled", true);	
-			}
-			
-			
 		</script>
 	</div>
 	<div layout:fragment="content">
@@ -147,12 +141,12 @@
 							</div>
 							<div th:errors="*{operatorId}"
 								class="alert alert-danger margin-top-5">error</div>
-							
-								<div id="operatorManual" class="checkbox">
-									<label><input type="checkbox"
-										id="operatorManualCheckbox" th:field="*{operatorManual}" /><span
-										th:text="#{qsurveys.operatormanual}"></span></label>
-								</div>
+
+							<div id="operatorManual" class="checkbox">
+								<label><input type="checkbox"
+									id="operatorManualCheckbox" th:field="*{operatorManual}" /><span
+									th:text="#{qsurveys.operatormanual}"></span></label>
+							</div>
 						</div>
 					</div>
 					<!-- /OPERATOR -->
@@ -209,12 +203,10 @@
 								class="glyphicon glyphicon-remove"></span> <span
 								th:text="#{qsurveys.cancel.survey}">back</span>
 							</a>
-							<!-- th:onclick="|confirm('#{general.warning.longtask} (~40s)');|" -->
-							<button id="submitbutton" class="btn btn-primary btn-sm" type="submit" name="ok"
-							data-toggle="tooltip" data-placement="top" 
-							th:title="|#{general.warning.longtask} ( ~40s )|"
-							>
-							<!-- 			th:onclick="|doSubmit('#{general.warning.longtask} (~40s)');|" -->
+							<button id="submitbutton" class="btn btn-primary btn-sm"
+								type="submit" name="ok" onclick="disableLong(this)"
+								data-toggle="tooltip" data-placement="top"
+								th:title="|#{general.warning.longtask} ( ~40s )|">
 								<span class="glyphicon glyphicon-ok"></span> <span
 									th:text="#{action.submit}">search</span>
 							</button>

@@ -125,7 +125,7 @@
 					<label for="file" class="btn btn-info"> <span
 						th:text="#{action.choose}"></span>
 					</label>
-					<button class="btn btn-primary" type="submit" name="upload"
+					<button class="btn btn-primary" type="submit" name="upload" onclick="disableLong(this)"
 						th:title="|#{general.warning.longtask} ~60-120s|"
 						data-toggle="tooltip" data-placement="bottom">
 						<span th:text="#{action.upload}">upload</span>
