@@ -27,6 +27,7 @@ import sbs.model.inventory.InventoryDataType;
 import sbs.model.qcheck.QCheckState;
 import sbs.model.qsurveys.QSurveyQuestionType;
 import sbs.model.qualitysurveys.QualitySurveyParameter;
+import sbs.model.shipments.ShipmentState;
 import sbs.model.tools.ToolsProjectState;
 import sbs.model.users.Role;
 import sbs.model.users.User;
@@ -40,6 +41,7 @@ import sbs.service.qcheck.QCheckStatesService;
 import sbs.service.qsurveys.QSurveyQuestionTypesService;
 import sbs.service.qualitysurveys.QualitySurveyParametersService;
 import sbs.service.qualitysurveys.QualitySurveysService;
+import sbs.service.shipments.ShipmentStatesService;
 import sbs.service.tools.ToolsProjectStateService;
 import sbs.service.users.RoleService;
 import sbs.service.users.UserService;
@@ -77,6 +79,8 @@ public class VariousPagesController {
 	QSurveyQuestionTypesService qSurveyQuestionTypesService;
 	@Autowired
 	QCheckStatesService qCheckStatesService;
+	@Autowired
+	ShipmentStatesService shipmentStatesService;
 	@Autowired
 	private LiveFeedSingleton liveFeedSingleton;
 	@Autowired
@@ -857,6 +861,50 @@ public class VariousPagesController {
 			qCheckStatesService.save(qCheckState);
 			msg += "[qcheckstate: " + qCheckState.getOrder() + " " + qCheckState.getTitle() + "], ";
 		}
+		
+		ShipmentState shipmentState;
+		
+		if (shipmentStatesService.findByOrder(10) == null) {
+			shipmentState = new ShipmentState();
+			shipmentState.setOrder(10);
+			shipmentState.setInternalTitle("new");
+			shipmentState.setCode("shipments.state.new");
+			shipmentStatesService.save(shipmentState);
+			msg += "[shipmentState: " + shipmentState.getOrder() + " " + shipmentState.getInternalTitle() + "], ";
+		}
+		if (shipmentStatesService.findByOrder(20) == null) {
+			shipmentState = new ShipmentState();
+			shipmentState.setOrder(20);
+			shipmentState.setInternalTitle("in progress");
+			shipmentState.setCode("shipments.state.inprogress");
+			shipmentStatesService.save(shipmentState);
+			msg += "[shipmentState: " + shipmentState.getOrder() + " " + shipmentState.getInternalTitle() + "], ";
+		}
+		if (shipmentStatesService.findByOrder(30) == null) {
+			shipmentState = new ShipmentState();
+			shipmentState.setOrder(30);
+			shipmentState.setInternalTitle("completed");
+			shipmentState.setCode("shipments.state.completed");
+			shipmentStatesService.save(shipmentState);
+			msg += "[shipmentState: " + shipmentState.getOrder() + " " + shipmentState.getInternalTitle() + "], ";
+		}
+		if (shipmentStatesService.findByOrder(40) == null) {
+			shipmentState = new ShipmentState();
+			shipmentState.setOrder(40);
+			shipmentState.setInternalTitle("shipped");
+			shipmentState.setCode("shipments.state.shipped");
+			shipmentStatesService.save(shipmentState);
+			msg += "[shipmentState: " + shipmentState.getOrder() + " " + shipmentState.getInternalTitle() + "], ";
+		}
+		if (shipmentStatesService.findByOrder(90) == null) {
+			shipmentState = new ShipmentState();
+			shipmentState.setOrder(90);
+			shipmentState.setInternalTitle("cancelled");
+			shipmentState.setCode("shipments.state.cancelled");
+			shipmentStatesService.save(shipmentState);
+			msg += "[shipmentState: " + shipmentState.getOrder() + " " + shipmentState.getInternalTitle() + "], ";
+		}
+		
 				 
 		
 		InventoryDataType invDataType;

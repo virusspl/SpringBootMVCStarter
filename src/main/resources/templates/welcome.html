@@ -20,16 +20,15 @@
 		<div class="row margin-top-10">
 			<!-- HANDY LINKS -->
 			<div id="social" th:if="${dayCode}">
-			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
-				<h3 class="text-primary" th:text="|#{welcome.dontforget}!|">tickets</h3>
-			</div>
-			<div class="col-xs-12 margin-top-10" style="margin-left: 5px;">
-				<span class="btn-sm glyphicon glyphicon-calendar"></span>
-				<span th:utext="|#{welcome.todaywegot} &lt;b&gt;#{${dayCode}}&lt;/b&gt;, ${today}|"></span>
-				<br/>
-				<span class="btn-sm glyphicon glyphicon-gift"></span>
-				<span th:utext="|#{welcome.nameday} &lt;b&gt;${nameDay}&lt;/b&gt;|"></span>
-			</div>
+				<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
+					<h3 class="text-primary" th:text="|#{welcome.dontforget}!|">tickets</h3>
+				</div>
+				<div class="col-xs-12 margin-top-10" style="margin-left: 5px;">
+					<span class="btn-sm glyphicon glyphicon-calendar"></span> <span
+						th:utext="|#{welcome.todaywegot} &lt;b&gt;#{${dayCode}}&lt;/b&gt;, ${today}|"></span>
+					<br /> <span class="btn-sm glyphicon glyphicon-gift"></span> <span
+						th:utext="|#{welcome.nameday} &lt;b&gt;${nameDay}&lt;/b&gt;|"></span>
+				</div>
 			</div>
 			<!-- HANDY LINKS -->
 			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
@@ -128,18 +127,15 @@
 						class="btn btn-danger btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-user"></span> <span
 						th:text="#{users.management}">users management</span>
-					</a> 
-					<a th:href="@{/system/log}"
+					</a> <a th:href="@{/system/log}"
 						class="btn btn-danger btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-list-alt"></span> <span
 						th:text="#{system.log}">users management</span>
-					</a> 
-					<a th:href="@{/users/monitor}"
+					</a> <a th:href="@{/users/monitor}"
 						class="btn btn-danger btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-time"></span> <span
 						th:text="#{session.monitor}">users management</span>
-					</a> 
-					<a href="https://firewall.atwsystem.pl/" target="_blank"
+					</a> <a href="https://firewall.atwsystem.pl/" target="_blank"
 						class="btn btn-danger btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-signal"></span> <span
 						th:text="|Firewall|">fire wall</span>
@@ -164,28 +160,25 @@
 					class="btn btn-info btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-check"></span> <span
 					th:text="#{buyorders.buyorders}"></span>
-				</a> 
-				<a th:href="@{/prodtosale/main}"
+				</a> <a th:href="@{/prodtosale/main}"
 					class="btn btn-info btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-list-alt"></span> <span
 					th:text="#{prodtosale.prodtosale}"></span>
-				</a> 
-				<a th:href="@{/ordtools/main}"
+				</a> <a th:href="@{/ordtools/main}"
 					class="btn btn-info btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-screenshot"></span> <span
 					th:text="#{ordtools.ordtools}"></span>
-				</a> 
-				<a th:href="@{/prodcomp/main}"
+				</a> <a th:href="@{/prodcomp/main}"
 					class="btn btn-info btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-check"></span> <span
 					th:text="#{prodcomp.title}"></span>
-				</a> 
-				<a th:if="${CANCEL_THIS}" th:href="@{/hrua/list}" class="btn btn-info btn-md margin-top-5">
-					<span class="glyphicon glyphicon-user"></span> <span
+				</a> <a th:if="${CANCEL_THIS}" th:href="@{/hrua/list}"
+					class="btn btn-info btn-md margin-top-5"> <span
+					class="glyphicon glyphicon-user"></span> <span
 					th:text="#{hrua.files}"></span>
 				</a> <a th:href="@{/consumption/dispatch}"
-					class="btn btn-info btn-md margin-top-5">
-					<span class="glyphicon glyphicon-export"></span> <span
+					class="btn btn-info btn-md margin-top-5"> <span
+					class="glyphicon glyphicon-export"></span> <span
 					th:text="#{consumption.consumptionacv}">consumption</span>
 				</a>
 			</div>
@@ -237,12 +230,23 @@
 				<a th:href="@{/geolook/map}"
 					class="btn btn-info btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-th"></span> <span
-					th:text="#{geolook.warehouses.map}">title</span>
+					th:text="|#{geolook.warehouses.map} ADRP|">title</span>
 				</a> <a th:href="@{/geolook/search}"
 					class="btn btn-info btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-search"></span> <span
-					th:text="#{geolook.warehouses.lookup}">title</span>
-				</a> <a th:href="@{/inventory/list}"
+					th:text="|#{geolook.warehouses.lookup} ADRP|">title</span>
+				</a> 
+				<a th:href="@{/wpslook/search}"
+					class="btn btn-info btn-md margin-top-5"> <span
+					class="glyphicon glyphicon-search"></span> <span
+					th:text="#{wpslook.warehouses.lookup}">WPS Lookup</span>
+				</a>
+				<a th:href="@{/shipments/dispatch}"
+					class="btn btn-info btn-md margin-top-5"> <span
+					class="glyphicon glyphicon-plane"></span> <span
+					th:text="#{shipments}">WPS Lookup</span>
+				</a>				
+				 <a th:href="@{/inventory/list}"
 					class="btn btn-info btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-indent-left"></span> <span
 					th:text="#{inventory.inventory}">title</span>
@@ -254,18 +258,6 @@
 					class="btn btn-info btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-upload"></span> <span
 					th:text="#{dirrcpship.dirrcpship}">title</span>
-				</a>
-			</div>
-			<!-- WAREHOUSE WPS -->
-			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
-				<h3 class="text-info" th:text="#{department.wps.warehouses}">Panel
-					With title</h3>
-			</div>
-			<div class="col-xs-12 margin-top-10">
-				<a th:href="@{/wpslook/search}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-search"></span> <span
-					th:text="#{wpslook.warehouses.lookup}">WPS Lookup</span>
 				</a>
 			</div>
 		</div>
