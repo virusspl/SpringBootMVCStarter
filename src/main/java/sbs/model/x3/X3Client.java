@@ -4,6 +4,7 @@ public class X3Client {
 
 	private String code;
 	private String name;
+	private String country;
 	
 	public X3Client() {
 		
@@ -29,6 +30,15 @@ public class X3Client {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
 	}
 
 	@Override

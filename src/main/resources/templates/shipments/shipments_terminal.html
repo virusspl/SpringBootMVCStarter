@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/layout_terminal">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="content">
+		<form id="termForm" th:action="@{/shipments/processentry}"
+			method="post" th:object="${shipmentTerminalForm}">
+
+			<!-- HIDDEN -->
+			<input type="hidden" th:field="*{currentColumnName}" /> <input
+				type="hidden" th:field="*{currentStep}" /> <input type="hidden"
+				th:field="*{currentShipment}" /> <input type="hidden"
+				th:field="*{code}" /> <input type="hidden"
+				th:field="*{description}" /> <input type="hidden"
+				th:field="*{category}" /> <input type="hidden" th:field="*{order}" />
+			<input type="hidden" th:field="*{quantity}" />
+			<!-- /HIDDEN -->
+
+
+			<!-- VISIBLE -->
+			<div th:if="*{currentStep}==*{STEP_CHOOSE_SHIPMENT}">
+				// or order or code or quantity
+				<h2 class="columntitle" th:text="*{currentColumnName}">field
+					name</h2>
+				<input type="text" id="currentValue" name="currentValue"
+					th:field="*{currentValue}" autocomplete="off"
+					onfocus="setFocusColor(this)" onblur="setBlurColor(this)" />
+				<div class="valueError" th:errors="*{currentValue}">error</div>
+				<button type="submit" name="step" value="step"
+					class="button okbutton margin-top-10" style="width: 46%;"
+					th:text="#{action.send}">send</button>
+				<button type="button" class="button badbutton margin-top-10"
+					style="width: 46%;" th:text="#{action.clear}"
+					onclick="clearFields()">clear</button>
+			</div>
+
+			<div th:if="*{currentStep}==*{STEP_CHOOSE_ACTION}">choose
+				
+				action: start line or set completed
+				
+			</div>
+			<!-- /VISIBLE -->
+		</form>
+	</div>
+
+	<div layout:fragment="script">
+		<script th:src="@{/js/url.helper.js}" type="text/javascript"></script>
+		<script>
+	window.onload = function() {
+  		document.getElementById("currentValue").focus();
+  		document.getElementById("currentValue").select();
+	};
+	$(document).ready(function() {
+	    $("input:text").focus(function() { $(this).select(); } );
+	});
+	
+	  function submitForm(action) {		  
+		  var form = document.getElementById('termForm');
+		  if(action == 'save'){
+			  form.action = getAppUrl()+'/shipments/saveline';  
+		  }
+		  else{
+			  form.action = getAppUrl()+'/shipments/cancelline';
+		  }
+		form.submit();
+		}
+
+	
+	function clearFields(){
+		document.getElementById('currentValue').value = '';
+		return false;
+	}
+	
+	</script>
+	</div>
+</body>
+</html>

@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import sbs.model.users.User;
+
 @Entity
 @Table(name = "shipment_lines")
 public class ShipmentLine {	
@@ -21,9 +23,13 @@ public class ShipmentLine {
 	@Column(name = "sl_shipment_line_id")
 	private int id;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sl_sh_id_shipment", nullable = false)
-	private Shipment shipment;	
+	private Shipment shipment;
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "sl_usr_id_creator", nullable = false)
+	private User creator;	
 	 
 	@Column(name = "sl_time", nullable = false)
 	private Timestamp creationTime;
@@ -127,14 +133,27 @@ public class ShipmentLine {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
+	
+
+	public User getCreator() {
+		return creator;
+	}
+
+
+	public void setCreator(User creator) {
+		this.creator = creator;
+	}
 
 
 	@Override
 	public String toString() {
-		return "ShipmentLine [id=" + id + ", creationTime=" + creationTime + ", productCode=" + productCode
-				+ ", productDescription=" + productDescription + ", productCategory=" + productCategory
+		return "ShipmentLine [id=" + id + ", creator=" + creator.getName() + ", creationTime=" + creationTime + ", productCode="
+				+ productCode + ", productDescription=" + productDescription + ", productCategory=" + productCategory
 				+ ", salesOrder=" + salesOrder + ", quantity=" + quantity + "]";
 	}
+
+
+
 
 
 }

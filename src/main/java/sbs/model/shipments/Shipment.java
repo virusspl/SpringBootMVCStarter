@@ -12,8 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Type;
-
 import sbs.model.users.User;
 
 @Entity
@@ -36,13 +34,16 @@ public class Shipment {
 	@Column(name = "sh_credat", nullable = false)
 	private Timestamp creationDate;
 
+	@Column(name = "sh_prepdat", nullable = false)
+	private Timestamp preparationDate;
+	
 	@Column(name = "sh_lastupddat", nullable = false)
 	private Timestamp updateDate;	
 
 	@Column(name = "sh_company", length = 10, nullable = false)
 	private String company;
 
-	@Column(name = "sh_client_code", length = 10, nullable = false)
+	@Column(name = "sh_client_code", length = 15, nullable = false)
 	private String clientCode;
 	
 	@Column(name = "sh_client_name", length = 90, nullable = false)
@@ -51,8 +52,7 @@ public class Shipment {
 	@Column(name = "sh_client_country", length = 5, nullable = false)
 	private String clientCountry;
 	
-	@Column(name = "sh_description", nullable = true)
-	@Type(type="text")
+	@Column(name = "sh_description", length = 255, nullable = true)
 	private String description;
 
 	
@@ -111,6 +111,16 @@ public class Shipment {
 	}
 
 
+	public Timestamp getPreparationDate() {
+		return preparationDate;
+	}
+
+
+	public void setPreparationDate(Timestamp preparationDate) {
+		this.preparationDate = preparationDate;
+	}
+
+
 	public String getCompany() {
 		return company;
 	}
@@ -163,10 +173,14 @@ public class Shipment {
 
 	@Override
 	public String toString() {
-		return "Shipment [id=" + id + ", state=" + state.getInternalTitle() + ", creationDate=" + creationDate + ", updateDate="
-				+ updateDate + ", company=" + company + ", clientCode=" + clientCode + ", clientName=" + clientName
-				+ ", clientCountry=" + clientCountry + ", description=" + description + "]";
+		return "Shipment [id=" + id + ", creator=" + creator.getName() + ", state=" + state + ", creationDate=" + creationDate
+				+ ", preparationDate=" + preparationDate + ", updateDate=" + updateDate + ", company=" + company
+				+ ", clientCode=" + clientCode + ", clientName=" + clientName + ", clientCountry=" + clientCountry
+				+ ", description=" + description + "]";
 	}
+
+
+
 
 
 }

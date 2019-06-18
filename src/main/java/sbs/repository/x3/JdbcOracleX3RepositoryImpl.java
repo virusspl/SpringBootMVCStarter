@@ -126,7 +126,8 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 						"SELECT " 
 						+ company + ".BPCUSTOMER.BPCNUM_0, "
 						+ company + ".BPARTNER.BPRNAM_0, "
-						+ company + ".BPARTNER.BPRNAM_1 "
+						+ company + ".BPARTNER.BPRNAM_1, "
+						+ company + ".BPARTNER.CRY_0 "
 						+ "FROM " 
 						+ company + ".BPCUSTOMER INNER JOIN " + company + ".BPARTNER "
 						+ "ON "
@@ -142,6 +143,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         	client = new X3Client();
         	client.setCode((String)row.get("BPCNUM_0"));
         	client.setName(((String)row.get("BPRNAM_0")) + " " + ((String)row.get("BPRNAM_1")));
+        	client.setCountry((String)row.get("CRY_0"));
         }
 		
 		return client;

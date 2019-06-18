@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script">
+		<!-- DATEPICKER -->
+		<script th:src="@{/datepicker/js/bootstrap-datepicker.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:src="@{/datepicker/locales/bootstrap-datepicker.pl.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script
+			th:src="@{/datepicker/locales/bootstrap-datepicker.en-GB.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:src="@{/datepicker/locales/bootstrap-datepicker.it.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:if="__${#locale}__ == 'pl'">
+			$('#date').datepicker({
+				autoclose : true,
+				language : 'pl'
+			});
+		</script>
+		<script th:if="__${#locale}__ == 'en'">
+			$('#date').datepicker({
+				autoclose : true,
+				language : 'en-GB'
+			});
+		</script>
+		<script th:if="__${#locale}__ == 'it'">
+			$('#date').datepicker({
+				autoclose : true,
+				language : 'it'
+			});
+		</script>
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h1 th:text="#{shipments.create.title}" class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{shipments.create.message}"> Welcome message
+				</span>
+			</div>
+			<a th:href="@{/shipments/dispatch}" class="btn btn-link btn-sm">
+				<span class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+		<div class="underline margin-top-20"></div>
+		<!-- CREATE FORM -->
+		<form th:action="@{/shipments/create}" method="post"
+			th:object="${shipmentCreateForm}">
+			<div class="row margin-top-20">
+				<div class="col-xs-6 col-sm-4">
+					<div class="form-group">
+						<label for="company" th:text="#{general.company}">txt</label> <select
+							class="form-control" id="company" name="company"
+							th:placeholder="#{general.company}" th:field="*{company}">
+							<option value="ATW">ATW</option>
+							<option value="WPS">WPS</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-6 col-sm-4">
+					<div class="form-group">
+						<label for="date" th:text="#{general.date}">Title</label> <input
+							type="text" class="form-control" id="date" name="date"
+							th:placeholder="#{general.date}" th:field="*{date}" />
+						<div th:errors="*{date}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-6 col-sm-4">
+					<div class="form-group">
+						<label for="client" th:text="#{general.client.code}">Title</label>
+						<input type="text" class="form-control" id="client" name="client"
+							th:placeholder="#{general.client.code}" th:field="*{client}" />
+						<div th:errors="*{client}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-6 col-sm-4">
+					<div class="form-group">
+						<label for="description" th:text="#{general.notes}">Title</label>
+						<input type="text" class="form-control" id="description" name="description"
+							th:placeholder="#{general.notes}" th:field="*{description}" />
+						<div th:errors="*{description}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+			<div class="row margin-top-20">
+
+				<a th:href="@{/shipments/dispatch}" class="btn btn-link btn-sm">
+					<span class="glyphicon glyphicon-menu-left"></span> <span
+					th:text="#{action.back}">back</span>
+				</a>
+				<button class="btn btn-primary btn-sm" type="submit" name="save">
+					<span class="glyphicon glyphicon-ok"></span> <span
+						th:text="#{action.save}">create</span>
+				</button>
+			</div>
+		</form>
+	</div>
+</body>
+</html>
