@@ -155,6 +155,7 @@ public class ShipmentsController {
 		}
 		ShipmentState state = shipmentStatesService.findByOrder(30);
 		shipment.setState(state);
+		shipment.setUpdateDate(new Timestamp(new java.util.Date().getTime()));
 		shipmentsService.update(shipment);
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage(state.getCode(), null, locale));
 		return "redirect:/shipments/show/" + shipment.getId();
@@ -170,6 +171,7 @@ public class ShipmentsController {
 		}
 		ShipmentState state = shipmentStatesService.findByOrder(40);
 		shipment.setState(state);
+		shipment.setUpdateDate(new Timestamp(new java.util.Date().getTime()));
 		shipmentsService.update(shipment);
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage(state.getCode(), null, locale));
 		return "redirect:/shipments/show/" + shipment.getId();
@@ -185,6 +187,7 @@ public class ShipmentsController {
 		}
 		ShipmentState state = shipmentStatesService.findByOrder(90);
 		shipment.setState(state);
+		shipment.setUpdateDate(new Timestamp(new java.util.Date().getTime()));
 		shipmentsService.update(shipment);
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage(state.getCode(), null, locale));
 		return "redirect:/shipments/show/" + shipment.getId();
@@ -200,6 +203,7 @@ public class ShipmentsController {
 		}
 		ShipmentState state = shipmentStatesService.findByOrder(20);
 		shipment.setState(state);
+		shipment.setUpdateDate(new Timestamp(new java.util.Date().getTime()));
 		shipmentsService.update(shipment);
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage(state.getCode(), null, locale));
 		return "redirect:/shipments/show/" + shipment.getId();
@@ -238,9 +242,12 @@ public class ShipmentsController {
 					return "shipments/terminal";
 				}
 				// update shipment state
-				ShipmentState inprogress = shipmentStatesService.findByOrder(20);
-				shipment.setState(inprogress);
-				shipmentsService.update(shipment);
+				if(shipment.getState().getOrder()==10){
+					ShipmentState inprogress = shipmentStatesService.findByOrder(20);
+					shipment.setState(inprogress);
+					shipment.setUpdateDate(new Timestamp(new java.util.Date().getTime()));
+					shipmentsService.update(shipment);	
+				}
 				// extract step data
 				sf.setCurrentShipment(shipment.getId());
 				sf.setClientName(shipment.getClientName());
@@ -314,10 +321,17 @@ public class ShipmentsController {
 			break;
 		case ShipmentTerminalForm.STEP_SUMMARY:
 			ShipmentLine line = new ShipmentLine();
+			Shipment shipment = shipmentsService.findById(sf.getCurrentShipment());
+			
+			if(shipment.getState().getOrder()>20){
+				bindingResult.rejectValue("currentValue", "shipments.error.shipmentcompleted");
+				model.addAttribute("error", messageSource.getMessage("shipments.error.shipmentcompleted", null, locale) );
+				return "shipments/terminal";
+			}
 			
 			line.setCreator(userService.getAuthenticatedUser());
 			line.setCreationTime(new Timestamp(new java.util.Date().getTime()));
-			line.setShipment(shipmentsService.findById(sf.getCurrentShipment()));
+			line.setShipment(shipment);
 			line.setProductCode(sf.getCode());
 			line.setProductDescription(sf.getDescription());
 			line.setProductCategory(sf.getCategory());
@@ -339,6 +353,7 @@ public class ShipmentsController {
 		Shipment shipment = shipmentsService.findById(shipmentTerminalForm.getCurrentShipment());
 		ShipmentState completed = shipmentStatesService.findByOrder(30);
 		shipment.setState(completed);
+		shipment.setUpdateDate(new Timestamp(new java.util.Date().getTime()));
 		shipmentsService.update(shipment);
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("shipments.state.completed", null, locale));
 		return "redirect:/terminal/shipments";
