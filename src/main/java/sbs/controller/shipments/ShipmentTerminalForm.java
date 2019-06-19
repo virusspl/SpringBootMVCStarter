@@ -28,6 +28,8 @@ public class ShipmentTerminalForm {
 	private String category;
 	private String order;
 	private int quantity;
+	private String clientName;
+	private String company;
 	
 
 	public ShipmentTerminalForm() {
@@ -155,6 +157,24 @@ public class ShipmentTerminalForm {
 
 	public void setStepSummary(int stepSummary) {
 		this.stepSummary = stepSummary;
+	}
+	
+
+	public String getClientName() {
+		return clientName;
+	}
+
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
+	}
+	
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 	@Override

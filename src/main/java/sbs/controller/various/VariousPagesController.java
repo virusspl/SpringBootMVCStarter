@@ -461,6 +461,30 @@ public class VariousPagesController {
 			roleService.save(cebsUser);
 			msg += "[role: " + cebsUser.getName() + "], ";
 		}
+		
+		Role shipmentsManager = roleService.findByName("ROLE_SHIPMENTSMANAGER");
+		if (shipmentsManager == null) {
+			shipmentsManager = new Role();
+			shipmentsManager.setName("ROLE_SHIPMENTSMANAGER");
+			roleService.save(shipmentsManager);
+			msg += "[role: " + shipmentsManager.getName() + "], ";
+		}
+		
+		Role shipmentsTerminal = roleService.findByName("ROLE_SHIPMENTSTERMINAL");
+		if (shipmentsTerminal == null) {
+			shipmentsTerminal = new Role();
+			shipmentsTerminal.setName("ROLE_SHIPMENTSTERMINAL");
+			roleService.save(shipmentsTerminal);
+			msg += "[role: " + shipmentsTerminal.getName() + "], ";
+		}
+		
+		Role inventoryTerminal = roleService.findByName("ROLE_INVENTORYTERMINAL");
+		if (inventoryTerminal == null) {
+			inventoryTerminal = new Role();
+			inventoryTerminal.setName("ROLE_INVENTORYTERMINAL");
+			roleService.save(inventoryTerminal);
+			msg += "[role: " + inventoryTerminal.getName() + "], ";
+		}
 
 		System.out.println("get users:");
 		User admin = userService.findByUsername("Admin");

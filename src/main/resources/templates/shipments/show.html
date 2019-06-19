@@ -184,6 +184,13 @@
 							class="glyphicon glyphicon-barcode"></span> <span
 							th:text="|Terminal|">back</span>
 						</a>						
+						<button th:if="${shipment.state.order} &gt; 20" 
+							class="btn btn-success btn-sm" type="submit" name="inprogress"
+							th:onclick="|return confirm('#{shipments.restart}?')|"
+							th:value="${shipment.id}">
+							<span class="glyphicon glyphicon-refresh"></span> 
+							<span th:text="#{shipments.restart}">create</span>
+						</button>
 						<button th:if="${shipment.state.order} &lt; 30" 
 							class="btn btn-primary btn-sm" type="submit" name="completed"
 							th:onclick="|return confirm('#{shipments.state.completed}?')|"

@@ -189,6 +189,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"CEBSMANAGER"
 				)
 		.antMatchers(
+				"/shipments/**"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"SHIPMENTSMANAGER"
+				)
+		.antMatchers(
+				"/terminal/shipments/**"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"SHIPMENTSMANAGER",
+				"SHIPMENTSTERMINAL"
+				)
+		.antMatchers(
 				"/admin", 
 				"/users/**",
 				"/system/**",

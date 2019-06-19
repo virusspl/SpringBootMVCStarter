@@ -16,12 +16,17 @@ public class WebSecurityTerminalConfig extends WebSecurityConfigurerAdapter {
 	
 	    @Override
 	    protected void configure(HttpSecurity http) throws Exception {
-	    	http.antMatcher("/terminal/**").authorizeRequests()
-	    	.anyRequest()
-	  		.hasAnyRole("ADMIN","TERMINAL")
-	  		.and()
+	    	http
 	    	.formLogin()
-	    	.loginPage("/tlogin")
+	    	.loginPage("/tlogin").and()
+	    	.antMatcher("/terminal/**").authorizeRequests()
+	    	
+	    	.antMatchers("/terminal/inventory/**")
+	  		.hasAnyRole("ADMIN","INVENTORYTERMINAL")
+	    	
+	  		.antMatchers("/terminal/shipments/**")
+	  		.hasAnyRole("ADMIN","SHIPMENTSMANAGER","SHIPMENTSTERMINAL", "TERMINAL")
+	  		
 	    	;			
 	    	
 	    	/*.authorizeRequests()

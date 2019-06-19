@@ -7,7 +7,7 @@
 </head>
 <body>
 	<div layout:fragment="content">
-		<form id="termForm" th:action="@{/inventory/processentry}" method="post"
+		<form id="termForm" th:action="@{/terminal/inventory/processentry}" method="post"
 			th:object="${inventoryTerminalForm}">
 
 			<!-- HIDDEN -->
@@ -195,10 +195,10 @@
 	  function submitForm(action) {		  
 		  var form = document.getElementById('termForm');
 		  if(action == 'save'){
-			  form.action = getAppUrl()+'/inventory/save';  
+			  form.action = getAppUrl()+'/terminal/inventory/save';  
 		  }
 		  else{
-			  form.action = getAppUrl()+'/inventory/cancel';
+			  form.action = getAppUrl()+'/terminal/inventory/cancel';
 		  }
 		form.submit();
 		}

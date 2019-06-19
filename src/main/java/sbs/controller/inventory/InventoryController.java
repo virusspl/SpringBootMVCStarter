@@ -276,7 +276,7 @@ public class InventoryController {
 		
 	}
 
-	@RequestMapping(value = "/inventory/processentry", params = { "step" }, method = RequestMethod.POST)
+	@RequestMapping(value = "/terminal/inventory/processentry", params = { "step" }, method = RequestMethod.POST)
 	@Transactional
 	public String terminalProcessInventoryEntry(InventoryTerminalForm inventoryTerminalForm,
 			BindingResult bindingResult, RedirectAttributes redirectAttrs, Locale locale, Model model)
@@ -363,7 +363,7 @@ public class InventoryController {
 		}
 	}
 	
-	@RequestMapping(value = "/inventory/save", method = RequestMethod.POST)
+	@RequestMapping(value = "terminal/inventory/save", method = RequestMethod.POST)
 	@Transactional
 	public String saveTerminalProcessInventoryEntry(InventoryTerminalForm inventoryTerminalForm,
 			BindingResult bindingResult, RedirectAttributes redirectAttrs, Locale locale, Model model)
@@ -377,7 +377,7 @@ public class InventoryController {
 		return "inventory/inventory_terminal";
 	}
 	
-	@RequestMapping(value = "/inventory/cancel", method = RequestMethod.POST)
+	@RequestMapping(value = "/terminal/inventory/cancel", method = RequestMethod.POST)
 	@Transactional
 	public String cancelTerminalProcessInventoryEntry(InventoryTerminalForm inventoryTerminalForm,
 			BindingResult bindingResult, RedirectAttributes redirectAttrs, Locale locale, Model model)

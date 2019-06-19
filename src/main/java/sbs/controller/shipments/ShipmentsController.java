@@ -20,15 +20,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javassist.NotFoundException;
 import sbs.controller.qcheck.ResponseForm;
 import sbs.model.shipments.Shipment;
+import sbs.model.shipments.ShipmentLine;
 import sbs.model.shipments.ShipmentState;
 import sbs.model.users.User;
 import sbs.model.x3.X3Client;
+import sbs.model.x3.X3Product;
+import sbs.model.x3.X3SalesOrder;
 import sbs.service.shipments.ShipmentLinesService;
 import sbs.service.shipments.ShipmentStatesService;
 import sbs.service.shipments.ShipmentsService;
 import sbs.service.users.UserService;
 import sbs.service.x3.JdbcOracleX3Service;
-
 
 @Controller
 public class ShipmentsController {
@@ -187,36 +189,184 @@ public class ShipmentsController {
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage(state.getCode(), null, locale));
 		return "redirect:/shipments/show/" + shipment.getId();
 	}
+	
+	@RequestMapping(value = "/shipments/action", params = { "inprogress" }, method = RequestMethod.POST)
+	@Transactional
+	public String setInProgress(@RequestParam String inprogress, RedirectAttributes redirectAttrs, Locale locale,
+			Model model) throws NotFoundException {
+		Shipment shipment = shipmentsService.findById(Integer.parseInt(inprogress));
+		if (shipment == null) {
+			throw new NotFoundException("Shipment not found");
+		}
+		ShipmentState state = shipmentStatesService.findByOrder(20);
+		shipment.setState(state);
+		shipmentsService.update(shipment);
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage(state.getCode(), null, locale));
+		return "redirect:/shipments/show/" + shipment.getId();
+	}
 
 	@RequestMapping(value = "/terminal/shipments")
 	public String terminalView(Model model, Locale locale) {
 		ShipmentTerminalForm shipmentTerminalForm = new ShipmentTerminalForm();
+		shipmentTerminalForm.setCurrentStep(ShipmentTerminalForm.STEP_CHOOSE_SHIPMENT);
 		shipmentTerminalForm
 				.setCurrentColumnName(messageSource.getMessage("shipments.terminal.choose.shipment", null, locale));
 		model.addAttribute("shipmentTerminalForm", shipmentTerminalForm);
-		return "shipments/shipments_terminal";
+		return "shipments/terminal";
 	}
 
-	@RequestMapping(value = "/shipments/processentry")
+	@RequestMapping(value = "terminal/shipments/processentry", method = RequestMethod.POST)
 	public String terminalView(ShipmentTerminalForm shipmentTerminalForm, BindingResult bindingResult,
 			RedirectAttributes redirectAttrs, Locale locale, Model model) {
 
 		ShipmentTerminalForm sf = shipmentTerminalForm;
-		System.out.println(sf);
-		
-		switch (shipmentTerminalForm.getCurrentStep()) {
-		case ShipmentTerminalForm.STEP_CHOOSE_SHIPMENT:
-			Shipment shipment = shipmentsService.findById(Integer.parseInt(sf.getCurrentValue()));
-			sf.setCurrentShipment(shipment.getId());
-			sf.setCurrentStep(sf.getStepChooseAction());
-
-			model.addAttribute("msg",
-					shipment.getClientName() + "(" + shipment.getClientCode() + ")" );
-			break;
-
+		if (sf.getCurrentValue() != null && sf.getCurrentValue().trim().length() == 0) {
+			bindingResult.rejectValue("currentValue", "error.maynotbeempty");
+			return "shipments/terminal";
 		}
 
-		return "shipments/shipments_terminal";
+		switch (shipmentTerminalForm.getCurrentStep()) {
+		case ShipmentTerminalForm.STEP_CHOOSE_SHIPMENT:
+			try {
+				Shipment shipment = shipmentsService.findById(Integer.parseInt(sf.getCurrentValue()));
+				// validate
+				if (shipment == null) {
+					bindingResult.rejectValue("currentValue", "shipments.error.shipmentnotfound");
+					return "shipments/terminal";
+				} else if (shipment.getState().getOrder() >= 30) {
+					bindingResult.rejectValue("currentValue", "shipments.error.shipmentcompleted");
+					return "shipments/terminal";
+				}
+				// update shipment state
+				ShipmentState inprogress = shipmentStatesService.findByOrder(20);
+				shipment.setState(inprogress);
+				shipmentsService.update(shipment);
+				// extract step data
+				sf.setCurrentShipment(shipment.getId());
+				sf.setClientName(shipment.getClientName());
+				sf.setCompany(shipment.getCompany());
+				// next step
+				sf.setCurrentValue("");
+				sf.setCurrentStep(sf.getStepChooseAction());
+				sf.setCurrentColumnName(messageSource.getMessage("shipments.to", null, locale) + " " +shipment.getClientName());
+			} catch (NumberFormatException nfe) {
+				bindingResult.rejectValue("currentValue", "error.mustbeanumber");
+				return "shipments/terminal";
+			}
+			break;
+		case ShipmentTerminalForm.STEP_CHOOSE_ACTION:
+			// next step
+			sf.setCurrentStep(sf.getStepEnterCode());
+			sf.setCurrentColumnName(messageSource.getMessage("general.productCode", null, locale));
+			break;
+		case ShipmentTerminalForm.STEP_ENTER_CODE:
+			// validate
+			String code = sf.getCurrentValue().trim().toUpperCase();
+			X3Product product = x3Service.findProductByCode(sf.getCompany(), code);
+			if (product == null) {
+				bindingResult.rejectValue("currentValue", "error.no.such.product");
+				return "shipments/terminal";
+			}
+			// extract data
+			sf.setCode(product.getCode());
+			sf.setDescription(product.getDescription());
+			sf.setCategory(product.getCategory());
+			// next step
+			model.addAttribute("msg", sf.getDescription());
+			sf.setCurrentValue("");
+			sf.setCurrentStep(sf.getStepEnterOrder());
+			sf.setCurrentColumnName(messageSource.getMessage("general.order", null, locale));
+			break;
+		case ShipmentTerminalForm.STEP_ENTER_ORDER:
+			// validate
+			String order = sf.getCurrentValue().trim().toUpperCase();
+			X3SalesOrder salesOrder = x3Service.findSalesOrderByNumber(sf.getCompany(), order);
+			if (salesOrder == null) {
+				bindingResult.rejectValue("currentValue", "error.no.such.order");
+				return "shipments/terminal";
+			}
+			// extract data
+			sf.setOrder(salesOrder.getSalesNumber());
+			// next step
+			model.addAttribute("msg", sf.getOrder());
+			sf.setCurrentValue("");
+			sf.setCurrentStep(sf.getStepEnterQuantity());
+			sf.setCurrentColumnName(messageSource.getMessage("general.quantity", null, locale));
+			break;
+		case ShipmentTerminalForm.STEP_ENTER_QUANTITY:
+			try {
+				// validate				
+				int quantity = Integer.parseInt(sf.getCurrentValue());
+				if(quantity <= 0){
+					bindingResult.rejectValue("currentValue", "shipments.error.mustbepositive");
+					return "shipments/terminal";
+				}
+				// extract data
+				sf.setQuantity(quantity);
+				// next step
+				sf.setCurrentValue("");
+				sf.setCurrentStep(sf.getStepSummary());
+				sf.setCurrentColumnName(messageSource.getMessage("general.summary", null, locale));
+			} catch (NumberFormatException nfe) {
+				bindingResult.rejectValue("currentValue", "error.mustbeanumber");
+				return "shipments/terminal";
+			}
+			break;
+		case ShipmentTerminalForm.STEP_SUMMARY:
+			ShipmentLine line = new ShipmentLine();
+			
+			line.setCreator(userService.getAuthenticatedUser());
+			line.setCreationTime(new Timestamp(new java.util.Date().getTime()));
+			line.setShipment(shipmentsService.findById(sf.getCurrentShipment()));
+			line.setProductCode(sf.getCode());
+			line.setProductDescription(sf.getDescription());
+			line.setProductCategory(sf.getCategory());
+			line.setSalesOrder(sf.getOrder());
+			line.setQuantity(sf.getQuantity());
+			shipmentLinesService.save(line);
+			
+			model.addAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+			clearFormBeforeActionStep(shipmentTerminalForm, locale);
+			break;
+		}
+
+		return "shipments/terminal";
 	}
+
+	@RequestMapping(value = "terminal/shipments/completed", method = RequestMethod.POST)
+	public String setCompleted(ShipmentTerminalForm shipmentTerminalForm, BindingResult bindingResult,
+			RedirectAttributes redirectAttrs, Locale locale, Model model) {
+		Shipment shipment = shipmentsService.findById(shipmentTerminalForm.getCurrentShipment());
+		ShipmentState completed = shipmentStatesService.findByOrder(30);
+		shipment.setState(completed);
+		shipmentsService.update(shipment);
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("shipments.state.completed", null, locale));
+		return "redirect:/terminal/shipments";
+
+	}
+	@RequestMapping(value = "terminal/shipments/cancel", method = RequestMethod.POST)
+	public String cancelLineInput(ShipmentTerminalForm shipmentTerminalForm, BindingResult bindingResult,
+			RedirectAttributes redirectAttrs, Locale locale, Model model) {
+		
+		clearFormBeforeActionStep(shipmentTerminalForm, locale);
+		return "shipments/terminal";
+	}
+
+	private void clearFormBeforeActionStep(ShipmentTerminalForm sf, Locale locale) {
+		sf.setCurrentColumnName("");
+		sf.setCurrentValue("");
+		sf.setCode("");
+		sf.setDescription("");
+		sf.setCategory("");
+		sf.setOrder("");
+		sf.setQuantity(0);
+		
+		// next step
+		sf.setCurrentValue("");
+		sf.setCurrentStep(sf.getStepChooseAction());
+		sf.setCurrentColumnName(messageSource.getMessage("shipments.to", null, locale) + " " +sf.getClientName());
+	}
+	
+	
 
 }
