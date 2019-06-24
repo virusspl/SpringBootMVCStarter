@@ -16,12 +16,13 @@ public class ShipmentsRepositoryImpl extends GenericRepositoryAdapter<Shipment, 
 
 	@Override
 	public List<Shipment> findPending(String company) {
-		String hql = "from Shipment s where s.state.order < :ord";
+		String hql = "from Shipment s where s.state.order < :ord and s.company = :comp";
 		@SuppressWarnings("unchecked")
 		List<Shipment> result = (List<Shipment>) 
 		currentSession()
 		.createQuery(hql)
 		.setInteger("ord", 40)
+		.setString("comp", company)
 		.list();
 		
 		return result;
@@ -29,12 +30,13 @@ public class ShipmentsRepositoryImpl extends GenericRepositoryAdapter<Shipment, 
 
 	@Override
 	public List<Shipment> findShipped(String company) {
-		String hql = "from Shipment s where s.state.order = :ord";
+		String hql = "from Shipment s where s.state.order = :ord and s.company = :comp";
 		@SuppressWarnings("unchecked")
 		List<Shipment> result = (List<Shipment>) 
 		currentSession()
 		.createQuery(hql)
 		.setInteger("ord", 40)
+		.setString("comp", company)
 		.list();
 		
 		return result;

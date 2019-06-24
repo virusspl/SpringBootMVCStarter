@@ -76,7 +76,6 @@ public class ShipmentsController {
 	@RequestMapping(value = "/shipments/create")
 	public String create(Model model) {
 		model.addAttribute("shipmentCreateForm", new ShipmentCreateForm("WPS", new java.util.Date()));
-		System.out.println("wtf?");
 		return "shipments/create";
 	}
 
@@ -192,7 +191,7 @@ public class ShipmentsController {
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage(state.getCode(), null, locale));
 		return "redirect:/shipments/show/" + shipment.getId();
 	}
-	
+
 	@RequestMapping(value = "/shipments/action", params = { "inprogress" }, method = RequestMethod.POST)
 	@Transactional
 	public String setInProgress(@RequestParam String inprogress, RedirectAttributes redirectAttrs, Locale locale,
@@ -225,8 +224,10 @@ public class ShipmentsController {
 
 		ShipmentTerminalForm sf = shipmentTerminalForm;
 		if (sf.getCurrentValue() != null && sf.getCurrentValue().trim().length() == 0) {
-			bindingResult.rejectValue("currentValue", "error.maynotbeempty");
-			return "shipments/terminal";
+			if(sf.getCurrentStep() != ShipmentTerminalForm.STEP_ENTER_ORDER){
+				bindingResult.rejectValue("currentValue", "error.maynotbeempty");
+				return "shipments/terminal";	
+			}
 		}
 
 		switch (shipmentTerminalForm.getCurrentStep()) {
@@ -242,11 +243,11 @@ public class ShipmentsController {
 					return "shipments/terminal";
 				}
 				// update shipment state
-				if(shipment.getState().getOrder()==10){
+				if (shipment.getState().getOrder() == 10) {
 					ShipmentState inprogress = shipmentStatesService.findByOrder(20);
 					shipment.setState(inprogress);
 					shipment.setUpdateDate(new Timestamp(new java.util.Date().getTime()));
-					shipmentsService.update(shipment);	
+					shipmentsService.update(shipment);
 				}
 				// extract step data
 				sf.setCurrentShipment(shipment.getId());
@@ -255,7 +256,8 @@ public class ShipmentsController {
 				// next step
 				sf.setCurrentValue("");
 				sf.setCurrentStep(sf.getStepChooseAction());
-				sf.setCurrentColumnName(messageSource.getMessage("shipments.to", null, locale) + " " +shipment.getClientName());
+				sf.setCurrentColumnName(
+						messageSource.getMessage("shipments.to", null, locale) + " " + shipment.getClientName());
 			} catch (NumberFormatException nfe) {
 				bindingResult.rejectValue("currentValue", "error.mustbeanumber");
 				return "shipments/terminal";
@@ -287,24 +289,30 @@ public class ShipmentsController {
 		case ShipmentTerminalForm.STEP_ENTER_ORDER:
 			// validate
 			String order = sf.getCurrentValue().trim().toUpperCase();
-			X3SalesOrder salesOrder = x3Service.findSalesOrderByNumber(sf.getCompany(), order);
-			if (salesOrder == null) {
-				bindingResult.rejectValue("currentValue", "error.no.such.order");
-				return "shipments/terminal";
+			if (order.length() != 0) {
+				X3SalesOrder salesOrder = x3Service.findSalesOrderByNumber(sf.getCompany(), order);
+				if (salesOrder == null) {
+					bindingResult.rejectValue("currentValue", "error.no.such.order");
+					return "shipments/terminal";
+				}
+				// extract data
+				sf.setOrder(salesOrder.getSalesNumber());
+				model.addAttribute("msg", sf.getOrder());
 			}
-			// extract data
-			sf.setOrder(salesOrder.getSalesNumber());
+			else{
+				model.addAttribute("warning", messageSource.getMessage("shipments.orderskipped", null, locale));
+			}
 			// next step
-			model.addAttribute("msg", sf.getOrder());
+			
 			sf.setCurrentValue("");
 			sf.setCurrentStep(sf.getStepEnterQuantity());
 			sf.setCurrentColumnName(messageSource.getMessage("general.quantity", null, locale));
 			break;
 		case ShipmentTerminalForm.STEP_ENTER_QUANTITY:
 			try {
-				// validate				
+				// validate
 				int quantity = Integer.parseInt(sf.getCurrentValue());
-				if(quantity <= 0){
+				if (quantity <= 0) {
 					bindingResult.rejectValue("currentValue", "shipments.error.mustbepositive");
 					return "shipments/terminal";
 				}
@@ -322,13 +330,14 @@ public class ShipmentsController {
 		case ShipmentTerminalForm.STEP_SUMMARY:
 			ShipmentLine line = new ShipmentLine();
 			Shipment shipment = shipmentsService.findById(sf.getCurrentShipment());
-			
-			if(shipment.getState().getOrder()>20){
+
+			if (shipment.getState().getOrder() > 20) {
 				bindingResult.rejectValue("currentValue", "shipments.error.shipmentcompleted");
-				model.addAttribute("error", messageSource.getMessage("shipments.error.shipmentcompleted", null, locale) );
+				model.addAttribute("error",
+						messageSource.getMessage("shipments.error.shipmentcompleted", null, locale));
 				return "shipments/terminal";
 			}
-			
+
 			line.setCreator(userService.getAuthenticatedUser());
 			line.setCreationTime(new Timestamp(new java.util.Date().getTime()));
 			line.setShipment(shipment);
@@ -338,7 +347,7 @@ public class ShipmentsController {
 			line.setSalesOrder(sf.getOrder());
 			line.setQuantity(sf.getQuantity());
 			shipmentLinesService.save(line);
-			
+
 			model.addAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 			clearFormBeforeActionStep(shipmentTerminalForm, locale);
 			break;
@@ -359,10 +368,11 @@ public class ShipmentsController {
 		return "redirect:/terminal/shipments";
 
 	}
+
 	@RequestMapping(value = "terminal/shipments/cancel", method = RequestMethod.POST)
 	public String cancelLineInput(ShipmentTerminalForm shipmentTerminalForm, BindingResult bindingResult,
 			RedirectAttributes redirectAttrs, Locale locale, Model model) {
-		
+
 		clearFormBeforeActionStep(shipmentTerminalForm, locale);
 		return "shipments/terminal";
 	}
@@ -375,13 +385,11 @@ public class ShipmentsController {
 		sf.setCategory("");
 		sf.setOrder("");
 		sf.setQuantity(0);
-		
+
 		// next step
 		sf.setCurrentValue("");
 		sf.setCurrentStep(sf.getStepChooseAction());
-		sf.setCurrentColumnName(messageSource.getMessage("shipments.to", null, locale) + " " +sf.getClientName());
+		sf.setCurrentColumnName(messageSource.getMessage("shipments.to", null, locale) + " " + sf.getClientName());
 	}
-	
-	
 
 }

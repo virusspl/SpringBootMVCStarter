@@ -46,6 +46,8 @@ a:active {
 #ttop {
 	width: 100%;
 	border-bottom: 1px solid #969696;
+	font-size: 125%; 
+	text-align: center;
 }
 
 #tmessages {
@@ -184,7 +186,7 @@ a.button:active {
 	<div id="termSize">
 		<!-- LAYOUT STATIC -->
 		<div id="ttop">
-			<span><a th:href="@{/terminal}" th:text="|Home|"></a></span> <span
+			<span><a th:href="@{/terminal}" th:text="|Start|"></a></span> <span
 				sec:authorize="isAuthenticated()"
 				th:text="| - ${#authentication.name}|"></span>
 		</div>

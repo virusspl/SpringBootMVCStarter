@@ -4,6 +4,9 @@
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
 	layout:decorator="layout/main">
 <head lang="pl">
+<title
+	th:text="|#{shipments.shipment} - ${shipment.clientCode} - ${shipment.clientName}|"></title>
+
 <style>
 .leftcol {
 	padding-right: 30px;
@@ -96,7 +99,13 @@
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
 				<span th:text="#{shipments.show.message}"> Welcome message </span>
 			</div>
-			<a th:href="|@{/shipments/list/}${shipment.company}|"
+			<a th:if="${shipment.state.order} &lt; 40"
+				th:href="|@{/shipments/list/}${shipment.company}|"
+				class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a> <a th:if="${shipment.state.order} &gt; 30"
+				th:href="|@{/shipments/archive/}${shipment.company}|"
 				class="btn btn-link btn-sm"> <span
 				class="glyphicon glyphicon-menu-left"></span> <span
 				th:text="#{action.back}">back</span>
@@ -162,9 +171,10 @@
 					<tr>
 						<td style="padding-top: 10px;" class="leftcol" colspan="2"><span
 							th:text="#{general.notes}"></span></td>
-							</tr>
-							<tr>
-						<td colspan="2" style="font-weight: bold;"><span th:text="${shipment.description}"></span></td>
+					</tr>
+					<tr>
+						<td colspan="2" style="font-weight: bold;"><span
+							th:text="${shipment.description}"></span></td>
 					</tr>
 				</table>
 			</div>
@@ -178,39 +188,38 @@
 							class="btn btn-link btn-sm"> <span
 							class="glyphicon glyphicon-menu-left"></span> <span
 							th:text="#{action.back}">back</span>
+						</a> <a th:href="|@{/terminal/shipments}|" class="btn btn-info btn-sm"
+							target="_blank"> <span class="glyphicon glyphicon-barcode"></span>
+							<span th:text="|Terminal|">back</span>
 						</a>
-						<a th:href="|@{/terminal/shipments}|"
-							class="btn btn-info btn-sm" target="_blank"> <span
-							class="glyphicon glyphicon-barcode"></span> <span
-							th:text="|Terminal|">back</span>
-						</a>						
-						<button th:if="${shipment.state.order} &gt; 20" 
+						<button th:if="${shipment.state.order} &gt; 20"
 							class="btn btn-success btn-sm" type="submit" name="inprogress"
 							th:onclick="|return confirm('#{shipments.restart}?')|"
 							th:value="${shipment.id}">
-							<span class="glyphicon glyphicon-refresh"></span> 
-							<span th:text="#{shipments.restart}">create</span>
+							<span class="glyphicon glyphicon-refresh"></span> <span
+								th:text="#{shipments.restart}">create</span>
 						</button>
-						<button th:if="${shipment.state.order} &lt; 30" 
+						<button th:if="${shipment.state.order} &lt; 30"
 							class="btn btn-primary btn-sm" type="submit" name="completed"
 							th:onclick="|return confirm('#{shipments.state.completed}?')|"
 							th:value="${shipment.id}">
-							<span class="glyphicon glyphicon-ok"></span> 
-							<span th:text="#{shipments.state.completed}">create</span>
+							<span class="glyphicon glyphicon-ok"></span> <span
+								th:text="#{shipments.state.completed}">create</span>
 						</button>
-						<button th:if="${shipment.state.order} &lt; 40" 
+						<button th:if="${shipment.state.order} &lt; 40"
 							class="btn btn-primary btn-sm" type="submit" name="shipped"
 							th:onclick="|return confirm('#{shipments.state.shipped}?')|"
 							th:value="${shipment.id}">
-							<span class="glyphicon glyphicon-road"></span> 
-							<span th:text="#{shipments.state.shipped}">create</span>
+							<span class="glyphicon glyphicon-road"></span> <span
+								th:text="#{shipments.state.shipped}">create</span>
 						</button>
-						<button th:if="${shipment.state.order} &lt; 90" 
+						<button
+							th:if="${shipment.state.order} &lt; 90 and ${shipment.state.order} != 40"
 							class="btn btn-danger btn-sm" type="submit" name="cancelled"
 							th:onclick="|return confirm('#{shipments.state.cancelled}?')|"
 							th:value="${shipment.id}">
-							<span class="glyphicon glyphicon-remove"></span> 
-							<span th:text="#{shipments.state.cancelled}">create</span>
+							<span class="glyphicon glyphicon-remove"></span> <span
+								th:text="#{shipments.state.cancelled}">create</span>
 						</button>
 					</div>
 
@@ -231,28 +240,25 @@
 				<div class="table-responsive">
 					<table id="srv" class="display">
 						<thead>
-							<tr>
-								<th th:text="|#id|"></th>
-								<th th:text="#{general.order.sales}"></th>
-								<th th:text="#{general.productCode}"></th>
-								<th th:text="#{general.productDescription}"></th>
-								<th th:text="#{general.category}"></th>
+							<tr><th th:text="#{general.productCode}"></th>
 								<th th:text="#{general.quantity}"></th>
+								<th th:text="#{general.order.sales}"></th>
+								<th th:text="#{general.productDescription}"></th>
+								<th  th:text="#{general.category}"></th>
+								<th th:text="|#id|"></th>
 								<th th:text="#{general.date.creation}"></th>
 								<th th:text="#{general.user}"></th>
-
 							</tr>
 						</thead>
 						<tbody>
 							<tr th:each="line : ${lines}">
-								<td><span th:text="|#${line.id}|"></span></td>
-								<td><span th:text="${line.salesOrder}"></span></td>
 								<td><span th:text="${line.productCode}"></span></td>
-								<td><span th:text="${line.productDescription}"></span></td>
-								<td><span th:text="${line.productCategory}"></span></td>
 								<td><span th:text="${line.quantity}"></span></td>
-								<td><span
-									th:text="${#dates.format(line.creationTime, 'yyyy.MM.dd HH:mm')}"></span></td>
+								<td><span th:text="${line.salesOrder}"></span></td>
+								<td><span th:text="${line.productDescription}"></span></td>
+								<td class="center"><span th:text="${line.productCategory}"></span></td>
+								<td><span th:text="|#${line.id}|"></span></td>
+								<td><span th:text="${#dates.format(line.creationTime, 'yyyy.MM.dd HH:mm')}"></span></td>
 								<td><span th:text="${line.creator.name}"></span></td>
 							</tr>
 						</tbody>
