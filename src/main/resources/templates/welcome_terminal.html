@@ -11,10 +11,21 @@
 			<h1>TERMINAL ADR</h1>
 		</div>
 		<div class="center">
-			<a class="button menubutton" th:text="#{inventory.inventory}"
-				th:href="@{/terminal/inventory}">txt</a>
-			<a class="button menubutton" th:text="#{shipments}"
-				th:href="@{/terminal/shipments}">txt</a>
+			<a sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_INVENTORYTERMINAL')" 
+				class="button menubutton" th:text="#{inventory.inventory}"
+				th:href="@{/terminal/inventory}">txt
+			</a>
+			
+			<a sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SHIPMENTSTERMINAL')" 
+				class="button menubutton" th:text="#{shipments}"
+				th:href="@{/terminal/shipments}">txt
+			</a>
+			
+			<a sec:authorize="!isAuthenticated()" 
+				class="button menubutton" th:text="|Log in|"
+				th:href="@{/terminal/auth}">txt
+			</a>
+
 			<a class="button menubutton" th:text="|Terminal test|"
 				th:href="@{/terminal/test}">txt</a><br/>
 		</div>

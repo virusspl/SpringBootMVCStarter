@@ -21,32 +21,16 @@ public class WebSecurityTerminalConfig extends WebSecurityConfigurerAdapter {
 	    	.loginPage("/tlogin").and()
 	    	.antMatcher("/terminal/**").authorizeRequests()
 	    	
+	    	.antMatchers("/terminal/auth")
+	    	.hasAnyRole("ADMIN","TERMINAL")
+	    	
 	    	.antMatchers("/terminal/inventory/**")
 	  		.hasAnyRole("ADMIN","INVENTORYTERMINAL")
 	    	
 	  		.antMatchers("/terminal/shipments/**")
-	  		.hasAnyRole("ADMIN","SHIPMENTSMANAGER","SHIPMENTSTERMINAL", "TERMINAL")
+	  		.hasAnyRole("ADMIN","SHIPMENTSTERMINAL","SHIPMENTSMANAGER")
 	  		
 	    	;			
-	    	
-	    	/*.authorizeRequests()
-	    	.anyRequest()
-	  		.hasAnyRole("ADMIN","TERMINAL")
-	  		.and()
-	  		.formLogin()
-	  		.loginPage("/terminallogin")
-	        .failureUrl("/terminallogin?error=loginError")
-	        .defaultSuccessUrl("/terminal")
-	        .and()
-	        .logout()
-	        .logoutUrl("/admin_logout")
-	        .logoutSuccessUrl("/protectedLinks")
-	        .deleteCookies("JSESSIONID")
-	        .and()
-	        .exceptionHandling()
-	        .accessDeniedPage("/403")
-	        .and()
-	        .csrf().disable(); 
-	        */ 
+ 
 	    }
 }

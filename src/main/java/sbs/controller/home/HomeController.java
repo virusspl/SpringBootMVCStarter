@@ -36,8 +36,13 @@ public class HomeController {
 
 	@RequestMapping("/terminal")
 	public String terminal() {
-		// return "redirect:/init";
 		return "welcome_terminal";
+	}
+	
+	// fake login link - path secured
+	@RequestMapping("/terminal/auth")
+	public String terminalAuthentication() {
+		return "redirect:/terminal";
 	}
 
 	private String getNameDay(String key) {
