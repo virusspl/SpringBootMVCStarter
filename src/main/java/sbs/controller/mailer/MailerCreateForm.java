@@ -34,7 +34,6 @@ public class MailerCreateForm {
 		this.from = "webapp@atwsystem.pl";
 		this.replyTo = "no-reply@atwsystem.pl";
 		this.date = new java.util.Date();
-		this.to="michalak.k@atwsystem.pl";
 	}
 
 	public String getTitle() {
