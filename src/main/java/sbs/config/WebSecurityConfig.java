@@ -205,6 +205,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				)
 		.antMatchers(
 				"/admin", 
+				"/mailer/**", 
 				"/users/**",
 				"/system/**",
 				"/inventory/createinventory/**",

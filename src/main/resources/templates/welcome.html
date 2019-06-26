@@ -127,15 +127,23 @@
 						class="btn btn-danger btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-user"></span> <span
 						th:text="#{users.management}">users management</span>
-					</a> <a th:href="@{/system/log}"
-						class="btn btn-danger btn-md margin-top-5"> <span
-						class="glyphicon glyphicon-list-alt"></span> <span
-						th:text="#{system.log}">users management</span>
-					</a> <a th:href="@{/users/monitor}"
+					</a> 
+					<a th:href="@{/users/monitor}"
 						class="btn btn-danger btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-time"></span> <span
 						th:text="#{session.monitor}">users management</span>
-					</a> <a href="https://firewall.atwsystem.pl/" target="_blank"
+					</a>
+					<a th:href="@{/mailer/create}"
+						class="btn btn-danger btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-envelope"></span> <span
+						th:text="|Mailer|">users management</span>
+					</a>
+					<a th:href="@{/system/log}"
+						class="btn btn-danger btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-list-alt"></span> <span
+						th:text="#{system.log}">users management</span>
+					</a> 
+					<a href="https://firewall.atwsystem.pl/" target="_blank"
 						class="btn btn-danger btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-signal"></span> <span
 						th:text="|Firewall|">fire wall</span>

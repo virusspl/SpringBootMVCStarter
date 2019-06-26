@@ -28,6 +28,10 @@ $(document).ready(function() {
 					window.location.href.indexOf("qcheck/edit") > -1
 					||
 					window.location.href.indexOf("qcheck/show") > -1
+					||
+					window.location.href.indexOf("mailer/create") > -1
+					||
+					window.location.href.indexOf("mailer/send") > -1
 					) {
 				return;
 			}

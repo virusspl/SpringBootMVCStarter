@@ -1,5 +1,7 @@
 package sbs.service.mail;
 
+import java.util.Date;
+
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
@@ -20,11 +22,26 @@ public class MailServiceImpl implements MailService {
 		helper.setTo(to);
 		helper.setFrom(from);
 		helper.setCc(cc);
-		//helper.setSubject(subject);
-		//helper.setText(content, true);
 		message.setSubject(subject, "UTF-8");
 		message.setContent(content, "text/html; charset=utf-8");
 		javaMailSender.send(message);
+	}
+
+	@Override
+	public void sendEmail(String from, String replyTo, String[] to, String[] cc, String[] bcc, Date date, String subject,
+			String content) throws MessagingException {
+		MimeMessage message = javaMailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+		helper.setFrom(from);
+		helper.setReplyTo(replyTo);
+		helper.setTo(to);
+		helper.setCc(cc);
+		helper.setBcc(bcc);
+		helper.setSentDate(date);
+		message.setSubject(subject, "UTF-8");
+		message.setContent(content, "text/html; charset=utf-8");
+		javaMailSender.send(message);
+		
 	}
 
 }

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script">
+		<!-- DATEPICKER -->
+		<script th:src="@{/datepicker/js/bootstrap-datepicker.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:src="@{/datepicker/locales/bootstrap-datepicker.pl.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script
+			th:src="@{/datepicker/locales/bootstrap-datepicker.en-GB.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:src="@{/datepicker/locales/bootstrap-datepicker.it.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:if="__${#locale}__ == 'pl'">
+			$('#date').datepicker({
+				autoclose : true,
+				language : 'pl'
+			});
+		</script>
+		<script th:if="__${#locale}__ == 'en'">
+			$('#date').datepicker({
+				autoclose : true,
+				language : 'en-GB'
+			});
+		</script>
+		<script th:if="__${#locale}__ == 'it'">
+			$('#date').datepicker({
+				autoclose : true,
+				language : 'it'
+			});
+		</script>
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h1 th:text="#{mailer.title}" class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{mailer.message}"> Welcome message </span>
+			</div>
+			<a th:href="@{/}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+		<div class="underline margin-top-10"></div>
+
+		<!-- BHP TICKET FORM -->
+		<form th:action="@{/mailer/send}" method="post"
+			th:object="${mailerCreateForm}">
+			<div class="row">
+				<div class="col-xs-12">
+					<h3 class="text-primary" th:text="#{general.settings}"></h3>
+				</div>
+			</div>
+			<div class="row margin-top-10">
+				<div class="col-xs-12 col-sm-6">
+					<div class="form-group">
+						<label th:text="#{mailer.from}"></label> <input type="text"
+							class="form-control" name="from" th:placeholder="#{mailer.from}"
+							th:field="*{from}" />
+						<div th:errors="*{from}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6">
+					<div class="form-group">
+						<label th:text="#{mailer.replyto}"></label> <input type="text"
+							class="form-control" name="replyTo"
+							th:placeholder="#{mailer.replyto}" th:field="*{replyTo}" />
+						<div th:errors="*{replyTo}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-12">
+					<div class="form-group">
+						<label th:text="#{mailer.to}"></label> <input type="text"
+							class="form-control" name="to"
+							th:placeholder="|#{mailer.to}: first@mail.pl; second@mail.pl...|"
+							th:field="*{to}" />
+						<div th:errors="*{to}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-12">
+					<div class="form-group">
+						<label th:text="#{mailer.cc}"></label> <input type="text"
+							class="form-control" name="cc"
+							th:placeholder="|#{mailer.cc}: first@mail.pl; second@mail.pl...|"
+							th:field="*{cc}" />
+						<div th:errors="*{cc}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-12">
+					<div class="form-group">
+						<label th:text="#{mailer.bcc}"></label> <input type="text"
+							class="form-control" name="bcc"
+							th:placeholder="|#{mailer.bcc}: first@mail.pl; second@mail.pl...|"
+							th:field="*{bcc}" />
+						<div th:errors="*{bcc}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-12">
+					<div class="underline margin-top-10"></div>
+					<h3 class="text-primary" th:text="#{general.contents}"></h3>
+				</div>
+				<div class="col-xs-6">
+					<div class="form-group">
+						<label for="date" th:text="#{general.date}"></label> <input
+							type="text" class="form-control" id="date" name="date"
+							th:placeholder="#{general.date}" th:field="*{date}" />
+						<div th:errors="*{date}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-6">
+					<div class="form-group">
+						<label for="hour" th:text="#{general.hour}"></label> <input
+							type="text" class="form-control" id="hour" name="hour"
+							th:placeholder="|hh:mm:ss|" th:field="*{hour}" />
+						<div th:errors="*{hour}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-12">
+					<div class="form-group">
+						<label for="title" th:text="#{general.title}">Title</label> <input
+							type="text" class="form-control" id="title" name="title"
+							th:placeholder="#{general.title}" th:field="*{title}" />
+						<div th:errors="*{title}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-xs-12">
+					<div class="form-group">
+						<label for="contents" th:text="#{general.contents}">Description</label>
+						<textarea class="form-control" id="contents" name="contents"
+							th:placeholder="#{general.contents}" th:field="*{contents}"
+							style="min-height: 200px;"></textarea>
+						<div th:errors="*{contents}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+			<div class="row margin-top-10">
+				<div class="col-xs-12">
+					<a th:href="@{/}" class="btn btn-link btn-sm"> <span
+						class="glyphicon glyphicon-menu-left"></span> <span
+						th:text="#{action.back}">back</span>
+					</a>
+					<button class="btn btn-primary btn-sm" type="submit" name="send"
+						th:onclick="|return confirm('#{general.areyousure}')|">
+						<span class="glyphicon glyphicon-ok"></span> <span
+							th:text="#{action.send}">create</span>
+					</button>
+
+				</div>
+			</div>
+		</form>
+		<!-- /USER FORM -->
+	</div>
+</body>
+</html>

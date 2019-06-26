@@ -3,6 +3,9 @@ package sbs.helpers;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
 import org.apache.commons.lang3.text.WordUtils;
 import org.springframework.stereotype.Component;
 @Component
@@ -62,6 +65,16 @@ public class TextHelper {
 			return String.format("%.2f", quantity);
 		}
 		
+	}
+	
+	public boolean isMailValid(String entry) {
+		 try {
+		      InternetAddress emailAddr = new InternetAddress(entry);
+		      emailAddr.validate();
+		   } catch (AddressException ex) {
+		      return false;
+		   }
+		return true;
 	}
 	
 }
