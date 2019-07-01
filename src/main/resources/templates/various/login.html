@@ -7,7 +7,7 @@
 <body>
 	<div class="section no-pad-bot" layout:fragment="content">
 		<div class="container">
-			<div class="row">
+			<div class="row margin-top-20">
 				<div class="col-xs-8 col-xs-offset-2 col-md-6 col-md-offset-3" style="border: 1px solid #CDCDCD;">
 				<h2 class="text-primary" th:text="#{login.title}" style="border-bottom: 1px solid #CDCDCD">Logowanie</h2>
 					<div class="row margin-top-10">
@@ -15,7 +15,6 @@
 							<div id="errorMessage" class="bg-danger text-danger text-center" th:if="${param.error}">
 									<span th:text="#{login.error}"> incorrect login or password</span><br/>
 									<a th:href="@{/contact}" class="text-danger"><span th:text="|#{navi.help} > #{faq.q.userlogin}|"></span></a>
-									
 							</div>
 						</div>
 					</div>
