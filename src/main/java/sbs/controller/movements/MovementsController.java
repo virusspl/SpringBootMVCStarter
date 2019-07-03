@@ -1,6 +1,7 @@
 package sbs.controller.movements;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -265,6 +266,51 @@ public class MovementsController {
 		 * System.out.println("UNKNOWN:" + unknownMovements);
 		 */
 
+		return "movements/main";
+	}
+	
+	@RequestMapping(value = "/calculate", params = { "shipmovements" }, method = RequestMethod.POST)
+	public String performShipMovements(@Valid MovementsForm movementsForm, BindingResult bindingResult, Model model,
+			RedirectAttributes redirectAttrs, Locale locale) {
+		if (bindingResult.hasErrors()) {
+			return "movements/main";
+		}
+		
+		List<GeodeMovement> movements = geodeService.findShipmentMovementsInPeriod(movementsForm.getStartDate(),
+				movementsForm.getEndDate());
+		List<GeodeMovement> movementsToShow = new ArrayList<>();
+		Map<String, GeodeMovementsForUser> summary = new HashMap<>();
+		Set<String> unknownMovements = new HashSet<>();
+		
+		for (GeodeMovement mvt : movements) {
+			if (!summary.containsKey(mvt.getCreationUserCode())) {
+				summary.put(mvt.getCreationUserCode(),
+						new GeodeMovementsForUser(mvt.getCreationUserCode(), mvt.getCreationUserName()));
+			}
+			
+			if (getGeodeMovementType(mvt) == GeodeMovement.GEODE_MOVEMENT_LOAD) {
+				summary.get(mvt.getCreationUserCode()).loadCounterIncrement();
+				movementsToShow.add(mvt);
+			} else if (getGeodeMovementType(mvt) == GeodeMovement.GEODE_MOVEMENT_UNLOAD) {
+				summary.get(mvt.getCreationUserCode()).unloadCounterIncrement();
+				movementsToShow.add(mvt);
+			} else {
+				unknownMovements.add(mvt.getMovementCode());
+			}
+		}
+		
+		model.addAttribute("startDate", movementsForm.getStartDate());
+		model.addAttribute("endDate", movementsForm.getEndDate());
+		model.addAttribute("rcpmovsummary", summary.values());
+		if (movementsToShow.size() <= 5000) {
+			model.addAttribute("rcpmovdetails", movementsToShow);
+		}
+		/*
+		 * if(unknownMovements.size() > 0){
+		 * model.addAttribute("unknownmovs",unknownMovements); }
+		 * System.out.println("UNKNOWN:" + unknownMovements);
+		 */
+		
 		return "movements/main";
 	}
 

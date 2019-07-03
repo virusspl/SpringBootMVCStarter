@@ -171,4 +171,51 @@ public class JdbcOracleGeodeRepositoryImpl implements JdbcOracleGeodeRepository 
 		return result;
 	}
 
+
+	@Override
+	public List<GeodeMovement> findShipmentMovementsInPeriod(Date startDate, Date endDate) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "GEOATW.ADJUSTM.ADJNUM_0, "
+				+ "GEOATW.ADJUSTM.ITM_0, "
+				+ "GEOATW.ADJUSTM.CUQ_0, "
+				+ "GEOATW.ADJUSTM.CUQ_1, "
+				+ "GEOATW.ADJUSTM.DAT_0, "
+				+ "GEOATW.ADJUSTM.TIM_0, "
+				+ "GEOATW.ADJUSTM.MVT_0, "
+				+ "GEOATW.ADJUSTM.STO_0, "
+				+ "GEOATW.ADJUSTM.SLO_0, "
+				+ "GEOATW.ADJUSTM.CREUSR_0, "
+				+ "GEOATW.AUTILIS.NOMUSR_0 "
+				+ "FROM "
+				+ "GEOATW.ADJUSTM INNER JOIN GEOATW.AUTILIS "
+				+ "ON "
+				+ "GEOATW.ADJUSTM.CREUSR_0 = GEOATW.AUTILIS.USR_0 "
+				+ "WHERE "
+				+ "GEOATW.ADJUSTM.DAT_0 >= ? AND "
+				+ "GEOATW.ADJUSTM.DAT_0 <= ? AND "
+				+ "GEOATW.ADJUSTM.CREUSR_0 LIKE 'RFW%' "
+		        ,
+                new Object[]{startDate, endDate});
+        
+		List<GeodeMovement> result = new ArrayList<>();
+		GeodeMovement mvt = null;
+		
+        for(Map<String,Object> row: resultSet ){
+        	mvt = new GeodeMovement();
+        	mvt.setNumber((String)row.get("ADJNUM_0"));
+        	mvt.setItem((String)row.get("ITM_0"));
+        	mvt.setQuantity(((BigDecimal)row.get("CUQ_0")).intValue() + ((BigDecimal)row.get("CUQ_1")).intValue());
+        	mvt.setCreationDateTime(geodeMovementDateTimeConvert((Timestamp)row.get("DAT_0"), (String)row.get("TIM_0")));
+        	mvt.setMovementCode((String)row.get("MVT_0"));
+        	mvt.setStore((String)row.get("STO_0"));
+        	mvt.setSlot((String)row.get("SLO_0"));
+        	mvt.setCreationUserCode((String)row.get("CREUSR_0"));
+        	mvt.setCreationUserName((String)row.get("NOMUSR_0"));
+        	result.add(mvt);
+        }
+        
+		return result;
+	}
+
 }
