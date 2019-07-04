@@ -41,9 +41,24 @@
 		
 		function setToEnd(){
 			element = document.getElementById("logarea");
-			 element.focus();
-			 element.setSelectionRange(element.value.length,element.value.length);
-			
+			element.focus();
+			element.setSelectionRange(element.value.length,element.value.length);
+		}
+		</script>
+
+		<script>
+		/*document.addEventListener('copy', function(e){
+			  e.clipboardData.setData('text/plain', '\\\\atwsrv-java\\c$\\_APACHE_TOMCAT\\adr-app.log');
+			  e.preventDefault(); // default behaviour is to copy any selected text
+			});
+		*/
+		
+		function copypath() {
+			$(addr).show();
+			$(addr).focus();
+		    $(addr).select();
+			document.execCommand('copy');
+			$(addr).hide();
 		}
 		</script>
 	</div>
@@ -54,8 +69,8 @@
 					page</h2>
 			</div>
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-20">
-				<span th:utext="#{system.log.message}" class="flow-text "> Welcome
-					message </span>
+				<span th:utext="#{system.log.message}" class="flow-text ">
+					Welcome message </span>
 			</div>
 			<a th:href="@{/}" class="btn btn-link btn-sm"> <span
 				class="glyphicon glyphicon-menu-left"></span> <span
@@ -97,12 +112,22 @@
 			</div>
 		</div>
 		<!-- /PARAMETAERS -->
+
 		<!-- LOG FILE -->
+
 		<div class="row">
 			<div class="col-xs-12">
 				<h3 th:text="#{system.log.file}" class="text-primary underline"></h3>
 			</div>
+			<div class="col-xs-12">
+				<a onclick="copypath()" data-toggle="tooltip" data-placement="top"
+					th:title="#{action.copy}" href="#"> <span
+					class="glyphicon glyphicon-copy"></span> <span>\\atwsrv-java\c$\_APACHE_TOMCAT\adr-app.log</span>
+					<input style="display: none;" type="text" value="\\atwsrv-java\c$\_APACHE_TOMCAT\adr-app.log" id="addr"/>
+				</a>
+			</div>
 		</div>
+		<!--
 		<div class="row margin-top-10">
 			<div class="col-xs-12">
 				<div class="form-group">
@@ -112,6 +137,7 @@
 				</div>
 			</div>
 		</div>
+		 -->
 		<!-- /LOG FILE -->
 	</div>
 </body>

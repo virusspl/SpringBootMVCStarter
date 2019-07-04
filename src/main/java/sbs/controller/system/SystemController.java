@@ -34,11 +34,12 @@ public class SystemController {
 	@RequestMapping("/log")
 	public String home(Model model) {
 		model.addAttribute("parameters", parametersService.findAll());
-		model.addAttribute("logContent", getLogContent());
+		model.addAttribute("logfile", logFilePath);
+		//model.addAttribute("logContent", getLogContent());
 		return "system/log";
 	}
 
-
+	@SuppressWarnings("unused")
 	private String getLogContent() {
 		String log = "";
 		try {
