@@ -9,6 +9,7 @@
 .red {
 	color: #F50000;
 }
+
 .neutral {
 	
 }
@@ -58,7 +59,7 @@
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-xs-12">
-				<h1 th:text="|Lista zamówień osób zaufanych|" class="text-primary"></h1>
+				<h3 th:text="|Lista zamówień osób zaufanych|" class="text-primary"></h3>
 			</div>
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
 				<span
@@ -70,160 +71,170 @@
 				th:text="#{action.back}">back</span>
 			</a>
 		</div>
+		<div class="underline margin-top-10 margin-bottom-20"></div>
 
-		<div class="underline margin-top-10"></div>
 
-		<div th:if="!${active}">
-			<h1 th:text="|Nikt nie zbiera ;(|" class="text-primary"></h1>
-			<div sec:authorize="hasAnyRole('ROLE_CEBSMANAGER', 'ROLE_ADMIN')">
-				<a th:href="@{/cebs/manage/starttoday}"
-					class="btn btn-success btn-md margin-top-5"
-					th:onclick="|return confirm('Chcesz rozpocząć zbieranie na DZISIAJ?')|">
-					<span class="glyphicon glyphicon-ok"></span> <span
-					th:text="|Zbieraj na dziś!|"></span>
-				</a> <a th:href="@{/cebs/manage/starttomorrow}"
-					class="btn btn-warning btn-md margin-top-5"
-					th:onclick="|return confirm('Chcesz rozpocząć zbieranie na JUTRO?')|">
-					<span class="glyphicon glyphicon-ok"></span> <span
-					th:text="|Zbieraj jutro!|"></span>
-				</a>
-			</div>
-		</div>
-
-		<div th:if="${active}">
-			<h3
-				th:utext="|Zbieramy na dzień: &lt;b&gt;#{${dayCode}}&lt;/b&gt;, ${actionDate}. Organizator: &lt;b&gt;${organizer}&lt;/b&gt; ;)|"
-				class="text-primary"></h3>
-			<div sec:authorize="hasAnyRole('ROLE_CEBSMANAGER', 'ROLE_ADMIN')">
-				<a th:href="@{/cebs/manage}"
-					class="btn btn-success btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-th-list"></span> <span
-					th:text="|Zbiorczy podgląd zamówień|"></span>
-				</a> <a th:href="@{/cebs/manage/finish}"
-					class="btn btn-warning btn-md margin-top-5"
-					th:onclick="|return confirm('Wszystkie dotychczasowe zamówienia zostaną skasowane, akcja zbierania zostanie zatrzymana')|">
-					<span class="glyphicon glyphicon-ok"></span> <span
-					th:text="|Zakończ zbieranie zamówień i skasuj listę|"></span>
-				</a> <a th:href="@{/cebs/manage/cancel}"
-					class="btn btn-danger btn-md margin-top-5"
-					th:onclick="|return confirm('Rezygnujemy ze zbierania? Zamówienia zostaną skasowane, akcja odwołana, a użytkownicy powiadomieni mailowo')|">
-					<span class="glyphicon glyphicon-remove"></span> <span
-					th:text="|Anuluj akcję i powiadom wszystkich o odwołaniu|"></span>
-				</a>
-
-			</div>
-			<div class="underline margin-top-20"></div>
-
-			<h3 th:text="|Twoje zamówienie|" class="text-primary"></h3>
-			<div class="row">
-				<div class="col-xs-12 margin-top-00">
-					<div class="table-responsive">
-						<table id="srv" class="display">
-							<thead>
-								<tr>
-									<th th:text="|Nazwa|">head</th>
-									<th th:text="|Ile|">head</th>
-									<th th:text="|Suma [PLN]|">head</th>
-									<th th:text="|Uwagi|">head</th>
-									<th style="text-align: center;" th:text="|Zapłacone|">head</th>
-									<th style="text-align: center;" th:text="|Anuluj? :(|">head</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr th:each="item : ${items}" th:classappend="${item.paid} ? neutral : red">
-									<td><span
-										th:text="${item.item}"></span></td>
-									<td><span th:text="${item.quantity}"></span></td>
-									<td><span th:text="${item.amount}"></span></td>
-									<td><span th:text="${item.comment}"></span></td>
-									<td style="text-align: center;"><span
-										th:if="${item.paid}" class="glyphicon glyphicon-ok"></span> <span
-										th:if="!${item.paid}" class="glyphicon glyphicon-remove"></span>
-									</td>
-									<td style="text-align: center;"><a
-										th:href="|@{/cebs/order/delete/}${item.id}|"
-										th:onclick="|return confirm('Rezygnujesz z &quot;${item.item}&quot;?')|"
-										class="btn btn-danger btn-sm"> <span
-											class="glyphicon glyphicon-remove"></span> <span
-											th:text="#{action.remove}">back</span>
-									</a></td>
-								</tr>
-							</tbody>
-						</table>
+		<div class="row">
+			<div class="col-xs-12 col-md-7">
+				<div th:if="!${active}">
+					<h1 th:text="|Nikt nie zbiera ;(|" class="text-primary"></h1>
+					<div sec:authorize="hasAnyRole('ROLE_CEBSMANAGER', 'ROLE_ADMIN')">
+						<a th:href="@{/cebs/manage/starttoday}"
+							class="btn btn-success btn-md margin-top-5"
+							th:onclick="|return confirm('Chcesz rozpocząć zbieranie na DZISIAJ?')|">
+							<span class="glyphicon glyphicon-ok"></span> <span
+							th:text="|Zbieraj na dziś!|"></span>
+						</a> <a th:href="@{/cebs/manage/starttomorrow}"
+							class="btn btn-warning btn-md margin-top-5"
+							th:onclick="|return confirm('Chcesz rozpocząć zbieranie na JUTRO?')|">
+							<span class="glyphicon glyphicon-ok"></span> <span
+							th:text="|Zbieraj jutro!|"></span>
+						</a>
 					</div>
-					<h3 th:text="|Do zapłaty: ${amount} PLN|" class="text-danger"></h3>
 				</div>
-			</div>
-			<div class="underline margin-top-10"></div>
-			<h3 th:text="|Dodaj do swojego zamówienia|" class="text-primary"></h3>
 
-			<form th:action="@{/cebs/order/add}" method="post"
-				th:object="${cebsOrderForm}">
+				<div th:if="${active}">
+					<h3
+						th:utext="|Zbieramy na dzień: &lt;b&gt;#{${dayCode}}&lt;/b&gt;, ${actionDate}.&lt;/br&gt;Organizator: &lt;b&gt;${organizer}&lt;/b&gt; ;)|"
+						class="text-primary center"></h3>
+					<div class="margin-top-20 center" sec:authorize="hasAnyRole('ROLE_CEBSMANAGER', 'ROLE_ADMIN')">
+						<a th:href="@{/cebs/manage}"
+							class="btn btn-success btn-md margin-top-5"> <span
+							class="glyphicon glyphicon-th-list"></span> <span
+							th:text="|Zbiorczy podgląd zamówień|"></span>
+						</a> <a th:href="@{/cebs/manage/finish}"
+							class="btn btn-warning btn-md margin-top-5"
+							th:onclick="|return confirm('Wszystkie dotychczasowe zamówienia zostaną skasowane, akcja zbierania zostanie zatrzymana')|">
+							<span class="glyphicon glyphicon-ok"></span> <span
+							th:text="|Zakończ zbieranie zamówień i skasuj listę|"></span>
+						</a> <a th:href="@{/cebs/manage/cancel}"
+							class="btn btn-danger btn-md margin-top-5"
+							th:onclick="|return confirm('Rezygnujemy ze zbierania? Zamówienia zostaną skasowane, akcja odwołana, a użytkownicy powiadomieni mailowo')|">
+							<span class="glyphicon glyphicon-remove"></span> <span
+							th:text="|Anuluj akcję i powiadom wszystkich o odwołaniu|"></span>
+						</a>
 
-				<div class="row margin-top-10">
-					<div class="col-xs-9 col-sm-3">
-						<div class="form-group">
-							<!-- comment -->
-							<label for="quantity" th:text="|Ile|"></label> <select
-								class="form-control" id="quantity" th:field="*{quantity}">
-								<option value="1">1</option>
-								<option value="2">2</option>
-								<option value="3">3</option>
-								<option value="4">4</option>
-								<option value="5">5</option>
-								<option value="6">6</option>
-								<option value="7">7</option>
-								<option value="8">8</option>
-								<option value="9">9</option>
-								<option value="10">10</option>
-							</select>
+					</div>
+					<div class="underline margin-top-30"></div>
+
+					<h3 th:text="|Twoje zamówienie|" class="text-primary center"></h3>
+					<div class="row">
+						<div class="col-xs-12 margin-top-10">
+							<div class="table-responsive">
+								<table id="srv" class="display">
+									<thead>
+										<tr>
+											<th th:text="|Nazwa|">head</th>
+											<th th:text="|Ile|">head</th>
+											<th th:text="|Suma [PLN]|">head</th>
+											<th th:text="|Uwagi|">head</th>
+											<th style="text-align: center;" th:text="|Zapłacone|">head</th>
+											<th style="text-align: center;" th:text="|Anuluj? :(|">head</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="item : ${items}"
+											th:classappend="${item.paid} ? neutral : red">
+											<td><span th:text="${item.item}"></span></td>
+											<td><span th:text="${item.quantity}"></span></td>
+											<td><span th:text="${item.amount}"></span></td>
+											<td><span th:text="${item.comment}"></span></td>
+											<td style="text-align: center;"><span
+												th:if="${item.paid}" class="glyphicon glyphicon-ok"></span>
+												<span th:if="!${item.paid}"
+												class="glyphicon glyphicon-remove"></span></td>
+											<td style="text-align: center;"><a
+												th:href="|@{/cebs/order/delete/}${item.id}|"
+												th:onclick="|return confirm('Rezygnujesz z &quot;${item.item}&quot;?')|"
+												class="btn btn-danger btn-sm"> <span
+													class="glyphicon glyphicon-remove"></span> <span
+													th:text="#{action.remove}">back</span>
+											</a></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<h3 th:text="|Do zapłaty: ${amount} PLN|" class="text-danger"></h3>
 						</div>
-
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-xs-9 col-sm-3">
-						<div class="form-group">
-							<!-- comment -->
-							<label for="contents" th:text="|Uwagi|"></label> <input
-								type="text" class="form-control" id="comment" name="comment"
-								th:placeholder="|Uwagi|" th:field="*{comment}"></input>
+				<div class="underline margin-top-10"></div>
+			</div>
+			
+			<div class="col-xs-12 col-md-5" style="border-left: 1px solid #337ab7;">
+				<h3 th:text="|Dodaj do swojego zamówienia|" class="text-primary center"></h3>
+				<form th:action="@{/cebs/order/add}" method="post"
+					th:object="${cebsOrderForm}">
+					<div class="row margin-top-20">
+						<div class="col-xs-12">
+							<div class="form-group">
+								<!-- comment -->
+								<label for="quantity" th:text="|Ile|"></label> <select
+									class="form-control" id="quantity" th:field="*{quantity}">
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+									<option value="6">6</option>
+									<option value="7">7</option>
+									<option value="8">8</option>
+									<option value="9">9</option>
+									<option value="10">10</option>
+								</select>
+							</div>
+
 						</div>
-
+					</div>
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="form-group">
+								<!-- comment -->
+								<label for="contents" th:text="|Uwagi|"></label> <input
+									type="text" class="form-control" id="comment" name="comment"
+									th:placeholder="|Uwagi|" th:field="*{comment}"></input>
+							</div>
+						</div>
 					</div>
 
-				</div>
 
+					<div class="row margin-top-20">
+						<div class="col-xs-12">
+							<table class="table-hover"
+								style="border: 1px solid black; background: white; width: 100%;">
+								<thead>
+									<tr>
+										<th style="padding: 8px">Obraz</th>
+										<th style="padding: 8px">Produkt</th>
+										<th style="padding: 8px">Cena</th>
+										<th style="padding: 8px">Dodaj</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="mi: ${menu}">
+										<td style="padding: 8px"><img
+											style="width: 75px; height: 75px;"
+											th:src="|http://192.168.1.23/APACHE_IMG/cebs/${mi.id}.png|"></img></td>
+										<td style="padding: 8px"><span th:text="${mi.text}"></span></td>
+										<td style="padding: 8px"><span th:text="${mi.price}"></span></td>
+										<td style="padding: 8px">
+											<button class="btn btn-success btn-sm" type="submit"
+												name="add" th:value="${mi.id}">
+												<span class="glyphicon glyphicon-ok"></span> <span
+													th:text="#{action.add}">create</span>
+											</button>
+										</td>
+									</tr>
 
-				<div class="row">
-					<div class="col-xs-12">
-						<table class="table-hover"
-							style="border: 1px solid black; background: white;">
-							<thead>
-								<tr>
-									<th style="padding: 8px">Produkt</th>
-									<th style="padding: 8px">Cena</th>
-									<th style="padding: 8px">Dodaj</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr th:each="mi: ${menu}">
-									<td style="padding: 8px"><span th:text="${mi.text}"></span></td>
-									<td style="padding: 8px"><span th:text="${mi.price}"></span></td>
-									<td style="padding: 8px">
-										<button class="btn btn-success btn-sm" type="submit"
-											name="add" th:value="${mi.id}">
-											<span class="glyphicon glyphicon-ok"></span> <span
-												th:text="#{action.add}">create</span>
-										</button>
-									</td>
-								</tr>
-
-							</tbody>
-						</table>
+								</tbody>
+							</table>
+						</div>
 					</div>
-				</div>
-			</form>
+				</form>
+			</div>
+
+
+
 		</div>
 	</div>
 </body>
