@@ -5,9 +5,7 @@
 <head lang="pl">
 </head>
 <body>
-	<div layout:fragment="script">
-
-	</div>
+	<div layout:fragment="script"></div>
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-xs-12 col-xs-offset-0">
@@ -18,7 +16,7 @@
 				<span th:text="#{geolook.message}"> Welcome message </span>
 			</div>
 		</div>
-
+		<div class="underline margin-top-20"></div>
 		<form th:action="@{/geolook/search}" method="post"
 			th:object="${geodeSearchForm}">
 			<div class="row margin-top-20">
@@ -54,7 +52,8 @@
 		<!-- if div -->
 		<div th:if="${itemCode!=null}">
 			<!-- PRODUCT CODE AND DESCRIPTION -->
-			<div class="row margin-top-20" style="border-bottom: 1px solid #EFEFEF;">
+			<div class="row margin-top-20"
+				style="border-bottom: 1px solid #EFEFEF;">
 				<div class="col-xs-12 col-xs-offset-0 margin-top-5">
 					<h2 th:text="${itemCode}"></h2>
 					<h4 th:text="${itemDescription}"></h4>
@@ -62,9 +61,10 @@
 			</div>
 			<!-- NOTHING FOUND -->
 			<div class="row margin-top-20" th:if="${#lists.isEmpty(geodeList)}">
-			<div class="col-xs-12 col-xs-offset-0 alert alert-warning margin-top-5">
-				<span th:text="#{geolook.product.not.found.in.store}"></span>
-			</div>
+				<div
+					class="col-xs-12 col-xs-offset-0 alert alert-warning margin-top-5">
+					<span th:text="#{geolook.product.not.found.in.store}"></span>
+				</div>
 			</div>
 			<!-- LOCATIONS OF PRODUCT(S) -->
 			<div class="row margin-top-20" th:if="${!#lists.isEmpty(geodeList)}">
@@ -80,7 +80,7 @@
 									<th th:text="#{geolook.unit}">cell title</th>
 									<th th:text="#{geolook.input.date}">cell title</th>
 									<th th:text="#{geolook.object}">cell title</th>
-									
+
 								</tr>
 							</thead>
 							<tr th:each="obj : ${geodeList}">
@@ -89,7 +89,8 @@
 								<td style="padding: 5px;" th:text="${obj.address}"></td>
 								<td style="padding: 5px;" th:text="${obj.quantity}"></td>
 								<td style="padding: 5px;" th:text="${obj.unit}"></td>
-								<td style="padding: 5px;" th:text="${#dates.format(obj.inputDate, 'dd.MM.yyyy')}"></td>
+								<td style="padding: 5px;"
+									th:text="${#dates.format(obj.inputDate, 'dd.MM.yyyy')}"></td>
 								<td style="padding: 5px;" th:text="${obj.object}"></td>
 							</tr>
 						</table>
