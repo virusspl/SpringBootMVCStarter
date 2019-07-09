@@ -81,4 +81,6 @@ public interface JdbcOracleX3Service {
 	public Map<String, Double> getAllProductsQuantities(String company);
 	public String updateStandardCostsTable(String company);
 	public Map<String, X3StandardCostEntry> getStandardCostsMap(String company);
+	public List<X3Supplier> findProductSuppliers(String company, String productCode);
+	public X3SupplyStatInfo getSupplyStatistics(String company, String productCode, String supplierCode);
 }

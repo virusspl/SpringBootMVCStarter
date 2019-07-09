@@ -26,6 +26,7 @@ import sbs.model.x3.X3ShipmentStockLineWithPrice;
 import sbs.model.x3.X3StandardCostEntry;
 import sbs.model.x3.X3StoreInfo;
 import sbs.model.x3.X3Supplier;
+import sbs.model.x3.X3SupplyStatInfo;
 import sbs.model.x3.X3ToolEntry;
 import sbs.model.x3.X3UsageDetail;
 import sbs.model.x3.X3UtrFault;
@@ -100,6 +101,8 @@ public interface JdbcOracleX3Repository  {
 	public Map<String, X3StandardCostEntry> getStandardCostsMap(String company);
 	public void insertStandardCostsInQuickTable(List<X3StandardCostEntry> updateList,
 			List<X3StandardCostEntry> insertList, String company);
+	public List<X3Supplier> findProductSuppliers(String company, String productCode);
+	public X3SupplyStatInfo getSupplyStatistics(String company, String productCode, String supplierCode);
 	
 	
 }

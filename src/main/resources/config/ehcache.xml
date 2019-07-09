@@ -10,7 +10,7 @@
 
 <ehcache name="eh1" maxBytesLocalHeap="1000M">
 
-	<sizeOfPolicy maxDepth="5500" maxDepthExceededBehavior="abort"/> 
+
 
 	<diskStore path="C:/_APACHE_TOMCAT/adr-app.cache" />
 

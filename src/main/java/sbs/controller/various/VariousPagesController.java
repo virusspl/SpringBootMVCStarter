@@ -1,6 +1,7 @@
 package sbs.controller.various;
 
 import java.util.ArrayList;
+import java.util.List;
 /*
 import java.io.InputStream;
 import java.net.URL;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import sbs.controller.prodorigin.ComponentInfo;
+import sbs.controller.prodorigin.SupplyInfo;
 import sbs.helpers.ExcelContents;
 import sbs.helpers.ExcelExportHelper;
 import sbs.helpers.MathHelper;
@@ -31,6 +34,9 @@ import sbs.model.shipments.ShipmentState;
 import sbs.model.tools.ToolsProjectState;
 import sbs.model.users.Role;
 import sbs.model.users.User;
+import sbs.model.x3.X3Product;
+import sbs.model.x3.X3Supplier;
+import sbs.model.x3.X3SupplyStatInfo;
 import sbs.service.bhptickets.BhpTicketStateService;
 import sbs.service.bhptickets.BhpTicketsService;
 import sbs.service.geode.JdbcOracleGeodeService;
@@ -188,7 +194,8 @@ public class VariousPagesController {
 		model.addAttribute("numbers", randomArray);
 		System.out.println("time: " + (System.currentTimeMillis()-start) + " ms");
 		*/
-		
+		X3SupplyStatInfo statInfo = jdbcOracleX3Service.getSupplyStatistics("ATW", "9RE0048", "DWP002");
+		System.out.println(statInfo);
 		//List<X3Product> allProducts = jdbcOracleX3Service.findAllActiveProducts("ATW");
 		System.out.println(" <===> ");
 		//System.out.println(allProducts);
@@ -470,6 +477,14 @@ public class VariousPagesController {
 			inventoryTerminal.setName("ROLE_INVENTORYTERMINAL");
 			roleService.save(inventoryTerminal);
 			msg += "[role: " + inventoryTerminal.getName() + "], ";
+		}
+		
+		Role prodOriginUser = roleService.findByName("ROLE_PRODORIGINUSER");
+		if (prodOriginUser == null) {
+			prodOriginUser = new Role();
+			prodOriginUser.setName("ROLE_PRODORIGINUSER");
+			roleService.save(prodOriginUser);
+			msg += "[role: " + prodOriginUser.getName() + "], ";
 		}
 
 		User admin = userService.findByUsername("Admin");

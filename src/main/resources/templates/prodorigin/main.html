@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script"></div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12 col-xs-offset-0">
+				<h2 th:text="#{prodorigin.title}" class="text-primary">Hello on a
+					page</h2>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{prodorigin.message}"> Welcome message </span>
+			</div>
+		</div>
+		<div class="underline margin-top-20"></div>
+		<form th:action="@{/prodorigin/analyze}" method="post"
+			th:object="${prodOriginForm}">
+			<div class="row margin-top-20">
+				<div class="col-xs-4 col-sm-4">
+					<div class="form-group">
+						<label for="product" th:text="#{geolook.product}">Product</label>
+						<input type="text" class="form-control" id="product"
+							name="product" th:placeholder="#{geolook.product}"
+							th:field="*{product}" />
+						<div th:errors="*{product}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+			<div class="row margin-top-5">
+				<div class="col-xs-12">
+					<a th:href="@{/}" class="btn btn-link btn-sm"> <span
+						class="glyphicon glyphicon-menu-left"></span> <span
+						th:text="#{action.back}">back</span>
+					</a>
+					<button class="btn btn-primary btn-sm" type="submit" name="analyze"
+						onclick="disableLong(this)"
+						th:title="|#{general.warning.longtask} ~60-120s|"
+						data-toggle="tooltip" data-placement="bottom"
+					>
+						<span class="glyphicon glyphicon-random"></span> &nbsp; <span
+							th:text="#{action.analyze}">search</span>
+					</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

@@ -204,6 +204,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"SHIPMENTSTERMINAL"
 				)
 		.antMatchers(
+				"/prodorigin/**"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"PRODORIGINUSER"
+				)
+		.antMatchers(
 				"/admin", 
 				"/mailer/**", 
 				"/users/**",

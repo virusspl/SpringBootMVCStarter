@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/main">
+<head lang="pl">
+<style>
+.red{
+ 	color: red;
+}
+</style>
+</head>
+<body>
+	<div layout:fragment="script"></div>
+	<div layout:fragment="content">
+		<div class="row">
+			<a th:href="@{/prodorigin/main}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+		
+		<div class="underline margin-top-20"></div>
+
+		<div class="row">
+			<div class="col-xs-12">
+				<h2 th:text="|${productCode} - ${productDescription}|" class="text-primary"></h2>
+			</div>
+		</div>
+		<div class="underline margin-top-10"></div>
+		<div class="row">
+		<div th:each="component : ${components}" class="col-xs-12 margin-top-10">
+			<h4 th:text="|${component.product.code} - ${component.product.description} - ${component.quantityInBom} [${component.unit}]|"></h4>
+			<div class="table-responsive">
+				<table class="table table-striped table-hover" style="border: 1px dashed #337ab7;">
+					<thead>
+						<tr style="font-style: italic;">
+							<td><span th:text="#{general.supplier.code}"></span></td>
+							<td><span th:text="#{general.supplier.name}"></span></td>
+							<td><span th:text="#{general.country}"></span></td>
+							<td><span th:text="#{prodorigin.numberofreceptions}"></span></td>
+							<td><span th:text="#{prodorigin.quantitypurchased}"></span></td>
+							<td><span th:text="#{prodorigin.lastreceptionnumber}"></span></td>
+							<td><span th:text="#{prodorigin.lastreceptiondate}"></span></td>
+							<td><span th:text="#{prodorigin.lastreceptionprice}"></span></td>
+						</tr>
+					</thead>
+					<tbody>
+					<tr th:each="supp: ${component.supplyInfo}">
+						<td><span th:text="${supp.supplierCode}"></span></td>
+						<td><span th:text="${supp.supplierName}"></span></td>
+						<td><span th:text="${supp.supplierCountry}"></span></td>
+						<td><span th:text="${supp.numberOfReceptions}"></span></td>
+						<td><span th:text="${supp.purchasedQuantity}"></span></td>
+						<td><span th:text="${supp.lastReceptionDate}"></span></td>
+						<td><span th:text="${supp.lastReceptionNumber}"></span></td>
+						<td><span th:text="${#numbers.formatDecimal(supp.lastReceptionPrice, 1, 'DEFAULT', 2, 'DEFAULT')}"></span></td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+	<div class="col-xs-12">
+	
+	<div class="underline margin-top-10"></div>
+	
+	<h3 th:text="|#{general.summary}|" class="text-primary margin-bottom-20"></h3>
+			<div class="table-responsive">
+				<table class="table table-striped table-hover" style="border: 1px dashed #337ab7;">
+					<thead>
+						<tr>
+							<th><span th:text="#{general.supplier.code}"></span></th>
+							<th><span th:text="|EU|"></span></th>
+							<th><span th:text="|EU|"></span></th>
+							<th><span th:text="|IMPORT|"></span></th>
+							<th><span th:text="|IMPORT|"></span></th>
+						</tr>
+					</thead>
+					<tbody>
+					<tr th:each="entry: ${fusion}">
+						<td><span th:text="${entry.key}"></span></td>
+						<td><span th:if="${entry.value.europeLine}!=null" th:classappend="${entry.value.europeLine.euMember} ? normal : red" th:text="${entry.value.europeLine.supplier}"></span></td>
+						<td><span th:if="${entry.value.europeLine}!=null" th:classappend="${entry.value.europeLine.euMember} ? normal : red" th:text="${#numbers.formatDecimal(entry.value.europeLine.value, 1, 'DEFAULT', 2, 'DEFAULT')}"></span></td>
+						<td><span th:if="${entry.value.importLine}!=null" th:classappend="${entry.value.importLine.euMember} ? normal : red" th:text="${entry.value.importLine.supplier}"></span></td>
+						<td><span th:if="${entry.value.importLine}!=null" th:classappend="${entry.value.importLine.euMember} ? normal : red" th:text="${#numbers.formatDecimal(entry.value.importLine.value, 1, 'DEFAULT', 2, 'DEFAULT')}"></span></td>
+					</tr>
+					<tr style="font-weight: bold;">
+						<td><span th:text="#{general.summary}"></span></td>
+						<td><span th:text="|EU: ${#numbers.formatDecimal(euEuVal, 1, 'DEFAULT', 2, 'DEFAULT')}|"></span></td>
+						<td><span th:text="|IMP: ${#numbers.formatDecimal(euImpVal, 1, 'DEFAULT', 2, 'DEFAULT')}|"></span></td>
+						<td><span th:text="|EU: ${#numbers.formatDecimal(impEuVal, 1, 'DEFAULT', 2, 'DEFAULT')}|"></span></td>
+						<td><span th:text="|IMP: ${#numbers.formatDecimal(impImpVal, 1, 'DEFAULT', 2, 'DEFAULT')}|"></span></td>
+					</tr>
+					<tr style="font-weight: bold;">
+						<td><span th:text="| |"></span></td>
+						<td><span th:text="|${#numbers.formatDecimal(euEuProc, 1, 'DEFAULT', 2, 'DEFAULT')}% / ${#numbers.formatDecimal(euGenVal, 1, 'DEFAULT', 2, 'DEFAULT')}|"></span></td>
+						<td><span th:text="|${#numbers.formatDecimal(euImpProc, 1, 'DEFAULT', 2, 'DEFAULT')}% / ${#numbers.formatDecimal(euGenVal, 1, 'DEFAULT', 2, 'DEFAULT')}|"></span></td>
+						<td><span th:text="|${#numbers.formatDecimal(impEuProc, 1, 'DEFAULT', 2, 'DEFAULT')}% / ${#numbers.formatDecimal(euGenVal, 1, 'DEFAULT', 2, 'DEFAULT')}|"></span></td>
+						<td><span th:text="|${#numbers.formatDecimal(impImpProc, 1, 'DEFAULT', 2, 'DEFAULT')}% / ${#numbers.formatDecimal(euGenVal, 1, 'DEFAULT', 2, 'DEFAULT')}|"></span></td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+	</div>
+	</div>
+	<div class="row">
+			<a th:href="@{/prodorigin/main}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+	</div>
+</body>
+</html>

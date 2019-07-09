@@ -180,15 +180,21 @@
 					class="btn btn-info btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-check"></span> <span
 					th:text="#{prodcomp.title}"></span>
-				</a> <a th:if="${CANCEL_THIS}" th:href="@{/hrua/list}"
+				</a> <a th:href="@{/prodorigin/main}"
 					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-user"></span> <span
-					th:text="#{hrua.files}"></span>
+					class="glyphicon glyphicon-random"></span> &nbsp;<span
+					th:text="#{prodorigin.title}"></span>
 				</a> <a th:href="@{/consumption/dispatch}"
 					class="btn btn-info btn-md margin-top-5"> <span
 					class="glyphicon glyphicon-export"></span> <span
 					th:text="#{consumption.consumptionacv}">consumption</span>
 				</a>
+				<!-- cancel -->
+				<a th:if="${CANCEL_THIS}" th:href="@{/hrua/list}"
+					class="btn btn-info btn-md margin-top-5"> <span
+					class="glyphicon glyphicon-user"></span> <span
+					th:text="#{hrua.files}"></span>
+				</a> 
 			</div>
 			<!-- PRODUCTION -->
 			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">

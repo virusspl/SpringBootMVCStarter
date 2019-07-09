@@ -43,6 +43,7 @@ import sbs.model.x3.X3ShipmentStockLineWithPrice;
 import sbs.model.x3.X3StandardCostEntry;
 import sbs.model.x3.X3StoreInfo;
 import sbs.model.x3.X3Supplier;
+import sbs.model.x3.X3SupplyStatInfo;
 import sbs.model.x3.X3ToolEntry;
 import sbs.model.x3.X3UsageDetail;
 import sbs.model.x3.X3UtrFault;
@@ -2291,7 +2292,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			    + company + ".BOMD.BOMSEQ_0, "
 				+ company + ".BOMD.CPNITMREF_0, "
 				+ company + ".BOMD.LIKQTY_0, "
-				+ company + ".BOMD.BOMUOM_0, "
+				+ company + ".ITMMASTER.STU_0, "
 				+ company + ".BOMD.BOMSTRDAT_0, "
 				+ company + ".BOMD.BOMENDDAT_0, "
 				+ company + ".ITMMASTER.ITMDES1_0, "
@@ -2327,7 +2328,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         	item.setSequence(((BigDecimal)row.get("BOMSEQ_0")).intValue());
         	item.setPartCode((String)row.get("CPNITMREF_0"));
         	item.setPartDescription(((String)row.get("ITMDES1_0")) + " " +  ((String)row.get("ITMDES2_0")));
-        	item.setModelUnit((String)row.get("BOMUOM_0"));
+        	item.setModelUnit((String)row.get("STU_0"));
         	item.setModelQuantity(((BigDecimal)row.get("LIKQTY_0")).doubleValue());
         	
         	if(!map.containsKey(parent)){
@@ -2470,6 +2471,81 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				return updateList.size();
 			}
 		});
+		
+	}
+
+	@Override
+	public List<X3Supplier> findProductSuppliers(String company, String productCode) {
+		
+		List<Map<String,Object>> resultSet = jdbc.queryForList( ""
+				+ "SELECT "
+				+ "BPR.BPRNUM_0, "
+				+ "BPR.BPRNAM_0, "
+				+ "BPR.BPRNAM_1, "
+				+ "BPR.CRY_0, "
+				+ "TBC.EECFLG_0 "
+				+ "FROM ("
+				+ company + ".ITMBPS BPS INNER JOIN " + company + ".BPARTNER BPR "
+				+ "ON "
+				+ "BPS.BPSNUM_0 = BPR.BPRNUM_0 ) INNER JOIN " + company + ".TABCOUNTRY TBC "
+				+ "ON "
+				+ "BPR.CRY_0 = TBC.CRY_0 "
+				+ "WHERE "
+				+ "BPS.ITMREF_0 = ? "
+				,
+                new Object[]{productCode});
+		
+		List<X3Supplier> list = new ArrayList<>();
+        X3Supplier supplier;
+        for(Map<String,Object> row: resultSet ){
+        	supplier = new X3Supplier();
+        	supplier.setCode((String)row.get("BPRNUM_0"));
+        	supplier.setName((String)row.get("BPRNAM_0") + " " + (String)row.get("BPRNAM_1"));
+        	supplier.setCountry((String)row.get("CRY_0"));
+        	supplier.setEuMember(((BigDecimal)row.get("EECFLG_0")).intValue() == 2 ? true : false);
+        	
+        	list.add(supplier);
+        }
+        
+		return list;
+	}
+
+	@Override
+	public X3SupplyStatInfo getSupplyStatistics(String company, String productCode, String supplierCode) {
+
+		List<Map<String,Object>> resultSet = jdbc.queryForList( ""
+				+ "SELECT "
+				+ "PRC.RCPDAT_0, "
+				+ "PRC.PTHNUM_0, "
+				+ "PRC.QTYSTU_0, "
+				+ "PRC.BPSNUM_0, "
+				+ "PRC.ITMREF_0, "
+				+ "PRC.NETPRI_0, "
+				+ "ORD.CHGCOE_0 "
+				+ "FROM "
+				+ company + ".PRECEIPTD PRC INNER JOIN " + company + ".PORDER ORD "
+				+ "ON PRC.POHNUM_0 = ORD.POHNUM_0 "
+				+ "WHERE "
+				+ "PRC.BPSNUM_0 = ? "
+				+ "AND "
+				+ "PRC.ITMREF_0 = ? "
+				+ "ORDER BY PRC.RCPDAT_0 "
+				,
+                new Object[]{supplierCode, productCode});
+		
+		X3SupplyStatInfo info = new X3SupplyStatInfo();
+		
+        for(Map<String,Object> row: resultSet ){
+        	info.setProductCode((String)row.get("ITMREF_0"));
+        	info.setSupplierCode((String)row.get("BPSNUM_0"));
+        	info.setLastReceptionDate((Timestamp)row.get("RCPDAT_0"));
+        	info.setLastReceptionNumber((String)row.get("PTHNUM_0"));
+        	info.setNumberOfReceptions(info.getNumberOfReceptions() + 1);
+        	info.setPurchasedQuantity(info.getPurchasedQuantity() + ((BigDecimal)row.get("QTYSTU_0")).intValue());
+        	info.setLastReceptionPrice(((BigDecimal)row.get("NETPRI_0")).doubleValue() * ((BigDecimal)row.get("CHGCOE_0")).doubleValue());
+        }
+		
+		return info;
 		
 	}
 	

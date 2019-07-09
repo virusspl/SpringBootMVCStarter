@@ -33,6 +33,7 @@ import sbs.model.x3.X3ShipmentStockLineWithPrice;
 import sbs.model.x3.X3StandardCostEntry;
 import sbs.model.x3.X3StoreInfo;
 import sbs.model.x3.X3Supplier;
+import sbs.model.x3.X3SupplyStatInfo;
 import sbs.model.x3.X3ToolEntry;
 import sbs.model.x3.X3UsageDetail;
 import sbs.model.x3.X3UtrFault;
@@ -396,6 +397,16 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	@Override
 	public Map<String, X3StandardCostEntry> getStandardCostsMap(String company) {
 		return jdbcOracleX3Repository.getStandardCostsMap(company);
+	}
+
+	@Override
+	public List<X3Supplier> findProductSuppliers(String company, String productCode) {
+		return jdbcOracleX3Repository.findProductSuppliers(company, productCode);
+	}
+
+	@Override
+	public X3SupplyStatInfo getSupplyStatistics(String company, String productCode, String supplierCode) {
+		return jdbcOracleX3Repository.getSupplyStatistics(company, productCode, supplierCode);
 	}
 
 
