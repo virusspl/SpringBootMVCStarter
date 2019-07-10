@@ -271,6 +271,8 @@ public class ConsumptionController {
 		for(int i = 1; i<=12; i++){
 			headers.add((consInitYear) +"." + textHelper.fillWithLeadingZero(i+"", 2));
 		}
+		headers.add("Consumption " + (consInitYear-2) + " I");
+		headers.add("Consumption " + (consInitYear-2) + " II");
 		headers.add("Consumption " + (consInitYear-2));
 		headers.add("Consumption " + (consInitYear-1));
 		headers.add("Consumption " + consInitYear);
@@ -310,10 +312,18 @@ public class ConsumptionController {
 			lineValues.add(lastSupply.containsKey(product.getProductCode()) ? lastSupply.get(product.getProductCode()).getDate() : "" );
 			int tmpPeriod; 
 			int prevPrevSum = 0;
+			int prevPrevSumA = 0;
+			int prevPrevSumB = 0;
 			// y -2 sum
 			if (consumption0.containsKey(product.getProductCode())) {
 				for(Map.Entry<Integer, Integer> entry: consumption0.get(product.getProductCode()).entrySet()){
 					prevPrevSum+= entry.getValue();
+					if(entry.getKey() < Integer.parseInt((consInitYear-2)+"07")){
+						prevPrevSumA += entry.getValue();
+					}
+					else{
+						prevPrevSumB += entry.getValue();
+					}
 				}
 			}
 
@@ -347,6 +357,9 @@ public class ConsumptionController {
 					lineValues.add("");
 				}
 			}
+			
+			lineValues.add(prevPrevSumA);
+			lineValues.add(prevPrevSumB);
 			lineValues.add(prevPrevSum);
 			lineValues.add(prevSum);
 			lineValues.add(currSum);
