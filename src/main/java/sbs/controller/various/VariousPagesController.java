@@ -1,7 +1,6 @@
 package sbs.controller.various;
 
 import java.util.ArrayList;
-import java.util.List;
 /*
 import java.io.InputStream;
 import java.net.URL;
@@ -20,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import sbs.controller.prodorigin.ComponentInfo;
-import sbs.controller.prodorigin.SupplyInfo;
 import sbs.helpers.ExcelContents;
 import sbs.helpers.ExcelExportHelper;
 import sbs.helpers.MathHelper;
@@ -34,8 +31,6 @@ import sbs.model.shipments.ShipmentState;
 import sbs.model.tools.ToolsProjectState;
 import sbs.model.users.Role;
 import sbs.model.users.User;
-import sbs.model.x3.X3Product;
-import sbs.model.x3.X3Supplier;
 import sbs.model.x3.X3SupplyStatInfo;
 import sbs.service.bhptickets.BhpTicketStateService;
 import sbs.service.bhptickets.BhpTicketsService;
