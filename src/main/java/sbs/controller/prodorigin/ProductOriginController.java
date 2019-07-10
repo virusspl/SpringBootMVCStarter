@@ -28,10 +28,6 @@ import sbs.service.x3.JdbcOracleX3Service;
 @RequestMapping("prodorigin")
 public class ProductOriginController {
 
-	// TODO ehcache size of policy
-	// + order + BOM by ref date from order ...
-	// + prizes + % of UE / imp
-
 	@Autowired
 	MessageSource messageSource;
 	@Autowired
