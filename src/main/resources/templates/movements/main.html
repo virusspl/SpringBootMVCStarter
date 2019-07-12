@@ -275,12 +275,12 @@
 				th:text="#{action.back}">back</span>
 			</a>
 		</div>
-		<div class="underline"></div>
+		<div class="underline margin-top-10"></div>
 		<!-- FORM -->
 		<form th:action="@{/movements/calculate}" method="post"
 			th:object="${movementsForm}">
 			<!-- DATES RANGE -->
-			<div class="row margin-top-10">
+			<div class="row margin-top-00">
 				<div class="col-xs-12">
 					<h3 class="text-primary" th:text="#{movements.date.range}">Panel
 						With title</h3>
@@ -314,10 +314,6 @@
 			<!-- /DATES RANGE -->
 			<div class="row margin-top-5">
 				<div class="col-xs-12">
-					<a th:href="@{/}" class="btn btn-link btn-sm"> <span
-						class="glyphicon glyphicon-menu-left"></span> <span
-						th:text="#{action.back}">back</span>
-					</a>
 					<div class="shipment_buttons margin-top-5">
 						<!-- 
 				sec:authorize="hasAnyRole(
@@ -376,6 +372,7 @@
 								th:text="#{movements.rcpweightdetails}">search</span>
 						</button>
 					</div>
+					<div class="underline margin-top-30"></div>
 				</div>
 			</div>
 		</form>
