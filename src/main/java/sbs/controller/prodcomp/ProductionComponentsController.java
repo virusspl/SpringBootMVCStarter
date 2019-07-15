@@ -135,6 +135,7 @@ public class ProductionComponentsController {
 				line.add(entry.getKey());
 				line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getDescription() : "-");
 				line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getCategory() : "-");
+				line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getGr2() : "-");
 				line.add(textHelper.numberFormatIntegerRoundSpace(x3));				
 				line.add(textHelper.numberFormatIntegerRoundSpace(geode));												
 				line.add(textHelper.numberFormatIntegerRoundSpace(qty));

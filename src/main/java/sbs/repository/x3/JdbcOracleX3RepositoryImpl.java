@@ -337,7 +337,8 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 						+ company + ".ITMMASTER.ITMREF_0, "
 						+ company + ".ITMMASTER.ITMDES1_0, "
 						+ company + ".ITMMASTER.ITMDES2_0, "
-						+ company + ".ITMMASTER.TCLCOD_0 "
+						+ company + ".ITMMASTER.TCLCOD_0, "
+						+ company + ".ITMMASTER.TSICOD_1 "
 						+ "FROM " 
 						+ company + ".ITMMASTER "						
 						+ "WHERE "
@@ -352,6 +353,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			product.setCode((String)row.get("ITMREF_0"));
 			product.setDescription(((String)row.get("ITMDES1_0")) + " " +  ((String)row.get("ITMDES2_0")));
 			product.setCategory((String)row.get("TCLCOD_0"));
+			product.setGr2((String)row.get("TSICOD_1"));
 			result.put(product.getCode(), product);
 		}
 		

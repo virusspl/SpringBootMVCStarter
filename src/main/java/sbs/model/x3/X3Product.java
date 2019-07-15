@@ -5,6 +5,7 @@ public class X3Product {
 	private String code;
 	private String description;
 	private String category;
+	private String gr2;
 
 	public X3Product() {
 	
@@ -15,6 +16,14 @@ public class X3Product {
 		this.code = code;
 		this.description = description;
 		this.category = category;
+	}
+	
+	public X3Product(String code, String description, String category, String gr2) {
+		super();
+		this.code = code;
+		this.description = description;
+		this.category = category;
+		this.gr2 = gr2;
 	}
 
 	public String getCode() {
@@ -40,11 +49,23 @@ public class X3Product {
 	public void setCategory(String category) {
 		this.category = category;
 	}
+	
+
+	public String getGr2() {
+		return gr2;
+	}
+
+	public void setGr2(String gr2) {
+		this.gr2 = gr2;
+	}
 
 	@Override
 	public String toString() {
-		return "X3Product [code=" + code + ", description=" + description + ", category=" + category + "]";
+		return "X3Product [code=" + code + ", description=" + description + ", category=" + category + ", gr2=" + gr2
+				+ "]";
 	}
+
+
 	
 	
 	
