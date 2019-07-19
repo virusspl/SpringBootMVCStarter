@@ -1,6 +1,7 @@
 package sbs.controller.various;
 
 import java.util.ArrayList;
+import java.util.List;
 /*
 import java.io.InputStream;
 import java.net.URL;
@@ -23,6 +24,7 @@ import sbs.helpers.ExcelContents;
 import sbs.helpers.ExcelExportHelper;
 import sbs.helpers.MathHelper;
 import sbs.model.bhptickets.BhpTicketState;
+import sbs.model.hr.HrUserInfo;
 import sbs.model.inventory.InventoryDataType;
 import sbs.model.qcheck.QCheckState;
 import sbs.model.qsurveys.QSurveyQuestionType;
@@ -117,15 +119,6 @@ public class VariousPagesController {
 	}
 
 	
-	@RequestMapping(value = "/terminal/test")
-	public String terminalTest(Model model) {
-		model.addAttribute("msg", "Current message from controller");
-		model.addAttribute("live", "Live feed from server");
-		model.addAttribute("warning", "Warning message during input");
-		model.addAttribute("error", "Error message of any kind");
-		return "welcome_terminal";
-	}
-	
 	@RequestMapping("/excel")
 	public ModelAndView getExcel() {
 		// create excel contents
@@ -166,40 +159,32 @@ public class VariousPagesController {
 		return "/various/timer"; 
 	}
 	
-	
 	@RequestMapping("/test")
 	public String test(Model model, Locale locale) throws InterruptedException {
-		//long start = System.currentTimeMillis();
-//    	List<X3CoverageData> initialData = jdbcOracleX3Service.getCoverageInitialData("ATW");
-//    	Map<String, String> descriptions = jdbcOracleX3Service.getDescriptionsByLanguage(jdbcOracleX3Service.convertLocaleToX3Lang(locale), "ATW");
-//		Map<String, Integer> demand = jdbcOracleX3Service.getAcvDemandList("ATW");
-//		List<X3UsageDetail> usage = jdbcOracleX3Service.getAcvUsageDetailsListByYear(2017, "ATW");
-//		Map<String, X3Supplier> suppliers = jdbcOracleX3Service.getFirstAcvSuppliers("ATW");		
-	
-		//jdbcOracleX3Service.updateStandardCostsTable("WPS");
 		
-		//int min = 1;
-		//int max = 100;
-		/*(ArrayList<Integer> randomArray = new ArrayList<>();
+		List<HrUserInfo> list = jdbcAdrOptimaService.findAllCurrentlyEmployed();
 		
-		for(int i = 0; i<30; i++){
-			Thread.sleep(2100);
-			randomArray.add(mathHelper.randomInRange(1, 100));
+		for(HrUserInfo inf: list){
+			//if(inf.getId().equals("01116")){
+				System.out.println(inf.getId() + " " + inf.getLastName() + " " + inf.getFirstName() + " " + inf.getRcpNumber());
+			//}
 		}
-		model.addAttribute("numbers", randomArray);
-		System.out.println("time: " + (System.currentTimeMillis()-start) + " ms");
-		*/
-		X3SupplyStatInfo statInfo = jdbcOracleX3Service.getSupplyStatistics("ATW", "9RE0048", "DWP002");
-		System.out.println(statInfo);
-		//List<X3Product> allProducts = jdbcOracleX3Service.findAllActiveProducts("ATW");
-		System.out.println(" <===> ");
-		//System.out.println(allProducts);
 		
+		System.out.println("id: "+jdbcAdrOptimaService.findCurrentlyEmployedById("01116").getLastName());
+		System.out.println("card: "+jdbcAdrOptimaService.findCurrentlyEmployedByCardNo("2200D84DD0").getLastName());
 		
 		return "various/test";
-
 	}
-
+	
+	@RequestMapping(value = "/terminal/test")
+	public String terminalTest(Model model) {
+		model.addAttribute("msg", "Current message from controller");
+		model.addAttribute("live", "Live feed from server");
+		model.addAttribute("warning", "Warning message during input");
+		model.addAttribute("error", "Error message of any kind");
+		return "welcome_terminal";
+	}
+	
 	@RequestMapping("/testprint")
 	public String testprint(Model model) {
 		return "various/testprint";
