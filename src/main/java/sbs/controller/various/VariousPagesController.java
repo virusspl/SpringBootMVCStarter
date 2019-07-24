@@ -33,7 +33,6 @@ import sbs.model.shipments.ShipmentState;
 import sbs.model.tools.ToolsProjectState;
 import sbs.model.users.Role;
 import sbs.model.users.User;
-import sbs.model.x3.X3SupplyStatInfo;
 import sbs.service.bhptickets.BhpTicketStateService;
 import sbs.service.bhptickets.BhpTicketsService;
 import sbs.service.geode.JdbcOracleGeodeService;
