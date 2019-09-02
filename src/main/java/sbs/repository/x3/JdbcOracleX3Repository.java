@@ -18,6 +18,7 @@ import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ProductSellDemand;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3PurchaseOrder;
+import sbs.model.x3.X3RouteLine;
 import sbs.model.x3.X3SalesOrder;
 import sbs.model.x3.X3SalesOrderItem;
 import sbs.model.x3.X3SalesOrderLine;
@@ -103,6 +104,8 @@ public interface JdbcOracleX3Repository  {
 			List<X3StandardCostEntry> insertList, String company);
 	public List<X3Supplier> findProductSuppliers(String company, String productCode);
 	public X3SupplyStatInfo getSupplyStatistics(String company, String productCode, String supplierCode);
+	public Map<String, Map<Integer, X3RouteLine>> getRoutesMap(String company);
+	public Map<String, String> getWorkcenterNumbersMapByMachines(String company);
 	
 	
 }

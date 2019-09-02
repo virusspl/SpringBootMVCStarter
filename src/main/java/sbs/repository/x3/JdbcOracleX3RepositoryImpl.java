@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -35,6 +36,7 @@ import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ProductSellDemand;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3PurchaseOrder;
+import sbs.model.x3.X3RouteLine;
 import sbs.model.x3.X3SalesOrder;
 import sbs.model.x3.X3SalesOrderItem;
 import sbs.model.x3.X3SalesOrderLine;
@@ -2550,11 +2552,87 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		return info;
 		
 	}
+
+	@Override
+	public Map<String, Map<Integer, X3RouteLine>> getRoutesMap(String company) {
+		
+		Map<String, Map<Integer, X3RouteLine>> result = new HashMap<>();
+		Map<Integer, X3RouteLine> route;
+
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+						"SELECT "
+						+ "ROO.OPENUM_0, "
+						+ "ROO.ITMREF_0, "
+						+ "ROO.ROODES_0, "
+						+ "ROO.WST_0, "
+						+ "ROO.LABWST_0, "
+						+ "ROO.X_SULABWST_0, "
+						+ "ROO.SETTIM_0, "
+						+ "ROO.WAITIM_0, "
+						+ "ROO.X_SULABNR_0, "
+						+ "ROO.X_SUESNR_0 "
+						+ "FROM " + company + ".ROUOPE ROO "
+						+ "WHERE ROO.ROUALT_0 = 1 "
+						+ "ORDER BY ROO.OPENUM_0 ASC",
+                new Object[]{});
+
+		X3RouteLine line = null;
+		String code;
+		int ope;
+		
+        for(Map<String,Object> row: resultSet ){
+        	// keys
+        	code = (String)row.get("ITMREF_0");
+        	ope = ((BigDecimal)row.get("OPENUM_0")).intValue();
+        	// object
+        	line = new X3RouteLine();
+        	line.setOperationNumber(ope);
+        	line.setCode(code);
+        	line.setOperationDescription((String)row.get("ROODES_0"));
+        	line.setMachine((String)row.get("WST_0"));
+        	line.setCenter((String)row.get("LABWST_0"));
+        	line.setSquad((String)row.get("X_SULABWST_0"));
+        	line.setSetTime(((BigDecimal)row.get("SETTIM_0")).doubleValue());
+        	line.setWaitTime(((BigDecimal)row.get("WAITIM_0")).doubleValue());
+        	line.setPersonPreparing(((BigDecimal)row.get("X_SULABNR_0")).doubleValue());
+        	line.setFrazLavorazione(((BigDecimal)row.get("X_SUESNR_0")).doubleValue());
+        	
+        	// assign
+        	if(!result.containsKey(code)){
+        		// create route map
+        		route = new TreeMap<>();
+        		route.put(ope,line);
+        		// add route
+        		result.put(code, route);
+        	}
+        	else{
+        		route = result.get(code);
+        		route.put(ope, line);
+        	}
+        }
+		
+		return result;
+	}
+
+	@Override
+	public Map<String, String> getWorkcenterNumbersMapByMachines(String company) {
+
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+						"SELECT "
+						+ "WST.WST_0, "
+						+ "WST.WCR_0 "
+						+ "FROM " + company + ".WORKSTATIO WST",
+                new Object[]{});
+
+		
+		Map<String,String> result = new HashMap<>();
+		
+        for(Map<String,Object> row: resultSet ){
+        	result.put((String)row.get("WST_0"), (String)row.get("WCR_0"));
+        }
+		
+		return result;
+	}
 	
-
-
-
-
-
 
 }

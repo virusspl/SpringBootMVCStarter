@@ -2,6 +2,8 @@ package sbs.controller.saleship;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -18,6 +20,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import sbs.helpers.TextHelper;
 import sbs.model.x3.X3Client;
+import sbs.model.x3.X3RouteLine;
+import sbs.model.x3.X3SalesOrderLine;
 import sbs.service.x3.JdbcOracleX3Service;
 
 @Controller
@@ -31,20 +35,66 @@ public class SaleShipController {
 	@Autowired
 	TextHelper textHelper;
 	
-	private List<X3Client> availableClients;
+	private static final String DEPARTMENT_ASSEMBLY = "department.assembly";
+	private static final String DEPARTMENT_WELDING = "department.welding";
+	private static final String DEPARTMENT_MECHANICAL = "department.mechanical";
+	private static final String DEPARTMENT_UNASSIGNED= "department.unassigned";
 	
-	@ModelAttribute("availableClients")
-	public List<X3Client> availableClients() {
-		return availableClients;
-	}
+	private String[] assemblyCenters;
+	private String[] weldingCenters;
+	private String[] mechanicalCenters;
+	
 	
 	public SaleShipController() {
-		
+		assemblyCenters = new String[]{"08","09","10","11","12","13"};
+		weldingCenters = new String[]{"15","16","18","19"};
+		mechanicalCenters = new String[]{"01","02","03","04","06","07","14"};
+	}
+	
+	private boolean isStringInArray(String str, String[] array){
+		boolean result = false;
+		for(String s: array){
+			if(s.equals(str)){
+				return true;
+			}
+		}
+		return result;
 	}
 
+	private String getMainDepartmentCodeByMachineCenter(String center){
+		if(isStringInArray(center, assemblyCenters)){
+			return DEPARTMENT_ASSEMBLY;
+		}
+		else if(isStringInArray(center, weldingCenters)){
+			return DEPARTMENT_WELDING;
+		}
+		else if(isStringInArray(center, mechanicalCenters)){
+			return DEPARTMENT_MECHANICAL;
+		}
+		else{
+			return DEPARTMENT_UNASSIGNED;
+		}
+	}
+	
+	private X3RouteLine getLastRouteLineExcludingKAL(Map<Integer, X3RouteLine> routeLinesMap){
+		X3RouteLine result = null;
+	
+		for(X3RouteLine entry: routeLinesMap.values()){
+			if(entry.getMachine().startsWith("KAL")){
+				if(result==null){
+					result = entry;
+				}
+			}
+			else {
+				result = entry;
+			}
+		}
+		return result;
+		
+	}
+	
 	@RequestMapping(value = "/main")
 	public String showForm(Model model) {
-		//availableClients = x3Service.findAllClients("ATW");
 		model.addAttribute("saleShipForm", new SaleShipForm());
 		return "saleship/main";		
 	}
@@ -59,11 +109,17 @@ public class SaleShipController {
 			return "saleship/main";
 		}	
 		
-		System.out.println(saleShipForm.getStartDate() + " - " + saleShipForm.getEndDate());
+		List<X3SalesOrderLine> orderLines = x3Service.findOpenedSalesOrderLinesInPeriod(saleShipForm.getStartDate(), saleShipForm.getEndDate(), "ATW");
+		Map<String, Map<Integer, X3RouteLine>> routes = x3Service.getRoutesMap("ATW");
+		Map<String, String> workcenters = x3Service.getWorkcenterNumbersMapByMachines("ATW");
 		
-		//x3Service.findOpenedSalesOrderLinesInPeriod(saleShipForm.getStartDate(), saleShipForm.getEndDate(), "ATW");
+		for(Map<Integer, X3RouteLine> map: routes.values()){
+			for(X3RouteLine line: map.values()){
+				System.out.println("-" + line);
+			}
+			System.out.println("final operation: " + getLastRouteLineExcludingKAL(map));
+		}
 		
-
 		return "saleship/main";
 	}
 	
