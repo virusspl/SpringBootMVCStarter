@@ -1417,6 +1417,32 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	}
 	
 	@Override
+	public Map<String, Integer> findGeneralMagStock(String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+						+ company + ".ITMMASTER.ITMREF_0, "
+						+ "Sum("+ company + ".STOCK.QTYSTU_0) AS QUANTITY "
+						+ "FROM "
+						+ company + ".ITMMASTER INNER JOIN " + company + ".STOCK "
+						+ "ON "
+						+ company + ".ITMMASTER.ITMREF_0 = " + company + ".STOCK.ITMREF_0 "
+						+ "WHERE "
+						+ company + ".STOCK.LOC_0 = ? "
+						+ "GROUP BY "
+						+ company + ".ITMMASTER.ITMREF_0"
+						,
+						new Object[]{"MAG"}
+				);
+		
+		Map <String, Integer> map = new HashMap<>();
+		for(Map<String,Object> row: resultSet ){
+			map.put(((String)row.get("ITMREF_0")), ((BigDecimal)row.get("QUANTITY")).intValue());
+		}
+		
+		return map;
+	}
+	
+	@Override
 	public Map<String, Integer> findAcvShipStock(String company) {
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
@@ -1439,6 +1465,36 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 						+ company + ".ITMMASTER.ITMREF_0"
 						,
 						new Object[]{"ACV", "QGX", "WGX01", "GEODE"}
+				);
+		
+		Map <String, Integer> map = new HashMap<>();
+		for(Map<String,Object> row: resultSet ){
+			map.put(((String)row.get("ITMREF_0")), ((BigDecimal)row.get("QUANTITY")).intValue());
+		}
+		
+		return map;
+	}
+	
+	@Override
+	public Map<String, Integer> findGeneralShipStock(String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+						+ company + ".ITMMASTER.ITMREF_0, "
+						+ "Sum("+ company + ".STOCK.QTYSTU_0) AS QUANTITY "
+						+ "FROM "
+						+ company + ".ITMMASTER INNER JOIN " + company + ".STOCK "
+						+ "ON "
+						+ company + ".ITMMASTER.ITMREF_0 = " + company + ".STOCK.ITMREF_0 "
+						+ "WHERE "
+						+ company + ".STOCK.LOC_0 = ? "
+						+ "OR "
+						+ company + ".STOCK.LOC_0 = ? "
+						+ "OR "						
+						+ company + ".STOCK.LOC_0 = ? "
+						+ "GROUP BY "
+						+ company + ".ITMMASTER.ITMREF_0"
+						,
+						new Object[]{"QGX", "WGX01", "GEODE"}
 				);
 		
 		Map <String, Integer> map = new HashMap<>();
@@ -2633,6 +2689,34 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		
 		return result;
 	}
-	
+
+	@Override
+	/*
+	 * key & value format: "number/line"
+	 */
+	public Map<String, String> getPendingProductionOrdersBySaleOrders(String company) {
+
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+						"SELECT "
+						+ "MFI.VCRNUMORI_0, "
+						+ "MFI.VCRLINORI_0, "
+						+ "MFI.MFGNUM_0, "
+						+ "MFI.MFGLIN_0 "
+						+ "FROM "
+						+ company + ".MFGITM MFI "
+						+ "WHERE "
+						+ "MFI.ITMSTA_0 < 3 ",
+                new Object[]{});
+
+		
+		Map<String,String> result = new HashMap<>();
+		
+        for(Map<String,Object> row: resultSet ){
+        	result.put((String)row.get("VCRNUMORI_0")+"/"+((BigDecimal)row.get("VCRLINORI_0")).intValue(), (String)row.get("MFGNUM_0")+"/"+((BigDecimal)row.get("MFGLIN_0")).intValue());
+        }
+		
+		return result;
+	}
+
 
 }

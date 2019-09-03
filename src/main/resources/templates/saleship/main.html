@@ -69,7 +69,7 @@
 				language : {
 					url : getUrl() + "polish.json",
 				},
-				order : [ [ 0, 'asc' ] ],
+				order : [ [ 6, 'asc' ] ],
 				paging: true,
 				dom : 'Bfrtip',
 				buttons : [
@@ -89,7 +89,7 @@
 				language : {
 					url : getUrl() + "english.json"
 				},
-				order : [ [ 0, 'asc' ] ],
+				order : [ [ 6, 'asc' ] ],
 				paging: true,
 				dom : 'Bfrtip',
 				buttons : [
@@ -109,7 +109,7 @@
 				language : {
 					url : getUrl() + "italian.json"
 				},
-				order : [ [ 0, 'asc' ] ],
+				order : [ [ 6, 'asc' ] ],
 				paging: true,
 				dom : 'Bfrtip',
 				buttons : [
@@ -188,7 +188,7 @@
 						data-toggle="tooltip" data-placement="bottom" th:title="#{general.warning.longtask}"
 						>
 						<span class="glyphicon glyphicon-search"></span> <span
-							th:text="#{prodtosale.makelist}">search</span>
+							th:text="#{action.submit}">search</span>
 					</button>
 				</div>
 			</div>
@@ -206,41 +206,62 @@
 						<table id="srv" class="display" style="font-size: 90%;">
 							<thead>
 								<tr>
-									<th th:text="#{general.order}">head</th>
+									<th th:text="#{general.order.sales}">head</th>
+									<th th:text="#{general.line}">head</th>
+									<th th:text="|#{general.order.production} / #{general.line}|">head</th>									
+									<th th:text="#{general.client.code}">head</th>
+									<th th:text="#{general.client.name}">head</th>
 									<th th:text="#{general.demandedDate.short}">head</th>
 									<th th:text="#{general.productCode}">head</th>
 									<th th:text="#{general.productDescription}">head</th>
-									<th th:text="#{prodtosale.ordered}">head</th>
-									<th th:text="#{general.code.sub}">head</th>
-									<th th:text="#{general.operation}">head</th>
+									<th th:text="|Gr.1|">head</th>
 									<th th:text="#{general.machine}">head</th>
-									<th th:text="#{general.tool}">head</th>
+									<th th:text="#{general.department}">head</th>
+									<th th:text="#{department.production}">head</th>
+									<th th:text="#{department.shipments}">head</th>
+									<th th:text="#{saleship.lefttosend}">head</th>
+									<th th:text="#{saleship.shipped}">head</th>
+									<th th:text="#{saleship.togive}">head</th>
 								</tr>
 							</thead>
 							<tfoot>
 								<tr>
-									<th th:text="#{general.order}">head</th>
+									<th th:text="#{general.order.sales}">head</th>
+									<th th:text="#{general.line}">head</th>
+									<th th:text="|#{general.order.production} / #{general.line}|">head</th>									
+									<th th:text="#{general.client.code}">head</th>
+									<th th:text="#{general.client.name}">head</th>
 									<th th:text="#{general.demandedDate.short}">head</th>									
 									<th th:text="#{general.productCode}">head</th>
 									<th th:text="#{general.productDescription}">head</th>
-									<th th:text="#{prodtosale.ordered}">head</th>
-									<th th:text="#{general.code.sub}">head</th>
-									<th th:text="#{general.operation}">head</th>
+									<th th:text="|Gr.1|">head</th>
 									<th th:text="#{general.machine}">head</th>
-									<th th:text="#{general.tool}">head</th>
+									<th th:text="#{general.department}">head</th>
+									<th th:text="#{department.production}">head</th>
+									<th th:text="#{department.shipments}">head</th>
+									<th th:text="#{saleship.lefttosend}">head</th>
+									<th th:text="#{saleship.shipped}">head</th>
+									<th th:text="#{saleship.togive}">head</th>
 								</tr>
 							</tfoot>
 							<tbody>
 								<tr th:each="line : ${list}">
-									<td><span th:text="${line.order}"></span></td>
+									<td><span th:text="${line.salesOrder}"></span></td>
+									<td><span th:text="${line.salesOrderLine}"></span></td>
+									<td><span th:text="${line.productionOrderAndLine}"></span></td>
+									<td><span th:text="${line.clientCode}"></span></td>
+									<td><span th:text="${line.clientName}"></span></td>
 									<td><span th:text="${#dates.format(line.demandedDate, 'yyyy.MM.dd')}"></span></td>
 									<td><span th:text="${line.productCode}"></span></td>
 									<td><span th:text="${line.productDescription}"></span></td>
-									<td><span th:text="${line.quantity}"></span></td>
-									<td><span th:text="${line.tool.code}"></span></td>
-									<td><span th:text="${line.tool.operation}"></span></td>
-									<td><span th:text="${line.tool.machine}"></span></td>
-									<td><span th:text="${line.tool.tool}"></span></td>
+									<td><span th:text="${line.productGr1}"></span></td>
+									<td><span th:text="${line.machineCode}"></span></td>
+									<td><span th:text="#{${line.departmentCode}}"></span></td>
+									<td><span th:text="${line.stockProduction}"></span></td>
+									<td><span th:text="${line.stockShipments}"></span></td>
+									<td><span th:text="${line.quantityRemainingToShip}"></span></td>
+									<td><span th:text="${line.quantityShipped}"></span></td>
+									<td><span th:text="${line.quantityToGive}"></span></td>
 								</tr>
 							</tbody>
 						</table>

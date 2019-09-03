@@ -411,6 +411,7 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	}
 
 	@Override
+	@Cacheable(value="x3RoutesMap")
 	public Map<String, Map<Integer, X3RouteLine>> getRoutesMap(String company) {
 			return jdbcOracleX3Repository.getRoutesMap(company);
 	}
@@ -418,6 +419,21 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	@Override
 	public Map<String, String> getWorkcenterNumbersMapByMachines(String company) {
 		return jdbcOracleX3Repository.getWorkcenterNumbersMapByMachines(company);
+	}
+
+	@Override
+	public Map<String, Integer> findGeneralMagStock(String company) {
+		return jdbcOracleX3Repository.findGeneralMagStock(company);
+	}
+
+	@Override
+	public Map<String, Integer> findGeneralShipStock(String company) {
+		return jdbcOracleX3Repository.findGeneralShipStock(company);
+	}
+
+	@Override
+	public Map<String, String> getPendingProductionOrdersBySaleOrders(String company) {
+		return jdbcOracleX3Repository.getPendingProductionOrdersBySaleOrders(company);
 	}
 
 

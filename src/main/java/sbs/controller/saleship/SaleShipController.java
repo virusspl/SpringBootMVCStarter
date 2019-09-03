@@ -1,9 +1,9 @@
 package sbs.controller.saleship;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -13,13 +13,11 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import sbs.helpers.TextHelper;
-import sbs.model.x3.X3Client;
 import sbs.model.x3.X3RouteLine;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.service.x3.JdbcOracleX3Service;
@@ -38,7 +36,7 @@ public class SaleShipController {
 	private static final String DEPARTMENT_ASSEMBLY = "department.assembly";
 	private static final String DEPARTMENT_WELDING = "department.welding";
 	private static final String DEPARTMENT_MECHANICAL = "department.mechanical";
-	private static final String DEPARTMENT_UNASSIGNED= "department.unassigned";
+	private static final String DEPARTMENT_UNASSIGNED= "general.unassigned";
 	
 	private String[] assemblyCenters;
 	private String[] weldingCenters;
@@ -107,18 +105,57 @@ public class SaleShipController {
 		// validate
 		if (bindingResult.hasErrors()) {
 			return "saleship/main";
-		}	
+		}
 		
 		List<X3SalesOrderLine> orderLines = x3Service.findOpenedSalesOrderLinesInPeriod(saleShipForm.getStartDate(), saleShipForm.getEndDate(), "ATW");
-		Map<String, Map<Integer, X3RouteLine>> routes = x3Service.getRoutesMap("ATW");
+		Map<String, Map<Integer, X3RouteLine>> routes = x3Service.getRoutesMap("ATW"); // cache
 		Map<String, String> workcenters = x3Service.getWorkcenterNumbersMapByMachines("ATW");
+		Map<String, Integer> magStock = x3Service.findGeneralMagStock("ATW");
+		Map<String, Integer> shipStock = x3Service.findGeneralShipStock("ATW");
+		Map<String, String> productionOrdersBySaleOrders = x3Service.getPendingProductionOrdersBySaleOrders("ATW");
 		
-		for(Map<Integer, X3RouteLine> map: routes.values()){
-			for(X3RouteLine line: map.values()){
-				System.out.println("-" + line);
+		List<SaleShipLine> lines = new ArrayList<>();
+		SaleShipLine line;
+
+		X3RouteLine routeInt;
+		String machineInt;
+		String departmentCodeInt;
+		String productionOrderAndLineInt;
+		
+		for(X3SalesOrderLine ord: orderLines){
+			if(routes.containsKey(ord.getProductCode())){
+				routeInt = getLastRouteLineExcludingKAL(routes.get(ord.getProductCode()));
+				machineInt = routeInt.getMachine();
+				departmentCodeInt = getMainDepartmentCodeByMachineCenter(workcenters.get(machineInt));
+				productionOrderAndLineInt = productionOrdersBySaleOrders.containsKey(ord.getOrderNumber()+"/"+ord.getOrderLineNumber()) ? productionOrdersBySaleOrders.get(ord.getOrderNumber()+"/"+ord.getOrderLineNumber()) : "N/D";
 			}
-			System.out.println("final operation: " + getLastRouteLineExcludingKAL(map));
+			else {
+				machineInt = "N/A";
+				departmentCodeInt = "general.na";
+				productionOrderAndLineInt = "N/A";
+			}
+			
+			line = new SaleShipLine();
+			line.setSalesOrder(ord.getOrderNumber());
+			line.setSalesOrderLine(""+ord.getOrderLineNumber());
+			line.setProductionOrderAndLine(productionOrderAndLineInt);
+			line.setClientCode(ord.getClientCode());
+			line.setClientName(ord.getClientName());
+			line.setDemandedDate(ord.getDemandedDate());
+			line.setProductCode(ord.getProductCode());
+			line.setProductDescription(ord.getProductDescription());
+			line.setProductGr1(ord.getProductGr1());
+			line.setMachineCode(machineInt);
+			line.setDepartmentCode(departmentCodeInt);
+			line.setStockProduction(magStock.containsKey(line.getProductCode()) ? magStock.get(line.getProductCode()) : 0);
+			line.setStockShipments(shipStock.containsKey(line.getProductCode()) ? shipStock.get(line.getProductCode()) : 0);
+			line.setQuantityRemainingToShip(ord.getQuantityLeftToSend());
+			line.setQuantityShipped(ord.getQuantityOrdered()-ord.getQuantityLeftToSend());
+			line.setQuantityToGive(line.getQuantityRemainingToShip()-line.getStockShipments() < 0 ? 0 : line.getQuantityRemainingToShip()-line.getStockShipments() );
+			lines.add(line);
 		}
+		
+		model.addAttribute("list", lines);
 		
 		return "saleship/main";
 	}
