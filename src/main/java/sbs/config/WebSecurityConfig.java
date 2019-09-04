@@ -211,6 +211,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"PRODORIGINUSER"
 				)
 		.antMatchers(
+				"/saleship/**"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"SALESHIPUSER"
+				)
+		.antMatchers(
 				"/admin", 
 				"/mailer/**", 
 				"/users/**",
