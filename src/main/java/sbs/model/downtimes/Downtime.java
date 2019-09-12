@@ -47,6 +47,9 @@ public class Downtime {
 	@Column(name = "dt_comment", length = 255, nullable = true)
 	private String comment;
 	
+	@Column(name = "dt_opened", nullable = false )
+	private boolean opened;
+	
 	@Column(name = "dt_init_date", nullable = false)
 	private Timestamp startDate;	
 	@Column(name = "dt_init_rcp_number", length = 25, nullable = false)
@@ -72,6 +75,7 @@ public class Downtime {
 	private String endPosition;
 	@Column(name = "dt_end_department", length = 150, nullable = true)
 	private String endDepartment;
+
 	
 	public Downtime() {
 	
@@ -237,16 +241,27 @@ public class Downtime {
 		this.endDepartment = endDepartment;
 	}
 
+	public boolean isOpened() {
+		return opened;
+	}
+
+	public void setOpened(boolean opened) {
+		this.opened = opened;
+	}
+
 	@Override
 	public String toString() {
 		return "Downtime [id=" + id + ", type=" + type + ", cause=" + cause + ", materialDetails=" + materialDetails
 				+ ", failureDetails=" + failureDetails + ", machineCode=" + machineCode + ", machineName=" + machineName
-				+ ", comment=" + comment + ", startDate=" + startDate + ", initRcpNumber=" + initRcpNumber
-				+ ", initFirstName=" + initFirstName + ", initLastName=" + initLastName + ", initPosition="
-				+ initPosition + ", initDepartment=" + initDepartment + ", endDate=" + endDate + ", endRcpNumber="
-				+ endRcpNumber + ", endFirstName=" + endFirstName + ", endLastName=" + endLastName + ", endPosition="
-				+ endPosition + ", endDepartment=" + endDepartment + "]";
+				+ ", comment=" + comment + ", opened=" + opened + ", startDate=" + startDate + ", initRcpNumber="
+				+ initRcpNumber + ", initFirstName=" + initFirstName + ", initLastName=" + initLastName
+				+ ", initPosition=" + initPosition + ", initDepartment=" + initDepartment + ", endDate=" + endDate
+				+ ", endRcpNumber=" + endRcpNumber + ", endFirstName=" + endFirstName + ", endLastName=" + endLastName
+				+ ", endPosition=" + endPosition + ", endDepartment=" + endDepartment + "]";
 	}
+	
+	
+	
 	
 
 }

@@ -227,7 +227,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/inventory/managecollumns/**"
 				)		
 		.hasRole("ADMIN")
-		 // ** old modules to del **
+		.antMatchers(
+				"/industry/manage/**",
+				"/downtimes/manage/**"
+				)		
+		.hasAnyRole(
+				"ADMIN", 
+				"INDUSTRYMANAGER"
+				)
+		 // ** old modules to delete **
 		.antMatchers(
 				"/qualitysurveys/**")
 		.hasAnyRole(
@@ -238,7 +246,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.hasAnyRole(
 				"ADMIN"
 				)		
-		 // ^^ old modules to del ^^
+		 // ^^ old modules to delete^^
 		.antMatchers("/**")
 		.permitAll()
 		.anyRequest().authenticated().and()

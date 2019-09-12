@@ -5,5 +5,7 @@ import sbs.service.GenericService;
 
 public interface DowntimeTypesService extends GenericService<DowntimeType, Integer>{
 
+	DowntimeType findByOrder(int order);
+
 	
 }

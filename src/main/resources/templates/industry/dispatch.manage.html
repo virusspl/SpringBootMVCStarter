@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+<style>
+.col-title{
+	padding: 5px 15px 5px 5px;
+}
+.col-descr{
+	padding: 5px;
+}
+</style>
+</head>
+<body>
+
+	<div layout:fragment="script"></div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12 col-xs-offset-0">
+				<h2 th:text="#{industry.manage.title}" class="text-primary">Hello
+					on a page</h2>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{industry.manage.dispatch.message}"> Welcome
+					message </span>
+			</div>
+			<!-- BACK TO MAIN PAGE -->
+			<a th:href="@{/}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+		<!-- DOWNTIMES -->
+		<div class="row">
+			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
+				<h3 class="text-primary" th:text="#{downtimes.title}"></h3>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 margin-top-20">
+				<table style="width: 100%;">
+					<tr>
+						<td class="col-title"><a class="btn btn-info btn-sm"
+							th:href="@{/downtimes/manage/causes}"> <span
+								class="glyphicon glyphicon-chevron-right"> </span> <span
+								th:text="#{downtimes.manage.causes}">txt</span>
+						</a></td>
+						<td class="col-descr"><span
+							th:text="#{downtimes.manage.causes.description}">txt</span></td>
+					</tr>
+				</table>
+			</div>
+			<div class="col-xs-9 col-sm-5 margin-top-20"></div>
+		</div>
+
+
+	</div>
+</body>
+</html>

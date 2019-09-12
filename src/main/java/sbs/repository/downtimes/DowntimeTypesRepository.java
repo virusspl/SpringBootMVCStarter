@@ -5,6 +5,8 @@ import sbs.repository.GenericRepository;
 
 public interface DowntimeTypesRepository extends GenericRepository<DowntimeType,Integer> {
 
+	DowntimeType findByOrder(int order);
+
 	
 }
 

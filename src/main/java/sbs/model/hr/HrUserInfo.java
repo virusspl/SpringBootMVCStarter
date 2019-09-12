@@ -175,6 +175,16 @@ public class HrUserInfo {
 	public Timestamp getCurrentJobStart() {
 		return currentJobStart;
 	}
+
+	@Override
+	public String toString() {
+		return "HrUserInfo [id=" + id + ", lastName=" + lastName + ", firstName=" + firstName + ", department="
+				+ department + ", rcpNumber=" + rcpNumber + ", position=" + position + ", currentJobStart="
+				+ currentJobStart + ", currentJobEnd=" + currentJobEnd + ", employDate=" + employDate + ", quitDate="
+				+ quitDate + "]";
+	}
+	
+	
 	
 	
 	

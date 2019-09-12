@@ -24,6 +24,7 @@ import sbs.helpers.ExcelContents;
 import sbs.helpers.ExcelExportHelper;
 import sbs.helpers.MathHelper;
 import sbs.model.bhptickets.BhpTicketState;
+import sbs.model.downtimes.DowntimeType;
 import sbs.model.hr.HrUserInfo;
 import sbs.model.inventory.InventoryDataType;
 import sbs.model.qcheck.QCheckState;
@@ -35,6 +36,7 @@ import sbs.model.users.Role;
 import sbs.model.users.User;
 import sbs.service.bhptickets.BhpTicketStateService;
 import sbs.service.bhptickets.BhpTicketsService;
+import sbs.service.downtimes.DowntimeTypesService;
 import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.inventory.InventoryDataTypesService;
 import sbs.service.mail.MailService;
@@ -87,6 +89,8 @@ public class VariousPagesController {
 	private LiveFeedSingleton liveFeedSingleton;
 	@Autowired
 	InventoryDataTypesService inventoryDataTypesService;
+	@Autowired
+	DowntimeTypesService downtimeTypesService;
 	@Autowired 
 	MathHelper mathHelper;
 
@@ -473,6 +477,16 @@ public class VariousPagesController {
 			roleService.save(saleShipUser);
 			msg += "[role: " + saleShipUser.getName() + "], ";
 		}
+		
+		Role industryManager = roleService.findByName("ROLE_INDUSTRYMANAGER");
+		if (industryManager == null) {
+			industryManager = new Role();
+			industryManager.setName("ROLE_INDUSTRYMANAGER");
+			roleService.save(industryManager);
+			msg += "[role: " + industryManager.getName() + "], ";
+		}
+		
+		// ROLE END
 
 		User admin = userService.findByUsername("Admin");
 		User user = userService.findByUsername("User");
@@ -914,6 +928,53 @@ public class VariousPagesController {
 			shipmentState.setCode("shipments.state.cancelled");
 			shipmentStatesService.save(shipmentState);
 			msg += "[shipmentState: " + shipmentState.getOrder() + " " + shipmentState.getInternalTitle() + "], ";
+		}
+		
+		DowntimeType downtimeType;
+		
+		if (downtimeTypesService.findByOrder(10) == null) {
+			downtimeType = new DowntimeType();
+			downtimeType.setOrder(10);
+			downtimeType.setInternalTitle("fault");
+			downtimeType.setCode("downtimes.type.fault");
+			downtimeTypesService.save(downtimeType);
+			msg += "[downtimeType: " + downtimeType.getOrder() + " " + downtimeType.getInternalTitle() + "], ";
+		}
+
+		if (downtimeTypesService.findByOrder(20) == null) {
+			downtimeType = new DowntimeType();
+			downtimeType.setOrder(20);
+			downtimeType.setInternalTitle("metarial");
+			downtimeType.setCode("downtimes.type.material");
+			downtimeTypesService.save(downtimeType);
+			msg += "[downtimeType: " + downtimeType.getOrder() + " " + downtimeType.getInternalTitle() + "], ";
+		}
+
+		if (downtimeTypesService.findByOrder(30) == null) {
+			downtimeType = new DowntimeType();
+			downtimeType.setOrder(30);
+			downtimeType.setInternalTitle("quality");
+			downtimeType.setCode("downtimes.type.quality");
+			downtimeTypesService.save(downtimeType);
+			msg += "[downtimeType: " + downtimeType.getOrder() + " " + downtimeType.getInternalTitle() + "], ";
+		}
+
+		if (downtimeTypesService.findByOrder(40) == null) {
+			downtimeType = new DowntimeType();
+			downtimeType.setOrder(40);
+			downtimeType.setInternalTitle("safety");
+			downtimeType.setCode("downtimes.type.safety");
+			downtimeTypesService.save(downtimeType);
+			msg += "[downtimeType: " + downtimeType.getOrder() + " " + downtimeType.getInternalTitle() + "], ";
+		}
+
+		if (downtimeTypesService.findByOrder(50) == null) {
+			downtimeType = new DowntimeType();
+			downtimeType.setOrder(50);
+			downtimeType.setInternalTitle("other");
+			downtimeType.setCode("downtimes.type.other");
+			downtimeTypesService.save(downtimeType);
+			msg += "[downtimeType: " + downtimeType.getOrder() + " " + downtimeType.getInternalTitle() + "], ";
 		}
 		
 				 

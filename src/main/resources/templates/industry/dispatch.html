@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+
+	<div layout:fragment="script">
+		
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12 col-xs-offset-0">
+				<h2 th:text="#{industry.title}" class="text-primary">Hello
+					on a page</h2>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{industry.dispatch.message}"> Welcome
+					message </span>
+			</div>
+		<!-- BACK TO MAIN PAGE -->
+				<a th:href="@{/}" class="btn btn-link btn-sm"> <span
+					class="glyphicon glyphicon-menu-left"></span> <span
+					th:text="#{action.back}">back</span>
+				</a>
+		</div>
+		<!-- MODULES -->
+		<div class="row">
+			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
+				<h3 class="text-primary" th:text="#{action.choose.action}">Panel With
+					title</h3>
+			</div>
+			<div class="col-xs-12 margin-top-10">
+				<a class="btn btn-info btn-md margin-top-5"
+					th:href="@{/downtimes/dispatch}"> <span
+					class="glyphicon glyphicon-time" style="margin-right: 10px;"></span>
+					<span th:text="#{downtimes.title}">begin</span>
+				</a> 
+			</div>
+			
+		</div>
+	</div>
+</body>
+</html>

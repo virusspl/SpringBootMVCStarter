@@ -119,15 +119,11 @@
 				<div id="microsoftWarning" style="display: none;"
 					class="alert alert-danger">
 					<h2 th:text="|#{warning}!|" style="margin-bottom: 30px;"></h2>
-					<span th:text="#{warning.youusemicrosoft}">error</span> 
-					<br/> 
-					<br/>
-					<a href="http://10.1.1.226/redmine/" target="_blank">
-					<span class="glyphicon glyphicon-flash"></span>
-					<span th:text="#{it.tickets}"></span>
-					<span class="glyphicon glyphicon-flash"></span>
-					<br/>
-					<br/>
+					<span th:text="#{warning.youusemicrosoft}">error</span> <br /> <br />
+					<a href="http://10.1.1.226/redmine/" target="_blank"> <span
+						class="glyphicon glyphicon-flash"></span> <span
+						th:text="#{it.tickets}"></span> <span
+						class="glyphicon glyphicon-flash"></span> <br /> <br />
 					</a>
 				</div>
 				<!-- /YOU USE MICROSOFT BROWSER WARNING -->
@@ -158,9 +154,42 @@
 			</div>
 		</div>
 		<!-- /POPUPS -->
+		<!-- RCP INFO -->
+		<div th:if="${userHolder}" style="font-weight: bold; font-size: 85%;" >
+			<!-- if identified -->
+			<div th:if="${userHolder.set}">
+				<div class="panel-group">
+					<div class="panel panel-info">
+						<div class="panel-heading"><span class="glyphicon glyphicon-user" style="margin-right: 10px;"></span><span th:text="#{industry.rcp.identification}"></span></div>
+						<div class="panel-body">
+							<span th:text="|${userHolder.info.firstName} ${userHolder.info.lastName}, ${userHolder.info.department}, ${userHolder.info.position}|"></span>
+							<a style="float: right;" th:onclick="|return confirm('#{general.areyousure}')|"
+								class=" " th:href="@{/industry/clearrcp}">
+								<span th:text="#{action.forget}">list</span> <span class="glyphicon glyphicon-remove"></span>
+							</a>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- if not identified -->
+			<div th:if="!${userHolder.set}">
+			<div class="panel-group">
+					<div class="panel panel-warning">
+						<div class="panel-heading"><span class="glyphicon glyphicon-user" style="margin-right: 10px;"></span><span th:text="#{industry.rcp.identification}"></span></div>
+						<div class="panel-body">
+							<span th:text="#{industry.user.unidentified}"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /RCP INFO -->
+		<!-- CONTENT -->
 		<section layout:fragment="content">
 			<p>page content</p>
 		</section>
+		<!-- /CONTENT -->
 		<!-- clear before footer -->
 		<div class="row" style="min-height: 1px; margin-bottom: 50px;"></div>
 	</div>
@@ -201,6 +230,7 @@
 	<script th:src="@{/js/detectIeEdge.js}" type="text/javascript"></script>
 	<!-- ALL SPECIFIC SCRIPTS FROM CHILD VIEWS -->
 	<script type="text/javascript" layout:fragment="script">
+		
 	</script>
 	<!-- LOGOUT HIDDEN FORM -->
 	<!-- do href post logout -->
