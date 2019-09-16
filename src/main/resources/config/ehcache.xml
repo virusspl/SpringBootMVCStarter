@@ -76,6 +76,9 @@
 	<cache name="x3RoutesMap" maxBytesLocalDisk="7m"
 		timeToLiveSeconds="86400">
 	</cache>
+	<cache name="downtimeTypes" maxBytesLocalHeap="1m"
+		timeToLiveSeconds="604800">
+	</cache>
 	<!-- <cache name="x3PendingProjectsProgress" maxBytesLocalHeap="1m" timeToLiveSeconds="86400"> 
 		</cache> -->
 	<!-- <cache name="allEmployed" maxBytesLocalHeap="2m" timeToLiveSeconds="3600"> 

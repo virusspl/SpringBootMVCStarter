@@ -111,3 +111,11 @@ html {
 	width: 200px;
 	height: 200px;
 }
+
+.industry-col-title {
+	padding: 5px 15px 5px 5px;
+}
+	
+.industry-col-descr {
+	padding: 5px;
+}

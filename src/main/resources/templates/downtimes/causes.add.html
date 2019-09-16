@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script"></div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h1 th:text="#{downtimes.cause.add}" class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{downtimes.cause.add.message}"> Welcome
+					message </span>
+			</div>
+			<a th:href="@{/downtimes/manage/causes}" class="btn btn-link btn-sm">
+				<span class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+
+		<div class="underline margin-top-20"></div>
+		<!-- FORM -->
+		<form th:action="@{/downtimes/manage/causes/add}" method="post"
+			th:object="${formCause}">
+			<!-- inventory id -->
+			<input type="hidden" th:field="*{id}" />
+			<div class="row margin-top-20">
+				<!-- order -->
+				<div class="col-xs-6 col-sm-2">
+					<div class="form-group">
+						<label for="order" th:text="#{downtimes.cause.order}">lbl</label>
+						<input type="text" class="form-control" id="order" name="order"
+							th:placeholder="#{general.order}" th:field="*{order}"
+							autocomplete="off" />
+						<div th:errors="*{order}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<!-- type -->
+				<div class="col-xs-6 col-sm-4">
+					<div class="form-group">
+						<label for="type" th:text="#{general.type}"></label> <select
+							class="form-control" id="type" name="type"
+							th:placeholder="#{general.type}" th:field="*{typeId}">
+							<option th:each="obj,stat : ${downtimeTypes}"
+								th:value="${downtimeTypes[__${stat.index}__].id}"
+								th:text="|#{${downtimeTypes[__${stat.index}__].code}}|">
+							</option>
+						</select>
+						<div th:errors="*{typeId}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<!-- short text -->
+				<div class="col-xs-6 col-sm-4">
+					<div class="form-group">
+						<label for="shortText" th:text="#{general.text.short}">lbl</label>
+						<input type="text" class="form-control" id="shortText"
+							name="shortText" th:placeholder="#{general.text.short}"
+							th:field="*{shortText}" autocomplete="off" />
+						<div th:errors="*{shortText}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<!-- text -->
+				<div class="col-xs-12 col-sm-9">
+					<div class="form-group">
+						<label for="text" th:text="#{general.text}">lbl</label> <input
+							type="text" class="form-control" id="text" name="text"
+							th:placeholder="#{general.text}" th:field="*{text}"
+							autocomplete="off" />
+						<div th:errors="*{text}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+			<div class="underline margin-top-10"></div>
+			<div class="row margin-top-20">
+				<a th:href="@{/downtimes/manage/causes}" class="btn btn-link btn-sm">
+					<span class="glyphicon glyphicon-menu-left"></span> <span
+					th:text="#{action.back}">back</span>
+				</a>
+				<button class="btn btn-primary btn-sm" type="submit" name="save">
+					<span class="glyphicon glyphicon-ok"></span> <span
+						th:text="#{action.save}">create</span>
+				</button>
+			</div>
+		</form>
+		<!-- /FORM -->
+	</div>
+</body>
+</html>

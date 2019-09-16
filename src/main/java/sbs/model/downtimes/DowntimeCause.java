@@ -29,7 +29,10 @@ public class DowntimeCause {
 	private int order;
 	
 	@Column(name = "dtc_text", length = 255, nullable = false)
-	private String code;
+	private String text;
+	
+	@Column(name = "dtc_text_short", length = 100, nullable = false)
+	private String shortText;
 
 	@Column(name = "dtc_active", nullable = false)
 	private boolean active;
@@ -62,14 +65,6 @@ public class DowntimeCause {
 		this.order = order;
 	}
 
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
 	public boolean isActive() {
 		return active;
 	}
@@ -77,12 +72,31 @@ public class DowntimeCause {
 	public void setActive(boolean active) {
 		this.active = active;
 	}
+	
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	public String getShortText() {
+		return shortText;
+	}
+
+	public void setShortText(String shortText) {
+		this.shortText = shortText;
+	}
 
 	@Override
 	public String toString() {
-		return "DowntimeCause [downtimeType=" + downtimeType.getInternalTitle() + ", id=" + id + ", order=" + order + ", code=" + code
-				+ ", active=" + active + "]";
+		return "DowntimeCause [downtimeType=" + downtimeType + ", id=" + id + ", order=" + order + ", text=" + text
+				+ ", shortText=" + shortText + ", active=" + active + "]";
 	}
+
+
 	
 	
 

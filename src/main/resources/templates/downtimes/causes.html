@@ -17,10 +17,7 @@
 				language : {
 					url : getUrl() + "polish.json",
 				},
-				order : [ [ 0, 'asc' ] ],
-				paging : false,
-				info : false,
-				searching : false
+				order : [ [ 0, 'asc' ] ]
 			});
 		</script>
 		<script th:if="__${#locale}__ == 'en'">
@@ -28,9 +25,7 @@
 				language : {
 					url : getUrl() + "english.json"
 				},
-				order : [ [ 0, 'asc' ] ],
-				paging : false,
-				info : false
+				order : [ [ 0, 'asc' ] ]
 			});
 		</script>
 		<script th:if="__${#locale}__ == 'it'">
@@ -38,10 +33,7 @@
 				language : {
 					url : getUrl() + "italian.json"
 				},
-				order : [ [ 0, 'asc' ] ],
-				paging : false,
-				info : false,
-				searching : false
+				order : [ [ 0, 'asc' ] ]
 			});
 		</script>
 	</div>
@@ -51,11 +43,12 @@
 				<h1 th:text="#{downtimes.manage.causes}" class="text-primary"></h1>
 			</div>
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
-				<span th:text="|#{downtimes.manage.causes.description}|"> Welcome
-					message </span>
+				<span th:text="|#{downtimes.manage.causes.description}|">
+					Welcome message </span>
 			</div>
-			<a th:href="|@{/industry/manage/dispatch}|" class="btn btn-link btn-sm">
-				<span class="glyphicon glyphicon-menu-left"></span> <span
+			<a th:href="|@{/industry/manage/dispatch}|"
+				class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
 				th:text="#{action.back}">back</span>
 			</a>
 		</div>
@@ -64,38 +57,42 @@
 
 		<div class="row">
 			<div class="col-xs-12">
-				<h3 class="text-primary" th:text="#{qsurveys.questions}">lbl</h3>
+				<h3 class="text-primary" th:text="#{downtimes.causes}">lbl</h3>
 			</div>
 			<div class="col-xs-12">
-				<a th:href="|@{/qsurveys/questions/add/}|"
+				<a th:href="@{/downtimes/manage/causes/add}"
 					class="btn btn-info btn-sm"> <span
 					class="glyphicon glyphicon-plus"></span> <span
 					th:text="#{action.add}">back</span>
 				</a>
 			</div>
-			<div class="col-xs-12 margin-top-10">
+			<div class="col-xs-12 margin-top-30">
 				<div class="table-responsive">
 					<table id="srv" class="display">
 						<thead>
 							<tr>
 								<th th:text="#{qsurveys.questions.order}">head</th>
-								<th th:text="#{general.text}">head</th>
-								<th th:text="#{general.text.short}">head</th>
 								<th th:text="#{general.type}">head</th>
-								<th>#id</th>
-								<th th:text="#{general.options}">head</th>
+								<th th:text="#{general.text}">head</th>
+								<th class="center">#id</th>
+								<th th:text="#{general.active}" class="center">head</th>
+								<th th:text="#{general.options}" class="center">head</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr th:each="question : ${questions}">
-								<td><span th:text="${question.order}">txt</span></td>
-								<td><span th:text="${question.longText}"></span></td>
-								<td><span th:text="${question.shortText}"></span></td>
-								<td><span th:text="#{${question.type.code}}"></span></td>
-								<td><span th:text="${question.id}"></span></td>
-								<td><a
-									th:href="|@{/qsurveys/questions/delete/}${template.id}/${question.id}|"
-									th:onclick="|return confirm('#{action.remove}: &quot;${question.shortText}&quot;?')|"
+							<tr th:each="cause : ${downtimeCauses}">
+								<td><span th:text="${cause.order}">txt</span></td>
+								<td><span th:text="#{${cause.downtimeType.code}}"></span></td>
+								<td><span th:text="${cause.text}"></span></td>
+								<td class="center"><span th:text="|#${cause.id}|"></span></td>
+								<td class="center"><span th:text="${cause.active}"></span></td>
+								<td class="center"><a
+									th:href="|@{/downtimes/manage/causes/edit/}${cause.id}|"
+									class="btn btn-info btn-sm"> <span
+										class="glyphicon glyphicon-pencil"></span> <span
+										th:text="#{action.edit}">back</span>
+								</a> <a th:href="|@{/downtimes/manage/causes/delete/}${cause.id}|"
+									th:onclick="|return confirm('#{action.remove}: &quot;${cause.shortText}&quot;?')|"
 									class="btn btn-danger btn-sm"> <span
 										class="glyphicon glyphicon-remove"></span> <span
 										th:text="#{action.remove}">back</span>

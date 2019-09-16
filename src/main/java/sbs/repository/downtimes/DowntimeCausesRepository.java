@@ -5,6 +5,8 @@ import sbs.repository.GenericRepository;
 
 public interface DowntimeCausesRepository extends GenericRepository<DowntimeCause,Integer> {
 
+	boolean isIndependent(DowntimeCause cause);
+
 	
 }
 

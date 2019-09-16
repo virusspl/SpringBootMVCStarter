@@ -4,14 +4,6 @@
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
 	layout:decorator="layout/main">
 <head lang="pl">
-<style>
-.col-title{
-	padding: 5px 15px 5px 5px;
-}
-.col-descr{
-	padding: 5px;
-}
-</style>
 </head>
 <body>
 
@@ -39,20 +31,19 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-xs-12 col-sm-12 margin-top-20">
+			<div class="col-xs-12 col-sm-12 margin-top-10">
 				<table style="width: 100%;">
 					<tr>
-						<td class="col-title"><a class="btn btn-info btn-sm"
+						<td class="industry-col-title"><a class="btn btn-info btn-sm"
 							th:href="@{/downtimes/manage/causes}"> <span
 								class="glyphicon glyphicon-chevron-right"> </span> <span
 								th:text="#{downtimes.manage.causes}">txt</span>
 						</a></td>
-						<td class="col-descr"><span
+						<td class="industry-col-desct"><span
 							th:text="#{downtimes.manage.causes.description}">txt</span></td>
 					</tr>
 				</table>
 			</div>
-			<div class="col-xs-9 col-sm-5 margin-top-20"></div>
 		</div>
 
 
