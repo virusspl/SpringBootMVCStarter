@@ -28,5 +28,22 @@ public class DowntimeCausesRepositoryImpl extends GenericRepositoryAdapter<Downt
 		return result.isEmpty();
 	}
 
+	@Override
+	public List<DowntimeCause> findByType(String typeInternalTitle, boolean activeOnly) {
+		String hql = "from DowntimeCause dc where dc.downtimeType.internalTitle = :title ";
+		if(activeOnly){
+			hql += " and dc.active = true ";
+		}
+		hql += " order by dc.order asc ";
+		@SuppressWarnings("unchecked")
+		List<DowntimeCause> result = (List<DowntimeCause>) 
+		currentSession()
+		.createQuery(hql)
+		.setString("title", typeInternalTitle)
+		.list();
+
+		return result;
+	}
+
 
 }

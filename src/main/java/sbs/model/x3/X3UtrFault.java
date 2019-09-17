@@ -11,10 +11,15 @@ public class X3UtrFault {
 	private String creatorName;
 	private Timestamp creationDate;
 	private String machineCode;
+	private String machineName;
 	private String locationName;
 	private int faultType;
+	private int faultKind;
 	public static final int NOSTOP_TYPE = 1;
 	public static final int STOP_TYPE = 2;
+	public static final int KIND_ELECTRIC = 1;
+	public static final int KIND_MECHANICAL = 2;
+	public static final int KIND_HYDRAULIC = 3;
 	
 	// filled from maps;
 	private X3UtrMachine machine;
@@ -102,6 +107,26 @@ public class X3UtrFault {
 
 	public void setFaultType(int faultType) {
 		this.faultType = faultType;
+	}
+	
+	/**
+	 * get fault kind
+	 * @return 1 electric, 2 mechanical, 3 hydraulic
+	 */	
+	public int getFaultKind() {
+		return faultKind;
+	}
+
+	public void setFaultKind(int faultKind) {
+		this.faultKind = faultKind;
+	}
+	
+	public String getMachineName() {
+		return machineName;
+	}
+
+	public void setMachineName(String machineName) {
+		this.machineName = machineName;
 	}
 
 	@Override

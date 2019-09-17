@@ -32,5 +32,23 @@ public class DowntimeTypesRepositoryImpl extends GenericRepositoryAdapter<Downti
 		}
 	}
 
+	@Override
+	public DowntimeType findByInternalTitle(String typeInternalTitle) {
+		String hql = "from DowntimeType s where s.internalTitle = :title";
+		@SuppressWarnings("unchecked")
+		List<DowntimeType> result = (List<DowntimeType>) 
+		currentSession()
+		.createQuery(hql)
+		.setString("title", typeInternalTitle)
+		.list();
+		
+		if(!result.isEmpty()){
+			return result.get(0);
+		}
+		else{
+			return null;
+		}
+	}
+
 
 }

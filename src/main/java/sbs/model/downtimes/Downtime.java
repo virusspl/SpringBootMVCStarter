@@ -75,6 +75,9 @@ public class Downtime {
 	private String endPosition;
 	@Column(name = "dt_end_department", length = 150, nullable = true)
 	private String endDepartment;
+	
+	@Column(name = "dt_end_comment", length = 255, nullable = true)
+	private String endComment;
 
 	
 	public Downtime() {
@@ -247,6 +250,14 @@ public class Downtime {
 
 	public void setOpened(boolean opened) {
 		this.opened = opened;
+	}
+	
+	public String getEndComment() {
+		return endComment;
+	}
+
+	public void setEndComment(String endComment) {
+		this.endComment = endComment;
 	}
 
 	@Override

@@ -30,7 +30,7 @@
 				language : {
 					url : getUrl() + "polish.json",
 				},
-				order : [ [ 1, 'desc' ] ],
+				order : [ [ 1, 'asc' ] ],
 				paging : true,
 				dom : 'Bfrtip',
 				buttons : [ {
@@ -47,7 +47,7 @@
 				language : {
 					url : getUrl() + "english.json"
 				},
-				order : [ [ 1, 'desc' ] ],
+				order : [ [ 1, 'asc' ] ],
 				paging : true,
 				dom : 'Bfrtip',
 				buttons : [ {
@@ -64,7 +64,7 @@
 				language : {
 					url : getUrl() + "italian.json"
 				},
-				order : [ [ 1, 'desc' ] ],
+				order : [ [ 1, 'asc' ] ],
 				paging : true,
 				dom : 'Bfrtip',
 				buttons : [ {
@@ -135,7 +135,7 @@
 					</tr>
 					<tr>
 						<td class="industry-col-title"><a class="btn btn-info btn-sm"
-							th:href="@{/downtimes/create/saefty}"> <span
+							th:href="@{/downtimes/create/safety}"> <span
 								class="glyphicon glyphicon-chevron-right"
 								style="margin-right: 10px;"></span> <span
 								th:text="#{downtimes.type.safety}">txt</span>
@@ -170,22 +170,21 @@
 						<thead>
 							<tr>
 								<th>#id</th>
-								<th th:text="|data|">head</th>
-								<th th:text="|wydzial|">head</th>
-								<th th:text="|maszyna|">head</th>
-								<th th:text="|typ|">head</th>
+								<th th:text="|#{general.date}|">head</th>
+								<th th:text="|#{general.department}|">head</th>
+								<th th:text="|#{general.machine}|">head</th>
+								<th th:text="|#{downtimes.cause}|">head</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr th:each="dt : ${downtimes}">
-								<td><a th:href="|@{sssssss/qsurveys/show/}${survey.id}|"
+								<td><a th:href="|@{downtimes/show/}${dt.id}|"
 									data-toggle="tooltip" data-placement="top"
-									th:title="#{action.show}">#<span th:text="${survey.id}"></span></a></td>
-								<td><span
-									th:text="|${survey.operatorFirstName} ${survey.operatorLastName}|"></span></td>
-								<td><span th:text="${survey.orderProduct}"></span></td>
-								<td><span th:text="${survey.orderClientCode}"></span></td>
-								<td><span th:text="${survey.orderSalesNumber}"></span></td>
+									th:title="#{action.show}">#<span th:text="${dt.id}"></span></a></td>
+								<td><span th:text="|${dt.startDate}|"></span></td>
+								<td><span th:text="|${dt.initDepartment}|"></span></td>
+								<td><span th:text="${dt.machineCode}"></span></td>
+								<td><span th:text="${dt.cause.shortText}"></span></td>
 							</tr>
 						</tbody>
 					</table>

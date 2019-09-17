@@ -1,5 +1,7 @@
 package sbs.service.downtimes;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,11 @@ public class DowntimeCausesServiceImpl extends GenericServiceAdapter<DowntimeCau
 	@Override
 	public boolean isIndependent(DowntimeCause cause) {
 		return downtimeCausesRepository.isIndependent(cause);
+	}
+
+	@Override
+	public List<DowntimeCause> findByType(String typeInternalTitle, boolean activeOnly) {
+		return downtimeCausesRepository.findByType(typeInternalTitle, activeOnly);
 	}
 
 }

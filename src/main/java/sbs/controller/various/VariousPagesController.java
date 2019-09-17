@@ -944,7 +944,7 @@ public class VariousPagesController {
 		if (downtimeTypesService.findByOrder(20) == null) {
 			downtimeType = new DowntimeType();
 			downtimeType.setOrder(20);
-			downtimeType.setInternalTitle("metarial");
+			downtimeType.setInternalTitle("material");
 			downtimeType.setCode("downtimes.type.material");
 			downtimeTypesService.save(downtimeType);
 			msg += "[downtimeType: " + downtimeType.getOrder() + " " + downtimeType.getInternalTitle() + "], ";

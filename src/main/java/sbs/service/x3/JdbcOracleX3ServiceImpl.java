@@ -180,6 +180,11 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	public Map<String, X3UtrFault> findAllUtrFaults() {
 		return jdbcOracleX3Repository.findAllUtrFaults();
 	}
+	
+	@Override
+	public X3UtrFault findUtrFault(String number) {
+		return jdbcOracleX3Repository.findUtrFault(number);
+	}
 
 	@Override
 	public List<X3UtrFaultLine> findUtrFaultLinesAfterDate(Date startDate) {
@@ -436,5 +441,10 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 		return jdbcOracleX3Repository.getPendingProductionOrdersBySaleOrders(company);
 	}
 
+	@Override
+	@Cacheable(value="x3Workstations")
+	public List<X3Workstation> getWorkstations(String company) {
+		return jdbcOracleX3Repository.getWorkstations(company);
+	}
 
 }

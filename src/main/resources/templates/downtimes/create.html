@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script">
+		<!-- SELECTIZE JS -->
+		<script th:src="@{/selectize/js/selectize.min.js}"
+			type="text/javascript"></script>
+		<script>
+			$('#machineCode').selectize();
+			$('#cause').selectize();
+		</script>
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h1 th:text="|#{downtimes.create.title} - #{${currentType.code}}|" class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{downtimes.create.message}"> Welcome message
+				</span>
+			</div>
+		</div>
+		<div class="row">
+			<!-- BACK TO MAIN PAGE -->
+			<a th:href="@{/downtimes/dispatch}" class="btn btn-link btn-sm">
+				<span class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+		<div class="underline margin-top-20"></div>
+		<!-- BHP TICKET FORM -->
+		<form th:action="@{/downtimes/create}" method="post"
+			th:object="${formDowntimeCreate}">
+		<input type="hidden" th:field ="*{typeInternalTitle}"/>
+			<div class="row margin-top-10">
+				<div class="col-lg-7 col-md-9 col-xs-12">
+					<div class="form-group">
+						<label for="machineCode" th:text="#{general.machine}">txt</label>
+						<select class="form-control" id="machineCode" name="machineCode"
+							th:placeholder="#{general.machine}" th:field="*{machineCode}">
+							<option th:each="obj,stat : ${machines}"
+								th:value="${machines[__${stat.index}__].code}"
+								th:text="|
+								${machines[__${stat.index}__].code} /
+								${machines[__${stat.index}__].name}
+								|">txt</option>
+						</select>
+						<div th:errors="*{machineCode}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+					<div class="form-group">
+						<label for="cause" th:text="#{downtimes.cause}">txt</label> <select
+							class="form-control" id="cause" name="cause"
+							th:placeholder="#{downtimes.cause}" th:field="*{causeId}">
+							<option th:each="obj,stat : ${causes}"
+								th:value="${causes[__${stat.index}__].id}"
+								th:text="|${causes[__${stat.index}__].text}
+								(#${causes[__${stat.index}__].id})
+								|">txt</option>
+						</select>
+						<div th:errors="*{causeId}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+
+					<div class="form-group">
+						<label for="comment" th:text="|#{general.comment} (#{general.optional})|">Description</label>
+						<input type="text" class="form-control" id="comment"
+							name="comment" th:placeholder="#{general.comment}"
+							th:field="*{comment}"></input>
+						<div th:errors="*{comment}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+
+					<div class="form-group" th:if="${formDowntimeCreate.typeInternalTitle}=='material'">
+						<label for="productCode" th:text="#{general.productCode}">txt</label>
+						<input type="text" class="form-control" id="productCode"
+							name="productCode" th:placeholder="#{general.productCode}"
+							th:field="*{productCode}"></input>
+						<div th:errors="*{productCode}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+					
+					<div class="form-group" th:if="${formDowntimeCreate.typeInternalTitle}=='fault'">
+						<label for="x3FailureNumber" th:text="|#{downtimes.x3FailureNumber} (#{general.optional})|">txt</label>
+						<input type="text" class="form-control" id="x3FailureNumber"
+							name="x3FailureNumber" th:placeholder="#{downtimes.x3FailureNumber}"
+							th:field="*{x3FailureNumber}"></input>
+						<div th:errors="*{x3FailureNumber}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="row margin-top-10">
+				<!-- BACK TO MAIN PAGE -->
+				<a th:href="@{/downtimes/dispatch}" class="btn btn-link btn-sm">
+					<span class="glyphicon glyphicon-menu-left"></span> <span
+					th:text="#{action.back}">back</span>
+				</a>
+				<button class="btn btn-primary btn-sm" type="submit" name="save">
+					<span class="glyphicon glyphicon-ok"></span> <span
+						th:text="#{action.save}">create</span>
+				</button>
+			</div>
+		</form>
+		<!-- /USER FORM -->
+	</div>
+</body>
+</html>

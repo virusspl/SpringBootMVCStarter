@@ -25,4 +25,9 @@ public class DowntimeTypesServiceImpl extends GenericServiceAdapter<DowntimeType
 		return downtimeTypesRepository.findByOrder(order);
 	}
 
+	@Override
+	public DowntimeType findByInternalTitle(String typeInternalTitle) {
+		return downtimeTypesRepository.findByInternalTitle(typeInternalTitle);
+	}
+
 }

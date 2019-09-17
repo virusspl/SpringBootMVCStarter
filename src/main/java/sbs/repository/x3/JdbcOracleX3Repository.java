@@ -62,6 +62,7 @@ public interface JdbcOracleX3Repository  {
 	public List<X3ShipmentMovement> findAdrShipmentMovementsInPeriod(Date startDate, Date endDate);
 	public Map<String, X3UtrFault> findUtrFaultsInPeriod(Date startDate, Date endDate);
 	public Map<String, X3UtrFault> findAllUtrFaults();
+	public X3UtrFault findUtrFault(String number);	
 	public List<X3UtrFaultLine> findUtrFaultLinesAfterDate(Date startDate);
 	public List<X3UtrFaultLine> findAllUtrFaultLines();
 	public Map<String, X3ProductFinalMachine> findX3ProductFinalMachines(String company);
@@ -109,6 +110,8 @@ public interface JdbcOracleX3Repository  {
 	public Map<String, Integer> findGeneralMagStock(String company);
 	public Map<String, Integer> findGeneralShipStock(String company);
 	public Map<String, String> getPendingProductionOrdersBySaleOrders(String company);
+	public List<X3Workstation> getWorkstations(String company);
+
 	
 	
 }

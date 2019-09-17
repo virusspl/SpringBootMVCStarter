@@ -913,6 +913,64 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         }
 		return map;
 	}
+	
+	@Override
+	public X3UtrFault findUtrFault(String number) {
+		String company = "ATW";
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ company + ".XMANUTGUA.XNUMMOD_0, "
+				+ company + ".XMANUTGUA.XPROP_0, "
+				+ company + ".XMANUTGUA.XTIPO_0, "
+				+ company + ".AUTILIS.NOMUSR_0, "
+				+ company + ".XMANUTGUA.XDATACRE_0, "
+				+ company + ".XMANUTGUA.XCESPITE_0, "
+				+ company + ".XMANUTGUA.YDESCCES_0, "
+				+ company + ".XMANUTGUA.YTBLOCCO_0, "
+				+ company + ".XMANUTGUA.YUBICA_0 "
+				+ "FROM "
+				+ company + ".XMANUTGUA INNER JOIN " + company + ".AUTILIS "
+				+ "ON "
+				+ company + ".XMANUTGUA.XPROP_0 = " + company + ".AUTILIS.USR_0 "
+				+ "WHERE " + company + ".XMANUTGUA.XNUMMOD_0 = ?",
+                new Object[]{number}
+				);
+        
+		X3UtrFault fault = null;
+        for(Map<String,Object> row: resultSet ){
+        	fault = new X3UtrFault();
+        	fault.setFaultNumber((String)row.get("XNUMMOD_0"));
+        	fault.setCreatorCode((String)row.get("XPROP_0"));
+        	fault.setCreatorName((String)row.get("NOMUSR_0"));
+        	fault.setCreationDate((Timestamp)row.get("XDATACRE_0"));
+        	fault.setMachineCode((String)row.get("XCESPITE_0"));
+        	fault.setMachineName((String)row.get("YDESCCES_0"));
+        	fault.setLocationName((String)row.get("YUBICA_0"));
+        	if(((BigDecimal)row.get("YTBLOCCO_0")).intValue() == 2){
+        		fault.setFaultType(X3UtrFault.STOP_TYPE);
+        	}
+        	else{
+        		fault.setFaultType(X3UtrFault.NOSTOP_TYPE);
+        	}
+        
+        	switch (((BigDecimal)row.get("XTIPO_0")).intValue()){
+        		case 1:
+        			fault.setFaultKind(X3UtrFault.KIND_ELECTRIC);
+        			break;
+        		case 2:
+        			fault.setFaultKind(X3UtrFault.KIND_MECHANICAL);
+        			break;
+        		case 3:
+        			fault.setFaultKind(X3UtrFault.KIND_HYDRAULIC);
+        			break;
+        		default:
+        				
+        	}
+        	
+        }
+		return fault;
+	}
+
 
 	@Override
 	public List<X3UtrFaultLine> findUtrFaultLinesAfterDate(Date startDate) {
@@ -1958,27 +2016,64 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public X3Workstation findWorkstationByCode(String company, String code) {
 		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
-
-
-						"SELECT " 
-						+ company + ".WORKSTATIO.WST_0, "
-						+ company + ".WORKSTATIO.WSTDES_0 "
-						+ "FROM " 
-						+ company + ".WORKSTATIO "
-						+ "WHERE UPPER("
-						+ company + ".WORKSTATIO.WST_0) = ?"
-						+ "",
-                new Object[]{code.toUpperCase()});
+				"SELECT "
+				+ "WST.WST_0, "
+				+ "TXT.TEXTE_0 "
+				+ "FROM "
+				+ company + ".WORKSTATIO WST "
+				+ "INNER JOIN "
+				+ company + ".ATEXTRA TXT "
+				+ "ON "
+				+ "WST.WST_0 = TXT.IDENT1_0 "
+				+ "WHERE TXT.CODFIC_0 = ? "
+				+ "AND TXT.ZONE_0 = ? "
+				+ "AND TXT.LANGUE_0 = ? "
+				+ "AND UPPER(WST.WST_0) = ? "
+				+ "ORDER BY WST.WST_0 ASC"
+				+ "",
+                new Object[]{"WORKSTATIO", "WSTDESAXX", "POL", code.toUpperCase()});
         		
 		X3Workstation workstation = null;
 		
         for(Map<String,Object> row: resultSet ){
         	workstation = new X3Workstation();
         	workstation.setCode((String)row.get("WST_0"));
-        	workstation.setName(((String)row.get("WSTDES_0")));
+        	workstation.setName(((String)row.get("TEXTE_0")));
         }
 		
 		return workstation;
+	}
+	
+	@Override
+	public List<X3Workstation> getWorkstations(String company) {
+		
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "WST.WST_0, "
+				+ "TXT.TEXTE_0 "
+				+ "FROM "
+				+ company + ".WORKSTATIO WST "
+				+ "INNER JOIN "
+				+ company + ".ATEXTRA TXT "
+				+ "ON "
+				+ "WST.WST_0 = TXT.IDENT1_0 "
+				+ "WHERE TXT.CODFIC_0 = ? "
+				+ "AND TXT.ZONE_0 = ? "
+				+ "AND TXT.LANGUE_0 = ? "
+				+ "ORDER BY WST.WST_0 ASC"
+				,
+				new Object[]{"WORKSTATIO", "WSTDESAXX", "POL"});
+		
+		X3Workstation workstation = null;
+		List<X3Workstation> result = new ArrayList<>();
+		for(Map<String,Object> row: resultSet ){
+			workstation = new X3Workstation();
+			workstation.setCode((String)row.get("WST_0"));
+			workstation.setName(((String)row.get("TEXTE_0")));
+			result.add(workstation);
+		}
+		
+		return result;
 	}
 
 	@Override
@@ -2717,6 +2812,5 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		
 		return result;
 	}
-
 
 }

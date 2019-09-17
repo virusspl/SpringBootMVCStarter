@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import sbs.model.x3.X3UtrFault;
+
 @Entity
 @Table(name = "downtime_details_failure")
 public class DowntimeDetailsFailure {
@@ -32,9 +34,6 @@ public class DowntimeDetailsFailure {
 	@Column(name = "dtdf_asset_name", length = 75, nullable = false)
 	private String assetName;
 	
-	@Column(name = "dtdf_description", length = 255, nullable = false)
-	private String description;
-	
 	@Column(name = "dtdf_type", length = 25, nullable = false)
 	private String type;
 	
@@ -43,6 +42,40 @@ public class DowntimeDetailsFailure {
 	
 	public DowntimeDetailsFailure() {
 	
+	}
+
+	public DowntimeDetailsFailure(X3UtrFault fault) {
+		this.failureX3Number = fault.getFaultNumber();
+		this.assetCode = fault.getMachineCode();
+		this.assetName = fault.getMachineName();
+		
+		switch (fault.getFaultType()){
+			case X3UtrFault.STOP_TYPE:
+				this.type = "STOP";
+				break;
+			case X3UtrFault.NOSTOP_TYPE:
+				this.type = "WARN";
+				break;
+			default:
+				this.type = "N/N";
+				break;
+		}
+		
+		switch (fault.getFaultKind()){
+			case X3UtrFault.KIND_ELECTRIC:
+				this.kind = "EL";
+				break;
+			case X3UtrFault.KIND_HYDRAULIC:
+				this.kind = "HY";
+				break;
+			case X3UtrFault.KIND_MECHANICAL:
+				this.kind = "ME";
+				break;
+			default:
+				this.kind = "N/N";
+				break;
+		}
+		
 	}
 
 	public int getId() {
@@ -85,14 +118,6 @@ public class DowntimeDetailsFailure {
 		this.assetName = assetName;
 	}
 
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
 	public String getType() {
 		return type;
 	}
@@ -112,7 +137,7 @@ public class DowntimeDetailsFailure {
 	@Override
 	public String toString() {
 		return "DowntimeDetailsFailure [id=" + id + ", failureX3Number=" + failureX3Number + ", assetCode=" + assetCode
-				+ ", assetName=" + assetName + ", description=" + description + ", type=" + type + ", kind=" + kind
+				+ ", assetName=" + assetName + ", type=" + type + ", kind=" + kind
 				+ "]";
 	}
 	
