@@ -214,5 +214,18 @@ public class DowntimesController {
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/downtimes/dispatch";
 	}
+	
+	@RequestMapping(value = "/show/{id}")
+	public String showDowntime(@PathVariable("id") int id, Model model) throws NotFoundException{
+		
+		Downtime downtime = downtimesService.findById(id);
+		if (downtime == null) {
+			throw new NotFoundException("Downtime not found: #" + id);
+		}
+		
+		model.addAttribute("downtime", downtime);		
+		
+		return "downtimes/show";
+	}
 
 }

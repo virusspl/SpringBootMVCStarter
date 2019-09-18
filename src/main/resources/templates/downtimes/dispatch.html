@@ -171,6 +171,7 @@
 							<tr>
 								<th>#id</th>
 								<th th:text="|#{general.date}|">head</th>
+								<th th:text="|#{general.user}|">head</th>								
 								<th th:text="|#{general.department}|">head</th>
 								<th th:text="|#{general.machine}|">head</th>
 								<th th:text="|#{downtimes.cause}|">head</th>
@@ -178,10 +179,14 @@
 						</thead>
 						<tbody>
 							<tr th:each="dt : ${downtimes}">
-								<td><a th:href="|@{downtimes/show/}${dt.id}|"
-									data-toggle="tooltip" data-placement="top"
-									th:title="#{action.show}">#<span th:text="${dt.id}"></span></a></td>
+								<td><span th:text="|#${dt.id}|"></span></td>
 								<td><span th:text="|${dt.startDate}|"></span></td>
+								<td><a th:href="|@{/downtimes/show/}${dt.id}|"
+									data-toggle="tooltip" data-placement="top"
+									th:title="#{action.show}">
+									<span th:text="|${dt.initLastName} ${dt.initFirstName}|"></span>
+									</a>
+									</td>
 								<td><span th:text="|${dt.initDepartment}|"></span></td>
 								<td><span th:text="${dt.machineCode}"></span></td>
 								<td><span th:text="${dt.cause.shortText}"></span></td>

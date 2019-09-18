@@ -1,0 +1,374 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/main">
+<head>
+</head>
+<body>
+	<div layout:fragment="script">
+			
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12 col-xs-offset-0">
+				<h2 th:text="#{qsurveys.show.title}" class="text-primary">Hello
+					on a page</h2>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{qsurveys.show.message}"> Welcome message </span>
+			</div>
+			<a th:href="@{/qsurveys/list}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+		<!-- SURVEY INFO -->
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="row">
+					<div class="col-xs-12">
+						<h3 th:text="#{qsurveys.survey.info}"
+							class="text-primary underline"></h3>
+					</div>
+				</div>
+				<div class="col-xs-12">
+					<div class="row">
+						<div class="col-xs-4 col-md-3 col-lg-2">
+							<span th:text="|Id|">param</span>
+						</div>
+						<div class="col-xs-8 col-md-9 col-lg-10">
+							<strong th:text="|#${surveyInfo.id}|" class="text-primary">value</strong>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4 col-md-3 col-lg-2">
+							<span th:text="#{qsurveys.login.user}">param</span>
+						</div>
+						<div class="col-xs-8 col-md-9 col-lg-10">
+							<strong th:text="${surveyInfo.user.username}"
+								class="text-primary">value</strong>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4 col-md-3 col-lg-2">
+							<span th:text="#{qsurveys.creation.time}">param</span>
+						</div>
+						<div class="col-xs-8 col-md-9 col-lg-10">
+							<strong th:text="${surveyInfo.creationDate}" class="text-primary">value</strong>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4 col-md-3 col-lg-2">
+							<span th:text="#{qsurveys.template}">param</span>
+						</div>
+						<div class="col-xs-8 col-md-9 col-lg-10">
+							<strong th:text="${surveyInfo.template.title}"
+								class="text-primary">value</strong>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4 col-md-3 col-lg-2">
+							<span th:text="#{qsurveys.template.time}">param</span>
+						</div>
+						<div class="col-xs-8 col-md-9 col-lg-10">
+							<strong th:text="${surveyInfo.templateSurveyDate}"
+								class="text-primary">value</strong> <strong
+								th:if="${noTemplateDate}" th:text="|-|" class="text-primary">value</strong>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4 col-md-3 col-lg-2">
+							<span th:text="#{qsurveys.bom.time}">param</span>
+						</div>
+						<div class="col-xs-8 col-md-9 col-lg-10">
+							<strong th:text="${surveyInfo.bomSurveyDate}"
+								class="text-primary">value</strong> <strong th:if="${noBomDate}"
+								th:text="|-|" class="text-primary">value</strong>
+						</div>
+					</div>
+					<div class="row margin-top-10">
+						<div class="col-xs-12">
+							<strong><span class="text-primary"
+								th:text="#{general.description}">param</span> </strong>
+						</div>
+						<div class="col-xs-8 col-md-9 col-lg-10">
+							<span th:text="${surveyInfo.template.description}">param</span>
+						</div>
+					</div>
+					<div class="row margin-top-10"
+						th:if="${#strings.length(surveyInfo.comment)>0}">
+						<div class="col-xs-12">
+							<strong><span class="text-primary"
+								th:text="#{qsurveys.comment}">param</span> </strong>
+						</div>
+						<div class="col-xs-8 col-md-9 col-lg-10">
+							<span th:text="${surveyInfo.comment}">param</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- USER DETAILS -->
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="row">
+					<div class="col-xs-12">
+						<h3 th:text="#{qsurveys.operator}" class="text-primary underline"></h3>
+					</div>
+				</div>
+				<div class="col-xs-12">
+					<div class="row">
+						<div class="col-xs-4 col-md-3 col-lg-2">
+							<span th:text="#{qsurveys.operator.id}">param</span>
+						</div>
+						<div class="col-xs-8 col-md-9 col-lg-10">
+							<strong th:text="${surveyInfo.operatorNumber}"
+								class="text-primary">value</strong>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4 col-md-3 col-lg-2">
+							<span
+								th:text="|#{qsurveys.operator.last.name}, #{qsurveys.operator.first.name}|">param</span>
+						</div>
+						<div class="col-xs-8 col-md-9 col-lg-10">
+							<strong
+								th:text="|${surveyInfo.operatorLastName}, ${surveyInfo.operatorFirstName}|"
+								class="text-primary">value</strong>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4 col-md-3 col-lg-2">
+							<span th:text="#{qsurveys.operator.department}">param</span>
+						</div>
+						<div class="col-xs-8 col-md-9 col-lg-10">
+							<strong th:text="${surveyInfo.operatorDepartment}"
+								class="text-primary">value</strong>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4 col-md-3 col-lg-2">
+							<span th:text="#{qsurveys.operator.position}">param</span>
+						</div>
+						<div class="col-xs-8 col-md-9 col-lg-10">
+							<strong th:text="${surveyInfo.operatorPosition}"
+								class="text-primary">value</strong>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- PRODUCTION ORDER DETAILS -->
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="row">
+					<div class="col-xs-12">
+						<h3 th:text="#{qsurveys.production.order}"
+							class="text-primary underline"></h3>
+					</div>
+				</div>
+				<div class="col-xs-12">
+					<div class="row">
+						<div class="col-xs-4 col-md-3 col-lg-2">
+							<span th:text="#{qsurveys.production.order}">param</span>
+						</div>
+						<div class="col-xs-8 col-md-9 col-lg-10">
+							<strong th:text="${surveyInfo.orderNumber}" class="text-primary">value</strong>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4 col-md-3 col-lg-2">
+							<span th:text="#{qsurveys.operation.number}">param</span>
+						</div>
+						<div class="col-xs-8 col-md-9 col-lg-10">
+							<strong
+								th:text="|${surveyInfo.orderOperation} (${surveyInfo.orderOperationDescription})|"
+								class="text-primary">value</strong>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4 col-md-3 col-lg-2">
+							<span th:text="#{qsurveys.product.code}">param</span>
+						</div>
+						<div class="col-xs-8 col-md-9 col-lg-10">
+							<strong th:text="${surveyInfo.orderProduct}" class="text-primary">value</strong>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4 col-md-3 col-lg-2">
+							<span th:text="#{qsurveys.product.description}">param</span>
+						</div>
+						<div class="col-xs-8 col-md-9 col-lg-10">
+							<strong th:text="${surveyInfo.orderProductDescription}"
+								class="text-primary">value</strong>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4 col-md-3 col-lg-2">
+							<span th:text="#{qsurveys.client.code}">param</span>
+						</div>
+						<div class="col-xs-8 col-md-9 col-lg-10">
+							<strong th:text="${surveyInfo.orderClientCode}"
+								class="text-primary">value</strong>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4 col-md-3 col-lg-2">
+							<span th:text="#{qsurveys.client.name}">param</span>
+						</div>
+						<div class="col-xs-8 col-md-9 col-lg-10">
+							<strong th:text="${surveyInfo.orderClientName}"
+								class="text-primary">value</strong>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4 col-md-3 col-lg-2">
+							<span th:text="#{qsurveys.produced.quantity}">param</span>
+						</div>
+						<div class="col-xs-8 col-md-9 col-lg-10">
+							<strong th:text="${surveyInfo.orderQuantityProduced}"
+								class="text-primary">value</strong>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4 col-md-3 col-lg-2">
+							<span th:text="#{qsurveys.checked.quantity}">param</span>
+						</div>
+						<div class="col-xs-8 col-md-9 col-lg-10">
+							<strong th:text="${surveyInfo.orderQuantityChecked}"
+								class="text-primary">value</strong>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row margin-top-20">
+			<div class="col-xs-12">
+				<form th:action="@{/qsurveys/make}" method="post">
+					<button th:if="${noBomDate}" class="btn btn-info btn-sm"
+						type="submit" name="bom" th:value="${surveyInfo.id}">
+						<span class="glyphicon glyphicon-align-justify"></span> <span
+							th:text="|#{qsurveys.execute}: BOM|">search</span>
+					</button>
+					<button th:if="${noTemplateDate}" class="btn btn-info btn-sm"
+						type="submit" name="template" th:value="${surveyInfo.id}">
+						<span class="glyphicon glyphicon-align-left"></span> <span
+							th:text="|#{qsurveys.execute}: #{qsurveys.template}|">show
+							all</span>
+					</button>
+					 <a th:href="@{'/qsurveys/photos/' + ${surveyInfo.id}}"
+						class="btn btn-warning btn-sm"> <span
+						class="glyphicon glyphicon-film"></span> <span
+						th:text="#{action.manage.photos}">back</span>
+						</a>
+				</form>
+			</div>
+		</div>
+		<div class="row" th:if="${answers}">
+			<div class="col-xs-12">
+				<div class="row">
+					<div class="col-xs-12">
+						<h3 th:text="#{qsurveys.survey.template.title}"
+							class="text-primary underline"></h3>
+					</div>
+				</div>
+
+				<div class="table-responsive margin-top-10">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th th:text="#{line.number}">lp</th>
+								<th th:text="#{qsurveys.parameter.title}">param</th>
+								<th class="text-center"
+									th:utext="|#{qsurveys.model.answer} /&lt;br /&gt;#{qualitu.survey.confirmation}|">model
+									answer / confirm</th>
+								<th class="text-center" th:text="#{qsurveys.answer}"></th>
+								<th th:text="#{qsurveys.comment}">comment</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="item,stat : ${answers}">
+								<td style="font-size: 110%;"><span
+									th:text="${stat.index} + 1">lp</span></td>
+
+								<td style="font-size: 110%;"><span class="text-lg"
+									th:text=" *{item.longQuestionText}"></span></td>
+								<td class="text-center"><span
+									th:if="*{item.type.code} == 'qsurveys.type.parameter'"
+									th:text=" *{item.referenceValue}"></span> <input
+									th:if="*{item.type.code} == 'qsurveys.type.boolean'"
+									type="checkbox" disabled="disabled"
+									th:checked="*{item.booleanValue}"></input></td>
+								<td class="text-center"><span
+									th:if="*{item.type.code} == 'qsurveys.type.parameter'"
+									style="text-align: center;" th:text=" *{item.value}"></span></td>
+								<td><span th:text=" *{item.comment}"></span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="row" th:if="${bomAnswers}">
+			<div class="col-xs-12">
+				<div class="row">
+					<div class="col-xs-12">
+						<h3 th:text="#{qsurveys.bom.list}" class="text-primary underline"></h3>
+					</div>
+				</div>
+
+				<div class="table-responsive margin-top-10">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th th:text="#{qsurveys.bom.seq}">lp</th>
+								<th th:text="#{qsurveys.bom.part.code}">part</th>
+								<th th:text="#{qsurveys.bom.part.description}">desc</th>
+								<th th:text="#{qsurveys.bom.model.unit} " class="text-center">unit</th>
+								<th th:text="#{qsurveys.bom.answer.quantity}"
+									class="text-center">quantity</th>
+								<th th:text="#{qsurveys.comment}">comment</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="item,stat : ${bomAnswers}">
+								<td style="font-size: 110%;"><span th:text="*{item.bomSeq}">value</span>
+								</td>
+
+								<td style="font-size: 110%;"><span class="text-lg"
+									th:text=" *{item.partCode}">value</span></td>
+								<td><span th:text="*{item.partDescription}">value</span></td>
+								<td class="text-center"><span th:text="*{item.modelUnit}">value</span>
+								</td>
+								<td class="text-center"><span
+									th:text="*{item.answerQuantity}">value</span></td>
+								<td><span th:text=" *{item.comment}">value</span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- PHOTOS -->
+		<div class="row" th:if="${#lists.size(photos)} > 0">
+			<div class="col-xs-12">
+				<h1 th:text="#{qsurveys.photos.list}"
+					class="text-primary margin-top-30"></h1>
+			</div>
+			<div th:each="photo : ${photos}" class="col-xs-3">				
+				<a th:href="|http://192.168.1.23/APACHE_IMG/qsurveys/photo/${surveyInfo.id}/${photo}|"
+					data-lightbox="image-1"> <img
+					th:src="|http://192.168.1.23/APACHE_IMG/qsurveys/photo/${surveyInfo.id}/${photo}|"
+					class="img-responsive img-rounded margin-top-10"
+					style="border: 1px solid grey;"></img>
+				</a>
+			</div>
+		</div>
+		<!-- /PHOTOS -->
+
+
+	</div>
+</body>
+</html>
