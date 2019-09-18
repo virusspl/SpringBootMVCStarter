@@ -48,6 +48,7 @@ public class CebsController {
 	TemplateEngine templateEngine;
 
 	private boolean active;
+	private boolean confirmed;
 	private Map<Long, CebsItem> items;
 	private String organizer;
 	private Calendar actionDate;
@@ -57,12 +58,14 @@ public class CebsController {
 	public void addAttributes(Model model) {
 		model.addAttribute("organizer", organizer);
 		model.addAttribute("active", active);
+		model.addAttribute("confirmed", confirmed);
 		model.addAttribute("actionDate", dateHelper.formatDdMmYyyy(actionDate.getTime()));
 		model.addAttribute("dayCode", dayCode);
 	}
 
 	public CebsController() {
 		active = false;
+		confirmed = false;
 		items = new TreeMap<>();
 		actionDate = Calendar.getInstance();
 	}
@@ -93,6 +96,7 @@ public class CebsController {
 			model.addAttribute("amount", amount);
 		}
 		model.addAttribute("active", active);
+		model.addAttribute("confirmed", confirmed);
 	}
 
 	private List<MenuItem> getMenuList() {
@@ -131,6 +135,32 @@ public class CebsController {
 		items.get(itemId).setPaid(!items.get(itemId).isPaid());
 		return "redirect:/cebs/manage";
 	}
+	
+	@RequestMapping("/manage/confirmed")
+	public String confirmedSwitch(RedirectAttributes redirectAttrs) throws UnknownHostException, MessagingException {
+		this.confirmed = !this.confirmed;
+		if(confirmed){
+			String title = "Zamówienie potwierdzone";
+			String message = "Zamówienie zostało zaakceptowane przez bar. Prosimy o zapłatę.";
+			this.sendMail(title, message);
+		}
+		else{
+			String title = "Potwierdzenie ODWOŁANE";
+			String message = "Potwierdzenie zostało ODWOŁANE. Nie wiemy, czy zostanie zrealizowane - wstrzymujemy zbiórkę pieniędzy.";
+			this.sendMail(title, message);
+		}
+		return "redirect:/cebs/order";
+	}
+	
+	@RequestMapping("/manage/arrived")
+	public String arrived(RedirectAttributes redirectAttrs) throws UnknownHostException, MessagingException {
+		
+			String title = "Zamówienie gotowe do odbioru!";
+			String message = "Przyjechała dostawa. Zapraszamy po odbiór ;-)";
+			this.sendMail(title, message);
+
+		return "redirect:/cebs/order";
+	}
 
 	@RequestMapping(value = "/order/add", params = { "add" }, method = RequestMethod.POST)
 	public String showMakeBomSurvey(@RequestParam String add, CebsOrderForm cebsOrderFom,
@@ -152,6 +182,7 @@ public class CebsController {
 	@RequestMapping("/manage/starttoday")
 	public String startToday(Model model) throws UnknownHostException, MessagingException {
 		this.active = true;
+		this.confirmed = false;		
 		this.actionDate = Calendar.getInstance();
 		this.dayCode = "general.calendar.day" + actionDate.get(Calendar.DAY_OF_WEEK);
 		this.organizer = userService.getAuthenticatedUser().getName();
@@ -166,6 +197,7 @@ public class CebsController {
 	@RequestMapping("/manage/starttomorrow")
 	public String startTomorrow(Model model) throws UnknownHostException, MessagingException {
 		this.active = true;
+		this.confirmed = false;		
 		this.actionDate = Calendar.getInstance();
 		this.actionDate.add(Calendar.DAY_OF_MONTH, 1);
 		this.dayCode = "general.calendar.day" + actionDate.get(Calendar.DAY_OF_WEEK);
@@ -181,9 +213,10 @@ public class CebsController {
 	@RequestMapping("/manage/cancel")
 	public String cancel(Model model) throws UnknownHostException, MessagingException {
 		this.active = false;
+		this.confirmed = false;
 		this.items.clear();
-		String title = "Przerywamy akcję zamawiania";
-		String message = "Anulujemy akcję zamawiania - może innym razem";
+		String title = "Anulujemy akcję zamawiania";
+		String message = "Anulujemy akcję zamawiania, bar nieczynny lub inny powód - może innym razem";
 		this.sendMail(title, message);
 		return "redirect:/cebs/order";
 	}
@@ -191,6 +224,7 @@ public class CebsController {
 	@RequestMapping("/manage/finish")
 	public String finish(Model model) throws UnknownHostException, MessagingException {
 		this.active = false;
+		this.confirmed = false;		
 		this.items.clear();
 		return "redirect:/cebs/order";
 	}

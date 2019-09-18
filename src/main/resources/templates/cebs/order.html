@@ -97,21 +97,50 @@
 					<h3
 						th:utext="|Zbieramy na dzień: &lt;b&gt;#{${dayCode}}&lt;/b&gt;, ${actionDate}.&lt;/br&gt;Organizator: &lt;b&gt;${organizer}&lt;/b&gt; ;)|"
 						class="text-primary center"></h3>
-					<div class="margin-top-20 center" sec:authorize="hasAnyRole('ROLE_CEBSMANAGER', 'ROLE_ADMIN')">
+
+					<div th:if="${confirmed}" class="center alert alert-success margin-top-20">
+							<span class="glyphicon glyphicon-check"></span>&nbsp;
+							<span
+								th:utext="|Zamówienie potwierdzone. Trwa zbiórka pieniędzy.|"
+								class="text-success center"> </span>
+						
+					</div>
+					<div th:if="!${confirmed}" class="center alert alert-warning margin-top-20">
+							<span class="glyphicon glyphicon-exclamation-sign"></span>
+							<span
+								th:utext="|&lt;b&gt;Możliwość zamówienia nie została jeszcze potwierdzona w barze.
+								&lt;/br&gt;Wpisz zamówienie i czekaj.&lt;/b&gt; Informacja o konieczności zapłaty 
+								zostanie przekazana osobnym mailem.|"></span>
+							
+								
+						
+					</div>
+					<div class="margin-top-20 center"
+						sec:authorize="hasAnyRole('ROLE_CEBSMANAGER', 'ROLE_ADMIN')">
 						<a th:href="@{/cebs/manage}"
-							class="btn btn-success btn-md margin-top-5"> <span
-							class="glyphicon glyphicon-th-list"></span> <span
+							class="btn btn-primary btn-md margin-top-5"> <span
+							class="glyphicon glyphicon-th-list"></span> &nbsp; <span
 							th:text="|Zbiorczy podgląd zamówień|"></span>
-						</a> <a th:href="@{/cebs/manage/finish}"
-							class="btn btn-warning btn-md margin-top-5"
+						</a> <br /> <br /> <a th:href="@{/cebs/manage/confirmed}"
+							th:onclick="|return confirm('[MAIL] Informujesz wszystkich, że bar jest otwarty lub zamknięty. Decydujesz o zbiórce pieniędzy.')|"
+							class="btn btn-info btn-md margin-top-5"> <span
+							class="glyphicon glyphicon-refresh"></span> &nbsp;<span
+							th:text="|Zamówienie potwierdzone|"></span>
+						</a> <br /> <a th:href="@{/cebs/manage/arrived}"
+							th:onclick="|return confirm('[MAIL] Dostawca u bram!? Daj znać wszystkim!')|"
+							class="btn btn-info btn-md margin-top-5"> <span
+							class="glyphicon glyphicon-flag"></span> &nbsp; <span
+							th:text="|Dostawca u bram!|"></span>
+						</a> <br /> <a th:href="@{/cebs/manage/finish}"
+							class="btn btn-success btn-md margin-top-5"
 							th:onclick="|return confirm('Wszystkie dotychczasowe zamówienia zostaną skasowane, akcja zbierania zostanie zatrzymana')|">
-							<span class="glyphicon glyphicon-ok"></span> <span
-							th:text="|Zakończ zbieranie zamówień i skasuj listę|"></span>
-						</a> <a th:href="@{/cebs/manage/cancel}"
+							<span class="glyphicon glyphicon-ok"></span>&nbsp; <span
+							th:text="|Wyczyść listę zamówień|"></span>
+						</a> <br /> <br /> <a th:href="@{/cebs/manage/cancel}"
 							class="btn btn-danger btn-md margin-top-5"
-							th:onclick="|return confirm('Rezygnujemy ze zbierania? Zamówienia zostaną skasowane, akcja odwołana, a użytkownicy powiadomieni mailowo')|">
-							<span class="glyphicon glyphicon-remove"></span> <span
-							th:text="|Anuluj akcję i powiadom wszystkich o odwołaniu|"></span>
+							th:onclick="|return confirm('[MAIL] Rezygnujemy ze zbierania? Zamówienia zostaną skasowane, akcja odwołana, a użytkownicy powiadomieni mailowo')|">
+							<span class="glyphicon glyphicon-remove"></span>&nbsp; <span
+							th:text="|Niepowodzenie, anuluj akcję|"></span>
 						</a>
 
 					</div>
@@ -160,9 +189,11 @@
 				</div>
 				<div class="underline margin-top-10"></div>
 			</div>
-			
-			<div class="col-xs-12 col-md-5" style="border-left: 1px solid #337ab7;">
-				<h3 th:text="|Dodaj do swojego zamówienia|" class="text-primary center"></h3>
+
+			<div class="col-xs-12 col-md-5"
+				style="border-left: 1px solid #337ab7;">
+				<h3 th:text="|Dodaj do swojego zamówienia|"
+					class="text-primary center"></h3>
 				<form th:action="@{/cebs/order/add}" method="post"
 					th:object="${cebsOrderForm}">
 					<div class="row margin-top-20">
