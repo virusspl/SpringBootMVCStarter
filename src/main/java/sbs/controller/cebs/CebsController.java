@@ -145,7 +145,7 @@ public class CebsController {
 		this.confirmed = !this.confirmed;
 		if (confirmed) {
 			String title = "Zamówienie potwierdzone";
-			String message = "Zamówienie zostało zaakceptowane przez bar. Prosimy o zapłatę.";
+			String message = "Zamówienie zostało zaakceptowane przez bar i na pewno zostanie złożone. Prosimy o zapłatę.";
 			this.sendMail(title, message);
 		} else {
 			String title = "Potwierdzenie ODWOŁANE";
