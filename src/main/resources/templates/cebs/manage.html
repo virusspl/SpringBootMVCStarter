@@ -9,8 +9,17 @@
 .red {
 	color: #F50000;
 }
+
 .neutral {
 	
+}
+
+.summary-cell {
+	background: #F5F5F5;
+	border-bottom: 1px solid #AAAAAA;
+	padding: 10px 30px 10px 20px;
+	font-size: 140%;
+	font-weight: bold;
 }
 </style>
 
@@ -118,23 +127,26 @@
 									<th th:text="|Ile|">head</th>
 									<th th:text="|Suma [PLN]|">head</th>
 									<th th:text="|Uwagi|">head</th>
-									
+
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:each="item : ${items}" th:classappend="${item.paid} ? neutral : red">
+								<tr th:each="item : ${items}"
+									th:classappend="${item.paid} ? neutral : red">
 									<td><span th:text="${item.user.name}">txt</span></td>
-									<td><a th:href="|@{/cebs/manage/paid/}${item.id}|" style="text-align: center; display:block; width:100%;">
-									<span th:if="${item.paid}" class="glyphicon glyphicon-ok"></span>
-									<span th:if="!${item.paid}" class="glyphicon glyphicon-remove"></span>
-									
+									<td><a th:href="|@{/cebs/manage/paid/}${item.id}|"
+										style="text-align: center; display: block; width: 100%;">
+											<span th:if="${item.paid}" class="glyphicon glyphicon-ok"></span>
+											<span th:if="!${item.paid}"
+											class="glyphicon glyphicon-remove"></span>
+
 									</a></td>
 									<td><span th:text="${item.item}"></span></td>
 									<td><span th:text="${item.quantity}"></span></td>
 									<td><span th:text="${item.amount}"></span></td>
-									
+
 									<td><span th:text="${item.comment}"></span></td>
-									
+
 								</tr>
 							</tbody>
 						</table>
@@ -165,11 +177,33 @@
 					</div>
 				</div>
 			</div>
-			<div class="underline margin-top-10"></div>
-			<h1 th:text="|Do zapłaty: ${amount} PLN|" class="text-primary"></h1>
-			<div class="underline margin-top-10"></div>
-
-
+			<div class="underline margin-top-20"></div>
+			<table class="margin-top-20">
+				<tr class="text-primary">
+					<td class="summary-cell">
+						<span th:text="|Suma|"></span>
+					</td>
+					<td class="summary-cell"><span th:text="|${amount}|"> </span>
+					</td>
+				</tr>
+				<tr class="text-success">
+					<td class="summary-cell">
+						<span th:text="|Zebrane|"></span>
+					</td>
+					<td class="summary-cell">
+						<span th:text="|${paid}|"></span>
+					</td>
+				</tr>
+				<tr class="text-danger">
+					<td class="summary-cell">
+						<span th:text="|Brakuje|"></span>
+					</td>
+					<td class="summary-cell">
+						<span th:text="|${missing}|"></span>
+					</td>
+				</tr>
+			</table>
+			<div class="underline margin-top-20"></div>
 		</div>
 	</div>
 </body>

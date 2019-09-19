@@ -49,6 +49,7 @@ public class CebsController {
 
 	private boolean active;
 	private boolean confirmed;
+	private boolean sent;
 	private Map<Long, CebsItem> items;
 	private String organizer;
 	private Calendar actionDate;
@@ -59,6 +60,7 @@ public class CebsController {
 		model.addAttribute("organizer", organizer);
 		model.addAttribute("active", active);
 		model.addAttribute("confirmed", confirmed);
+		model.addAttribute("sent", sent);
 		model.addAttribute("actionDate", dateHelper.formatDdMmYyyy(actionDate.getTime()));
 		model.addAttribute("dayCode", dayCode);
 	}
@@ -66,6 +68,7 @@ public class CebsController {
 	public CebsController() {
 		active = false;
 		confirmed = false;
+		sent = false;
 		items = new TreeMap<>();
 		actionDate = Calendar.getInstance();
 	}
@@ -97,6 +100,7 @@ public class CebsController {
 		}
 		model.addAttribute("active", active);
 		model.addAttribute("confirmed", confirmed);
+		model.addAttribute("sent", sent);
 	}
 
 	private List<MenuItem> getMenuList() {
@@ -135,29 +139,34 @@ public class CebsController {
 		items.get(itemId).setPaid(!items.get(itemId).isPaid());
 		return "redirect:/cebs/manage";
 	}
-	
+
 	@RequestMapping("/manage/confirmed")
 	public String confirmedSwitch(RedirectAttributes redirectAttrs) throws UnknownHostException, MessagingException {
 		this.confirmed = !this.confirmed;
-		if(confirmed){
+		if (confirmed) {
 			String title = "Zamówienie potwierdzone";
 			String message = "Zamówienie zostało zaakceptowane przez bar. Prosimy o zapłatę.";
 			this.sendMail(title, message);
-		}
-		else{
+		} else {
 			String title = "Potwierdzenie ODWOŁANE";
 			String message = "Potwierdzenie zostało ODWOŁANE. Nie wiemy, czy zostanie zrealizowane - wstrzymujemy zbiórkę pieniędzy.";
 			this.sendMail(title, message);
 		}
 		return "redirect:/cebs/order";
 	}
-	
+
+	@RequestMapping("/manage/sent")
+	public String sentSwitch(RedirectAttributes redirectAttrs) throws UnknownHostException, MessagingException {
+		this.sent = !this.sent;
+		return "redirect:/cebs/order";
+	}
+
 	@RequestMapping("/manage/arrived")
 	public String arrived(RedirectAttributes redirectAttrs) throws UnknownHostException, MessagingException {
-		
-			String title = "Zamówienie gotowe do odbioru!";
-			String message = "Przyjechała dostawa. Zapraszamy po odbiór ;-)";
-			this.sendMail(title, message);
+
+		String title = "Zamówienie gotowe do odbioru!";
+		String message = "Przyjechała dostawa. Zapraszamy po odbiór ;-)";
+		this.sendMail(title, message);
 
 		return "redirect:/cebs/order";
 	}
@@ -165,15 +174,17 @@ public class CebsController {
 	@RequestMapping(value = "/order/add", params = { "add" }, method = RequestMethod.POST)
 	public String showMakeBomSurvey(@RequestParam String add, CebsOrderForm cebsOrderFom,
 			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
-		List<MenuItem> menu = getMenuList();
-		for (MenuItem item : menu) {
-			if (item.getId().equals(add)) {
-				CebsItem ci = new CebsItem(userService.getAuthenticatedUser());
-				ci.setComment(cebsOrderFom.getComment().trim());
-				ci.setItem(item.getText());
-				ci.setQuantity(cebsOrderFom.getQuantity());
-				ci.setAmount(item.getPrice() * cebsOrderFom.getQuantity());
-				this.items.put(ci.getId(), ci);
+		if (!sent) {
+			List<MenuItem> menu = getMenuList();
+			for (MenuItem item : menu) {
+				if (item.getId().equals(add)) {
+					CebsItem ci = new CebsItem(userService.getAuthenticatedUser());
+					ci.setComment(cebsOrderFom.getComment().trim());
+					ci.setItem(item.getText());
+					ci.setQuantity(cebsOrderFom.getQuantity());
+					ci.setAmount(item.getPrice() * cebsOrderFom.getQuantity());
+					this.items.put(ci.getId(), ci);
+				}
 			}
 		}
 		return "redirect:/cebs/order";
@@ -182,7 +193,8 @@ public class CebsController {
 	@RequestMapping("/manage/starttoday")
 	public String startToday(Model model) throws UnknownHostException, MessagingException {
 		this.active = true;
-		this.confirmed = false;		
+		this.confirmed = false;
+		this.sent = false;
 		this.actionDate = Calendar.getInstance();
 		this.dayCode = "general.calendar.day" + actionDate.get(Calendar.DAY_OF_WEEK);
 		this.organizer = userService.getAuthenticatedUser().getName();
@@ -197,7 +209,8 @@ public class CebsController {
 	@RequestMapping("/manage/starttomorrow")
 	public String startTomorrow(Model model) throws UnknownHostException, MessagingException {
 		this.active = true;
-		this.confirmed = false;		
+		this.confirmed = false;
+		this.sent = false;
 		this.actionDate = Calendar.getInstance();
 		this.actionDate.add(Calendar.DAY_OF_MONTH, 1);
 		this.dayCode = "general.calendar.day" + actionDate.get(Calendar.DAY_OF_WEEK);
@@ -214,6 +227,7 @@ public class CebsController {
 	public String cancel(Model model) throws UnknownHostException, MessagingException {
 		this.active = false;
 		this.confirmed = false;
+		this.sent = false;
 		this.items.clear();
 		String title = "Anulujemy akcję zamawiania";
 		String message = "Anulujemy akcję zamawiania, bar nieczynny lub inny powód - może innym razem";
@@ -224,7 +238,8 @@ public class CebsController {
 	@RequestMapping("/manage/finish")
 	public String finish(Model model) throws UnknownHostException, MessagingException {
 		this.active = false;
-		this.confirmed = false;		
+		this.confirmed = false;
+		this.sent = false;
 		this.items.clear();
 		return "redirect:/cebs/order";
 	}
@@ -232,17 +247,23 @@ public class CebsController {
 	@RequestMapping("/manage")
 	public String manage(Model model) {
 		Double amount = 0.0;
+		Double paid = 0.0;
 		List<CebsItem> currentItems = new ArrayList<>();
 		Map<String, Integer> summary = new TreeMap<>();
 
 		for (CebsItem item : items.values()) {
 			currentItems.add(item);
 			amount += item.getAmount();
+			if(item.isPaid()){
+				paid += item.getAmount();
+			}
 			summary.put(item.getItem(), item.getQuantity() + summary.getOrDefault(item.getItem(), 0));
 		}
 
 		model.addAttribute("items", currentItems);
 		model.addAttribute("amount", amount);
+		model.addAttribute("paid", paid);
+		model.addAttribute("missing", amount-paid);
 		model.addAttribute("summary", summary);
 
 		return "cebs/manage";
