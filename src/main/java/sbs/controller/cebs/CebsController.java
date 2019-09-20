@@ -146,11 +146,11 @@ public class CebsController {
 		if (confirmed) {
 			String title = "Zamówienie potwierdzone";
 			String message = "Zamówienie zostało zaakceptowane przez bar i na pewno zostanie złożone. Prosimy o zapłatę.";
-			this.sendMail(title, message);
+			this.sendMail(title, message, true);
 		} else {
 			String title = "Potwierdzenie ODWOŁANE";
 			String message = "Potwierdzenie zostało ODWOŁANE. Nie wiemy, czy zostanie zrealizowane - wstrzymujemy zbiórkę pieniędzy.";
-			this.sendMail(title, message);
+			this.sendMail(title, message, true);
 		}
 		return "redirect:/cebs/order";
 	}
@@ -166,13 +166,13 @@ public class CebsController {
 
 		String title = "Zamówienie gotowe do odbioru!";
 		String message = "Przyjechała dostawa. Zapraszamy po odbiór ;-)";
-		this.sendMail(title, message);
+		this.sendMail(title, message, true);
 
 		return "redirect:/cebs/order";
 	}
 
 	@RequestMapping(value = "/order/add", params = { "add" }, method = RequestMethod.POST)
-	public String showMakeBomSurvey(@RequestParam String add, CebsOrderForm cebsOrderFom,
+	public String addToOrder(@RequestParam String add, CebsOrderForm cebsOrderFom,
 			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
 		if (!sent) {
 			List<MenuItem> menu = getMenuList();
@@ -202,7 +202,7 @@ public class CebsController {
 		String message = "Jeżeli wszystko się uda, zamówienie będzie relizowane DZISIAJ, "
 				+ dateHelper.formatDdMmYyyy(actionDate.getTime())
 				+ ". <br/>Proszę wejść na stronę z linku poniżej i dopisać się do listy ;)";
-		this.sendMail(title, message);
+		this.sendMail(title, message, false);
 		return "redirect:/cebs/order";
 	}
 
@@ -219,7 +219,7 @@ public class CebsController {
 		String message = "Jeżeli wszystko się uda, zamówienie będzie relizowane JUTRO, "
 				+ dateHelper.formatDdMmYyyy(actionDate.getTime())
 				+ ". <br/>Proszę wejść na stronę z linku poniżej i dopisać się do listy ;)";
-		this.sendMail(title, message);
+		this.sendMail(title, message, false);
 		return "redirect:/cebs/order";
 	}
 
@@ -228,10 +228,10 @@ public class CebsController {
 		this.active = false;
 		this.confirmed = false;
 		this.sent = false;
-		this.items.clear();
 		String title = "Anulujemy akcję zamawiania";
 		String message = "Anulujemy akcję zamawiania, bar nieczynny lub inny powód - może innym razem";
-		this.sendMail(title, message);
+		this.sendMail(title, message, true);
+		this.items.clear();
 		return "redirect:/cebs/order";
 	}
 
@@ -269,10 +269,18 @@ public class CebsController {
 		return "cebs/manage";
 	}
 
-	private void sendMail(String title, String message) throws UnknownHostException, MessagingException {
+	private void sendMail(String title, String message, boolean orderedOnly) throws UnknownHostException, MessagingException {
 
-		List<User> cebsUsers = userService
-				.findByAnyRole(new String[] { "ROLE_CEBSMANAGER", "ROLE_CEBSUSER", "ROLE_ADMIN" });
+		List<User> cebsUsers = new ArrayList<>();
+		
+		if(orderedOnly){
+			cebsUsers = getOrderedMailingList();
+		}
+		else{
+			cebsUsers = userService
+					.findByAnyRole(new String[] { "ROLE_CEBSMANAGER", "ROLE_CEBSUSER", "ROLE_ADMIN" });	
+		}
+		
 		ArrayList<String> mailTo = new ArrayList<>();
 		for (User user : cebsUsers) {
 			mailTo.add(user.getEmail());
@@ -283,7 +291,17 @@ public class CebsController {
 		context.setVariable("title", title);
 		context.setVariable("message", message);
 		String body = templateEngine.process("cebs/mailtemplate", context);
-		mailService.sendEmail("webapp@atwsystem.pl", mailTo.toArray(new String[0]), new String[0], title, body);
+		if(mailTo.size()>0){
+			mailService.sendEmail("webapp@atwsystem.pl", mailTo.toArray(new String[0]), new String[0], title, body);
+		}
+	}
+
+	private List<User> getOrderedMailingList() {
+		List<User> list = new ArrayList<>();
+		for (CebsItem item : items.values()) {
+			list.add(item.getUser());
+		}
+		return list;
 	}
 
 }

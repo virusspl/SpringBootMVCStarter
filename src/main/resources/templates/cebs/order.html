@@ -59,11 +59,28 @@
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-xs-12">
-				<h3 th:text="|Lista zamówień osób zaufanych|" class="text-primary"></h3>
+				<h3 th:text="|Lista zamówień tylko dla osób zaufanych|" class="text-primary"></h3>
 			</div>
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
 				<span
-					th:utext="|Aplikacja wspólnego zaufania - nie ma setki zabezpieczeń i kontroli poprawności danych :)|">
+					th:utext="|
+					Aplikacja powstała w związku z niepodważalną potrzebą automatyzacji składania zamówień.
+					&lt;br/&gt;
+					&lt;br/&gt;
+					&lt;b/&gt;Aktualnie obowiązująca kolejność działań:&lt;/b/&gt;
+					&lt;br/&gt;
+					&lt;b/&gt;1.&lt;/b/&gt; Rozpoczęcie zbierania, powiadomienie mailowe, można się dopisywac do listy - jeszcze nie zbieramy pieniędzy.
+					&lt;br/&gt;
+					&lt;b/&gt;2a.&lt;/b/&gt; W przypadku potwierdzenia z baru (otwarty, gotowy), powiadomienie mailowe o zbiórce pieniędzy.
+					&lt;br/&gt;
+					&lt;b/&gt;2b.&lt;/b/&gt; W przypadku braku informacji z baru lub informacji o zamknięciu, powiadomienie mailowe o anulowaniu akcji.
+					&lt;br/&gt;
+					&lt;b/&gt;3.&lt;/b/&gt; Po wysłaniu zamówienia do baru, możliwość dopisywania się do listy znika. Wtedy jedyna droga, to kontakt z organizatorem akcji.
+					&lt;br/&gt;
+					&lt;b/&gt;4.&lt;/b/&gt; Kiedy zamówienie przyjedzie do firmy, powiadomienie zostanie wysłane mailem.
+					&lt;br/&gt;
+					&lt;br/&gt;
+					|">
 					Welcome message </span>
 			</div>
 			<a th:href="@{/}" class="btn btn-link btn-sm"> <span
