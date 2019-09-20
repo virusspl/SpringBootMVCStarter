@@ -1,7 +1,5 @@
 package sbs.controller.downtimes;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Locale;
@@ -70,7 +68,7 @@ public class DowntimesController {
 	public List<DowntimeCause> getCauses() {
 		return currentCauses;
 	}
-	
+
 	@ModelAttribute("currentType")
 	public DowntimeType getCurrentType() {
 		return currentType;
@@ -83,12 +81,8 @@ public class DowntimesController {
 
 	@RequestMapping(value = "/dispatch")
 	public String dispatch(Model model) {
-		if (userHolder.isSet()) {
-			model.addAttribute("downtimes", downtimesService.findAllPending());
-			return "downtimes/dispatch";
-		} else {
-			return "redirect:/industry/dispatch";
-		}
+		model.addAttribute("downtimes", downtimesService.findAllPending());
+		return "downtimes/dispatch";
 	}
 
 	@RequestMapping(value = "/create/{type}")
@@ -122,68 +116,64 @@ public class DowntimesController {
 	public String addCause(@Valid FormDowntimeCreate formDowntimeCreate, BindingResult bindingResult,
 			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
 
-		if(!userHolder.isSet()){
-			redirectAttrs.addFlashAttribute("error", messageSource.getMessage("error.user.not.authenticated", null, locale));
+		if (!userHolder.isSet()) {
+			redirectAttrs.addFlashAttribute("error",
+					messageSource.getMessage("error.user.not.authenticated", null, locale));
 			return "redirect:/industry/dispatch";
 		}
-		
+
 		Downtime downtime = null;
 		DowntimeDetailsFailure failure = null;
 		DowntimeDetailsMaterial material = null;
-		
+
 		// validate special fields
-		if (formDowntimeCreate.getTypeInternalTitle()
-				.equals(DowntimeCausesService.CAUSE_FAULT)) {
-			// FAULT, take X3 number			
+		if (formDowntimeCreate.getTypeInternalTitle().equals(DowntimeCausesService.CAUSE_FAULT)) {
+			// FAULT, take X3 number
 			formDowntimeCreate.setX3FailureNumber(formDowntimeCreate.getX3FailureNumber().trim().toUpperCase());
-			if(formDowntimeCreate.getX3FailureNumber() != null && formDowntimeCreate.getX3FailureNumber().length() > 0){
+			if (formDowntimeCreate.getX3FailureNumber() != null
+					&& formDowntimeCreate.getX3FailureNumber().length() > 0) {
 				X3UtrFault fault = x3Service.findUtrFault(formDowntimeCreate.getX3FailureNumber().trim());
-				if(fault == null){
-					bindingResult.rejectValue("x3FailureNumber", "downtimes.error.failure.notfound",
-							"ERROR");
-				}
-				else{
+				if (fault == null) {
+					bindingResult.rejectValue("x3FailureNumber", "downtimes.error.failure.notfound", "ERROR");
+				} else {
 					failure = new DowntimeDetailsFailure(fault);
 				}
 			}
-			
-		} else if (formDowntimeCreate.getTypeInternalTitle()
-				.equals(DowntimeCausesService.CAUSE_MATERIAL)) {
-			
+
+		} else if (formDowntimeCreate.getTypeInternalTitle().equals(DowntimeCausesService.CAUSE_MATERIAL)) {
+
 			// MATERIAL, check product in X3
 			formDowntimeCreate.setProductCode(formDowntimeCreate.getProductCode().trim().toUpperCase());
 			X3Product product = x3Service.findProductByCode("ATW", formDowntimeCreate.getProductCode());
-			if(product == null){
-				bindingResult.rejectValue("productCode", "error.no.such.product",
-						"ERROR");
-			}
-			else{
+			if (product == null) {
+				bindingResult.rejectValue("productCode", "error.no.such.product", "ERROR");
+			} else {
 				material = new DowntimeDetailsMaterial();
 				material.setProductCode(product.getCode());
 				material.setProductDescription(product.getDescription());
 				material.setProductCategory(product.getCategory());
 			}
 		}
-		
+
 		if (bindingResult.hasErrors()) {
 			return "downtimes/create";
 		}
-		
+
 		// check basic structure fields
 		DowntimeType type = typesService.findByInternalTitle(formDowntimeCreate.getTypeInternalTitle());
-		if(type == null){
+		if (type == null) {
 			throw new NotFoundException("Downtime type not found: " + formDowntimeCreate.getTypeInternalTitle());
 		}
-		
+
 		X3Workstation workstation = x3Service.findWorkstationByCode("ATW", formDowntimeCreate.getMachineCode());
-		if(workstation == null){
+		if (workstation == null) {
 			throw new NotFoundException("Workstation not found: " + formDowntimeCreate.getMachineCode());
 		}
-		
+
 		DowntimeCause cause = causesService.findById(formDowntimeCreate.getCauseId());
-		if(cause == null){
+		if (cause == null) {
 			throw new NotFoundException("Downtime cause not found: " + formDowntimeCreate.getMachineCode());
-		}		
+		}
 
 		// SAVE
 		downtime = new Downtime();
@@ -199,14 +189,14 @@ public class DowntimesController {
 		downtime.setInitLastName(userHolder.getInfo().getLastName());
 		downtime.setInitPosition(userHolder.getInfo().getPosition());
 		downtime.setInitDepartment(userHolder.getInfo().getDepartment());
-		
+
 		downtimesService.save(downtime);
-		
+
 		// save child rows
-		if(material != null){
+		if (material != null) {
 			material.setDowntime(downtime);
 			materialDetailsService.save(material);
-		} else if(failure != null) {
+		} else if (failure != null) {
 			failure.setDowntime(downtime);
 			failureDetailsService.save(failure);
 		}
@@ -214,18 +204,75 @@ public class DowntimesController {
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/downtimes/dispatch";
 	}
-	
+
 	@RequestMapping(value = "/show/{id}")
-	public String showDowntime(@PathVariable("id") int id, Model model) throws NotFoundException{
-		
+	public String showDowntime(@PathVariable("id") int id, Model model) throws NotFoundException {
+
 		Downtime downtime = downtimesService.findById(id);
 		if (downtime == null) {
 			throw new NotFoundException("Downtime not found: #" + id);
 		}
-		
-		model.addAttribute("downtime", downtime);		
-		
+
+		model.addAttribute("dt", downtime);
+		model.addAttribute("formDowntimeClose", new FormDowntimeClose(downtime.getId()));
+
+		if (!downtime.getFailureDetails().isEmpty()) {
+			model.addAttribute("ddf", downtime.getFailureDetails().toArray()[0]);
+		}
+
+		if (!downtime.getMaterialDetails().isEmpty()) {
+			model.addAttribute("ddm", downtime.getMaterialDetails().toArray()[0]);
+		}
+
 		return "downtimes/show";
 	}
+	
+	@RequestMapping(value = "/close", method = RequestMethod.POST)
+	@Transactional
+	public String close(@Valid FormDowntimeClose formDowntimeClose, BindingResult bindingResult,
+			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
+
+		if (!userHolder.isSet()) {
+			redirectAttrs.addFlashAttribute("error",
+					messageSource.getMessage("error.user.not.authenticated", null, locale));
+			return "redirect:/industry/dispatch";
+		}
+		
+		
+		Downtime downtime = downtimesService.findById(formDowntimeClose.getDowntimeId());
+		if (downtime == null) {
+			throw new NotFoundException("Downtime not found: #" + formDowntimeClose.getDowntimeId());
+		}
+
+		if(bindingResult.hasErrors()){
+			System.out.println(bindingResult.getAllErrors());
+			model.addAttribute("dt", downtime);
+			if (!downtime.getFailureDetails().isEmpty()) {
+				model.addAttribute("ddf", downtime.getFailureDetails().toArray()[0]);
+			}
+			if (!downtime.getMaterialDetails().isEmpty()) {
+				model.addAttribute("ddm", downtime.getMaterialDetails().toArray()[0]);
+			}
+			return "downtimes/show";
+		}
+		
+		downtime.setOpened(false);
+		downtime.setEndComment(formDowntimeClose.getEndComment().trim());
+		downtime.setEndDate(new Timestamp(new java.util.Date().getTime()));
+		downtime.setEndRcpNumber(userHolder.getInfo().getRcpNumber());
+		downtime.setEndFirstName(userHolder.getInfo().getFirstName());
+		downtime.setEndLastName(userHolder.getInfo().getLastName());
+		downtime.setEndPosition(userHolder.getInfo().getPosition());
+		downtime.setEndDepartment(userHolder.getInfo().getDepartment());
+
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/downtimes/show/"+downtime.getId();
+		
+
+		
+		
+		
+	}
+	
 
 }

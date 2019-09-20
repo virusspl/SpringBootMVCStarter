@@ -36,13 +36,15 @@ public class IndustryController {
 	
 	@RequestMapping(value = "/dispatch")
 	public String dispatch(Model model) {
-		if (userHolder.isSet()) {
 			return "industry/dispatch";
-		} else {
-			model.addAttribute("rcpCardForm", new RcpCardForm());
-			return "industry/readcard";
-		}
 	}
+	
+	@RequestMapping(value = "/readcard")
+	public String readCardView(Model model) {
+		model.addAttribute("rcpCardForm", new RcpCardForm());
+		return "industry/readcard";
+	}
+	
 	
 	@RequestMapping(value = "/rcplogin", method = RequestMethod.POST)
 	public String findUser(@Valid RcpCardForm rcpCardForm, BindingResult bindingResult,
