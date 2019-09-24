@@ -18,7 +18,14 @@
 		</div>
 		<!-- MODULES -->
 		<div class="row margin-top-10">
-			<!-- HANDY LINKS -->
+		<div class="col-xs-12">
+			<a class="btn btn-link btn-md margin-top-0"
+					href="http://192.168.1.23/DOCS/WebApp_General.pdf" target="_blank"> <span
+					class="glyphicon glyphicon-folder-open">&nbsp;</span>
+					<span th:text="#{general.manual.webapp.general}"> </span>
+				</a>
+				</div>
+			<!-- NAMEDAY -->
 			<div id="social" th:if="${dayCode}">
 				<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
 					<h3 class="text-primary" th:text="|#{welcome.dontforget}!|">tickets</h3>
