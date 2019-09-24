@@ -113,9 +113,11 @@ html {
 }
 
 .industry-col-title {
-	padding: 5px 15px 5px 5px;
+	padding: 5px 15px 15px 5px;
+	/*border-bottom: 1px solid lightgrey;*/
 }
 	
 .industry-col-descr {
-	padding: 5px;
+	padding: 5px 15px 15px 5px;
+	/*border-bottom: 1px solid lightgrey;*/
 }

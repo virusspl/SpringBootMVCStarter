@@ -24,6 +24,31 @@
 				th:text="#{action.back}">back</span>
 			</a>
 		</div>
+		<div class="row">
+			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
+				<h3 class="text-primary" th:text="#{general.manuals}">Panel With
+					title</h3>
+			</div>
+			<div class="col-xs-12">
+				<a class="btn btn-link btn-md margin-top-5"
+					href="http://192.168.1.23/DOCS/IND.4.0-General.pdf" target="_blank">
+					<span class="glyphicon glyphicon-link"></span>
+					<span th:text="|Industry 4.0 - #{general.generalinfo}|">Codification</span>
+				</a>
+				<a class="btn btn-link btn-md margin-top-5"
+					href="http://192.168.1.23/DOCS/IND.4.0-Downtimes_User.pdf" target="_blank">
+					<span class="glyphicon glyphicon-time"></span>
+					<span th:text="|#{downtimes.title}|">Codification</span>
+				</a>
+				<a 
+					sec:authorize="hasAnyRole('ROLE_OWNER', 'ROLE_ADMIN', 'ROLE_INDUSTRYMANAGER')"
+					class="btn btn-link btn-md margin-top-5"
+					href="http://192.168.1.23/DOCS/IND.4.0-Downtimes_Manager.pdf" target="_blank">
+					<span class="glyphicon glyphicon-time"></span>
+					<span th:text="|#{downtimes.title} - #{general.management}|">Codification</span>
+				</a>
+			</div>
+		</div>
 		<!-- MODULES -->
 		<div class="row">
 			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
@@ -33,16 +58,43 @@
 			<div class="col-xs-12 margin-top-10">
 				<table style="width: 100%;">
 					<tr>
-						<td class="industry-col-title"><a
-							class="btn btn-info btn-md"
+						<td class="industry-col-title"><a class="btn btn-info btn-md"
 							th:href="@{/downtimes/dispatch}"> <span
 								class="glyphicon glyphicon-time" style="margin-right: 10px;"></span>
 								<span th:text="#{downtimes.title}">begin</span>
 						</a></td>
-						<td class="industry-col-title"><span
+						<td class="industry-col-descr"><span
 							th:text="#{downtimes.message}"></span></td>
 					</tr>
-
+					<tr>
+						<td class="industry-col-title"><a th:href="@{/geolook/map}"
+							class="btn btn-info btn-md margin-top-5"> <span
+								class="glyphicon glyphicon-th" style="margin-right: 10px;"></span>
+								<span th:text="|#{geolook.warehouses.map} ADRP|">title</span>
+						</a></td>
+						<td class="industry-col-descr"><span
+							th:text="#{geolook.map.message}"></span></td>
+					</tr>
+					<tr>
+						<td class="industry-col-title"><a
+							th:href="@{/geolook/search}"
+							class="btn btn-info btn-md margin-top-5"> <span
+								class="glyphicon glyphicon-search" style="margin-right: 10px;"></span>
+								<span th:text="|#{geolook.warehouses.lookup} ADRP|">title</span>
+						</a></td>
+						<td class="industry-col-descr"><span
+							th:text="#{geolook.message}"></span></td>
+					</tr>
+					<tr>
+						<td class="industry-col-title"><a
+							th:href="@{/wpslook/search}"
+							class="btn btn-info btn-md margin-top-5"> <span
+								class="glyphicon glyphicon-search" style="margin-right: 10px;"></span>
+								<span th:text="#{wpslook.warehouses.lookup}">WPS Lookup</span>
+						</a></td>
+						<td class="industry-col-descr"><span
+							th:text="#{wpslook.message}"></span></td>
+					</tr>
 				</table>
 			</div>
 		</div>
