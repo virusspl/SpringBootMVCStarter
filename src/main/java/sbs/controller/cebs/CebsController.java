@@ -11,6 +11,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.TreeMap;
 
 import javax.mail.MessagingException;
@@ -166,7 +168,22 @@ public class CebsController {
 
 		String title = "Zamówienie gotowe do odbioru!";
 		String message = "Przyjechała dostawa. Zapraszamy po odbiór ;-)";
-		this.sendMail(title, message, true);
+		
+		new Timer().schedule(
+			    new TimerTask() {
+			        @Override
+			        public void run() {
+			        	try {
+							sendMail(title, message, true);
+						} catch (UnknownHostException | MessagingException e) {
+							
+						}
+			        }
+			    }, 
+			    180000
+			);
+		
+		
 
 		return "redirect:/cebs/order";
 	}
