@@ -79,6 +79,9 @@
 	<cache name="downtimeTypes" maxBytesLocalHeap="1m"
 		timeToLiveSeconds="604800">
 	</cache>
+	<cache name="pdfListFromDirectory" maxBytesLocalHeap="1m"
+		timeToLiveSeconds="10800">
+	</cache>
 	<cache name="x3Workstations" maxBytesLocalHeap="1m"
 		timeToLiveSeconds="86400">
 	</cache>
