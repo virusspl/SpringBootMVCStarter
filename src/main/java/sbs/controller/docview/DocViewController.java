@@ -6,11 +6,14 @@ import java.io.InputStream;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletResponse;
-
+import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +27,7 @@ import sbs.helpers.FileHelper;
 @Controller
 @RequestMapping("docview")
 public class DocViewController {
-	
+
 	public static final String TYPE_WORK_MANUALS = "workmanuals";
 	public static final String TYPE_INFO_FORMS = "infoforms";
 
@@ -33,7 +36,7 @@ public class DocViewController {
 
 	private String workManualsPath;
 	private String infoFormsPath;
-	
+
 	private Map<String, String> workManuals;
 	private Map<String, String> infoForms;
 
@@ -54,9 +57,9 @@ public class DocViewController {
 	@RequestMapping("/list/{type}")
 	public String type(@PathVariable String type, Model model) throws NotFoundException {
 
-		Map<String,String> currentMap;
+		Map<String, String> currentMap;
 		String currentTypeCode;
-		
+
 		switch (type) {
 		case TYPE_WORK_MANUALS:
 			workManuals = fileHelper.getPdfMap(new File(workManualsPath));
@@ -71,19 +74,20 @@ public class DocViewController {
 		default:
 			throw new NotFoundException("Document type unknown: '" + type + "'");
 		}
-		
+
 		model.addAttribute("type", type);
 		model.addAttribute("files", currentMap);
 		model.addAttribute("typeCode", currentTypeCode);
-		
+
 		return "docview/list";
 	}
 
-	@RequestMapping(value = "/get/{type}", params = { "fileName" }, method = RequestMethod.POST)
-	public void getFile(@PathVariable String type, @RequestParam String fileName, HttpServletResponse response,
-			Locale locale) throws NotFoundException {
+	@RequestMapping(value = "/get/{type}", params = { "fileName" }, method = RequestMethod.GET)
+	// HttpServletResponse response, in arguments
+	public ResponseEntity<byte[]> getFile(@PathVariable String type, @RequestParam String fileName, Locale locale)
+			throws NotFoundException {
 
-		Map<String,String> currentMap;
+		Map<String, String> currentMap;
 
 		switch (type) {
 		case TYPE_WORK_MANUALS:
@@ -95,18 +99,42 @@ public class DocViewController {
 		default:
 			throw new NotFoundException("Document type unknown: '" + type + "'");
 		}
-		
+
 		if (currentMap.containsKey(fileName)) {
 			try {
 				File file = new File(currentMap.get(fileName));
 				InputStream is = FileUtils.openInputStream(file);
-				org.apache.commons.io.IOUtils.copy(is, response.getOutputStream());
-				response.flushBuffer();
-				response.setContentType("application/pdf");
+				byte[] bytes = IOUtils.toByteArray(is);
 				is.close();
+
+				HttpHeaders headers = new HttpHeaders();
+				headers.setContentType(MediaType.APPLICATION_PDF);
+				headers.add("content-disposition", "inline;filename=" + fileName + ".pdf");
+				headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+				ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(bytes, headers, HttpStatus.OK);
+				return response;
+
 			} catch (IOException ex) {
 				throw new RuntimeException("I/O error while reading file '" + fileName + "': " + ex.getMessage());
 			}
+			
+			/*
+			try {
+				File file = new File(currentMap.get(fileName));
+				InputStream is = FileUtils.openInputStream(file);
+				org.apache.commons.io.IOUtils.copy(is, response.getOutputStream());
+
+				response.addHeader("Content-Disposition", "inline; filename=" + fileName);
+				response.setContentType("application/pdf");
+
+				// response.flushBuffer();
+			} catch (IOException ex) {
+				throw new RuntimeException("I/O error while reading file '" + fileName + "': " + ex.getMessage());
+			}
+			*/
+			
+		} else {
+			throw new NotFoundException("File not found: '" + fileName + "'");
 		}
 	}
 }
