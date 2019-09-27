@@ -30,15 +30,18 @@ public class DocViewController {
 
 	public static final String TYPE_WORK_MANUALS = "workmanuals";
 	public static final String TYPE_INFO_FORMS = "infoforms";
+	public static final String TYPE_DRAWINGS_NOT_MERIDIAN = "notmeriddraw";
 
 	@Autowired
 	private FileHelper fileHelper;
 
 	private String workManualsPath;
 	private String infoFormsPath;
+	private String notMeridianDrawingsPath;
 
 	private Map<String, String> workManuals;
 	private Map<String, String> infoForms;
+	private Map<String, String> notMeridianDrawings;
 
 	/* inject PDF into HTML */
 	// https://stackoverflow.com/questions/2740297/display-adobe-pdf-inside-a-div
@@ -47,6 +50,7 @@ public class DocViewController {
 	public DocViewController(Environment env) {
 		workManualsPath = env.getRequiredProperty("industry.dir.workmanuals");
 		infoFormsPath = env.getRequiredProperty("industry.dir.infoforms");
+		notMeridianDrawingsPath = env.getRequiredProperty("industry.dir.notmeriddraw");
 	}
 
 	@RequestMapping("/dispatch")
@@ -70,6 +74,11 @@ public class DocViewController {
 			infoForms = fileHelper.getPdfMap(new File(infoFormsPath));
 			currentMap = infoForms;
 			currentTypeCode = "docview.type.infoforms";
+			break;
+		case TYPE_DRAWINGS_NOT_MERIDIAN:
+			notMeridianDrawings = fileHelper.getPdfMap(new File(notMeridianDrawingsPath));
+			currentMap = notMeridianDrawings;
+			currentTypeCode = "docview.type.notmeriddraw";
 			break;
 		default:
 			throw new NotFoundException("Document type unknown: '" + type + "'");
@@ -95,6 +104,9 @@ public class DocViewController {
 			break;
 		case TYPE_INFO_FORMS:
 			currentMap = infoForms;
+			break;
+		case TYPE_DRAWINGS_NOT_MERIDIAN:
+			currentMap = notMeridianDrawings;
 			break;
 		default:
 			throw new NotFoundException("Document type unknown: '" + type + "'");

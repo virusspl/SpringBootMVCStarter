@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
 
-<!-- sec 1 min 60 h 3600 3h 10800 6h 21600 12h 43200 24h 86400 week 604800 
-	month 2419200 6 months 14515200 -->
+<!-- 
+	sec 1
+ 	min 60 
+ 	h 3600 
+ 	3h 10800 
+ 	6h 21600 
+ 	12h 43200 
+ 	24h 86400 
+ 	week 604800 
+	month 2419200 
+	6 months 14515200 
+-->
 
 <!-- 
 	<sizeOfPolicy maxDepth="5500" maxDepthExceededBehavior="abort"/> 
@@ -79,12 +89,12 @@
 	<cache name="downtimeTypes" maxBytesLocalHeap="1m"
 		timeToLiveSeconds="604800">
 	</cache>
-	<cache name="pdfListFromDirectory" maxBytesLocalDisk="5m"
-		timeToLiveSeconds="10800">
-	</cache>
 	<cache name="x3Workstations" maxBytesLocalHeap="1m"
 		timeToLiveSeconds="86400">
 	</cache>
+	<cache name="pdfListFromDirectory" maxBytesLocalDisk="5m"
+		timeToLiveSeconds="43200">
+	</cache>	
 	<!-- <cache name="x3PendingProjectsProgress" maxBytesLocalHeap="1m" timeToLiveSeconds="86400"> 
 		</cache> -->
 	<!-- <cache name="allEmployed" maxBytesLocalHeap="2m" timeToLiveSeconds="3600"> 
