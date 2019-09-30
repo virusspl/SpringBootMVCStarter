@@ -4,6 +4,11 @@
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
 	layout:decorator="layout/main">
 <head lang="pl">
+<style>
+.docview-title-cel {
+	border-bottom: 1px solid #DFDFDF;
+}
+</style>
 </head>
 <body>
 
@@ -40,12 +45,11 @@
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-xs-12 col-xs-offset-0">
-				<h2 th:text="#{docview.title}" class="text-primary">Hello
-					on a page</h2>
+				<h2 th:text="#{docview.title}" class="text-primary">Hello on a
+					page</h2>
 			</div>
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
-				<span th:text="#{docview.message}"> Welcome message
-				</span>
+				<span th:text="#{docview.message}"> Welcome message </span>
 			</div>
 			<!-- BACK TO MAIN PAGE -->
 			<a th:href="@{/industry/dispatch/}" class="btn btn-link btn-sm">
@@ -61,9 +65,35 @@
 			</div>
 			<div class="col-xs-12 margin-top-10">
 				<table style="width: 100%">
+					<!-- HEADER LINE -->
+					<tr class="docview-title-cel">
+						<td colspan="2" class="left">
+							<h4 class="text-primary">
+								<span class="glyphicon glyphicon-triangle-right"></span>&nbsp;<span
+									th:text="#{department.quality.control}"></span>
+							</h4>
+						</td>
+					</tr>
+					<!-- /HEADER LINE -->
 					<!-- LINE START -->
 					<tr>
 						<td class="industry-col-title"><a class="btn btn-info btn-md"
+							data-toggle="tooltip" data-placement="right"
+							th:title="|#{docview.warning.longtask}|"
+							th:href="@{/docview/list/checkspec}"> <span
+								class="glyphicon glyphicon-chevron-right"
+								style="margin-right: 10px;"></span> <span
+								th:text="#{docview.type.checkspec}">txt</span>
+						</a></td>
+						<td class="industry-col-descr"><span
+							th:text="#{docview.type.checkspec.description}">txt</span></td>
+					</tr>
+					<!-- LINE END -->
+					<!-- LINE START -->
+					<tr>
+						<td class="industry-col-title"><a class="btn btn-info btn-md"
+							data-toggle="tooltip" data-placement="right"
+							th:title="|#{docview.warning.longtask}|"						
 							th:href="@{/docview/list/workmanuals}"> <span
 								class="glyphicon glyphicon-chevron-right"
 								style="margin-right: 10px;"></span> <span
@@ -76,6 +106,8 @@
 					<!-- LINE START -->
 					<tr>
 						<td class="industry-col-title"><a class="btn btn-info btn-md"
+							data-toggle="tooltip" data-placement="right"
+							th:title="|#{docview.warning.longtask}|"						
 							th:href="@{/docview/list/infoforms}"> <span
 								class="glyphicon glyphicon-chevron-right"
 								style="margin-right: 10px;"></span> <span
@@ -88,6 +120,32 @@
 					<!-- LINE START -->
 					<tr>
 						<td class="industry-col-title"><a class="btn btn-info btn-md"
+							data-toggle="tooltip" data-placement="right"
+							th:title="|#{docview.warning.longtask}|"						
+							th:href="@{/docview/list/controlplan}"> <span
+								class="glyphicon glyphicon-chevron-right"
+								style="margin-right: 10px;"></span> <span
+								th:text="#{docview.type.controlplan}">txt</span>
+						</a></td>
+						<td class="industry-col-descr"><span
+							th:text="#{docview.type.controlplan.description}">txt</span></td>
+					</tr>
+					<!-- LINE END -->
+					<!-- HEADER LINE -->
+					<tr class="docview-title-cel">
+						<td colspan="2" class="left">
+							<h4 class="text-primary">
+								<span class="glyphicon glyphicon-triangle-right"></span>&nbsp;<span
+									th:text="#{general.technology}"></span>
+							</h4>
+						</td>
+					</tr>
+					<!-- /HEADER LINE -->
+					<!-- LINE START -->
+					<tr>
+						<td class="industry-col-title"><a class="btn btn-info btn-md"
+							data-toggle="tooltip" data-placement="right"
+							th:title="|#{docview.warning.longtask}|"
 							th:href="@{/docview/list/notmeriddraw}"> <span
 								class="glyphicon glyphicon-chevron-right"
 								style="margin-right: 10px;"></span> <span
@@ -95,6 +153,48 @@
 						</a></td>
 						<td class="industry-col-descr"><span
 							th:text="#{docview.type.notmeriddraw.description}">txt</span></td>
+					</tr>
+					<!-- LINE END -->
+					<!-- LINE START -->
+					<tr>
+						<td class="industry-col-title"><a class="btn btn-info btn-md"
+							data-toggle="tooltip" data-placement="right"
+							th:title="|#{docview.warning.longtask}|"
+							th:href="@{/docview/list/laser}"> <span
+								class="glyphicon glyphicon-chevron-right"
+								style="margin-right: 10px;"></span> <span
+								th:text="#{docview.type.laser}">txt</span>
+						</a></td>
+						<td class="industry-col-descr"><span
+							th:text="#{docview.type.laser.description}">txt</span></td>
+					</tr>
+					<!-- LINE END -->
+					<!-- LINE START -->
+					<tr>
+						<td class="industry-col-title"><a class="btn btn-info btn-md"
+							data-toggle="tooltip" data-placement="right"
+							th:title="|#{docview.warning.longtask}|"
+							th:href="@{/docview/list/tools}"> <span
+								class="glyphicon glyphicon-chevron-right"
+								style="margin-right: 10px;"></span> <span
+								th:text="#{docview.type.tools}">txt</span>
+						</a></td>
+						<td class="industry-col-descr"><span
+							th:text="#{docview.type.tools.description}">txt</span></td>
+					</tr>
+					<!-- LINE END -->
+					<!-- LINE START -->
+					<tr>
+						<td class="industry-col-title"><a class="btn btn-info btn-md"
+							data-toggle="tooltip" data-placement="right"
+							th:title="|#{docview.warning.longtask}|"
+							th:href="@{/docview/list/cadarchive}"> <span
+								class="glyphicon glyphicon-chevron-right"
+								style="margin-right: 10px;"></span> <span
+								th:text="#{docview.type.cadarchive}">txt</span>
+						</a></td>
+						<td class="industry-col-descr"><span
+							th:text="#{docview.type.cadarchive.description}">txt</span></td>
 					</tr>
 					<!-- LINE END -->
 				</table>

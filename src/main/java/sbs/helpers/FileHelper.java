@@ -21,10 +21,15 @@ public class FileHelper {
 	}
 
 	private void getPdfListFromDirectory(File directory, Map<String, String> result) {
-		if (!directory.isDirectory()) {
+		if (directory == null || !directory.isDirectory()) {
 			return;
 		}
 		File[] files = directory.listFiles();
+
+		if(files == null){
+			return;
+		}
+		
 		for (int i = 0; i < files.length; i++) {
 
 			if (files[i].isDirectory()) {

@@ -31,6 +31,11 @@ public class DocViewController {
 	public static final String TYPE_WORK_MANUALS = "workmanuals";
 	public static final String TYPE_INFO_FORMS = "infoforms";
 	public static final String TYPE_DRAWINGS_NOT_MERIDIAN = "notmeriddraw";
+	public static final String TYPE_LASER = "laser";
+	public static final String TYPE_TOOLS = "tools";
+	public static final String TYPE_CAD_ARCHIVE = "cadarchive";
+	public static final String TYPE_CHECK_SPEC = "checkspec";
+	public static final String TYPE_CONTROL_PLAN = "controlplan";
 
 	@Autowired
 	private FileHelper fileHelper;
@@ -38,10 +43,20 @@ public class DocViewController {
 	private String workManualsPath;
 	private String infoFormsPath;
 	private String notMeridianDrawingsPath;
+	private String laserPath;
+	private String toolsPath;
+	private String cadArchivePath;
+	private String checkSpecPath;
+	private String controlPlanPath;
 
 	private Map<String, String> workManuals;
 	private Map<String, String> infoForms;
 	private Map<String, String> notMeridianDrawings;
+	private Map<String, String> laser;
+	private Map<String, String> tools;
+	private Map<String, String> cadArchive;
+	private Map<String, String> checkSpec;
+	private Map<String, String> controlPlan;
 
 	/* inject PDF into HTML */
 	// https://stackoverflow.com/questions/2740297/display-adobe-pdf-inside-a-div
@@ -51,6 +66,12 @@ public class DocViewController {
 		workManualsPath = env.getRequiredProperty("industry.dir.workmanuals");
 		infoFormsPath = env.getRequiredProperty("industry.dir.infoforms");
 		notMeridianDrawingsPath = env.getRequiredProperty("industry.dir.notmeriddraw");
+		laserPath = env.getRequiredProperty("industry.dir.laser");
+		toolsPath = env.getRequiredProperty("industry.dir.tools");
+		cadArchivePath = env.getRequiredProperty("industry.dir.cadarchive");
+		checkSpecPath = env.getRequiredProperty("industry.dir.checkspec");
+		controlPlanPath = env.getRequiredProperty("industry.dir.controlplan");
+		
 	}
 
 	@RequestMapping("/dispatch")
@@ -63,7 +84,7 @@ public class DocViewController {
 
 		Map<String, String> currentMap;
 		String currentTypeCode;
-
+		
 		switch (type) {
 		case TYPE_WORK_MANUALS:
 			workManuals = fileHelper.getPdfMap(new File(workManualsPath));
@@ -79,6 +100,31 @@ public class DocViewController {
 			notMeridianDrawings = fileHelper.getPdfMap(new File(notMeridianDrawingsPath));
 			currentMap = notMeridianDrawings;
 			currentTypeCode = "docview.type.notmeriddraw";
+			break;
+		case TYPE_LASER:
+			laser = fileHelper.getPdfMap(new File(laserPath));
+			currentMap = laser;
+			currentTypeCode = "docview.type.laser";
+			break;
+		case TYPE_TOOLS:
+			tools = fileHelper.getPdfMap(new File(toolsPath));
+			currentMap = tools;
+			currentTypeCode = "docview.type.tools";
+			break;
+		case TYPE_CAD_ARCHIVE:
+			cadArchive = fileHelper.getPdfMap(new File(cadArchivePath));
+			currentMap = cadArchive;
+			currentTypeCode = "docview.type.cadarchive";
+			break;
+		case TYPE_CHECK_SPEC:
+			checkSpec = fileHelper.getPdfMap(new File(checkSpecPath));
+			currentMap = checkSpec;
+			currentTypeCode = "docview.type.checkspec";
+			break;
+		case TYPE_CONTROL_PLAN:
+			controlPlan = fileHelper.getPdfMap(new File(controlPlanPath));
+			currentMap = controlPlan;
+			currentTypeCode = "docview.type.controlplan";
 			break;
 		default:
 			throw new NotFoundException("Document type unknown: '" + type + "'");
@@ -107,6 +153,21 @@ public class DocViewController {
 			break;
 		case TYPE_DRAWINGS_NOT_MERIDIAN:
 			currentMap = notMeridianDrawings;
+			break;
+		case TYPE_LASER:
+			currentMap = laser;
+			break;
+		case TYPE_TOOLS:
+			currentMap = tools;
+			break;
+		case TYPE_CAD_ARCHIVE:
+			currentMap = cadArchive;
+			break;
+		case TYPE_CHECK_SPEC:
+			currentMap = checkSpec;
+			break;
+		case TYPE_CONTROL_PLAN:
+			currentMap = controlPlan;
 			break;
 		default:
 			throw new NotFoundException("Document type unknown: '" + type + "'");
