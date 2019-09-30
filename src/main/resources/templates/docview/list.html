@@ -53,13 +53,17 @@
 				th:text="#{action.back}">back</span>
 			</a>
 		</div>
+		<div class="underline"></div>
 		<!-- MODULES -->
 		<div class="row">
-			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
+			<div class="col-xs-12">
 				<h3 class="text-primary" th:text="|#{general.list} - #{${typeCode}}|">Panel
 					With title</h3>
 			</div>
-			<div class="col-xs-12 margin-top-10">
+			<div class="col-xs-12">
+				<span th:text="#{|${typeCode}.description|}"></span>
+			</div>
+			<div class="col-xs-12 margin-top-20">
 				<form target="_blank" th:action="|@{/docview/get/}${type}|" method="get">
 					<div class="table-responsive">
 						<table id="srv" class="display">
