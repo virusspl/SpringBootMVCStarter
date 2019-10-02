@@ -3,6 +3,8 @@ package sbs.controller.docview;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -28,6 +30,8 @@ import sbs.helpers.FileHelper;
 @RequestMapping("docview")
 public class DocViewController {
 
+	private List<String> nightCacheList;
+	
 	public static final String TYPE_WORK_MANUALS = "workmanuals";
 	public static final String TYPE_INFO_FORMS = "infoforms";
 	public static final String TYPE_DRAWINGS_NOT_MERIDIAN = "notmeriddraw";
@@ -36,6 +40,7 @@ public class DocViewController {
 	public static final String TYPE_CAD_ARCHIVE = "cadarchive";
 	public static final String TYPE_CHECK_SPEC = "checkspec";
 	public static final String TYPE_CONTROL_PLAN = "controlplan";
+	public static final String TYPE_BHP_MANUALS = "bhpmanuals";
 
 	@Autowired
 	private FileHelper fileHelper;
@@ -48,6 +53,7 @@ public class DocViewController {
 	private String cadArchivePath;
 	private String checkSpecPath;
 	private String controlPlanPath;
+	private String bhpManualsPath;
 
 	private Map<String, String> workManuals;
 	private Map<String, String> infoForms;
@@ -57,12 +63,25 @@ public class DocViewController {
 	private Map<String, String> cadArchive;
 	private Map<String, String> checkSpec;
 	private Map<String, String> controlPlan;
+	private Map<String, String> bhpManuals;
 
 	/* inject PDF into HTML */
 	// https://stackoverflow.com/questions/2740297/display-adobe-pdf-inside-a-div
 	// https://scalified.com/2018/01/16/injecting-pdf-html-page/
 
 	public DocViewController(Environment env) {
+		// add path codes to cache at night (docViewCacheScheduler
+		nightCacheList = new ArrayList<>();
+		nightCacheList.add("industry.dir.workmanuals");
+		nightCacheList.add("industry.dir.infoforms");
+		nightCacheList.add("industry.dir.notmeriddraw");
+		nightCacheList.add("industry.dir.laser");
+		nightCacheList.add("industry.dir.tools");
+		nightCacheList.add("industry.dir.cadarchive");
+		nightCacheList.add("industry.dir.checkspec");
+		nightCacheList.add("industry.dir.controlplan");
+		nightCacheList.add("industry.dir.bhpmanuals");
+		
 		workManualsPath = env.getRequiredProperty("industry.dir.workmanuals");
 		infoFormsPath = env.getRequiredProperty("industry.dir.infoforms");
 		notMeridianDrawingsPath = env.getRequiredProperty("industry.dir.notmeriddraw");
@@ -70,8 +89,12 @@ public class DocViewController {
 		toolsPath = env.getRequiredProperty("industry.dir.tools");
 		cadArchivePath = env.getRequiredProperty("industry.dir.cadarchive");
 		checkSpecPath = env.getRequiredProperty("industry.dir.checkspec");
-		controlPlanPath = env.getRequiredProperty("industry.dir.controlplan");
-		
+		controlPlanPath = env.getRequiredProperty("industry.dir.controlplan");	
+		bhpManualsPath = env.getRequiredProperty("industry.dir.bhpmanuals");	
+	}
+
+	public List<String> getCacheList(){
+		return this.nightCacheList;
 	}
 
 	@RequestMapping("/dispatch")
@@ -126,6 +149,11 @@ public class DocViewController {
 			currentMap = controlPlan;
 			currentTypeCode = "docview.type.controlplan";
 			break;
+		case TYPE_BHP_MANUALS:
+			bhpManuals = fileHelper.getPdfMap(new File(bhpManualsPath));
+			currentMap = bhpManuals;
+			currentTypeCode = "docview.type.bhpmanuals";
+			break;
 		default:
 			throw new NotFoundException("Document type unknown: '" + type + "'");
 		}
@@ -169,6 +197,9 @@ public class DocViewController {
 		case TYPE_CONTROL_PLAN:
 			currentMap = controlPlan;
 			break;
+		case TYPE_BHP_MANUALS:
+			currentMap = bhpManuals;
+			break;
 		default:
 			throw new NotFoundException("Document type unknown: '" + type + "'");
 		}
@@ -190,22 +221,6 @@ public class DocViewController {
 			} catch (IOException ex) {
 				throw new RuntimeException("I/O error while reading file '" + fileName + "': " + ex.getMessage());
 			}
-			
-			/*
-			try {
-				File file = new File(currentMap.get(fileName));
-				InputStream is = FileUtils.openInputStream(file);
-				org.apache.commons.io.IOUtils.copy(is, response.getOutputStream());
-
-				response.addHeader("Content-Disposition", "inline; filename=" + fileName);
-				response.setContentType("application/pdf");
-
-				// response.flushBuffer();
-			} catch (IOException ex) {
-				throw new RuntimeException("I/O error while reading file '" + fileName + "': " + ex.getMessage());
-			}
-			*/
-			
 		} else {
 			throw new NotFoundException("File not found: '" + fileName + "'");
 		}

@@ -197,10 +197,32 @@
 							th:text="#{docview.type.cadarchive.description}">txt</span></td>
 					</tr>
 					<!-- LINE END -->
+					<!-- HEADER LINE -->
+					<tr class="docview-title-cel">
+						<td colspan="2" class="left">
+							<h4 class="text-primary">
+								<span class="glyphicon glyphicon-triangle-right"></span>&nbsp;<span
+									th:text="#{department.safety}"></span>
+							</h4>
+						</td>
+					</tr>
+					<!-- /HEADER LINE -->
+					<!-- LINE START -->
+					<tr>
+						<td class="industry-col-title"><a class="btn btn-info btn-md"
+							data-toggle="tooltip" data-placement="right"
+							th:title="|#{docview.warning.longtask}|"
+							th:href="@{/docview/list/bhpmanuals}"> <span
+								class="glyphicon glyphicon-chevron-right"
+								style="margin-right: 10px;"></span> <span
+								th:text="#{docview.type.bhpmanuals}">txt</span>
+						</a></td>
+						<td class="industry-col-descr"><span
+							th:text="#{docview.type.bhpmanuals.description}">txt</span></td>
+					</tr>
+					<!-- LINE END -->					
 				</table>
 			</div>
-
-
 		</div>
 	</div>
 </body>
