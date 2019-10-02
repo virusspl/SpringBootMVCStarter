@@ -9,6 +9,9 @@ target/
 .settings
 .springBeans
 
+### MySQL Workbench ###
+*.mwb.bak
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
