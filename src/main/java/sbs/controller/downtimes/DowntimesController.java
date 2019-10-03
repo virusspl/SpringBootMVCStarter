@@ -245,7 +245,6 @@ public class DowntimesController {
 		}
 
 		if(bindingResult.hasErrors()){
-			System.out.println(bindingResult.getAllErrors());
 			model.addAttribute("dt", downtime);
 			if (!downtime.getFailureDetails().isEmpty()) {
 				model.addAttribute("ddf", downtime.getFailureDetails().toArray()[0]);
@@ -267,11 +266,7 @@ public class DowntimesController {
 
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/downtimes/show/"+downtime.getId();
-		
 
-		
-		
-		
 	}
 	
 

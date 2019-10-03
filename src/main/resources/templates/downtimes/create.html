@@ -71,6 +71,7 @@
 						<label for="comment" th:text="|#{general.comment} (#{general.optional})|">Description</label>
 						<input type="text" class="form-control" id="comment"
 							name="comment" th:placeholder="#{general.comment}"
+							autocomplete="off" 
 							th:field="*{comment}"></input>
 						<div th:errors="*{comment}"
 							class="alert alert-danger margin-top-5">error</div>
