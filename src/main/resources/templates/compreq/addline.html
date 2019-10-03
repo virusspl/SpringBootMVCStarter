@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script"></div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h1 th:text="#{compreq.line.add}" class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{compreq.line.add.message}"> Welcome
+					message </span>
+			</div>
+			<a th:href="|@{/compreq/show/}${formCompReqLineCreate.requestId}|" class="btn btn-link btn-sm">
+				<span class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+		<div class="underline margin-top-10"></div>
+		<!-- FORM -->
+		<form th:action="@{/compreq/addline}" method="post"
+			th:object="${formCompReqLineCreate}">
+			<input type="hidden" th:field="*{requestId}" />
+			<div class="row margin-top-20">
+				<!-- componentCode -->
+				<div class="col-xs-10 col-sm-7 col-md-5">
+					<div class="form-group">
+						<label for="order" th:text="#{general.productCode}">lbl</label>
+						<input type="text" class="form-control" id="componentCode" name="componentCode"
+							th:placeholder="#{general.productCode}" th:field="*{componentCode}"
+							autocomplete="off" />
+						<div th:errors="*{componentCode}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<!-- quantity -->
+				<div class="col-xs-6 col-sm-4 col-md-3">
+					<div class="form-group">
+						<label for="quantity" th:text="#{general.quantity}">lbl</label>
+						<input type="text" class="form-control" id="quantity" name="quantity"
+							th:placeholder="#{general.quantity}" th:field="*{quantity}"
+							autocomplete="off" />
+						<div th:errors="*{quantity}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+			<div class="row margin-top-00">
+				<a th:href="|@{/compreq/show/}${formCompReqLineCreate.requestId}|" class="btn btn-link btn-sm">
+				<span class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+				</a>
+				<button class="btn btn-primary btn-sm" type="submit" name="save">
+					<span class="glyphicon glyphicon-ok"></span> <span
+						th:text="#{action.add}"></span>
+				</button>
+			</div>
+		</form>
+		<!-- /FORM -->
+	</div>
+</body>
+</html>
