@@ -214,7 +214,7 @@ public class ComponentRequest {
 
 	@Override
 	public String toString() {
-		return "ComponentRequest [id=" + id + ", creator=" + creator + ", startDate="
+		return "ComponentRequest [id=" + id + ", creator=" + creator.getName() + ", startDate="
 				+ startDate + ", endDate=" + endDate + ", productCode=" + productCode + ", productDescription="
 				+ productDescription + ", orderNumber=" + orderNumber + ", clientCode=" + clientCode + ", clientName="
 				+ clientName + ", workstationCode=" + workstationCode + ", workstationName=" + workstationName

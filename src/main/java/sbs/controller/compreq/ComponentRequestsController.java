@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javassist.NotFoundException;
+import sbs.helpers.DateHelper;
 import sbs.model.compreq.ComponentRequest;
+import sbs.model.compreq.ComponentRequestLine;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3SalesOrder;
 import sbs.model.x3.X3Workstation;
@@ -47,6 +49,8 @@ public class ComponentRequestsController {
 	ComponentRequestLinesService linesService;
 	@Autowired
 	DowntimesService downtimesService;
+	@Autowired
+	DateHelper dateHelper;
 	
 	@ModelAttribute("machines")
 	public List<X3Workstation> getMachines() {
@@ -64,13 +68,13 @@ public class ComponentRequestsController {
     	return "compreq/list";
     }
     
-    @RequestMapping("/create")
+    @RequestMapping("/manage/create")
     public String showCreate(Model model){
     	model.addAttribute("formRequestCreate", new FormRequestCreate());
     	return "compreq/create";
     }
     
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    @RequestMapping(value = "/manage/create", method = RequestMethod.POST)
 	@Transactional
 	public String close(@Valid FormRequestCreate formRequestCreate, BindingResult bindingResult,
 			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
@@ -144,7 +148,7 @@ public class ComponentRequestsController {
 		return "compreq/show";
 	}
 	
-	@RequestMapping(value = "/addline/{id}")
+	@RequestMapping(value = "/manage/addline/{id}")
 	@Transactional
 	public String showAddLine(@PathVariable("id") int id, Model model) throws NotFoundException {
 		
@@ -159,22 +163,95 @@ public class ComponentRequestsController {
 		return "compreq/addline";
 	}
 	
-    @RequestMapping(value = "/addline", method = RequestMethod.POST)
+    @RequestMapping(value = "/manage/addline", method = RequestMethod.POST)
 	@Transactional
 	public String addLine(@Valid FormCompReqLineCreate formCompReqLineCreate, BindingResult bindingResult,
 			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
 
-		ComponentRequest request = requestsService.findById(formCompReqLineCreate.getRequestId());
+    	formCompReqLineCreate.setComponentCode(formCompReqLineCreate.getComponentCode().trim().toUpperCase());
+    	
+    	ComponentRequest request = requestsService.findById(formCompReqLineCreate.getRequestId());
 		if (request == null) {
 			throw new NotFoundException("Request not found: #" + formCompReqLineCreate.getRequestId());
 		}
-		// TODO
-    	
-    	
-		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		
+		X3Product product = x3Service.findProductByCode("ATW", formCompReqLineCreate.getComponentCode());
+		if (product == null) {
+			bindingResult.rejectValue("componentCode", "error.no.such.product", "ERROR");
+		}
+		
+		if(bindingResult.hasErrors()){
+			return "compreq/addline";
+		}
+		
+		ComponentRequestLine line = new ComponentRequestLine();
+		
+		line.setQuantity(formCompReqLineCreate.getQuantity());
+		line.setComponentCode(product.getCode());
+		line.setComponentDescription(product.getDescription());
+		line.setComponentCategory(product.getCategory());
+		
+		line.setRequest(request);
+		linesService.save(line);
+		request.getRequestLines().add(line);
+		
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/compreq/show/" + request.getId();
     }
     
+	@RequestMapping(value = "/manage/remove/{id}")
+	@Transactional
+	public String removeLine(@PathVariable("id") int id, RedirectAttributes redirectAttrs, Locale locale) throws NotFoundException {
+		
+		ComponentRequestLine line = linesService.findById(id);
+		if (line == null) {
+			throw new NotFoundException("Request line not found: #" + id);
+		}
+		
+		ComponentRequest request = line.getRequest();
+		String code = line.getComponentCode();
+		request.getRequestLines().remove(line);
+		linesService.remove(line);
+		
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.removed", null, locale) + " " + code);
+		return "redirect:/compreq/show/" + request.getId();
+	}
+	
+	@RequestMapping(value = "/manage/close/{id}")
+	@Transactional
+	public String closeRequest(@PathVariable("id") int id, RedirectAttributes redirectAttrs, Locale locale) throws NotFoundException {
+		
+		ComponentRequest request = requestsService.findById(id);
+		if (request == null) {
+			throw new NotFoundException("Request not found: #" + id);
+		}
+
+		request.setPending(false);
+		request.setEndDate(new Timestamp(new java.util.Date().getTime()));
+		requestsService.update(request);
+		
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.finished", null, locale) + " " + request.getProductCode());
+		return "redirect:/compreq/list";
+	}
+    
+	@RequestMapping(value = "/print/{id}")
+	@Transactional
+	public String showPrint(@PathVariable("id") int id, Model model, Locale locale) throws NotFoundException {
+	
+		ComponentRequest request = requestsService.findById(id);
+		if (request == null) {
+			throw new NotFoundException("Request not found: #" + id);
+		}
+
+		model.addAttribute("rq", request);
+		Hibernate.initialize(request.getRequestLines());
+		model.addAttribute("lines", request.getRequestLines());
+		model.addAttribute("title", request.getProductCode());
+		model.addAttribute("printDate", dateHelper.formatDdMmYyyyHhMm(new java.util.Date()));
+		model.addAttribute("startDate", dateHelper.formatDdMmYyyyHhMm(request.getStartDate()));
+		
+		return "compreq/print";
+	}
+
     
 }

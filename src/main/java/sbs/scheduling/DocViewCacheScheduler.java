@@ -31,7 +31,7 @@ public class DocViewCacheScheduler {
 	}
 
 	// each day at 1:30 AM
-	@Scheduled(cron = "0 30 1 * * MON-SAT")
+	@Scheduled(cron = "0 30 0 * * MON-SAT")
 	public void cacheDocViewFolders() {
 
 		// clear old cache

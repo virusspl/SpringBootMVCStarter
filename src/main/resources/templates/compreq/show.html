@@ -116,6 +116,24 @@
 			</div>
 			<div class="row">
 				<div class="col-xs-4 col-md-3 col-lg-2">
+					<span th:text="#{general.client.name}">param</span>
+				</div>
+				<div class="col-xs-8 col-md-9 col-lg-10">
+					<strong th:text="|${rq.clientCode} - ${rq.clientName}|"
+						class="text-primary">value</strong>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-4 col-md-3 col-lg-2">
+					<span th:text="#{general.order.sales}">param</span>
+				</div>
+				<div class="col-xs-8 col-md-9 col-lg-10">
+					<strong th:text="|${rq.orderNumber}|"
+						class="text-primary">value</strong>
+				</div>
+			</div>			
+			<div class="row">
+				<div class="col-xs-4 col-md-3 col-lg-2">
 					<span th:text="#{general.date.start}">param</span>
 				</div>
 				<div class="col-xs-8 col-md-9 col-lg-10">
@@ -135,8 +153,9 @@
 					<span th:text="#{general.state}">param</span>
 				</div>
 				<div class="col-xs-8 col-md-9 col-lg-10">
-					<strong th:if="${rq.pending}" th:text="|#{general.pending}|" class="text-primary">value</strong>
-					<strong th:if="!${rq.pending}" th:text="|#{general.closed}|" class="text-primary">value</strong>
+					<strong th:if="${rq.pending}" th:text="|#{general.pending}|"
+						class="text-primary">value</strong> <strong th:if="!${rq.pending}"
+						th:text="|#{general.closed}|" class="text-primary">value</strong>
 				</div>
 			</div>
 			<div class="row">
@@ -167,28 +186,26 @@
 				<h3 th:text="|#{action.choose.action}|"
 					class="text-primary underline"></h3>
 			</div>
-			<div class="col-xs-12"> 
+			<div class="col-xs-12">
 				<a class="btn btn-primary btn-md margin-top-5"
-					sec:authorize="hasAnyRole('ROLE_OWNER', 'ROLE_ADMIN')"
+					sec:authorize="hasAnyRole('ROLE_COMPREQMANAGER', 'ROLE_ADMIN')"
 					th:if="${rq.pending}"
-					th:href="|@{/compreq/addline/}${rq.id}|"> <span
-					class="glyphicon glyphicon-plus"></span>&nbsp;
-					<span th:text="#{action.add.line}">begin</span>
-				</a> 
-				<a class="btn btn-success btn-md margin-top-5"
-					sec:authorize="hasAnyRole('ROLE_OWNER', 'ROLE_ADMIN')"
-					th:if="${rq.pending}"				
+					th:href="|@{/compreq/manage/addline/}${rq.id}|"> <span
+					class="glyphicon glyphicon-plus"></span>&nbsp; <span
+					th:text="#{action.add.line}">begin</span>
+				</a> <a class="btn btn-success btn-md margin-top-5"
+					sec:authorize="hasAnyRole('ROLE_COMPREQMANAGER', 'ROLE_ADMIN')"
+					th:if="${rq.pending}"
 					th:onclick="|return confirm('#{general.areyousure}')|"
-					th:href="|@{/compreq/close/}${rq.id}|"> <span
-					class="glyphicon glyphicon-ok"></span>&nbsp;
-					<span th:text="#{action.close}">begin</span>
-				</a>
-				<a class="btn btn-info btn-md margin-top-5"
+					th:href="|@{/compreq/manage/close/}${rq.id}|"> <span
+					class="glyphicon glyphicon-ok"></span>&nbsp; <span
+					th:text="#{action.close}">begin</span>
+				</a> <a class="btn btn-info btn-md margin-top-5"
 					th:href="|@{/compreq/print/}${rq.id}|"> <span
-					class="glyphicon glyphicon-print"></span>&nbsp;
-					<span th:text="#{action.print}">list</span>
+					class="glyphicon glyphicon-print"></span>&nbsp; <span
+					th:text="#{action.print}">list</span>
 				</a>
-			</div>			
+			</div>
 		</div>
 		<!-- /CHOOSE ACTION -->
 		<!-- LIST -->
@@ -204,11 +221,15 @@
 					<table id="srv" class="display">
 						<thead>
 							<tr>
-								<th>#id</th>								
+								<th>#id</th>
 								<th th:text="|#{general.productCode}|">head</th>
 								<th th:text="|#{general.productDescription}|">head</th>
-								<th th:text="|#{general.category}|">head</th>
+								<th th:text="|#{general.category}|" class="center">head</th>
 								<th th:text="|#{general.quantity}|">head</th>
+								<th 
+								sec:authorize="hasAnyRole('ROLE_COMPREQMANAGER', 'ROLE_ADMIN')"
+									th:if="${rq.pending}"
+								th:text="|#{general.options}|">head</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -216,15 +237,25 @@
 								<td><span th:text="|#${line.id}|"></span></td>
 								<td><span th:text="|${line.componentCode}|"></span></td>
 								<td><span th:text="|${line.componentDescription}|"></span></td>
-								<td><span th:text="|${line.componentCategory}|"></span></td>
+								<td class="center"><span
+									th:text="|${line.componentCategory}|"></span></td>
 								<td><span th:text="|${line.quantity}|"></span></td>
+								<td
+								sec:authorize="hasAnyRole('ROLE_COMPREQMANAGER', 'ROLE_ADMIN')"
+									th:if="${rq.pending}"
+								><a
+									th:onclick="|return confirm('${line.componentCode} - #{general.areyousure} ')|"
+									class="btn btn-danger btn-sm"
+									th:href="|@{/compreq/manage/remove/}${line.id}|"> <span
+										class="glyphicon glyphicon-remove"></span>&nbsp; <span
+										th:text="#{action.remove}">list</span>
+								</a></td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
 			</div>
-		</div>		
+		</div>
 	</div>
-
 </body>
 </html>

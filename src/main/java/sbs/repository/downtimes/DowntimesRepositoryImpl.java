@@ -7,7 +7,6 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import sbs.model.downtimes.Downtime;
-import sbs.model.downtimes.DowntimeCause;
 import sbs.repository.GenericRepositoryAdapter;
 
 @Repository

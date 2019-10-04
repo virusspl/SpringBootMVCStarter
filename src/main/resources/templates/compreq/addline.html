@@ -23,7 +23,7 @@
 		</div>
 		<div class="underline margin-top-10"></div>
 		<!-- FORM -->
-		<form th:action="@{/compreq/addline}" method="post"
+		<form th:action="@{/compreq/manage/addline}" method="post"
 			th:object="${formCompReqLineCreate}">
 			<input type="hidden" th:field="*{requestId}" />
 			<div class="row margin-top-20">
@@ -43,7 +43,9 @@
 						<label for="quantity" th:text="#{general.quantity}">lbl</label>
 						<input type="text" class="form-control" id="quantity" name="quantity"
 							th:placeholder="#{general.quantity}" th:field="*{quantity}"
-							autocomplete="off" />
+							autocomplete="off" 
+							 onclick="$(this).select();"
+							/>
 						<div th:errors="*{quantity}" class="alert alert-danger margin-top-5">error</div>
 					</div>
 				</div>

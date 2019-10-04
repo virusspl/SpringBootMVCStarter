@@ -37,12 +37,12 @@
 			});
 		</script>
 	</div>
-	
+
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-xs-12 col-xs-offset-0">
-				<h2 th:text="#{compreq.title}" class="text-primary">Hello on
-					a page</h2>
+				<h2 th:text="#{compreq.title}" class="text-primary">Hello on a
+					page</h2>
 			</div>
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
 				<span th:text="#{compreq.message}"> Welcome message </span>
@@ -56,20 +56,23 @@
 
 		<!-- LIST -->
 		<div class="row margin-top-00">
-			<div class="col-xs-12 underline" >
+			<div class="col-xs-12 underline">
 				<h3 class="text-primary" th:text="#{compreq.list.current}">Panel
 					With title</h3>
 			</div>
 		</div>
-		<div class="row margin-top-10">
-		<div class="col-xs-12">
-		<a th:href="@{/compreq/create}" class="btn btn-primary btn-sm">
-					<span class="glyphicon glyphicon-plus"></span> <span
+		<div class="row margin-top-10"
+			sec:authorize="hasAnyRole('ROLE_COMPREQMANAGER', 'ROLE_ADMIN')"
+		>
+			<div class="col-xs-12">
+				<a th:href="@{/compreq/manage/create}"
+					class="btn btn-primary btn-sm"> <span
+					class="glyphicon glyphicon-plus"></span> <span
 					th:text="#{action.add}">back</span>
 				</a>
+			</div>
 		</div>
-		</div>
-		<div class="row margin-top-30">
+		<div class="row margin-top-10">
 			<div class="col-xs-12 col-xs-offset-0">
 				<div class="table-responsive">
 					<table id="srv" class="display">
@@ -77,10 +80,11 @@
 							<tr>
 								<th>#id</th>
 								<th th:text="|#{general.date}|">head</th>
-								<th th:text="|#{general.user}|">head</th>								
+								<th th:text="|#{general.user}|">head</th>
 								<th th:text="|#{general.productCode}|">head</th>
-								<th th:text="|#{general.order.sales}|">head</th>
-								<th th:text="|#{general.workstation}|">head</th>
+								<th th:text="|#{general.order.sales.short}|">head</th>
+								<th th:text="|#{general.client.name}|">head</th>
+								<th th:text="|#{general.workstation.short}|">head</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -90,11 +94,11 @@
 								<td><span th:text="|${rq.creator.name}|"></span></td>
 								<td><a th:href="|@{/compreq/show/}${rq.id}|"
 									data-toggle="tooltip" data-placement="top"
-									th:title="#{action.show}">
-									<span th:text="|${rq.productCode}|"></span>
-									</a>
-									</td>
+									th:title="#{action.show}"> <span
+										th:text="|${rq.productCode}|"></span>
+								</a></td>
 								<td><span th:text="|${rq.orderNumber}|"></span></td>
+								<td><span th:text="|${rq.clientName} (${rq.clientCode})|"></span></td>
 								<td><span th:text="|${rq.workstationCode}|"></span></td>
 							</tr>
 						</tbody>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/print">
+<head lang="pl">
+<style>
+body {
+	font-size: 110%;
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+.noborder {
+	border: none;
+}
+</style>
+</head>
+<body>
+	<div layout:fragment="script"></div>
+	<div layout:fragment="content">
+		<div class="hideonprint">
+			<div class="margin-top-10">
+				<span th:text="|#{compreq.print.title} ${rq.productCode}|">
+					Welcome message </span>
+			</div>
+			<a th:href="|@{/compreq/show/}${rq.id}|"> <span
+				th:text="#{action.back}">back</span></a>
+		</div>
+		<!-- FORM -->
+		<div th:if="${lines}">
+			<div class="row margin-top-10">
+				<div class="col-xs-12">
+					<b><span style="font-size: 115%;"
+						th:text="|#{compreq.print.title} #${rq.id}|">result</span></b> <br /> <br />
+					<table>
+						<tr>
+							<td><b><span th:text="#{general.productCode}"></span>:</b></td>
+							<td><span
+								th:text="|${rq.productCode} - ${rq.productDescription}|"></span>
+							</td>
+						</tr>
+						<tr>
+							<td><b><span th:text="#{general.workstation}"></span>:</b></td>
+							<td><span
+								th:text="|${rq.workstationCode} - ${rq.workstationName}|"></span>
+							</td>
+						</tr>
+						<tr>
+							<td><b><span th:text="#{general.client.name}"></span>:</b></td>
+							<td><span
+								th:text="|${rq.clientCode} - ${rq.clientName}|"></span>
+							</td>
+						</tr>
+						<tr>
+							<td><b><span th:text="#{general.creator}"></span>:</b></td>
+							<td><span th:text="|${rq.creator.name}|"></span> <br /></td>
+						</tr>
+						<tr>
+							<td><b><span th:text="#{general.date}"></span>:</b></td>
+							<td><span th:text="|${startDate}|"></span> <br /></td>
+						</tr>
+						<tr>
+							<td><b><span th:text="#{general.date.print}"></span>:</b></td>
+							<td><span th:text="|${printDate}|"></span></td>
+						</tr>
+						<tr th:if="${#strings.length(rq.comment)>0}">
+							<td><b><span th:text="#{general.comment}"></span>:</b></td>
+							<td><span th:text="|${rq.comment}|"></span></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="row margin-top-20">
+				<div class="col-xs-12">
+					<div class="table-responsive">
+						<table id="srv" class="display">
+							<thead>
+								<tr>
+									<th th:text="|#{general.productCode}|">head</th>
+									<th th:text="|#{general.productDescription}|">head</th>
+									<th th:text="|#{general.category.short}|" class="center">head</th>
+									<th th:text="|#{general.quantity}|">head</th>
+								</tr>
+							</thead>
+							<tbody>
+							<div th:each="line : ${lines}">
+								<tr>
+									<td><span th:text="|${line.componentCode}|"></span></td>
+									<td><span th:text="|${line.componentDescription}|"></span></td>
+									<td class="center"><span
+										th:text="|${line.componentCategory}|"></span></td>
+									<td><span th:text="|${line.quantity}|"></span></td>
+								</tr>
+								<tr class="barcode hideonscreen" style="font-size: 190%;">
+									<td colspan="2" class="center" style="padding: 5px 0px 5px 0px;">
+										<span th:text="|*${line.componentCode}*|"></span>
+									</td>
+									<td colspan="2" class="center" style="padding: 5px 0px 5px 0px;">
+										<span th:text="|*${line.quantity}*|"></span>
+									</td>
+								</tr>
+							</div>								
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /SHOW LIST -->
+	</div>
+</body>
+</html>

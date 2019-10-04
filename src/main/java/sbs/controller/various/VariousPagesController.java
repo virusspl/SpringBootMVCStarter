@@ -478,6 +478,14 @@ public class VariousPagesController {
 			msg += "[role: " + saleShipUser.getName() + "], ";
 		}
 		
+		Role compReqManager = roleService.findByName("ROLE_COMPREQMANAGER");
+		if (compReqManager == null) {
+			compReqManager = new Role();
+			compReqManager.setName("ROLE_COMPREQMANAGER");
+			roleService.save(compReqManager);
+			msg += "[role: " + compReqManager.getName() + "], ";
+		}
+		
 		Role industryManager = roleService.findByName("ROLE_INDUSTRYMANAGER");
 		if (industryManager == null) {
 			industryManager = new Role();

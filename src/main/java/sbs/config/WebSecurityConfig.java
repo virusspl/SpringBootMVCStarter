@@ -218,6 +218,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"SALESHIPUSER"
 				)
 		.antMatchers(
+				"/compreq/manage/**"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"COMPREQMANAGER"
+				)
+		.antMatchers(
 				"/admin", 
 				"/mailer/**", 
 				"/users/**",

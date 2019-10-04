@@ -14,6 +14,10 @@ public class FormCompReqLineCreate {
 	@Min(1)
 	int quantity;
 	
+	public FormCompReqLineCreate() {
+	
+	}
+	
 	public FormCompReqLineCreate(int requestId) {
 		this.requestId = requestId;
 	}
