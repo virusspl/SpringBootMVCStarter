@@ -17,7 +17,7 @@
 				language : {
 					url : getUrl() + "polish.json",
 				},
-				order : [ [ 0, 'asc' ] ]
+				order : [ [ 1, 'asc' ] ]
 			});
 		</script>
 		<script th:if="__${#locale}__ == 'en'">
@@ -25,7 +25,7 @@
 				language : {
 					url : getUrl() + "english.json"
 				},
-				order : [ [ 0, 'asc' ] ]
+				order : [ [ 1, 'asc' ] ]
 			});
 		</script>
 		<script th:if="__${#locale}__ == 'it'">
@@ -33,7 +33,7 @@
 				language : {
 					url : getUrl() + "italian.json"
 				},
-				order : [ [ 0, 'asc' ] ]
+				order : [ [ 1, 'asc' ] ]
 			});
 		</script>
 	</div>
@@ -85,6 +85,10 @@
 								<th th:text="|#{general.order.sales.short}|">head</th>
 								<th th:text="|#{general.client.name}|">head</th>
 								<th th:text="|#{general.workstation.short}|">head</th>
+								<th  
+									sec:authorize="hasAnyRole('ROLE_COMPREQMANAGER', 'ROLE_ADMIN')"
+									th:text="|#{general.options}|">head
+								</th>								
 							</tr>
 						</thead>
 						<tbody>
@@ -100,6 +104,14 @@
 								<td><span th:text="|${rq.orderNumber}|"></span></td>
 								<td><span th:text="|${rq.clientName} (${rq.clientCode})|"></span></td>
 								<td><span th:text="|${rq.workstationCode}|"></span></td>
+								<td sec:authorize="hasAnyRole('ROLE_COMPREQMANAGER', 'ROLE_ADMIN')">
+									<a th:onclick="|return confirm('${rq.productCode} - #{general.areyousure} ')|"
+										class="btn btn-success btn-sm"
+										th:href="|@{/compreq/manage/close/}${rq.id}|"> 
+										<span class="glyphicon glyphicon-ok"></span>&nbsp; 
+										<span th:text="#{action.close}">list</span>
+									</a>
+								</td>								
 							</tr>
 						</tbody>
 					</table>
