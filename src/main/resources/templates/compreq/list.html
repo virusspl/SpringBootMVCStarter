@@ -96,11 +96,19 @@
 								<td><span th:text="|#${rq.id}|"></span></td>
 								<td><span th:text="|${rq.startDate}|"></span></td>
 								<td><span th:text="|${rq.creator.name}|"></span></td>
-								<td><a th:href="|@{/compreq/show/}${rq.id}|"
+								<td>
+								<a th:href="|@{/compreq/show/}${rq.id}|"
 									data-toggle="tooltip" data-placement="top"
 									th:title="#{action.show}"> <span
 										th:text="|${rq.productCode}|"></span>
-								</a></td>
+								</a>&nbsp;
+								<span 
+									th:if="${#strings.length(rq.comment)>0}" 
+									class="glyphicon glyphicon-envelope"
+									data-toggle="tooltip" data-placement="top"
+									th:title="${rq.comment}">
+								</span>
+								</td>
 								<td><span th:text="|${rq.orderNumber}|"></span></td>
 								<td><span th:text="|${rq.clientName} (${rq.clientCode})|"></span></td>
 								<td><span th:text="|${rq.workstationCode}|"></span></td>
