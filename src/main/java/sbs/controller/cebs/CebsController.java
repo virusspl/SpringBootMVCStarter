@@ -191,7 +191,11 @@ public class CebsController {
 	@RequestMapping(value = "/order/add", params = { "add" }, method = RequestMethod.POST)
 	public String addToOrder(@RequestParam String add, CebsOrderForm cebsOrderFom,
 			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
-		if (!sent) {
+		if (
+				!sent || 
+				userService.getAuthenticatedUser().hasRole("ROLE_CEBSMANAGER") || 
+				userService.getAuthenticatedUser().hasRole("ROLE_ADMIN")
+			) {
 			List<MenuItem> menu = getMenuList();
 			for (MenuItem item : menu) {
 				if (item.getId().equals(add)) {
