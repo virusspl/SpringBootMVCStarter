@@ -63,7 +63,16 @@
 	<!-- USERS LOOP -->
 	<table th:each="lp : ${loop}">
 		<tr>
-			<td class="color" colspan="4"><span th:text="${lp.user.name}"></span>
+			<td class="color"><span th:text="${lp.user.name}"></span>
+			</td>
+			<td class="color">
+			Aktualny status
+			</td>
+			<td class="color">
+			Termin realizacji
+			</td>
+			<td class="color">
+			Temat zgłoszenia
 			</td>
 		</tr>
 		<!-- TICKETS LOOP -->
