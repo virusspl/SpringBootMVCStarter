@@ -15,7 +15,6 @@ public class GlobalControllerAdvice {
 	@Autowired
 	Environment env;
 	
-	
     @ModelAttribute("live")
     public String getLiveFeedMessage() {
         return lvs.getMessage();
