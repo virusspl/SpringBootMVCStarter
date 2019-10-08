@@ -84,7 +84,7 @@ public class MovementsController {
 			return "movements/main";
 		}
 
-		Map<String, Double> prices = x3HistoryPriceService.findAllX3HistoryPrices();
+		Map<String, Double> prices = x3Service.getCurrentStandardCostsMap("ATW");
 		List<X3ShipmentMovement> movements = x3Service.findAdrShipmentMovementsInPeriod(movementsForm.getStartDate(),
 				movementsForm.getEndDate());
 		int counter = 0;
@@ -102,7 +102,7 @@ public class MovementsController {
 		Map<String, X3ProductFinalMachine> machinesIndex = x3Service.findX3ProductFinalMachines("ATW");
 
 		for (X3ShipmentMovement mvt : movements) {
-			if (prices.get(mvt.getItemCode()) != null) {
+			if (prices.containsKey(mvt.getItemCode()) && !mvt.getItemCategory().equalsIgnoreCase("ACV")) {
 				mvt.setPrice(prices.get(mvt.getItemCode()));
 			} else {
 				mvt.setPrice(mvt.getEmergencyAveragePrice());

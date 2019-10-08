@@ -447,4 +447,10 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 		return jdbcOracleX3Repository.getWorkstations(company);
 	}
 
+	@Override
+	@Cacheable(value="x3StandardCostsMap")
+	public Map<String, Double> getCurrentStandardCostsMap(String company) {
+		return jdbcOracleX3Repository.getCurrentStandardCostsMap(company);
+	}
+
 }

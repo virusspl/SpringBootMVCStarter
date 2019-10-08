@@ -111,6 +111,7 @@ public interface JdbcOracleX3Repository  {
 	public Map<String, Integer> findGeneralShipStock(String company);
 	public Map<String, String> getPendingProductionOrdersBySaleOrders(String company);
 	public List<X3Workstation> getWorkstations(String company);
+	public Map<String, Double> getCurrentStandardCostsMap(String company);
 
 	
 	

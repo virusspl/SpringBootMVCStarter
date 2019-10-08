@@ -2813,4 +2813,24 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		return result;
 	}
 
+	@Override
+	public Map<String, Double> getCurrentStandardCostsMap(String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "VSTD.ITMREF_0, "
+				+ "VSTD.TOTAL_0 "
+				+ "FROM "
+				+ company + ".VSTDCST VSTD"
+				,
+                new Object[]{}
+				);
+		
+		Map <String, Double> map = new HashMap<>();
+		for(Map<String,Object> row: resultSet ){
+			map.put(((String)row.get("ITMREF_0")), ((BigDecimal)row.get("TOTAL_0")).doubleValue());
+		}
+			
+		return map;
+	}
+
 }

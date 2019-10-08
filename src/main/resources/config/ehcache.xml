@@ -68,6 +68,9 @@
 	<cache name="x3HistoryPriceMap" maxBytesLocalHeap="5m"
 		timeToLiveSeconds="604800">
 	</cache>
+	<cache name="x3StandardCostsMap" maxBytesLocalHeap="5m"
+		timeToLiveSeconds="604800">
+	</cache>
 	<cache name="x3productFinalMachines" maxBytesLocalHeap="23m"
 		timeToLiveSeconds="86400">
 	</cache>
