@@ -179,6 +179,11 @@ public class VariousPagesController {
 		return "various/test";
 	}
 	
+	@RequestMapping("/err")
+	public String errorView(Model model){
+		return "err";
+	}
+	
 	@RequestMapping(value = "/terminal/test")
 	public String terminalTest(Model model) {
 		model.addAttribute("msg", "Current message from controller");

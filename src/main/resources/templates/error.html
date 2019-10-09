@@ -1,29 +1,88 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layout/error">
+	layout:decorator="layout/main">
 <head lang="pl">
+<style>
+.errorPage {
+	width: 90%;
+	margin: 0 auto;
+	padding: 35px;
+	font-family: "Courier New", Courier, monospace;
+	border: 1px solid lightgreen;
+	background-color: #121212;
+	color: lightgreen;
+}
+
+pre {
+	border: 1px solid lightgreen;
+	background-color: black;
+	color: lightgreen;
+	max-height: 500px;
+	overflow: scroll;
+}
+
+a:link, a:active, a:visited {
+	color: lightgreen;
+	text-decoration: underline;
+}
+
+a:hover {
+	color: white;
+}
+
+ul {
+	padding-left: 17px;
+	list-style-type: "> ";
+}
+
+li {
+	padding-left: 5px;
+}
+
+/*
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li { 
+  padding-left: 16px; 
+}
+
+li::before {
+  content: ">"; 
+  padding-right: 8px;
+
+}
+*/
+</style>
 </head>
 <body>
 	<div layout:fragment="content">
-		<!-- available: $timestamp, $status, $error, $message  -->
-		<div th:if="${status}!=null" class="orange-text text-darken-3">
-			<h2 th:text="|${status} - ${error}|">404 - Not Found</h2>
-			<br />
-		</div>
-		<div th:if="${status}==null" class="orange-text text-darken-3">
-			<h2 th:text="#{error.something}">Something went wrong</h2>
-			<br />
-		</div>
-		<div th:if="${exception}">
-			<span th:text="${exception}">java.lang.NullPointerException</span><br />
-		</div>
-		<div th:if="${message}">
-			<span th:text="${message}">There has been an internal error</span><br />
-		</div>
-		<br />
-		<div style="text-align: center;">
-			<img th:src="@{/images/error.gif}"></img>
+		<div class="errorPage">
+			<!-- TITLE -->
+			<h3 class="sub_title margin-bottom-20">#!error</h3>
+			<!-- MESSAGE -->
+			<p class="margin-bottom-20">
+				<span th:text="#{error.something}">Something went wrong</span> <a
+					th:href="|
+					mailto:michalak.k@atwsystem.pl;
+					?subject=webapp error [adr]
+					&amp;body=path: ${path}%0D%0A%0D%0Aerror: ${error} ${status}%0D%0Aexception: ${exception}%0D%0A%0D%0Amessage: ${message}%0D%0A%0D%0A${trace}
+			|">e-mail</a>
+			</p>
+			<!-- INFO -->
+			<ul>
+				<li th:text="|path: ${path}|"></li>
+				<li th:text="|error: ${error} ${status}|"></li>
+				<li th:text="|message: ${message}|"></li>
+				<li th:text="|exception: ${exception}|"></li>
+			</ul>
+			<!-- TRACE -->
+			<pre class="margin-top-20" th:text="${trace}"></pre>
+
 		</div>
 	</div>
 </body>
