@@ -24,11 +24,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sbs.helpers.TextHelper;
 import sbs.service.x3.JdbcOracleX3Service;
 
-
 @Controller
 @RequestMapping("dirrcpship")
 public class DirectReceptionsShipmentController {
-	
+
 	@Autowired
 	MessageSource messageSource;
 	@Autowired
@@ -88,6 +87,7 @@ public class DirectReceptionsShipmentController {
 
 		return "dirrcpship/main";
 	}
+
 	@RequestMapping(value = "/makelist", params = { "printlist" }, method = RequestMethod.POST)
 	public String printList(@Valid DirectReceptionsShipmentForm directReceptionsShipmentForm,
 			BindingResult bindingResult, Model model, RedirectAttributes redirectAttrs, Locale locale) {
@@ -96,9 +96,10 @@ public class DirectReceptionsShipmentController {
 		}
 		model.addAttribute("list", prepareList(directReceptionsShipmentForm, false));
 		model.addAttribute("title", messageSource.getMessage("dirrcpship.list.show", null, locale));
-		
+
 		return "dirrcpship/print";
 	}
+
 	@RequestMapping(value = "/makelist", params = { "viewnegativelist" }, method = RequestMethod.POST)
 	public String viewNegativeList(@Valid DirectReceptionsShipmentForm directReceptionsShipmentForm,
 			BindingResult bindingResult, Model model, RedirectAttributes redirectAttrs, Locale locale) {
@@ -108,9 +109,10 @@ public class DirectReceptionsShipmentController {
 		model.addAttribute("negativeList", prepareList(directReceptionsShipmentForm, true));
 		model.addAttribute("startDate", directReceptionsShipmentForm.getStartDate());
 		model.addAttribute("endDate", directReceptionsShipmentForm.getEndDate());
-		
+
 		return "dirrcpship/main";
 	}
+
 	@RequestMapping(value = "/makelist", params = { "printnegativelist" }, method = RequestMethod.POST)
 	public String printNegativeList(@Valid DirectReceptionsShipmentForm directReceptionsShipmentForm,
 			BindingResult bindingResult, Model model, RedirectAttributes redirectAttrs, Locale locale) {
@@ -119,102 +121,102 @@ public class DirectReceptionsShipmentController {
 		}
 		model.addAttribute("list", prepareList(directReceptionsShipmentForm, true));
 		model.addAttribute("title", messageSource.getMessage("dirrcpship.list.negative", null, locale));
-		
+
 		return "dirrcpship/print";
 	}
 
-
-	private List<DirectReceptionsShipmentLine> prepareList(DirectReceptionsShipmentForm directReceptionsShipmentForm, boolean negative) {
+	private List<DirectReceptionsShipmentLine> prepareList(DirectReceptionsShipmentForm directReceptionsShipmentForm,
+			boolean negative) {
 		// average 1-month usage
-				String startPeriod, endPeriod;
-				Calendar calendar = Calendar.getInstance();
-				endPeriod = calendar.get(Calendar.YEAR) + ""
-						+ textHelper.fillWithLeadingZero("" + calendar.get(Calendar.MONTH), 2);
-				calendar.add(Calendar.MONTH, -7);
-				startPeriod = calendar.get(Calendar.YEAR) + ""
-						+ textHelper.fillWithLeadingZero("" + calendar.get(Calendar.MONTH), 2);
-				// average usage
-				Map<String, Integer> averageUsage = x3Service.findAcvAverageUsageInPeriod(startPeriod, endPeriod,"ATW");
-				// MAG stock
-				Map<String, Integer> magStock = x3Service.findAcvMagStock("ATW");
-				// shipment stock
-				Map<String, Integer> shipStock = x3Service.findAcvShipStock("ATW");
-				// non production codes
-				List<String> nonProductionCodes = x3Service.findAcvNonProductionCodes("ATW");
-				// main list
-				List<DirectReceptionsShipmentLine> list = x3Service.findDirectReceptionsShipmentLines(
-						directReceptionsShipmentForm.getStartDate(), directReceptionsShipmentForm.getEndDate(), "ATW");
-				// calculate mag stock and left to give
-				calculateMagAndToGiveStock(list, magStock, shipStock);
-				// calculate total current shipment demand
-				Map<String, Integer> shipDemand = calculateShipmentDemandFromLines(list);
+		String startPeriod, endPeriod;
+		Calendar calendar = Calendar.getInstance();
+		endPeriod = calendar.get(Calendar.YEAR) + ""
+				+ textHelper.fillWithLeadingZero("" + calendar.get(Calendar.MONTH), 2);
+		calendar.add(Calendar.MONTH, -7);
+		startPeriod = calendar.get(Calendar.YEAR) + ""
+				+ textHelper.fillWithLeadingZero("" + calendar.get(Calendar.MONTH), 2);
+		// average usage
+		Map<String, Integer> averageUsage = x3Service.findAcvAverageUsageInPeriod(startPeriod, endPeriod, "ATW");
+		// MAG stock
+		Map<String, Integer> magStock = x3Service.findAcvMagStock("ATW");
+		// shipment stock
+		Map<String, Integer> shipStock = x3Service.findAcvShipStock("ATW");
+		// non production codes
+		List<String> nonProductionCodes = x3Service.findAcvNonProductionCodes("ATW");
+		// main list
+		List<DirectReceptionsShipmentLine> list = x3Service.findDirectReceptionsShipmentLines(
+				directReceptionsShipmentForm.getStartDate(), directReceptionsShipmentForm.getEndDate(), "ATW");
+		// calculate mag stock and left to give
+		calculateMagAndToGiveStock(list, magStock, shipStock);
+		// calculate total current shipment demand
+		Map<String, Integer> shipDemand = calculateShipmentDemandFromLines(list);
 
-				
-				List<DirectReceptionsShipmentLine> showList = new ArrayList<>();
-				List<DirectReceptionsShipmentLine> negativeList = new ArrayList<>();
-				
-				int avg, dem, stck;
+		List<DirectReceptionsShipmentLine> showList = new ArrayList<>();
+		List<DirectReceptionsShipmentLine> negativeList = new ArrayList<>();
 
-				for (DirectReceptionsShipmentLine line : list) {
-					// if nothing to give, never show
-					if(line.getToGive() == 0){
-						continue;
-					}
-					// if no stock, skip, never show
-					if(!magStock.containsKey(line.getProductCode())){
-						continue;
-					}
-					// if always hide, never show
-					if(isAlwaysHide(line.getProductCode())){
-						//negativeList.add(line); - update: negative -> never
-						continue;
-					}
-					// is always show, show
-					if(isAlwaysShow(line.getProductCode())){
-						showList.add(line);
-						continue;
-					}
-					// if not in BOM, show
-					if(nonProductionCodes.contains(line.getProductCode())){
-						showList.add(line);
-						continue;
-					}
-					
-					// get average one month consumption 
-					avg = averageUsage.containsKey(line.getProductCode()) ? averageUsage.get(line.getProductCode()) : 0;
-					// total demand for code
-					dem = shipDemand.containsKey(line.getProductCode()) ? shipDemand.get(line.getProductCode()): 0;
-					// get receptions stock for code
-					stck = magStock.containsKey(line.getProductCode()) ? magStock.get(line.getProductCode()) : 0;
-					
-					// if demand <= 1-month-consumption and stock > 3-month-consumption, show, else negative
-					if ((dem <= avg) && (stck > (3*avg))){
-						showList.add(line);
-					}
-					else{
-						negativeList.add(line);
-					}	
-				}
-				
-				if(!negative){
-					return showList;
-				}
-				else{
-					return negativeList;
-				}
+		int avg, dem, stck;
+
+		for (DirectReceptionsShipmentLine line : list) {
+			// if nothing to give, never show
+			if (line.getToGive() == 0) {
+				continue;
+			}
+			// if no stock, skip, never show
+			if (!magStock.containsKey(line.getProductCode())) {
+				continue;
+			}
+			// if always hide, never show
+			if (isAlwaysHide(line.getProductCode())) {
+				// negativeList.add(line); - update: negative -> never
+				continue;
+			}
+			// is always show, show
+			if (isAlwaysShow(line.getProductCode())) {
+				showList.add(line);
+				continue;
+			}
+			// if not in BOM, show
+			if (nonProductionCodes.contains(line.getProductCode())) {
+				showList.add(line);
+				continue;
+			}
+
+			// get average one month consumption
+			avg = averageUsage.containsKey(line.getProductCode()) ? averageUsage.get(line.getProductCode()) : 0;
+			// total demand for code
+			dem = shipDemand.containsKey(line.getProductCode()) ? shipDemand.get(line.getProductCode()) : 0;
+			// get receptions stock for code
+			stck = magStock.containsKey(line.getProductCode()) ? magStock.get(line.getProductCode()) : 0;
+
+			// if demand <= 1-month-consumption and stock > 3-month-consumption, show, else
+			// negative
+			if ((dem <= avg) && (stck > (3 * avg))) {
+				showList.add(line);
+			} else {
+				negativeList.add(line);
+			}
+		}
+
+		if (!negative) {
+			return showList;
+		} else {
+			return negativeList;
+		}
 	}
 
-	private void calculateMagAndToGiveStock(List<DirectReceptionsShipmentLine> list, Map<String, Integer> magStock, Map<String, Integer> shipStock) {
+	private void calculateMagAndToGiveStock(List<DirectReceptionsShipmentLine> list, Map<String, Integer> magStock,
+			Map<String, Integer> shipStock) {
 		for (DirectReceptionsShipmentLine line : list) {
 			line.setMagStock(magStock.containsKey(line.getProductCode()) ? magStock.get(line.getProductCode()) : 0);
 			line.setToGive(shipStock.containsKey(line.getProductCode())
-					? line.getLeftToSend() - shipStock.get(line.getProductCode()) : line.getLeftToSend());
+					? line.getLeftToSend() - shipStock.get(line.getProductCode())
+					: line.getLeftToSend());
 			if (line.getToGive() < 0) {
 				line.setToGive(0);
 			}
 		}
 	}
-	
+
 	private Map<String, Integer> calculateShipmentDemandFromLines(List<DirectReceptionsShipmentLine> list) {
 		Map<String, Integer> map = new HashMap<>();
 		for (DirectReceptionsShipmentLine line : list) {
