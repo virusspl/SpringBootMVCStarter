@@ -112,8 +112,9 @@
 
 				<div th:if="${active}">
 					<h3
-						th:utext="|Zbieramy na dzień: &lt;b&gt;#{${dayCode}}&lt;/b&gt;, ${actionDate}.&lt;/br&gt;Organizator: &lt;b&gt;${organizer}&lt;/b&gt; ;)|"
+						th:utext="|Zbieramy na dzień: &lt;b&gt;#{${dayCode}}&lt;/b&gt;, ${actionDate}&lt;/br&gt;|"
 						class="text-primary center"></h3>
+						<!-- Organizator: &lt;b&gt;${organizer}&lt;/b&gt; ;) -->
 
 					<div th:if="${confirmed}"
 						class="center alert alert-success margin-top-20">
