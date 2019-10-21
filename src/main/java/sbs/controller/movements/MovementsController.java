@@ -30,7 +30,6 @@ import sbs.model.x3.X3ShipmentMovement;
 import sbs.model.x3.X3ShipmentStockLineWithPrice;
 import sbs.model.x3.X3WarehouseWeightDetailLine;
 import sbs.model.x3.X3WarehouseWeightLine;
-import sbs.service.dictionary.X3HistoryPriceService;
 import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.x3.JdbcOracleX3Service;
 
@@ -44,8 +43,6 @@ public class MovementsController {
 	JdbcOracleGeodeService geodeService;
 	@Autowired
 	JdbcOracleX3Service x3Service;
-	@Autowired
-	X3HistoryPriceService x3HistoryPriceService;
 
 	List<String> productionStores;
 	List<String> receptionStores;
@@ -328,7 +325,7 @@ public class MovementsController {
 	public String performShipStockValue(@Valid MovementsForm movementsForm, BindingResult bindingResult, Model model,
 			RedirectAttributes redirectAttrs, Locale locale) {
 
-		Map<String, Double> prices = x3HistoryPriceService.findAllX3HistoryPrices();
+		Map<String, Double> stdPrices = x3Service.getCurrentStandardCostsMap("ATW");
 		List<X3ShipmentStockLineWithPrice> lines = x3Service.findAllShipStockWithAveragePrice("ATW");
 
 		double acvValue = 0;
@@ -336,9 +333,12 @@ public class MovementsController {
 		double otherValue = 0;
 		double totalValue = 0;
 		for (X3ShipmentStockLineWithPrice line : lines) {
-			if (prices.get(line.getCode()) != null) {
-				line.setAveragePrice(prices.get(line.getCode()));
+			if(!line.getCategory().equals("ACV")){
+				if (stdPrices.containsKey(line.getCode())) {
+					line.setAveragePrice(stdPrices.get(line.getCode()));
+				}
 			}
+			
 			line.setLineValue(line.getAveragePrice() * line.getQuantity() * 1.0);
 			if (line.getCategory().equals("ACV")) {
 				acvValue += line.getLineValue();

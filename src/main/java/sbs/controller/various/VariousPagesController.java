@@ -1,7 +1,6 @@
 package sbs.controller.various;
 
 import java.util.ArrayList;
-import java.util.List;
 /*
 import java.io.InputStream;
 import java.net.URL;
@@ -25,7 +24,6 @@ import sbs.helpers.ExcelExportHelper;
 import sbs.helpers.MathHelper;
 import sbs.model.bhptickets.BhpTicketState;
 import sbs.model.downtimes.DowntimeType;
-import sbs.model.hr.HrUserInfo;
 import sbs.model.inventory.InventoryDataType;
 import sbs.model.qcheck.QCheckState;
 import sbs.model.qsurveys.QSurveyQuestionType;
@@ -45,6 +43,7 @@ import sbs.service.qcheck.QCheckStatesService;
 import sbs.service.qsurveys.QSurveyQuestionTypesService;
 import sbs.service.qualitysurveys.QualitySurveyParametersService;
 import sbs.service.qualitysurveys.QualitySurveysService;
+import sbs.service.redmine.RedmineService;
 import sbs.service.shipments.ShipmentStatesService;
 import sbs.service.tools.ToolsProjectStateService;
 import sbs.service.users.RoleService;
@@ -93,7 +92,16 @@ public class VariousPagesController {
 	DowntimeTypesService downtimeTypesService;
 	@Autowired 
 	MathHelper mathHelper;
+	@Autowired
+	RedmineService redmineService;
 
+	@RequestMapping("/test")
+	public String test(Model model, Locale locale) throws InterruptedException {
+		
+		
+		return "various/test";
+	}
+	
 	@RequestMapping("/noaccess")
 	public String noAccess() {
 		return "various/noaccess";
@@ -161,24 +169,7 @@ public class VariousPagesController {
 		model.addAttribute("timerDate", liveFeedSingleton.getTimerMillis());
 		return "/various/timer"; 
 	}
-	
-	@RequestMapping("/test")
-	public String test(Model model, Locale locale) throws InterruptedException {
 		
-		List<HrUserInfo> list = jdbcAdrOptimaService.findAllCurrentlyEmployed();
-		
-		for(HrUserInfo inf: list){
-			//if(inf.getId().equals("01116")){
-				System.out.println(inf.getId() + " " + inf.getLastName() + " " + inf.getFirstName() + " " + inf.getRcpNumber());
-			//}
-		}
-		
-		System.out.println("id: "+jdbcAdrOptimaService.findCurrentlyEmployedById("01116").getLastName());
-		System.out.println("card: "+jdbcAdrOptimaService.findCurrentlyEmployedByCardNo("2200D84DD0").getLastName());
-		
-		return "various/test";
-	}
-	
 	@RequestMapping("/err")
 	public String errorView(Model model){
 		return "err";

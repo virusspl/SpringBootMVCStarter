@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+<style>
+tr {
+	white-space: nowrap;
+}
+</style>
+
+</head>
+<body>
+	<div layout:fragment="script">
+		<script th:src="@{/datatables/jquery.dataTables.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/dataTables.helper.js}"
+			type="text/javascript"></script>
+		<script th:if="__${#locale}__ == 'pl'">
+			$('#srv').DataTable({
+				language : {
+					url : getUrl() + "polish.json",
+				},
+				order: [[ 1, 'asc' ]]
+			});		    
+		</script>
+		<script th:if="__${#locale}__ == 'en'">
+			$('#srv').DataTable({
+				language : {
+					url : getUrl() + "english.json"
+				},
+				order: [[ 1, 'asc' ]]
+			});
+		</script>
+		<script th:if="__${#locale}__ == 'it'">
+			$('#srv').DataTable({
+				language : {
+					url : getUrl() + "italian.json"
+				},
+				order: [[ 1, 'asc' ]]
+			});
+		</script>
+
+		<script>
+		function copydata(id) {
+			$(id).show();
+			$(id).focus();
+		    $(id).select();
+			document.execCommand('copy');
+			$(id).hide();
+		}
+		</script>
+
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12 col-xs-offset-0">
+				<h2 th:text="#{redmine.users.title}" class="text-primary">Hello
+					on a page</h2>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-20">
+				<span th:utext="#{redmine.users.message}" class="flow-text ">
+					Welcome message </span>
+			</div>
+			<a th:href="@{/}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<h3 th:text="#{general.list}" class="text-primary underline"></h3>
+			</div>
+		</div>
+		<div class="row margin-top-20">
+			<div class="col-xs-12 col-xs-offset-0">
+				<div class="table-responsive">
+					<table id="srv" class="display">
+						<thead>
+							<tr>
+								<!-- 
+								<th th:text="#{general.date.creation}">head</th>				
+								<th th:text="#{general.date.update}">head</th>				
+								<th th:text="#{redmine.passchangedate}">head</th>				
+								 -->
+								<th>#id</th>
+								<th th:text="|Login|">head</th>
+								<th th:text="#{general.name}">head</th>
+								<th th:text="|E-Mail|">head</th>
+
+								<th th:text="|Admin|">head</th>
+								<th th:text="#{redmine.projects}">head</th>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<th>#id</th>
+								<th th:text="|Login|">head</th>
+								<th th:text="#{general.name}">head</th>
+								<th th:text="|E-Mail|">head</th>
+								<th th:text="|Admin|">head</th>
+								<th th:text="#{redmine.projects}">head</th>
+							</tr>
+						</tfoot>
+						<tbody>
+							<tr th:each="usr: ${list}">
+								<!-- data-toggle="tooltip" data-placement="top" th:title="#{action.show}"  -->
+								<!-- 
+								<td><span th:text="${#dates.format(usr.createDate, 'yyyy.MM.dd HH:mm')}"></span></td>
+								<td><span th:text="${#dates.format(usr.updateDate, 'yyyy.MM.dd HH:mm')}"></span></td>
+								<td><span th:text="${#dates.format(usr.passChangeDate, 'yyyy.MM.dd HH:mm')}"></span></td>
+							 -->
+								<td><span th:text="|#${usr.id}|"></span></td>
+								<td><a th:onclick="|copydata(hid${usr.id})|" data-toggle="tooltip"
+									data-placement="top" th:title="#{action.copy}" href="#"> <span
+										class="glyphicon glyphicon-copy"></span> 
+										<input style="display: none;" type="text"
+										th:value="|login: ${usr.login}|" th:id="|hid${usr.id}|" />
+								</a> &nbsp; <span th:text="${usr.login}"></span></td>
+								<td><span th:text="|${usr.lastName} ${usr.firstName}|"></span></td>
+								<td><a th:href="|mailto:${usr.mail}|" data-toggle="tooltip"
+									data-placement="top" th:title="|Mail to|"><span
+										th:text="${usr.mail}"></span></a></td>
+								<td><span th:text="${usr.admin}"></span></td>
+								<td><span class="btn btn-info btn-xs" style="margin-right: 5px;"
+									th:each="pr: ${usr.projects}" th:text="|${pr.name}|"></span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
