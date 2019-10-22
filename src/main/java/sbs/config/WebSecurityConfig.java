@@ -229,6 +229,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/mailer/**", 
 				"/users/**",
 				"/system/**",
+				"/redmine/**",
 				"/inventory/createinventory/**",
 				"/inventory/editinventory/**",
 				"/inventory/managecollumns/**"

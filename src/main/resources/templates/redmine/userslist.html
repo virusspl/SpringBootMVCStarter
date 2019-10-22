@@ -112,13 +112,20 @@ tr {
 								<td><span th:text="${#dates.format(usr.passChangeDate, 'yyyy.MM.dd HH:mm')}"></span></td>
 							 -->
 								<td><span th:text="|#${usr.id}|"></span></td>
-								<td><a th:onclick="|copydata(hid${usr.id})|" data-toggle="tooltip"
+								<td>
+								<span th:text="${usr.login}"></span></td>
+								<td>
+								<a th:onclick="|copydata(hid${usr.id})|" data-toggle="tooltip"
 									data-placement="top" th:title="#{action.copy}" href="#"> <span
-										class="glyphicon glyphicon-copy"></span> 
-										<input style="display: none;" type="text"
-										th:value="|login: ${usr.login}|" th:id="|hid${usr.id}|" />
-								</a> &nbsp; <span th:text="${usr.login}"></span></td>
-								<td><span th:text="|${usr.lastName} ${usr.firstName}|"></span></td>
+									class="glyphicon glyphicon-copy"></span> 
+									<textarea style="display: none;" 
+									 th:id="|hid${usr.id}|"
+									 th:utext="${usr.copyString}"
+									 >
+									</textarea>
+								</a>
+								 &nbsp; 
+								<span th:text="|${usr.lastName} ${usr.firstName}|"></span></td>
 								<td><a th:href="|mailto:${usr.mail}|" data-toggle="tooltip"
 									data-placement="top" th:title="|Mail to|"><span
 										th:text="${usr.mail}"></span></a></td>

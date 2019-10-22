@@ -16,6 +16,7 @@ public class RedmineUser {
 	private Timestamp passChangeDate;
 	private boolean admin;
 	private List<RedmineProject> projects;
+	private String copyString;
 	
 	public RedmineUser() {
 		projects = new ArrayList<>();
@@ -33,6 +34,8 @@ public class RedmineUser {
 		this.createDate = createDate;
 		this.updateDate = updateDate;
 		this.passChangeDate = passChangeDate;
+		this.copyString = "";
+		this.projects = new ArrayList<>();
 	}
 
 	public int getId() {
@@ -116,11 +119,34 @@ public class RedmineUser {
 		this.projects = projects;
 	}
 
+	public String getCopyString() {
+		return copyString;
+	}
+
+	public void setCopyString(String copyString) {
+		this.copyString = copyString;
+	}
+
 	@Override
 	public String toString() {
 		return "RedmineUser [id=" + id + ", login=" + login + ", firstName=" + firstName + ", lastName=" + lastName
 				+ ", mail=" + mail + ", createDate=" + createDate + ", updateDate=" + updateDate + ", passChangeDate="
 				+ passChangeDate + ", admin=" + admin + ", projects=" + projects + "]";
+	}
+
+	public void createCopyString() {
+		this.copyString = ""
+				+ "login: " + this.login + "&#13;&#10;"
+				+ "first name: " + this.firstName + "&#13;&#10;"
+				+ "last name: " + this.lastName + "&#13;&#10;"
+				+ "e-mail: " + this.mail + "&#13;&#10;"
+				+ "project: ";
+		
+		for(RedmineProject project: this.projects) {
+			this.copyString += project.getName() + "; ";
+		}
+		
+		
 	}
 	
 }
