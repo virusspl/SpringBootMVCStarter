@@ -120,6 +120,7 @@
 								<th th:text="#{qsurveys.sales.order}">head</th>
 								<th th:text="#{qsurveys.production.order}">head</th>
 								<th th:text="#{qsurveys.login.user}">head</th>
+								<th th:text="#{general.comment}">head</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -136,6 +137,7 @@
 								<td><span th:text="${survey.orderSalesNumber}"></span></td>
 								<td><span th:text="${survey.orderNumber}"></span></td>
 								<td><span th:text="${survey.user.username}"></span></td>
+								<td><span th:text="${survey.comment}"></span></td>
 							</tr>
 						</tbody>
 					</table>
