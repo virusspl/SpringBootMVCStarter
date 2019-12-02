@@ -444,6 +444,36 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         new Object[]{number.toUpperCase()});
 
 		X3ProductionOrderDetails order = null;
+		
+		if(resultSet.isEmpty()) {
+			resultSet = jdbc.queryForList(
+					"SELECT " 
+					+ company + ".MFGITM.MFGNUM_0, "
+					+ company + ".MFGITM.ITMREF_0, "
+					+ company + ".MFGITM.EXTQTY_0, "
+					+ company + ".ITMMASTER.ITMDES1_0, "
+					+ company + ".ITMMASTER.ITMDES2_0, "
+					+ company + ".SORDER.SOHNUM_0, "
+					+ company + ".SORDER.XCLIORI_0, "
+					+ company + ".BPARTNER.BPRNAM_0, "
+					+ company + ".BPARTNER.BPRNAM_1 "
+					+ "FROM (( " 
+					+ company + ".MFGITM INNER JOIN " + company + ".ITMMASTER "
+					+ "ON " 
+					+ company + ".MFGITM.ITMREF_0 = " + company +  ".ITMMASTER.ITMREF_0 ) "
+					+ "INNER JOIN "
+					+ company + ".SORDER "
+					+ "ON "
+					+ company + ".SORDER.SOHNUM_0 = "
+					+ "SUBSTR(" + company +  ".MFGITM.PJT_0, 0, LENGTH(" + company +  ".MFGITM.PJT_0) - 2)" 
+					+ ") "
+					+ "INNER JOIN "
+					+ company + ".BPARTNER ON "
+					+ company + ".SORDER.XCLIORI_0 = " + company + ".BPARTNER.BPRNUM_0 "
+					+ "WHERE UPPER("
+					+ company + ".MFGITM.MFGNUM_0) = ? ",
+	        new Object[]{number.toUpperCase()});
+		}
 	
 		for(Map<String,Object> row: resultSet ){
 			order = new X3ProductionOrderDetails();
