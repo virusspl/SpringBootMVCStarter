@@ -17,110 +17,164 @@
 			</div>
 		</div>
 		<!-- MODULES -->
-		<div class="row margin-top-10">
-		<div class="col-xs-12">
-			<a class="btn btn-link btn-md margin-top-0"
-					href="http://192.168.1.23/DOCS/WebApp_General.pdf" target="_blank"> <span
-					class="glyphicon glyphicon-folder-open">&nbsp;</span>
-					<span th:text="#{general.manual.webapp.general}"> </span>
-				</a>
-				</div>
+		<div class="row">
 			<!-- NAMEDAY -->
-			<div id="social" th:if="${dayCode}">
-				<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
+			<div id="social" class="col-md-6" th:if="${dayCode}">
 					<h3 class="text-primary" th:text="|#{welcome.dontforget}!|">tickets</h3>
-				</div>
-				<div class="col-xs-12 margin-top-10" style="margin-left: 5px;">
+					<div class="underline margin-bottom-5"></div>
 					<span class="btn-sm glyphicon glyphicon-calendar"></span> <span
 						th:utext="|#{welcome.todaywegot} &lt;b&gt;#{${dayCode}}&lt;/b&gt;, ${today}|"></span>
 					<br /> <span class="btn-sm glyphicon glyphicon-gift"></span> <span
 						th:utext="|#{welcome.nameday} &lt;b&gt;${nameDay}&lt;/b&gt;|"></span>
+			</div>
+			<!-- NO AUTH -->
+			<div class="col-md-6 margin-top-10" id="no-login"
+				sec:authorize="!isAuthenticated()">
+
+				<div class="panel panel-primary" style="margin-bottom: -5px;">
+					<div class="panel-heading">
+					<span class="glyphicon glyphicon-user"></span>
+						<span class="bold" th:text="#{welcome.auth}"></span>
+					</div>
+					<div class="panel-body center">
+					
+					<p><span th:text="#{welcome.auth.message}"></span>
+						<a th:href="@{/login}" class="btn btn-primary btn-sm"> <span
+						class="glyphicon glyphicon-lock"></span>&nbsp;&nbsp;<span
+						th:text="#{action.login}"></span>
+					</a>
+					</p>
+			
+					
+					</div>
 				</div>
 			</div>
-			<!-- HANDY LINKS -->
-			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
-				<h3 class="text-primary" th:text="#{handy.links}">tickets</h3>
-			</div>
-			<div class="col-xs-12 margin-top-10">
-				<a class="btn btn-link btn-md margin-top-5"
-					th:href="@{/phones/list}"> <span
-					class="glyphicon glyphicon-phone-alt" style="margin-right: 10px;"></span>
-					<span th:text="#{phone.numbers}">Phone numbers</span>
-				</a> <a class="btn btn-link btn-md margin-top-5"
-					href="http://192.168.1.23/DOCS/company.print.adr.doc"
-					target="_blank"> <span class="glyphicon glyphicon-save-file"
-					style="margin-right: 10px;"></span> <span
-					th:text="#{company.print.adr}">Phone numbers</span>
-				</a> <a class="btn btn-link btn-md margin-top-5"
-					href="http://192.168.1.23/DOCS/company.print.wps.doc"
-					target="_blank"> <span class="glyphicon glyphicon-save-file"
-					style="margin-right: 10px;"></span> <span
-					th:text="#{company.print.wps}">Phone numbers</span>
-				</a>
-			</div>
-			<div class="col-xs-12 margin-top-0">
-				<a class="btn btn-link btn-md margin-top-5"
-					href="http://192.168.1.33:8082" target="_blank"> <span
-					class="glyphicon glyphicon-link" style="margin-right: 10px;"></span>
-					<span th:text="|Comarch HRM ADR|">Phone numbers</span>
-				</a> <a class="btn btn-link btn-md margin-top-5"
-					href="http://192.168.1.33:8081" target="_blank"> <span
-					class="glyphicon glyphicon-link" style="margin-right: 10px;"></span>
-					<span th:text="|Comarch HRM WPS|">Phone numbers</span>
-				</a> <a class="btn btn-link btn-md margin-top-5"
-					href="http://192.168.1.23/DOCS/calendar.pdf" target="_blank"> <span
-					class="glyphicon glyphicon-calendar" style="margin-right: 10px;"></span>
-					<span th:text="#{calendar.freedays}">Phone numbers</span>
-				</a>
-			</div>
-			<div class="col-xs-12 margin-top-0">
-				<a class="btn btn-link btn-md margin-top-5"
-					href="http://192.168.1.23/DOCS/trip_user.pdf" target="_blank">
-					<span class="glyphicon glyphicon-plane" style="margin-right: 10px;"></span>
-					<span th:text="#{trip.user}">Codification</span>
-				</a> <a class="btn btn-link btn-md margin-top-5"
-					href="http://192.168.1.23/DOCS/trip_manager.pdf" target="_blank">
-					<span class="glyphicon glyphicon-plane" style="margin-right: 10px;"></span>
-					<span th:text="#{trip.manager}">Codification</span>
-				</a> <a class="btn btn-link btn-md margin-top-5"
-					href="http://192.168.1.23/DOCS/trip_manage_reservations.pdf"
-					target="_blank"> <span class="glyphicon glyphicon-plane"
-					style="margin-right: 10px;"></span> <span
-					th:text="#{trip.managereservations}">Codification</span>
-				</a> <a class="btn btn-link btn-md margin-top-5"
-					href="http://192.168.1.23/DOCS/trip_flow.jpg" target="_blank">
-					<span class="glyphicon glyphicon-object-align-left"
-					style="margin-right: 10px;"></span> <span th:text="#{trip.flow}">Codification</span>
-				</a>
-			</div>
-			<div class="col-xs-12 margin-top-0">
-				<a class="btn btn-link btn-md margin-top-5"
-					href="http://192.168.1.23/DOCS/codifica.pdf" target="_blank"> <span
-					class="glyphicon glyphicon-info-sign" style="margin-right: 10px;"></span>
-					<span th:text="#{clients.codification}">Codification</span>
-				</a> <a class="btn btn-link btn-md margin-top-5"
-					href="http://192.168.1.23/DOCS/passchange.pdf" target="_blank">
-					<span class="glyphicon glyphicon-info-sign"
-					style="margin-right: 10px;"></span> <span
-					th:text="#{password.manual}">Phone numbers</span>
-				</a>
+			<!-- PUBLIC -->
+			<div id="public">
+				<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
+					<h3 class="text-primary" th:text="#{welcome.public}">tickets</h3>
+				</div>
+				<div class="col-xs-12 margin-top-10"></div>
+				<div class="col-xs-12 margin-top-5">
+					<!-- HR DROP -->
+					<div class="dropdown" style="display: inline;">
+						<button class="btn btn-primary dropdown-toggle"
+							style="margin-top: 5px;" type="button" id="drop1"
+							data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+							<span class="glyphicon glyphicon-user"></span> <span
+								th:text="|#{welcome.hr}|"></span> <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu margin-top-20" aria-labelledby="drop1">
+							<li class="dropdown-header"><span
+								th:text="#{welcome.holidays}"></span></li>
+							<li><a href="http://192.168.1.33:8082" target="_blank"><span
+									class="glyphicon glyphicon-link"></span> <span
+									th:text="|Comarch HRM ADR|"></span></a></li>
 
-			</div>
-			<!-- REPORT A PROBLEM -->
-			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
-				<h3 class="text-warning" th:text="#{it.maketicket}">Panel With
-					title</h3>
-			</div>
-			<div class="col-xs-12 margin-top-10">
-				<a class="btn btn-warning btn-md margin-top-5"
-					href="http://10.1.1.226/redmine/" target="_blank"> <span
-					class="glyphicon glyphicon-star" style="margin-right: 5px;"></span>
-					<span th:text="#{it.tickets}">CRM Manual</span>
-				</a> <a class="btn btn-warning btn-md margin-top-5"
-					href="http://192.168.1.23/DOCS/tickets.pdf" target="_blank"> <span
-					class="glyphicon glyphicon-folder-open" style="margin-right: 10px;"></span>
-					<span th:text="#{it.ticketsmanual}">CRM Manual</span>
-				</a>
+							<li><a href="http://192.168.1.33:8081" target="_blank">
+									<span class="glyphicon glyphicon-link"></span> <span
+									th:text="|Comarch HRM WPS|"></span>
+							</a></li>
+							<li><a href="http://192.168.1.23/DOCS/calendar.pdf"
+								target="_blank"> <span class="glyphicon glyphicon-calendar"></span>
+									<span th:text="#{calendar.freedays}"></span>
+							</a></li>
+							<li role="separator" class="divider"></li>
+							<li class="dropdown-header"><span
+								th:text="#{welcome.delegations}"></span></li>
+							<li><a href="http://192.168.1.23/DOCS/trip_user.pdf"
+								target="_blank"> <span class="glyphicon glyphicon-plane"></span>
+									<span th:text="#{trip.user}">Codification</span>
+							</a></li>
+							<li><a href="http://192.168.1.23/DOCS/trip_manager.pdf"
+								target="_blank"> <span class="glyphicon glyphicon-plane"></span>
+									<span th:text="#{trip.manager}"></span>
+							</a></li>
+							<li><a
+								href="http://192.168.1.23/DOCS/trip_manage_reservations.pdf"
+								target="_blank"> <span class="glyphicon glyphicon-plane"></span>
+									<span th:text="#{trip.managereservations}">Codification</span>
+							</a></li>
+							<li><a href="http://192.168.1.23/DOCS/trip_flow.jpg"
+								target="_blank"> <span
+									class="glyphicon glyphicon-object-align-left"></span> <span
+									th:text="#{trip.flow}">Codification</span>
+							</a></li>
+						</ul>
+					</div>
+					<!-- DOC DROP -->
+					<div class="dropdown" style="display: inline;">
+						<button class="btn btn-primary dropdown-toggle"
+							style="margin-top: 5px;" type="button" id="drop2"
+							data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+							<span class="glyphicon glyphicon-folder-open"
+								style="margin-right: 5px;"></span> <span
+								th:text="|#{welcome.documents}|"></span> <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu margin-top-20" aria-labelledby="drop2">
+							<li class="dropdown-header"><span
+								th:text="#{welcome.manuals}"></span></li>
+							<li><a href="http://192.168.1.23/DOCS/WebApp_General.pdf"
+								target="_blank"> <span
+									class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;<span
+									th:text="#{general.manual.webapp.general}"> </span>
+							</a></li>
+							<li><a href="http://192.168.1.23/DOCS/codifica.pdf"
+								target="_blank"> <span
+									class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;<span
+									th:text="#{clients.codification}"></span>
+							</a></li>
+							<li><a href="http://192.168.1.23/DOCS/passchange.pdf"
+								target="_blank"> <span
+									class=" 	glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;<span
+									th:text="#{password.manual}"></span>
+							</a></li>
+							<li role="separator" class="divider"></li>
+							<li class="dropdown-header"><span
+								th:text="#{welcome.companyprints}"></span></li>
+
+							<li><a href="http://192.168.1.23/DOCS/company.print.adr.doc"
+								target="_blank"> <span class="glyphicon glyphicon-save-file"></span>
+									<span th:text="#{company.print.adr}">Phone numbers</span>
+							</a></li>
+							<li><a href="http://192.168.1.23/DOCS/company.print.wps.doc"
+								target="_blank"> <span class="glyphicon glyphicon-save-file"></span>
+									<span th:text="#{company.print.wps}">Phone numbers</span>
+							</a></li>
+						</ul>
+					</div>
+
+					<a class="btn btn-primary btn-md margin-top-5"
+						th:href="@{/phones/list}"> <span
+						class="glyphicon glyphicon-phone-alt"></span> <span
+						th:text="#{phone.numbers}">Phone numbers</span>
+					</a> <a th:href="@{/geolook/map}"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-th"></span> <span
+						th:text="|#{geolook.warehouses.map} ADRP|">title</span>
+					</a> <a th:href="@{/geolook/search}"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-search"></span> <span
+						th:text="|#{geolook.warehouses.lookup} ADRP|">title</span>
+					</a> <a th:href="@{/wpslook/search}"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-search"></span> <span
+						th:text="#{wpslook.warehouses.lookup}">WPS Lookup</span>
+					</a> <a th:href="@{/inventory/list}"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-indent-left"></span> <span
+						th:text="#{inventory.inventory}">title</span>
+					</a> <a th:href="@{/nameplates/list}"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-list"></span> <span
+						th:text="#{nameplates.rfid.log}">RFID Log</span>
+					</a> <a th:href="@{/weldlog/list}"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-list"></span> <span
+						th:text="#{weldlog.title}">Weldlog Log</span>
+					</a>
+
+				</div>
 			</div>
 			<!-- ADMIN -->
 			<div id="adminOnly"
@@ -134,13 +188,11 @@
 						class="btn btn-danger btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-user"></span> <span
 						th:text="#{users.management}">users management</span>
-					</a> 
-					<a th:href="@{/redmine/userslist}"
+					</a> <a th:href="@{/redmine/userslist}"
 						class="btn btn-danger btn-md margin-top-5"> <span
 						class=" 	glyphicon glyphicon-eye-open"></span> <span
 						th:text="#{redmine.users.title}">users management</span>
-					</a> 
-					<a th:href="@{/users/monitor}"
+					</a> <a th:href="@{/users/monitor}"
 						class="btn btn-danger btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-time"></span> <span
 						th:text="#{session.monitor}">users management</span>
@@ -160,155 +212,220 @@
 				</div>
 			</div>
 			<!-- INDUSTRY 4.0 -->
-			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
-				<h3 class="text-info" th:text="#{industry.title}">Panel With title</h3>
-			</div>
-			<div class="col-xs-12 margin-top-10">
-			<p><span th:text="#{industry.start}"></span></p>
-				<a th:href="@{/industry/dispatch}"
-					class="btn btn-primary btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-star"></span> <span
-					th:text="#{industry.title}"></span>
-				</a>
-				<a sec:authorize="hasAnyRole('ROLE_OWNER', 'ROLE_ADMIN', 'ROLE_INDUSTRYMANAGER')" 
-				th:href="@{/industry/manage/dispatch}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-star-empty"></span> <span
-					th:text="#{industry.manage.title}"></span>
-				</a>
+			<div id="industry">
+				<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
+					<h3 class="text-info" th:text="#{industry.title}">Panel With
+						title</h3>
+				</div>
+				<div class="col-xs-12 margin-top-10">
+					<p>
+						<span th:text="#{industry.start}"></span>
+					</p>
+					<a th:href="@{/industry/dispatch}"
+						class="btn btn-primary btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-star"></span> <span
+						th:text="#{industry.title}"></span>
+					</a> <a
+						sec:authorize="hasAnyRole('ROLE_OWNER', 'ROLE_ADMIN', 'ROLE_INDUSTRYMANAGER')"
+						th:href="@{/industry/manage/dispatch}"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-star-empty"></span> <span
+						th:text="#{industry.manage.title}"></span>
+					</a>
+				</div>
 			</div>
 			<!-- OFFICE -->
-			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
-				<h3 class="text-info" th:text="#{department.offices}">Panel
-					With title</h3>
-			</div>
-			<div class="col-xs-12 margin-top-10">
-				<a th:href="@{/proprog/list}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-forward"></span> <span
-					th:text="#{proprog.proprog}"></span>
-				</a> <a th:href="@{/tools/dispatch}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-copy"></span> <span
-					th:text="#{tools.projects}"></span>
-				</a> <a th:href="@{/buyorders/list}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-check"></span> <span
-					th:text="#{buyorders.buyorders}"></span>
-				</a> <a th:href="@{/prodtosale/main}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-list-alt"></span> <span
-					th:text="#{prodtosale.prodtosale}"></span>
-				</a> <a th:href="@{/ordtools/main}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-screenshot"></span> <span
-					th:text="#{ordtools.ordtools}"></span>
-				</a> <a th:href="@{/prodcomp/main}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-check"></span> <span
-					th:text="#{prodcomp.title}"></span>
-				</a> <a th:href="@{/prodorigin/main}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-random"></span> &nbsp;<span
-					th:text="#{prodorigin.title}"></span>
-				</a> <a th:href="@{/consumption/dispatch}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-export"></span> <span
-					th:text="#{consumption.consumptionacv}">consumption</span>
-				</a>
-				<!-- cancel -->
-				<a th:if="${CANCEL_THIS}" th:href="@{/hrua/list}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-user"></span> <span
-					th:text="#{hrua.files}"></span>
-				</a>
+			<div id="office"
+				sec:authorize="hasAnyRole(
+			'ROLE_ADMIN', 
+			'ROLE_BUYORDMANAGER', 
+			'ROLE_PRODTOSALEUSER', 
+			'ROLE_COMPONENTSUSER', 
+			'ROLE_PRODORIGINUSER', 
+			'ROLE_CONSUMPTIONUSER'
+			)">
+				<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
+					<h3 class="text-info" th:text="#{department.offices}">Panel
+						With title</h3>
+				</div>
+				<div class="col-xs-12 margin-top-10">
+					<a th:href="@{/buyorders/list}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_BUYORDMANAGER')"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-check"></span> <span
+						th:text="#{buyorders.buyorders}"></span>
+					</a> <a th:href="@{/prodtosale/main}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_PRODTOSALEUSER')"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-list-alt"></span> <span
+						th:text="#{prodtosale.prodtosale}"></span>
+					</a> <a th:href="@{/ordtools/main}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_PRODTOSALEUSER')"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-screenshot"></span> <span
+						th:text="#{ordtools.ordtools}"></span>
+					</a> <a th:href="@{/prodcomp/main}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_COMPONENTSUSER')"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-check"></span> <span
+						th:text="#{prodcomp.title}"></span>
+					</a> <a th:href="@{/prodorigin/main}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_PRODORIGINUSER')"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-random"></span> &nbsp;<span
+						th:text="#{prodorigin.title}"></span>
+					</a> <a th:href="@{/consumption/dispatch}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_CONSUMPTIONUSER')"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-export"></span> <span
+						th:text="#{consumption.consumptionacv}">consumption</span>
+					</a>
+					<!-- cancel -->
+					<a th:if="${CANCEL_THIS}" th:href="@{/proprog/list}"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-forward"></span> <span
+						th:text="#{proprog.proprog}"></span>
+					</a> <a th:if="${CANCEL_THIS}" th:href="@{/tools/dispatch}"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-copy"></span> <span
+						th:text="#{tools.projects}"></span>
+					</a> <a th:if="${CANCEL_THIS}" th:href="@{/hrua/list}"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-user"></span> <span
+						th:text="#{hrua.files}"></span>
+					</a>
+				</div>
 			</div>
 			<!-- PRODUCTION -->
-			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
-				<h3 class="text-info" th:text="#{department.production}">Panel
-					With title</h3>
+			<div id="production"
+				sec:authorize="hasAnyRole(
+			'ROLE_ADMIN', 
+			'ROLE_BHPMANAGER',
+			'ROLE_BHPSUPERVISOR',
+			'ROLE_BHPTICKETSUSER',
+			'ROLE_BHPTICKETSUTRUSER',
+			'ROLE_QSURVEYMANAGER',
+			'ROLE_QSURVEYUSER',
+			'ROLE_QCHECKMANAGER',
+			'ROLE_QCHECKUSER',
+			'ROLE_COMPREQMANAGER',
+			'ROLE_UTR_NORMALUSER'
+			)">
+				<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
+					<h3 class="text-info" th:text="#{department.production}">Panel
+						With title</h3>
+				</div>
+				<div class="col-xs-12 margin-top-10">
+					<a th:href="@{/bhptickets/dispatch}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN', 
+						'ROLE_BHPMANAGER',
+						'ROLE_BHPSUPERVISOR',
+						'ROLE_BHPTICKETSUSER',
+						'ROLE_BHPTICKETSUTRUSER'
+						)"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-pencil"></span> <span
+						th:text="#{bhp.tickets}">bhp tickets</span>
+					</a> <a th:href="@{/qsurveys/dispatch}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN', 
+						'ROLE_QSURVEYMANAGER',
+						'ROLE_QSURVEYUSER'
+						)"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-link"></span> <span
+						th:text="#{qsurveys.title}">quality surveys</span>
+					</a> <a th:href="@{/qcheck/list}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN', 
+						'ROLE_QCHECKMANAGER',
+						'ROLE_QCHECKUSER'
+						)"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-resize-full"></span> <span
+						th:text="#{qcheck.title}">quality surveys</span>
+					</a> <a th:href="@{/compreq/list}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_COMPREQMANAGER')"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-saved"></span> <span
+						th:text="#{compreq.title}"></span>
+					</a> <a th:href="@{/utr/stats}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_UTR_NORMALUSER')"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-stats"></span> <span
+						th:text="#{utr.stats}">bhp tickets</span>
+					</a> <a th:href="@{/utr/current}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_UTR_NORMALUSER')"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-warning-sign"></span> <span
+						th:text="#{utr.current}">bhp tickets</span>
+					</a> <a th:if="${CANCEL_THIS}" th:href="@{/wakesurvey/dosurvey/1}"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-ok"></span> <span
+						th:text="#{wakesurvey.title}">bhp tickets</span>
+					</a>
+				</div>
 			</div>
-			<div class="col-xs-12 margin-top-10">
-				<a th:href="@{/bhptickets/dispatch}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-pencil"></span> <span
-					th:text="#{bhp.tickets}">bhp tickets</span>
-				</a> <a th:href="@{/qsurveys/dispatch}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-link"></span> <span
-					th:text="#{qsurveys.title}">quality surveys</span>
-				</a> 
-				<a th:href="@{/qcheck/list}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-resize-full"></span> <span
-					th:text="#{qcheck.title}">quality surveys</span>
-				</a> 
-				<a th:href="@{/compreq/list}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-saved"></span> <span
-					th:text="#{compreq.title}"></span>
-				</a> 
-				<a th:href="@{/utr/stats}" class="btn btn-info btn-md margin-top-5">
-					<span class="glyphicon glyphicon-stats"></span> <span
-					th:text="#{utr.stats}">bhp tickets</span>
-				</a> <a th:href="@{/utr/current}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-warning-sign"></span> <span
-					th:text="#{utr.current}">bhp tickets</span>
-				</a> <a th:href="@{/nameplates/list}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-list"></span> <span
-					th:text="#{nameplates.rfid.log}">RFID Log</span>
-				</a> <a th:href="@{/weldlog/list}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-list"></span> <span
-					th:text="#{weldlog.title}">Weldlog Log</span>
-				</a> <a th:href="@{/wakesurvey/dosurvey/1}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-ok"></span> <span
-					th:text="#{wakesurvey.title}">bhp tickets</span>
-				</a>
-			</div>
+
 			<!-- WAREHOUSE -->
-			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
-				<h3 class="text-info" th:text="#{department.warehouses}">Panel
-					With title</h3>
+			<div id="warehouse"
+				sec:authorize="hasAnyRole(
+			'ROLE_ADMIN', 
+			'ROLE_SALESHIPUSER', 
+			'ROLE_SHIPMENTSMANAGER', 
+			'ROLE_MOVEMENTSUSER', 
+			'ROLE_MOVEMENTSSUPERUSER', 
+			'ROLE_RCPMANAGER'
+			)">
+
+				<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
+					<h3 class="text-info" th:text="#{department.warehouses}">Panel
+						With title</h3>
+				</div>
+				<div class="col-xs-12 margin-top-10">
+					<a th:href="@{/saleship/main}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SALESHIPUSER')"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-share"></span> <span
+						th:text="#{saleship}"></span>
+					</a> <a th:href="@{/shipments/dispatch}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SHIPMENTSMANAGER')"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-share"></span> <span
+						th:text="#{shipments}"></span>
+					</a> <a th:href="@{/movements/main}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN', 
+						'ROLE_MOVEMENTSUSER',
+						'ROLE_MOVEMENTSSUPERUSER'
+						)"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-sort"></span> <span
+						th:text="#{movements.movements}">title</span>
+					</a> <a th:href="@{/dirrcpship/main}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_RCPMANAGER')"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-upload"></span> <span
+						th:text="#{dirrcpship.dirrcpship}">title</span>
+					</a>
+				</div>
 			</div>
-			<div class="col-xs-12 margin-top-10">
-				<a th:href="@{/geolook/map}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-th"></span> <span
-					th:text="|#{geolook.warehouses.map} ADRP|">title</span>
-				</a> <a th:href="@{/geolook/search}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-search"></span> <span
-					th:text="|#{geolook.warehouses.lookup} ADRP|">title</span>
-				</a> <a th:href="@{/wpslook/search}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-search"></span> <span
-					th:text="#{wpslook.warehouses.lookup}">WPS Lookup</span>
-				</a> <a th:href="@{/saleship/main}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-share"></span> <span
-					th:text="#{saleship}"></span>
-				</a> <a th:href="@{/shipments/dispatch}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-share"></span> <span
-					th:text="#{shipments}"></span>
-				</a> <a th:href="@{/inventory/list}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-indent-left"></span> <span
-					th:text="#{inventory.inventory}">title</span>
-				</a> <a th:href="@{/movements/main}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-sort"></span> <span
-					th:text="#{movements.movements}">title</span>
-				</a> <a th:href="@{/dirrcpship/main}"
-					class="btn btn-info btn-md margin-top-5"> <span
-					class="glyphicon glyphicon-upload"></span> <span
-					th:text="#{dirrcpship.dirrcpship}">title</span>
-				</a>
+
+			<!-- REPORT A PROBLEM -->
+			<div id="report">
+				<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
+					<h3 class="text-warning" th:text="#{it.maketicket}"></h3>
+				</div>
+				<div class="col-xs-12 margin-top-10">
+					<a class="btn btn-warning btn-md margin-top-5"
+						href="http://10.1.1.226/redmine/" target="_blank"> <span
+						class="glyphicon glyphicon-star" style="margin-right: 2px;"></span>
+						<span th:text="#{it.tickets}">CRM Manual</span>
+					</a> <a class="btn btn-warning btn-md margin-top-5"
+						href="http://192.168.1.23/DOCS/tickets.pdf" target="_blank"> <span
+						class="glyphicon glyphicon-folder-open" style="margin-right: 5px;"></span>
+						<span th:text="#{it.ticketsmanual}">CRM Manual</span>
+					</a>
+				</div>
 			</div>
+
 		</div>
 	</div>
 </body>
