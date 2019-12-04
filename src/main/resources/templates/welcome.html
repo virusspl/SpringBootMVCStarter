@@ -20,12 +20,12 @@
 		<div class="row">
 			<!-- NAMEDAY -->
 			<div id="social" class="col-md-6" th:if="${dayCode}">
-					<h3 class="text-primary" th:text="|#{welcome.dontforget}!|">tickets</h3>
-					<div class="underline margin-bottom-5"></div>
-					<span class="btn-sm glyphicon glyphicon-calendar"></span> <span
-						th:utext="|#{welcome.todaywegot} &lt;b&gt;#{${dayCode}}&lt;/b&gt;, ${today}|"></span>
-					<br /> <span class="btn-sm glyphicon glyphicon-gift"></span> <span
-						th:utext="|#{welcome.nameday} &lt;b&gt;${nameDay}&lt;/b&gt;|"></span>
+				<h3 class="text-primary" th:text="|#{welcome.dontforget}!|">tickets</h3>
+				<div class="underline margin-bottom-5"></div>
+				<span class="btn-sm glyphicon glyphicon-calendar"></span> <span
+					th:utext="|#{welcome.todaywegot} &lt;b&gt;#{${dayCode}}&lt;/b&gt;, ${today}|"></span>
+				<br /> <span class="btn-sm glyphicon glyphicon-gift"></span> <span
+					th:utext="|#{welcome.nameday} &lt;b&gt;${nameDay}&lt;/b&gt;|"></span>
 			</div>
 			<!-- NO AUTH -->
 			<div class="col-md-6 margin-top-10" id="no-login"
@@ -33,20 +33,53 @@
 
 				<div class="panel panel-primary" style="margin-bottom: -5px;">
 					<div class="panel-heading">
-					<span class="glyphicon glyphicon-user"></span>
-						<span class="bold" th:text="#{welcome.auth}"></span>
+						<span class="glyphicon glyphicon-user"></span> <span class="bold"
+							th:text="#{welcome.auth}"></span>
 					</div>
 					<div class="panel-body center">
-					
-					<p><span th:text="#{welcome.auth.message}"></span>
-						<a th:href="@{/login}" class="btn btn-primary btn-sm"> <span
-						class="glyphicon glyphicon-lock"></span>&nbsp;&nbsp;<span
-						th:text="#{action.login}"></span>
-					</a>
-					</p>
-			
-					
+						<p>
+							<span th:text="#{welcome.auth.message}"></span> <a
+								th:href="@{/login}" class="btn btn-primary btn-sm"> <span
+								class="glyphicon glyphicon-lock"></span>&nbsp;&nbsp;<span
+								th:text="#{action.login}"></span>
+							</a>
+						</p>
 					</div>
+				</div>
+			</div>
+			<!-- ADMIN -->
+			<div id="adminOnly"
+				sec:authorize="hasAnyRole('ROLE_OWNER', 'ROLE_ADMIN')">
+				<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
+					<h3 class="text-danger" th:text="#{department.it}">Panel With
+						title</h3>
+				</div>
+				<div class="col-xs-12 margin-top-10">
+					<a th:href="@{/users/list/active}"
+						class="btn btn-danger btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-user"></span> <span
+						th:text="#{users.management}">users management</span>
+					</a> <a th:href="@{/redmine/userslist}"
+						class="btn btn-danger btn-md margin-top-5"> <span
+						class=" 	glyphicon glyphicon-eye-open"></span> <span
+						th:text="#{redmine.users.title}">users management</span>
+					</a> <a th:href="@{/users/monitor}"
+						class="btn btn-danger btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-time"></span> <span
+						th:text="#{session.monitor}">users management</span>
+					</a> <a th:href="@{/mailer/create}"
+						class="btn btn-danger btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-envelope"></span> <span
+						th:text="|Mailer|">users management</span>
+					</a> <a th:href="@{/system/log}"
+						class="btn btn-danger btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-list-alt"></span> <span
+						th:text="#{system.log}">users management</span>
+					</a> <a href="https://firewall.atwsystem.pl/" target="_blank"
+						class="btn btn-danger btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-signal"></span> <span
+						th:text="|Firewall|">fire wall</span>
+					</a>
 				</div>
 			</div>
 			<!-- PUBLIC -->
@@ -174,41 +207,6 @@
 						th:text="#{weldlog.title}">Weldlog Log</span>
 					</a>
 
-				</div>
-			</div>
-			<!-- ADMIN -->
-			<div id="adminOnly"
-				sec:authorize="hasAnyRole('ROLE_OWNER', 'ROLE_ADMIN')">
-				<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
-					<h3 class="text-danger" th:text="#{department.it}">Panel With
-						title</h3>
-				</div>
-				<div class="col-xs-12 margin-top-10">
-					<a th:href="@{/users/list/active}"
-						class="btn btn-danger btn-md margin-top-5"> <span
-						class="glyphicon glyphicon-user"></span> <span
-						th:text="#{users.management}">users management</span>
-					</a> <a th:href="@{/redmine/userslist}"
-						class="btn btn-danger btn-md margin-top-5"> <span
-						class=" 	glyphicon glyphicon-eye-open"></span> <span
-						th:text="#{redmine.users.title}">users management</span>
-					</a> <a th:href="@{/users/monitor}"
-						class="btn btn-danger btn-md margin-top-5"> <span
-						class="glyphicon glyphicon-time"></span> <span
-						th:text="#{session.monitor}">users management</span>
-					</a> <a th:href="@{/mailer/create}"
-						class="btn btn-danger btn-md margin-top-5"> <span
-						class="glyphicon glyphicon-envelope"></span> <span
-						th:text="|Mailer|">users management</span>
-					</a> <a th:href="@{/system/log}"
-						class="btn btn-danger btn-md margin-top-5"> <span
-						class="glyphicon glyphicon-list-alt"></span> <span
-						th:text="#{system.log}">users management</span>
-					</a> <a href="https://firewall.atwsystem.pl/" target="_blank"
-						class="btn btn-danger btn-md margin-top-5"> <span
-						class="glyphicon glyphicon-signal"></span> <span
-						th:text="|Firewall|">fire wall</span>
-					</a>
 				</div>
 			</div>
 			<!-- INDUSTRY 4.0 -->
