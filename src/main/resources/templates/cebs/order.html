@@ -96,23 +96,44 @@
 				<div th:if="!${active}">
 					<h1 th:text="|Nikt nie zbiera ;(|" class="text-primary"></h1>
 					<div sec:authorize="hasAnyRole('ROLE_CEBSMANAGER', 'ROLE_ADMIN')">
-						<a th:href="@{/cebs/manage/starttoday}"
+						<a 
+							style="display: block;"
+							th:href="@{/cebs/manage/starttoday/kml}"
 							class="btn btn-success btn-md margin-top-5"
-							th:onclick="|return confirm('Chcesz rozpocząć zbieranie na DZISIAJ?')|">
+							th:onclick="|return confirm('Chcesz rozpocząć zbieranie na DZISIAJ w KebabMania Lesko?')|">
 							<span class="glyphicon glyphicon-ok"></span> <span
-							th:text="|Zbieraj na dziś!|"></span>
-						</a> <a th:href="@{/cebs/manage/starttomorrow}"
-							class="btn btn-warning btn-md margin-top-5"
-							th:onclick="|return confirm('Chcesz rozpocząć zbieranie na JUTRO?')|">
+							th:text="|Zbieraj na DZISIAJ w Kebab Mania LESKO!|"></span>
+						</a>
+						<a 
+							style="display: block;"
+							th:href="@{/cebs/manage/starttomorrow/kml}"
+							class="btn btn-info btn-md margin-top-5"
+							th:onclick="|return confirm('Chcesz rozpocząć zbieranie na JUTRO w KebabMania Lesko?')|">
 							<span class="glyphicon glyphicon-ok"></span> <span
-							th:text="|Zbieraj jutro!|"></span>
+							th:text="|Zbieraj na JUTRO w KebabMania LESKO!|"></span>
+						</a>
+						<a 
+							style="display: block;"
+							th:href="@{/cebs/manage/starttoday/bks}"
+							class="btn btn-success btn-md margin-top-5"
+							th:onclick="|return confirm('Chcesz rozpocząć zbieranie na DZISIAJ w Bar Kebab Sanok?')|">
+							<span class="glyphicon glyphicon-ok"></span> <span
+							th:text="|Zbieraj na DZISIAJ w Bar Kebab SANOK!|"></span>
+						</a>
+						 <a 
+						 	style="display: block;"
+						 	th:href="@{/cebs/manage/starttomorrow/bks}"
+							class="btn btn-info btn-md margin-top-5"
+							th:onclick="|return confirm('Chcesz rozpocząć zbieranie na JUTRO w Bar Kebab Sanok?')|">
+							<span class="glyphicon glyphicon-ok"></span> <span
+							th:text="|Zbieraj na JUTRO w Bak Kebab SANOK!|"></span>
 						</a>
 					</div>
 				</div>
 
 				<div th:if="${active}">
 					<h3
-						th:utext="|Zbieramy na dzień: &lt;b&gt;#{${dayCode}}&lt;/b&gt;, ${actionDate}&lt;/br&gt;|"
+						th:utext="|Zbieramy na dzień: &lt;b&gt;#{${dayCode}}&lt;/b&gt;, ${actionDate}&lt;/br&gt; w ${location}|"
 						class="text-primary center"></h3>
 						<!-- Organizator: &lt;b&gt;${organizer}&lt;/b&gt; ;) -->
 

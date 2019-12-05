@@ -56,6 +56,8 @@ public class CebsController {
 	private String organizer;
 	private Calendar actionDate;
 	private String dayCode;
+	private String location;
+	private String locationCode;
 
 	@ModelAttribute
 	public void addAttributes(Model model) {
@@ -65,6 +67,7 @@ public class CebsController {
 		model.addAttribute("sent", sent);
 		model.addAttribute("actionDate", dateHelper.formatDdMmYyyy(actionDate.getTime()));
 		model.addAttribute("dayCode", dayCode);
+		model.addAttribute("location", this.location);
 	}
 
 	public CebsController() {
@@ -108,7 +111,17 @@ public class CebsController {
 	private List<MenuItem> getMenuList() {
 		List<MenuItem> list = new ArrayList<>();
 		try {
-			File resource = new ClassPathResource("data/cebs.dat").getFile();
+			String file = "";
+			switch(this.locationCode) {
+				case "kml":
+					file = "data/cebs_KM.dat";
+				break;
+				case "bks":
+					file = "data/cebs_BK.dat";
+				break;
+			}
+			
+			File resource = new ClassPathResource(file).getFile();
 
 			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(resource), "UTF8"));
 
@@ -182,8 +195,6 @@ public class CebsController {
 			    }, 
 			    180000
 			);
-		
-		
 
 		return "redirect:/cebs/order";
 	}
@@ -211,24 +222,46 @@ public class CebsController {
 		return "redirect:/cebs/order";
 	}
 
-	@RequestMapping("/manage/starttoday")
-	public String startToday(Model model) throws UnknownHostException, MessagingException {
+	@RequestMapping("/manage/starttoday/{loc}")
+	public String startToday(@PathVariable("loc") String loc, Model model) throws Exception {
+		this.locationCode = loc;
+		switch(loc) {
+			case "kml":
+				this.location = "KebabMania LESKO";
+			break;
+			case "bks":
+				this.location = "Bar Kebab SANOK";
+			break;
+			default:
+				throw new Exception("Unrecognized location " + loc);
+		}
 		this.active = true;
 		this.confirmed = false;
 		this.sent = false;
 		this.actionDate = Calendar.getInstance();
 		this.dayCode = "general.calendar.day" + actionDate.get(Calendar.DAY_OF_WEEK);
 		this.organizer = userService.getAuthenticatedUser().getName();
-		String title = "Zbieramy zamówienia na DZISIAJ!";
+		String title = "Zbieramy na DZISIAJ w " + this.location + "!";
 		String message = "Jeżeli wszystko się uda, zamówienie będzie relizowane DZISIAJ, "
-				+ dateHelper.formatDdMmYyyy(actionDate.getTime())
+				+ dateHelper.formatDdMmYyyy(actionDate.getTime()) + " w " + this.location
 				+ ". <br/>Proszę wejść na stronę z linku poniżej i dopisać się do listy ;)";
 		this.sendMail(title, message, false);
 		return "redirect:/cebs/order";
 	}
 
-	@RequestMapping("/manage/starttomorrow")
-	public String startTomorrow(Model model) throws UnknownHostException, MessagingException {
+	@RequestMapping("/manage/starttomorrow/{loc}")
+	public String startTomorrow(@PathVariable("loc") String loc, Model model) throws Exception {
+		this.locationCode = loc;
+		switch(loc) {
+			case "kml":
+				this.location = "KebabMania LESKO";
+			break;
+			case "bks":
+				this.location = "Bar Kebab SANOK";
+			break;
+			default:
+				throw new Exception("Unrecognized location " + loc);			
+		}
 		this.active = true;
 		this.confirmed = false;
 		this.sent = false;
@@ -236,9 +269,9 @@ public class CebsController {
 		this.actionDate.add(Calendar.DAY_OF_MONTH, 1);
 		this.dayCode = "general.calendar.day" + actionDate.get(Calendar.DAY_OF_WEEK);
 		this.organizer = userService.getAuthenticatedUser().getName();
-		String title = "Zbieramy zamówienia na JUTRO!";
+		String title = "Zbieramy na JUTRO w " + this.location + "!";
 		String message = "Jeżeli wszystko się uda, zamówienie będzie relizowane JUTRO, "
-				+ dateHelper.formatDdMmYyyy(actionDate.getTime())
+				+ dateHelper.formatDdMmYyyy(actionDate.getTime()) + " w " + this.location
 				+ ". <br/>Proszę wejść na stronę z linku poniżej i dopisać się do listy ;)";
 		this.sendMail(title, message, false);
 		return "redirect:/cebs/order";
