@@ -243,6 +243,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"ADMIN", 
 				"INDUSTRYMANAGER"
 				)
+		.antMatchers(
+				"/environment/**"
+				)		
+		.hasAnyRole(
+				"ADMIN", 
+				"ENVIRONMENTUSER"
+				)
 		 // ** old modules to delete **
 		.antMatchers(
 				"/qualitysurveys/**")

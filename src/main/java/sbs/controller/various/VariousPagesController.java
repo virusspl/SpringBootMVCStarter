@@ -490,6 +490,14 @@ public class VariousPagesController {
 			msg += "[role: " + industryManager.getName() + "], ";
 		}
 		
+		Role environment = roleService.findByName("ROLE_ENVIRONMENTUSER");
+		if (environment == null) {
+			environment = new Role();
+			environment.setName("ROLE_ENVIRONMENTUSER");
+			roleService.save(environment);
+			msg += "[role: " + environment.getName() + "], ";
+		}
+		
 		// ROLE END
 
 		User admin = userService.findByUsername("Admin");
