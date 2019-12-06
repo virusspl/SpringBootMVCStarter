@@ -21,6 +21,7 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import sbs.config.error.NotFoundException;
 import sbs.controller.dirrcpship.DirectReceptionsShipmentLine;
 import sbs.helpers.DateHelper;
 import sbs.model.proprog.Project;
@@ -30,6 +31,7 @@ import sbs.model.x3.X3Client;
 import sbs.model.x3.X3ConsumptionProductInfo;
 import sbs.model.x3.X3ConsumptionSupplyInfo;
 import sbs.model.x3.X3CoverageData;
+import sbs.model.x3.X3EnvironmentInfo;
 import sbs.model.x3.X3KeyValString;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductFinalMachine;
@@ -2861,6 +2863,87 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		}
 			
 		return map;
+	}
+
+	@Override
+	public List<X3EnvironmentInfo> getEnvironmentInfoInPeriod(Date startDate, Date endDate, String type,
+			String company) {
+
+		String query = ""
+				+ "SELECT "
+				+ "ITM.ITMREF_0, "
+				+ "ITM.ITMDES1_0, "
+				+ "STJ.IPTDAT_0, "
+				+ "STJ.QTYSTU_0, "
+				+ "ITM.STU_0, "
+				+ "APL.LANMES_0, "
+				+ "ITM.TSICOD_0, "
+				+ "ITM.TSICOD_1 "
+				+ "FROM "
+				+ "("
+				+ "ATW.STOJOU INNER JOIN ATW.ITMMASTER "
+				+ "ON STJ.ITMREF_0 = ITM.ITMREF_0"
+				+ ") "
+				+ "INNER JOIN ATW.APLSTD "
+				+ "ON STJ.TRSTYP_0 = APL.LANNUM_0 "
+				+ "WHERE " 
+				+ "(APL.LANCHP_0 = ?) " 
+				+ "AND (APL.LAN_0 = ?) "
+				+ "AND (STJ.TRSTYP_0 = ? Or STJ.TRSTYP_0 = ?) "
+				+ "AND (STJ.IPTDAT_0 > ? And STJ.IPTDAT_0 < ?) ";
+		
+		<!-- WIRE -->
+		AND (ITM.ITMREF_0 Like "04783*") 
+		<!-- PAINT -->
+		AND (ITM.TSICOD_1 = "FAR") 
+		<!-- GAS -->
+		(ITM.ITMDES1_0 Like "GAZ*") 
+		<!-- GLUE -->
+		(ITM.ITMDES1_0 Like "*KLEJ*") 
+		
+		Object[] criteria = new Object[] { 704, "POL", 2, 6, startDate, endDate };
+		
+		switch (type) {
+		case JdbcOracleX3Service.ENV_INFO_WIRE:
+			query = "";
+			criteria = new Object[] { startDate, endDate };
+			break;
+		case JdbcOracleX3Service.ENV_INFO_PAINT:
+
+			break;
+		case JdbcOracleX3Service.ENV_INFO_GAS:
+
+			break;
+		case JdbcOracleX3Service.ENV_INFO_GLUE:
+
+			break;
+		default:
+			throw new NotFoundException("Unknown list type: " + type);
+		}
+		
+		query +=" ORDER BY ITM.ITMREF_0, STJ.IPTDAT_0";
+
+		List<Map<String, Object>> resultSet = jdbc.queryForList(
+				query, 
+				
+				);
+
+		List<X3EnvironmentInfo> list = new ArrayList<>();
+		X3EnvironmentInfo envr;
+		for (Map<String, Object> row : resultSet) {
+			envr = new X3EnvironmentInfo();
+			envr.setCode((String)row.get("ITMREF_0"));
+			envr.setDescription((String)row.get("ITMDES1_0"));
+			envr.setGr1((String)row.get("TSICOD_0"));
+			envr.setGr2((String)row.get("TSICOD_1"));
+			envr.setAccDate((Timestamp)row.get("IPTDAT_0"));
+			envr.setMovementName((String)row.get("LANMES_0"));
+			envr.setQuantity(((BigDecimal)row.get("QTYSTU_0")).doubleValue());
+			envr.setUnit((String)row.get("STU_0"));
+			
+			list.add(envr);
+		}
+		return list;
 	}
 
 }

@@ -12,6 +12,7 @@ import sbs.model.x3.X3Client;
 import sbs.model.x3.X3ConsumptionProductInfo;
 import sbs.model.x3.X3ConsumptionSupplyInfo;
 import sbs.model.x3.X3CoverageData;
+import sbs.model.x3.X3EnvironmentInfo;
 import sbs.model.x3.X3KeyValString;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductFinalMachine;
@@ -112,6 +113,8 @@ public interface JdbcOracleX3Repository  {
 	public Map<String, String> getPendingProductionOrdersBySaleOrders(String company);
 	public List<X3Workstation> getWorkstations(String company);
 	public Map<String, Double> getCurrentStandardCostsMap(String company);
+	public List<X3EnvironmentInfo> getEnvironmentInfoInPeriod(Date startDate, Date endDate, String type,
+			String company);
 
 	
 	

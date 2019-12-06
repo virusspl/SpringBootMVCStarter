@@ -145,35 +145,31 @@
 						class="glyphicon glyphicon-menu-left"></span> <span
 						th:text="#{action.back}">back</span>
 					</a>
-					drut spawalniczy
 					<button class="btn btn-primary btn-sm" type="submit" onclick="disableLong(this)"
-						name="typ" th:value="|ds|">
+						name="typ" th:value="|ww|">
 						<span class="glyphicon glyphicon-search"></span> <span
-							th:text="#{prodtosale.makelist}">search</span>
+							th:text="#{environment.wire}">search</span>
 					</button>
-					farby
 					<button class="btn btn-primary btn-sm" type="submit" onclick="disableLong(this)"
-						name="typ" th:value="|fr|">
+						name="typ" th:value="|pt|">
 						<span class="glyphicon glyphicon-search"></span> <span
-							th:text="#{prodtosale.makelist}">search</span>
+							th:text="#{environment.paint}">search</span>
 					</button>
-					gaz
 					<button class="btn btn-primary btn-sm" type="submit" onclick="disableLong(this)"
-						name="typ" th:value="|gz|">
+						name="typ" th:value="|gs|">
 						<span class="glyphicon glyphicon-search"></span> <span
-							th:text="#{prodtosale.makelist}">search</span>
+							th:text="#{environment.gas}">search</span>
 					</button>
-					kleje
 					<button class="btn btn-primary btn-sm" type="submit" onclick="disableLong(this)"
-						name="typ" th:value="|kl|">
+						name="typ" th:value="|gl|">
 						<span class="glyphicon glyphicon-search"></span> <span
-							th:text="#{prodtosale.makelist}">search</span>
+							th:text="#{environment.glue}">search</span>
 					</button>
 				</div>
 			</div>
 		</form>
 		<!-- SHOW LIST -->
-		<div th:if="${showList}">
+		<div th:if="${list}">
 			<div class="row margin-top-10">
 				<div class="col-xs-12">
 					<h3 class="text-primary" th:text="#{general.list}">result</h3>

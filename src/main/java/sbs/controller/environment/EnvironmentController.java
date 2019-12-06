@@ -22,8 +22,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import sbs.config.error.NotFoundException;
 import sbs.helpers.DateHelper;
 import sbs.helpers.TextHelper;
+import sbs.model.x3.X3EnvironmentInfo;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.service.x3.JdbcOracleX3Service;
 
@@ -64,8 +66,8 @@ public class EnvironmentController {
 		if (bindingResult.hasErrors()) {
 			return "environment/dispatch";
 		}
-
-		System.out.println(typ);
+		
+		List<X3EnvironmentInfo> list = x3Service.getEnvironmentInfoInPeriod(environmentForm.getStartDate(), environmentForm.getEndDate(), typ, environmentForm.getCompany());
 		/*
 		// database list
 		Map<String, Integer> stock = x3Service.findGeneralStockForAllProducts("ATW");

@@ -19,6 +19,7 @@ import sbs.model.x3.X3Client;
 import sbs.model.x3.X3ConsumptionProductInfo;
 import sbs.model.x3.X3ConsumptionSupplyInfo;
 import sbs.model.x3.X3CoverageData;
+import sbs.model.x3.X3EnvironmentInfo;
 import sbs.model.x3.X3KeyValString;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductFinalMachine;
@@ -451,6 +452,12 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	@Cacheable(value="x3StandardCostsMap")
 	public Map<String, Double> getCurrentStandardCostsMap(String company) {
 		return jdbcOracleX3Repository.getCurrentStandardCostsMap(company);
+	}
+
+	@Override
+	public List<X3EnvironmentInfo> getEnvironmentInfoInPeriod(Date startDate, Date endDate, String type,
+			String company) {
+		return jdbcOracleX3Repository.getEnvironmentInfoInPeriod(startDate, endDate, type, company);
 	}
 
 }

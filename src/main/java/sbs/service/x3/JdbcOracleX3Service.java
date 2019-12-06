@@ -20,6 +20,12 @@ public interface JdbcOracleX3Service {
 	public static final String LANG_ENGLISH = "ENG";
 	public static final String LANG_ITALIAN = "ITA";
 	
+	public static final String ENV_INFO_WIRE = "ww";
+	public static final String ENV_INFO_PAINT = "pt";
+	public static final String ENV_INFO_GAS = "gs";
+	public static final String ENV_INFO_GLUE = "gl";
+	
+	
 	public String convertLocaleToX3Lang(Locale locale);
     public List<String> findAllUsers(String company);
     public List<X3Product> findAllActiveProducts(String company);
@@ -91,5 +97,6 @@ public interface JdbcOracleX3Service {
 	public Map<String, String> getPendingProductionOrdersBySaleOrders(String company);
 	public List<X3Workstation> getWorkstations(String company);
 	public Map<String, Double> getCurrentStandardCostsMap(String company);
+	public List<X3EnvironmentInfo> getEnvironmentInfoInPeriod(Date startDate, Date endDate, String type, String company);
 	
 }
