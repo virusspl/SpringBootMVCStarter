@@ -1,20 +1,24 @@
-XSPEK;Speed kebab (frytki,mięso,sosy);7
-XBUKE;Burger kebab (sałata lod., mięso, sosy, pomidor, ogórek);8
-XBKXL;Bułka kebab XL (surówki, mięso, sosy);9
-XBKXX;Bułka kebab XXL (surówki, mięso, sosy);11
-XPKXL;Pita kebab XL (surówki, mięso, sosy);9
-XPKXX;Pita kebab XXL (surówki, mięso, sosy);11
-XRKXL;Rollo kebab XL (surówki, mięso, sosy);9
-XRKXX;Rollo kebab XXL (surówki, mięso, sosy);11
-XRKMG;Rollo mega 42 cm (surówki, mięso, sosy);14
-XRKZF;Rollo z frytkami (frytki, surówki, mięso, sosy);13
-XKBXL;Kebab box XL (frytki, surówki, mięso, sosy);9
-XKBXX;Kebab box XXL (frytki, surówki, mięso, sosy);11
-XKBOR;Kebab box z ryżem (ryż, surówki, mięso, sosy);11
-XKTXL;Kebab na talerzu XL (frytki, surówki, mięso, sosy);11
-XKTXX;Kebab na talerzu XX (frytki, surówki, mięso, sosy)L;13
-XSACH;Sałatka chicken (kurczak,sałata lodowa, ogórek, pomidor, oliwki, feta, sosy);12
-XFRXL;Frytki XL (frytki);4
-XFRXX;Frytki XXL (frytki);6
-XFRPS;Frytki z posypką (ser, przyprawy, sory);6
-XZEST;Zestaw (rollo, frytki, cola);15
+XBKXL;Buła el kebab XXL (mięso, sos, surówka);10
+XBEF;Buła el frytol (mięso, surówka, frytki, sos);12
+XBUKE;Burger kebab (mięso, sałata, sos, pomidor, ogórek);8
+XBUSZ;Bułka szkolna (szynka, ser, sos, pomidor, ogórek);6
+XPKXL;Pita XL (mięso, surówka, sos);9
+XPKXX;Pita XXL (mięso, surówka, sos);11
+XPIFR;Pita frytol (mięso, sos, frytki, ser);13
+XRKXX;Rollo kebab XXL (mięso, surówka, sos);10
+XRKMG;Rollo mega 42 cm (mięso, surówka, sos);14
+XRKSP;Rollo special 42cm (mięso, surówka, sos, frytki, ser);19
+XRKRF;Rollo frytol (mięso, surówka, sos, frytki);13
+XKBXX;Box XXL (mięso, sos, frytki, surówka);11
+XXBSB;Speed box (frytki, mięso, sos);7
+XXKPS;Kapsalon (mięso, frytki, ser, pomidor, ogórek, sałata);14
+XKTXL;Talerz XL (mięso, surówka, sos, frytki);11
+XKTXX;Talerz XXL (mięso, surówka, sos, frytki);13
+XKTMG;Talerz 50cm (mięso, surówka, sos, frytki);80
+XSVGC;Suvlak grecki (pita grecka, mięso, sos, pomidor, ogórek, frytki, cebula);10
+XSACH;Sałatka kurczak (chrupiący kurczak, surówka, ser feta, oliwki, ogórek, pomidor, kukurydza);13
+XFRXX;Frytki XXL (frytki);5
+XFRPS;Frytki z serem (frytki);7
+XZS01;Zestaw mały (rollo, frytki, cola 0,33l);15
+XZS02;Zestaw duży (3x kapsalon, 3x cola 0,33l);40
+XZS03;Zestaw mega (5x rollo mega, 5x frytki, cola 2l);85
