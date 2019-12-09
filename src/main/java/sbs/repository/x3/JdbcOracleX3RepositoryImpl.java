@@ -2881,10 +2881,10 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "ITM.TSICOD_1 "
 				+ "FROM "
 				+ "("
-				+ "ATW.STOJOU INNER JOIN ATW.ITMMASTER "
+				+ company +".STOJOU STJ INNER JOIN " + company +".ITMMASTER ITM "
 				+ "ON STJ.ITMREF_0 = ITM.ITMREF_0"
 				+ ") "
-				+ "INNER JOIN ATW.APLSTD "
+				+ "INNER JOIN " + company + ".APLSTD APL "
 				+ "ON STJ.TRSTYP_0 = APL.LANNUM_0 "
 				+ "WHERE " 
 				+ "(APL.LANCHP_0 = ?) " 
@@ -2892,56 +2892,75 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "AND (STJ.TRSTYP_0 = ? Or STJ.TRSTYP_0 = ?) "
 				+ "AND (STJ.IPTDAT_0 > ? And STJ.IPTDAT_0 < ?) ";
 		
-		<!-- WIRE -->
-		AND (ITM.ITMREF_0 Like "04783*") 
-		<!-- PAINT -->
-		AND (ITM.TSICOD_1 = "FAR") 
-		<!-- GAS -->
-		(ITM.ITMDES1_0 Like "GAZ*") 
-		<!-- GLUE -->
-		(ITM.ITMDES1_0 Like "*KLEJ*") 
-		
-		Object[] criteria = new Object[] { 704, "POL", 2, 6, startDate, endDate };
-		
+		Object[] criteria = new Object[] {};
 		switch (type) {
 		case JdbcOracleX3Service.ENV_INFO_WIRE:
-			query = "";
-			criteria = new Object[] { startDate, endDate };
+			// ITM.ITMREF_0 Like ? 
+			// "04783%",
+			query += " AND ((ITM.ITMDES1_0 Like ? OR ITM.ITMDES1_0 Like ?))";
+			criteria = new Object[] {704, "POL", 2, 6, startDate, endDate, "DRUT %", "FILO %"};
 			break;
 		case JdbcOracleX3Service.ENV_INFO_PAINT:
-
+			if(company.equals("ATW")) {
+				query += " AND (ITM.TSICOD_1 = ?)";
+				criteria = new Object[] {704, "POL", 2, 6, startDate, endDate, "FAR"};
+			}
+			else {
+				query += " AND (ITM.ITMDES1_0 LIKE ?)";
+				criteria = new Object[] {704, "POL", 2, 6, startDate, endDate, "%FARB%"};
+			}
 			break;
 		case JdbcOracleX3Service.ENV_INFO_GAS:
-
+			query += " AND (ITM.ITMDES1_0 Like ?)";
+			criteria = new Object[] {704, "POL", 2, 6, startDate, endDate, "GAZ%"};
 			break;
 		case JdbcOracleX3Service.ENV_INFO_GLUE:
-
+			if(company.equals("ATW")) {
+				query += " AND (ITM.ITMDES1_0 Like ?)"; 
+				criteria = new Object[] {704, "POL", 2, 6, startDate, endDate, "%KLEJ%"};
+			}
+			else {
+				query += " AND (ITM.TSICOD_1 = ?)"; 
+				criteria = new Object[] {704, "POL", 2, 6, startDate, endDate, "KLE"};
+			}
 			break;
 		default:
 			throw new NotFoundException("Unknown list type: " + type);
 		}
 		
 		query +=" ORDER BY ITM.ITMREF_0, STJ.IPTDAT_0";
-
+		
 		List<Map<String, Object>> resultSet = jdbc.queryForList(
 				query, 
-				
+				criteria
 				);
-
+		
+		System.out.println("===========");
+		System.out.println(company);
+		System.out.println(type);
+		System.out.println(query);
+		for(Object cr: criteria) {
+			System.out.println("crit: " + cr);
+		}
+		System.out.println(query);
+		System.out.println(resultSet.size());
+		System.out.println("===========");
+		
+		
 		List<X3EnvironmentInfo> list = new ArrayList<>();
-		X3EnvironmentInfo envr;
+		X3EnvironmentInfo einfo;
 		for (Map<String, Object> row : resultSet) {
-			envr = new X3EnvironmentInfo();
-			envr.setCode((String)row.get("ITMREF_0"));
-			envr.setDescription((String)row.get("ITMDES1_0"));
-			envr.setGr1((String)row.get("TSICOD_0"));
-			envr.setGr2((String)row.get("TSICOD_1"));
-			envr.setAccDate((Timestamp)row.get("IPTDAT_0"));
-			envr.setMovementName((String)row.get("LANMES_0"));
-			envr.setQuantity(((BigDecimal)row.get("QTYSTU_0")).doubleValue());
-			envr.setUnit((String)row.get("STU_0"));
+			einfo = new X3EnvironmentInfo();
+			einfo.setCode((String)row.get("ITMREF_0"));
+			einfo.setDescription((String)row.get("ITMDES1_0"));
+			einfo.setGr1((String)row.get("TSICOD_0"));
+			einfo.setGr2((String)row.get("TSICOD_1"));
+			einfo.setAccDate((Timestamp)row.get("IPTDAT_0"));
+			einfo.setMovementName((String)row.get("LANMES_0"));
+			einfo.setQuantity(((BigDecimal)row.get("QTYSTU_0")).doubleValue());
+			einfo.setUnit((String)row.get("STU_0"));
 			
-			list.add(envr);
+			list.add(einfo);
 		}
 		return list;
 	}

@@ -59,113 +59,30 @@ public class EnvironmentController {
 		return "environment/dispatch";
 	}
 
-	@RequestMapping(value = "/makelist", params = { "typ" }, method = RequestMethod.POST)
-	public String viewList(@Valid EnvironmentForm environmentForm, @RequestParam String typ, BindingResult bindingResult, Model model,
+	@RequestMapping(value = "/makelist", params = { "type" }, method = RequestMethod.POST)
+	public String viewList(@Valid EnvironmentForm environmentForm, @RequestParam String type, BindingResult bindingResult, Model model,
 			RedirectAttributes redirectAttrs, Locale locale) {
 		
 		if (bindingResult.hasErrors()) {
 			return "environment/dispatch";
 		}
 		
-		List<X3EnvironmentInfo> list = x3Service.getEnvironmentInfoInPeriod(environmentForm.getStartDate(), environmentForm.getEndDate(), typ, environmentForm.getCompany());
-		/*
-		// database list
-		Map<String, Integer> stock = x3Service.findGeneralStockForAllProducts("ATW");
-		List<X3SalesOrderLine> lines = x3Service.findOpenedSalesOrderLinesInPeriod(environmentForm.getStartDate(),
-				environmentForm.getEndDate(), "ATW");
+		List<X3EnvironmentInfo> list = x3Service.getEnvironmentInfoInPeriod(environmentForm.getStartDate(), environmentForm.getEndDate(), type, environmentForm.getCompany());
 
-		// variables for summary calculation
-		Set<String> allGroups = new HashSet<>();
-		Map<String, Integer> tillToday = new HashMap<>();
-		Map<String, Integer> endOfMonth = new HashMap<>();
-		Map<String, Integer> oneMonthAhead = new HashMap<>();
-		Map<String, Integer> furtherDates = new HashMap<>();
-		// border dates for summary
-		Calendar cal = Calendar.getInstance();
-		Timestamp today = new Timestamp(cal.getTime().getTime());
-		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-		Timestamp thisMonth = new Timestamp(cal.getTime().getTime());
-		cal.add(Calendar.MONTH, 1);
-		Timestamp nextMonth = new Timestamp(cal.getTime().getTime());
-		*/
-/*
-		// loop through lines
-		ProductionToSaleLine sl;
-		int tmp;
-		List<ProductionToSaleLine> showList = new ArrayList<>();
-		for (X3SalesOrderLine sol : lines) {
-			sl = new ProductionToSaleLine();
-			sl.setOrderNumberAndLine(sol.getOrderNumber() + "/" + sol.getOrderLineNumber());
-			sl.setProductCode(sol.getProductCode());
-			sl.setProductDescription(sol.getProductDescription());
-			sl.setProductGr1(sol.getProductGr1());
-			sl.setProductGr2(sol.getProductGr2());
-			sl.setProductGr3(sol.getProductGr3());
-			sl.setClientCode(sol.getClientCode());
-			sl.setClientName(sol.getClientName());
-			sl.setDemandedDate(sol.getDemandedDate());
-			sl.setQuantityOrdered(sol.getQuantityOrdered());
-			sl.setQuantityLeftToSend(sol.getQuantityLeftToSend());
-			if(stock.get(sol.getProductCode()) == null){
-				// if no stock
-				sl.setQuantityAvailable(sol.getQuantityLeftToSend());
-			}
-			else {
-				// available is minimum of "left to send" and "stock"
-				sl.setQuantityAvailable(Math.min(stock.get(sol.getProductCode()), sol.getQuantityLeftToSend()));
-				// decrease in stock
-				stock.put(sol.getProductCode(),
-						decreaseZeroPositive(stock.get(sol.getProductCode()), sol.getQuantityLeftToSend()));
-			}
-
-			// add line to list
-			showList.add(sl);
-
-			// calculation for summary
-			allGroups.add(sl.getProductGr2());
-
-			if (dateHelper.dateBefore(sol.getDemandedDate(), today)) {
-				tmp = tillToday.containsKey(sol.getProductGr2()) ? tillToday.get(sol.getProductGr2()) : 0;
-				tillToday.put(sol.getProductGr2(), (tmp + sol.getQuantityLeftToSend()));
-			} 
-			else if (dateHelper.isDateInRange(sol.getDemandedDate(), today, thisMonth)) {
-				tmp = endOfMonth.containsKey(sol.getProductGr2()) ? endOfMonth.get(sol.getProductGr2()) : 0;
-				endOfMonth.put(sol.getProductGr2(), (tmp + sol.getQuantityLeftToSend()));
-			} 
-			else if (dateHelper.isDateInRange(sol.getDemandedDate(), thisMonth, nextMonth)) {
-				tmp = oneMonthAhead.containsKey(sol.getProductGr2()) ? oneMonthAhead.get(sol.getProductGr2()) : 0;
-				oneMonthAhead.put(sol.getProductGr2(), (tmp + sol.getQuantityLeftToSend()));
-			} 
-			else if (dateHelper.dateAfter(sol.getDemandedDate(), nextMonth)) {
-				tmp = furtherDates.containsKey(sol.getProductGr2()) ? furtherDates.get(sol.getProductGr2()) : 0;
-				furtherDates.put(sol.getProductGr2(), (tmp + sol.getQuantityLeftToSend()));
-			}
-		}
+		redirectAttrs.addFlashAttribute("list", list);
+		redirectAttrs.addFlashAttribute("type", type);
+		redirectAttrs.addFlashAttribute("company", environmentForm.getCompany());
+		redirectAttrs.addFlashAttribute("startDate", dateHelper.formatDdMmYyyy(environmentForm.getStartDate()));
+		redirectAttrs.addFlashAttribute("endDate", dateHelper.formatDdMmYyyy(environmentForm.getEndDate()));
 		
-		// prepare summary lines
-		ArrayList<ProductionToSaleSummaryLine> summary = new ArrayList<>();
-		ProductionToSaleSummaryLine suml;
-		for(String gr: allGroups){
-			suml = new ProductionToSaleSummaryLine();
-			suml.setGroup(gr);
-			suml.setQuantityToday(tillToday.containsKey(gr) ? tillToday.get(gr) : 0);
-			suml.setQuantityEndMonth(endOfMonth.containsKey(gr) ? endOfMonth.get(gr) : 0);
-			suml.setQuantityNextMonth(oneMonthAhead.containsKey(gr) ? oneMonthAhead.get(gr) : 0);
-			suml.setQuantityFurther(furtherDates.containsKey(gr) ? furtherDates.get(gr) : 0);
-			summary.add(suml);
-		}
-		
-		
-		model.addAttribute("summary", summary);
-		model.addAttribute("showList", showList);
-		model.addAttribute("startDate", productionToSaleForm.getStartDate());
-		model.addAttribute("endDate", productionToSaleForm.getEndDate());
-*/
-		return "environment/dispatch";
+		return "redirect:/environment/view";		
+
 	}
-
-	private int decreaseZeroPositive(int initial, int decrease) {
-		return (initial - decrease <= 0) ? 0 : initial - decrease;
+	
+	@RequestMapping("/view")
+	public String showView() {
+		return "environment/view";
+		
 	}
 
 }

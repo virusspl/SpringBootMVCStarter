@@ -20,10 +20,10 @@ public interface JdbcOracleX3Service {
 	public static final String LANG_ENGLISH = "ENG";
 	public static final String LANG_ITALIAN = "ITA";
 	
-	public static final String ENV_INFO_WIRE = "ww";
-	public static final String ENV_INFO_PAINT = "pt";
-	public static final String ENV_INFO_GAS = "gs";
-	public static final String ENV_INFO_GLUE = "gl";
+	public static final String ENV_INFO_WIRE = "environment.wire";
+	public static final String ENV_INFO_PAINT = "environment.paint";
+	public static final String ENV_INFO_GAS = "environment.gas";
+	public static final String ENV_INFO_GLUE = "environment.glue";
 	
 	
 	public String convertLocaleToX3Lang(Locale locale);
