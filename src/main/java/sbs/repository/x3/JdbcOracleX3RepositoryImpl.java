@@ -2917,7 +2917,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		case JdbcOracleX3Service.ENV_INFO_GLUE:
 			if(company.equals("ATW")) {
 				query += " AND (ITM.ITMDES1_0 Like ?)"; 
-				criteria = new Object[] {704, "POL", 2, 6, startDate, endDate, "%KLEJ%"};
+				criteria = new Object[] {704, "POL", 2, 6, startDate, endDate, "KLEJ %"};
 			}
 			else {
 				query += " AND (ITM.TSICOD_1 = ?)"; 
@@ -2934,18 +2934,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				query, 
 				criteria
 				);
-		
-		System.out.println("===========");
-		System.out.println(company);
-		System.out.println(type);
-		System.out.println(query);
-		for(Object cr: criteria) {
-			System.out.println("crit: " + cr);
-		}
-		System.out.println(query);
-		System.out.println(resultSet.size());
-		System.out.println("===========");
-		
 		
 		List<X3EnvironmentInfo> list = new ArrayList<>();
 		X3EnvironmentInfo einfo;
