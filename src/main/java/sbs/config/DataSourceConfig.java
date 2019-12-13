@@ -81,6 +81,7 @@ public class DataSourceConfig {
 	 * USER DETAILS SERVICE - USING MAIN APP DATABASE
 	 */
 	@Bean
+	@Primary
 	@Autowired
 	public UserDetailsService userDetailsService(CustomUserDetailsService customUserDetailsService) {
 		return customUserDetailsService;

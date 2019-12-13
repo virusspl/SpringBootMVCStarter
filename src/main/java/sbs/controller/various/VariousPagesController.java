@@ -94,11 +94,10 @@ public class VariousPagesController {
 	MathHelper mathHelper;
 	@Autowired
 	RedmineService redmineService;
-
+	
 	@RequestMapping("/test")
 	public String test(Model model, Locale locale) throws InterruptedException {
-		
-		
+
 		return "various/test";
 	}
 	
