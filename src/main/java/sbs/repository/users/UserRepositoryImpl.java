@@ -35,6 +35,17 @@ public class UserRepositoryImpl extends GenericRepositoryAdapter<User, Long> imp
 		} 
 		return result.get(0);
 	}
+	
+	@Override
+	public User findByRcpNumber(String rcpNumber) {
+		String hql = "from User u where lower(u.rcpNumber) = :number and u.active=true";
+		@SuppressWarnings("unchecked")
+		List<User> result = (List<User>) currentSession().createQuery(hql).setString("number", rcpNumber.toLowerCase()).list();
+		if (result == null || result.isEmpty()) {
+			return null;
+		} 
+		return result.get(0);
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -87,5 +98,6 @@ public class UserRepositoryImpl extends GenericRepositoryAdapter<User, Long> imp
 		crit.add(Restrictions.in("role.name", roles));
 		return crit.list();
 	}
+
 
 }

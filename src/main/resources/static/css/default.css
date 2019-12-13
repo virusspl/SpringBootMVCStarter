@@ -64,10 +64,10 @@ html {
 .margin-bottom-30{
 	margin-bottom: 30px;
 }
-
-.margin-top-5{
-	margin-top: 5px;
+.margin-bottom-60{
+	margin-bottom: 60px;
 }
+
 .margin-top-5{
 	margin-top: 5px;
 }
@@ -80,6 +80,10 @@ html {
 .margin-top-30{
 	margin-top: 30px;
 }
+.margin-top-60{
+	margin-top: 60px;
+}
+
 .center{
 	text-align: center;
 }

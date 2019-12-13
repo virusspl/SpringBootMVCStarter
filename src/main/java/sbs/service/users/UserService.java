@@ -21,4 +21,5 @@ public interface UserService extends GenericService<User, Long>{
 	public List<User> findByRole(String role);
 	public List<User> findByAnyRole(String[] roles);
 	public boolean hasAnyRole(User user, List<String> roles);
+	public User findByRcpNumber(String rcpNumber);
 }

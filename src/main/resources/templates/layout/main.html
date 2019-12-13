@@ -73,7 +73,10 @@
 									th:text="#{action.logout}">Log out</span></a></li>
 							<!-- anonymous -->
 							<li sec:authorize="isAnonymous()"><a th:href="@{/login}">
-									<span th:text="#{action.login}">Log in</span>
+									<span th:text="#{action.login.pass}">Log in</span>
+							</a></li>
+							<li sec:authorize="isAnonymous()"><a th:href="@{/readcard}">
+									<span th:text="#{action.login.rcp}">Log in</span>
 							</a></li>
 						</ul></li>
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
@@ -164,10 +167,9 @@
 						<div class="panel-body">
 							<span th:text="|${userHolder.info.firstName} ${userHolder.info.lastName}, ${userHolder.info.department}, ${userHolder.info.position}|"></span>
 							<a style="float: right;" th:onclick="|return confirm('#{general.areyousure}')|"
-								class=" " th:href="@{/industry/clearrcp}">
+								class=" " href="javascript: document.logoutForm.submit()">
 								<span th:text="#{action.forget}">list</span> <span class="glyphicon glyphicon-remove"></span>
 							</a>
-							
 						</div>
 					</div>
 				</div>
@@ -180,10 +182,13 @@
 						<div class="panel-body">
 							<span th:text="#{industry.user.unidentified}"></span>
 							<br/>
+							<span sec:authorize="!isAuthenticated()">
 							<span class="glyphicon glyphicon-arrow-right"></span>&nbsp;&nbsp;
-							<a th:href="@{/industry/readcard}">
+							<a th:href="@{/readcard}">
 							 <span th:text="#{industry.rcp.identification}"></span>
 							</a>
+							</span>
+							<span sec:authorize="isAuthenticated()" th:text="|TODO: MSG: log out and identify|"></span>
 						</div>
 					</div>
 				</div>

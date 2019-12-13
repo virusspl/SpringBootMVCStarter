@@ -38,10 +38,17 @@
 					</div>
 					<div class="panel-body center">
 						<p>
-							<span th:text="#{welcome.auth.message}"></span> <a
+							<span th:text="#{welcome.auth.message}"></span>
+							</p><p>
+							 <a
 								th:href="@{/login}" class="btn btn-primary btn-sm"> <span
 								class="glyphicon glyphicon-lock"></span>&nbsp;&nbsp;<span
-								th:text="#{action.login}"></span>
+								th:text="#{action.login.pass}"></span> 
+							</a> <b>/</b> 
+							<a
+								th:href="@{/readcard}" class="btn btn-primary btn-sm"> <span
+								class="glyphicon glyphicon-credit-card"></span>&nbsp;&nbsp;<span
+								th:text="#{action.login.rcp}"></span> 
 							</a>
 						</p>
 					</div>

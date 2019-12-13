@@ -1,4 +1,4 @@
-package sbs.controller.industry;
+package sbs.controller.auth;
 
 public class RcpCardForm {
 	

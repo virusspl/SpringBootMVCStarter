@@ -34,6 +34,7 @@ public class User {
     private String email;
     private String password;
     private String avatarfilename;
+    private String rcpNumber;
     private Set<Role> roles;
     private Set<QualitySurvey> qualitySurveys;
     private Set<BhpTicket> createdBhpTickets;
@@ -80,7 +81,16 @@ public class User {
         this.password = password;
     }
 
-    @NotEmpty
+    
+    public String getRcpNumber() {
+		return rcpNumber;
+	}
+
+	public void setRcpNumber(String rcpNumber) {
+		this.rcpNumber = rcpNumber;
+	}
+
+	@NotEmpty
     @Size(min = 2, max = 50)
     public String getName() {
 		return name;

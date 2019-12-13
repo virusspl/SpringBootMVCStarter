@@ -66,6 +66,15 @@ public class UserServiceImpl extends GenericServiceAdapter<User, Long> implement
 		return user;
 	}
 	
+	@Override
+	@Transactional
+	public User findByRcpNumber(String rcpNumber) {
+		User user = userRepository.findByRcpNumber(rcpNumber);
+		if (user!=null){
+			Hibernate.initialize(user.getRoles());
+		}
+		return user;
+	}
 	
 	@Override
 	@Transactional

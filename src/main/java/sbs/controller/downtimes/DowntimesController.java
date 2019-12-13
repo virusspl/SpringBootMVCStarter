@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javassist.NotFoundException;
-import sbs.controller.industry.HrUserInfoSessionHolder;
+import sbs.controller.auth.HrUserInfoSessionHolder;
 import sbs.model.downtimes.Downtime;
 import sbs.model.downtimes.DowntimeCause;
 import sbs.model.downtimes.DowntimeDetailsFailure;

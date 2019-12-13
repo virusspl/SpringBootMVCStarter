@@ -33,7 +33,7 @@ $(document).ready(function() {
 					||
 					window.location.href.indexOf("mailer/send") > -1
 					||
-					window.location.href.indexOf("industry/readcard") > -1
+					window.location.href.indexOf("readcard") > -1
 					) {
 				return;
 			}

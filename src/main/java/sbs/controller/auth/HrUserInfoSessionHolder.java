@@ -1,4 +1,4 @@
-package sbs.controller.industry;
+package sbs.controller.auth;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;

@@ -19,6 +19,9 @@ public class UserEditForm {
 	@NotNull
 	@Size(min = 2, max=25)
 	private String name;
+	
+	@Size(max=25)
+	private String rcpNumber;
 	@Email  
 	@NotEmpty
 	private String email;
@@ -100,6 +103,15 @@ public class UserEditForm {
 	 */
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+	
+
+	public String getRcpNumber() {
+		return rcpNumber;
+	}
+
+	public void setRcpNumber(String rcpNumber) {
+		this.rcpNumber = rcpNumber;
 	}
 
 	public Set<Role> getRoles() {

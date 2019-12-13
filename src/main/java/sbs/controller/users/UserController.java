@@ -118,6 +118,7 @@ public class UserController {
 		userEditForm.setEmail(user.getEmail());
 		userEditForm.setActive(user.isActive());
 		userEditForm.setRoles(user.getRoles());
+		userEditForm.setRcpNumber(user.getRcpNumber());
 		userEditForm.setAvatarFileName(user.getAvatarfilename());
 		model.addAttribute("userEditForm",userEditForm);
 		return "users/edit";
@@ -139,6 +140,7 @@ public class UserController {
 		modelUser.setName(userEditForm.getName());
 		modelUser.setEmail(userEditForm.getEmail());
 		modelUser.setActive(userEditForm.getActive());
+		modelUser.setRcpNumber(userEditForm.getRcpNumber().trim());
 		userService.update(modelUser);
 		
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
