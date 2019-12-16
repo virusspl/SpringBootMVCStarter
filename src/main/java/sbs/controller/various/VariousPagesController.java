@@ -27,7 +27,6 @@ import sbs.model.downtimes.DowntimeType;
 import sbs.model.inventory.InventoryDataType;
 import sbs.model.qcheck.QCheckState;
 import sbs.model.qsurveys.QSurveyQuestionType;
-import sbs.model.qualitysurveys.QualitySurveyParameter;
 import sbs.model.shipments.ShipmentState;
 import sbs.model.tools.ToolsProjectState;
 import sbs.model.users.Role;
@@ -41,8 +40,6 @@ import sbs.service.mail.MailService;
 import sbs.service.optima.JdbcAdrOptimaService;
 import sbs.service.qcheck.QCheckStatesService;
 import sbs.service.qsurveys.QSurveyQuestionTypesService;
-import sbs.service.qualitysurveys.QualitySurveyParametersService;
-import sbs.service.qualitysurveys.QualitySurveysService;
 import sbs.service.redmine.RedmineService;
 import sbs.service.shipments.ShipmentStatesService;
 import sbs.service.tools.ToolsProjectStateService;
@@ -66,10 +63,6 @@ public class VariousPagesController {
 	JdbcAdrOptimaService jdbcAdrOptimaService;
 	@Autowired
 	JdbcOracleGeodeService jdbcOracleGeodeService;
-	@Autowired
-	QualitySurveysService qualitySurveysService;
-	@Autowired
-	QualitySurveyParametersService parametersService;
 	@Autowired
 	BhpTicketsService bhpTicketsService;
 	@Autowired
@@ -502,8 +495,6 @@ public class VariousPagesController {
 		User admin = userService.findByUsername("Admin");
 		User user = userService.findByUsername("User");
 		User krzysiek = userService.findByUsername("Krzysiek");
-		User maciek = userService.findByUsername("Maciek");
-		User seweryn = userService.findByUsername("Seweryn");
 		if (admin == null) {
 			// object
 			admin = new User();
@@ -511,6 +502,7 @@ public class VariousPagesController {
 			admin.setPassword("$2a$04$7gatGBXoTWA.rLmFONVz/Oepajcpp7FTOwaAiFjEQOx/BPMm/gJL6");
 			admin.setName("Admin Name");
 			admin.setEmail("admin@sjava.com");
+			admin.setRcpNumber("");
 			admin.setActive(true);
 			// many to many
 			admin.getRoles().add(adminRole);
@@ -521,38 +513,6 @@ public class VariousPagesController {
 			userService.save(admin);
 			msg += "[user: " + admin.getUsername() + "], ";
 		}
-		if (maciek == null) {
-			// object
-			maciek = new User();
-			maciek.setUsername("Maciek");
-			maciek.setName("Maciej Rycyk");
-			maciek.setEmail("rycyk.m@atwsystem.pl");
-			maciek.setActive(false);
-			// many to many
-			maciek.getRoles().add(adminRole);
-			adminRole.getUsers().add(maciek);
-			maciek.getRoles().add(userRole);
-			userRole.getUsers().add(maciek);
-			// save
-			userService.save(maciek);
-			msg += "[user: " + maciek.getUsername() + "], ";
-		}
-		if (seweryn == null) {
-			// object
-			seweryn = new User();
-			seweryn.setUsername("Seweryn");
-			seweryn.setName("Seweryn Prenkiewicz");
-			seweryn.setEmail("prenkiewicz.s@atwsystem.pl");
-			seweryn.setActive(false);
-			// many to many
-			seweryn.getRoles().add(adminRole);
-			adminRole.getUsers().add(seweryn);
-			seweryn.getRoles().add(userRole);
-			userRole.getUsers().add(seweryn);
-			// save
-			userService.save(seweryn);
-			msg += "[user: " + seweryn.getUsername() + "], ";
-		}
 		if (krzysiek == null) {
 			// object
 			krzysiek = new User();
@@ -560,6 +520,7 @@ public class VariousPagesController {
 			krzysiek.setPassword("$2a$04$UZWCi1I779DTvZzdYI/YG.oRidHjWNsxQcW9I7QqapOrYE8tXelu6");
 			krzysiek.setName("Krzysztof Michalak");
 			krzysiek.setEmail("michalak.k@atwsystem.pl");
+			krzysiek.setRcpNumber("");
 			krzysiek.setActive(false);
 			// many to many
 			krzysiek.getRoles().add(adminRole);
@@ -578,6 +539,7 @@ public class VariousPagesController {
 			user.setPassword("$2a$04$VYg7rxx7ZKLszJbLxAW48eMu/cYy8Asg4BFmOkEawwK6WfuywISdS");
 			user.setName("Normal User");
 			user.setEmail("normaluser@sjava.com");
+			user.setRcpNumber("");
 			user.setActive(false);
 			// many to many
 			user.getRoles().add(userRole);
@@ -585,101 +547,6 @@ public class VariousPagesController {
 			// save
 			userService.save(user);
 			msg += "[user: " + user.getUsername() + "], ";
-		}
-
-		if (parametersService.findAll().size() == 0) {
-			QualitySurveyParameter param;
-
-			param = new QualitySurveyParameter();
-			param.setActive(true);
-			param.setTitle("Podać roztaw osi");
-			param.setType(QualitySurveyParameter.PARAMETER_TEXT);
-			parametersService.save(param);
-			msg += "[qs_param: " + param.getTitle() + "], ";
-
-			param = new QualitySurveyParameter();
-			param.setActive(true);
-			param.setTitle("Podać roztaw płytek resorowych");
-			param.setType(QualitySurveyParameter.PARAMETER_TEXT);
-			parametersService.save(param);
-			msg += "[qs_param: " + param.getTitle() + "], ";
-
-			param = new QualitySurveyParameter();
-			param.setActive(true);
-			param.setTitle("Podać roztaw wspornikówi");
-			param.setType(QualitySurveyParameter.PARAMETER_TEXT);
-			parametersService.save(param);
-			msg += "[qs_param: " + param.getTitle() + "], ";
-
-			param = new QualitySurveyParameter();
-			param.setActive(true);
-			param.setTitle("Podać średnicę szczęk po przetaczaniu");
-			param.setType(QualitySurveyParameter.PARAMETER_TEXT);
-			parametersService.save(param);
-			msg += "[qs_param: " + param.getTitle() + "], ";
-
-			param = new QualitySurveyParameter();
-			param.setActive(true);
-			param.setTitle("Podać moment skrętu osi (skrętnej)");
-			param.setType(QualitySurveyParameter.PARAMETER_TEXT);
-			parametersService.save(param);
-			msg += "[qs_param: " + param.getTitle() + "], ";
-
-			param = new QualitySurveyParameter();
-			param.setActive(true);
-			param.setTitle("Moment dokręcenia nakrętki sworznia hamulca");
-			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
-			parametersService.save(param);
-			msg += "[qs_param: " + param.getTitle() + "], ";
-
-			param = new QualitySurveyParameter();
-			param.setActive(true);
-			param.setTitle("Poprawność działania ABS");
-			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
-			parametersService.save(param);
-			msg += "[qs_param: " + param.getTitle() + "], ";
-
-			param = new QualitySurveyParameter();
-			param.setActive(true);
-			param.setTitle("Dzwignia zgodna z rysunkiem/kat.Prod.");
-			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
-			parametersService.save(param);
-			msg += "[qs_param: " + param.getTitle() + "], ";
-
-			param = new QualitySurveyParameter();
-			param.setActive(true);
-			param.setTitle("Sprawdzić poprawność obrotu Piasty / Bębna");
-			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
-			parametersService.save(param);
-			msg += "[qs_param: " + param.getTitle() + "], ";
-
-			param = new QualitySurveyParameter();
-			param.setActive(true);
-			param.setTitle("Czy zamontowano i poprawnie zaplombowano  zawlęczkę");
-			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
-			parametersService.save(param);
-			msg += "[qs_param: " + param.getTitle() + "], ";
-
-			param = new QualitySurveyParameter();
-			param.setActive(true);
-			param.setTitle("Zgodność Konfiguracji osi z Rysunkiem technicznym");
-			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
-			parametersService.save(param);
-			msg += "[qs_param: " + param.getTitle() + "], ";
-
-			param = new QualitySurveyParameter();
-			param.setActive(true);
-			param.setTitle("Sprawdzić zbieżność");
-			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
-			parametersService.save(param);
-			msg += "[qs_param: " + param.getTitle() + "], ";
-
-			param = new QualitySurveyParameter();
-			param.setActive(true);
-			param.setTitle("Smarowanie zgodnie z instrukcją/kartą");
-			param.setType(QualitySurveyParameter.PARAMETER_BOOLEAN);
-			parametersService.save(param);
-			msg += "[qs_param: " + param.getTitle() + "], ";
 		}
 
 		BhpTicketState bhpState;

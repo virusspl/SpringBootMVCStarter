@@ -21,7 +21,6 @@ import sbs.model.bhptickets.BhpTicket;
 import sbs.model.buyorders.BuyOrder;
 import sbs.model.hruafiles.HrUaInfo;
 import sbs.model.inventory.Inventory;
-import sbs.model.qualitysurveys.QualitySurvey;
 import sbs.model.tools.ToolsProject;
 
 @Entity
@@ -36,7 +35,6 @@ public class User {
     private String avatarfilename;
     private String rcpNumber;
     private Set<Role> roles;
-    private Set<QualitySurvey> qualitySurveys;
     private Set<BhpTicket> createdBhpTickets;
     private Set<BhpTicket> assignedBhpTickets;
     private Set<ToolsProject> createdToolsProjects;
@@ -49,7 +47,6 @@ public class User {
     
     public User() {
 		this.roles = new HashSet<>();
-		this.qualitySurveys = new HashSet<>();
 	}
 
 	@Id
@@ -140,10 +137,6 @@ public class User {
 		this.active = active;
 	}
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-	public Set<QualitySurvey> getQualitySurveys() {
-		return qualitySurveys;
-	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
 	public Set<BhpTicket> getCreatedBhpTickets() {
@@ -198,10 +191,6 @@ public class User {
 	
 	public void setAssignedToolsProjects(Set<ToolsProject> assignedToolsProjects) {
 		this.assignedToolsProjects = assignedToolsProjects;
-	}
-
-	public void setQualitySurveys(Set<QualitySurvey> qualitySurveys) {
-		this.qualitySurveys = qualitySurveys;
 	}
 
 	public void setHrUaFilesCreated(Set<HrUaInfo> hrUaFilesCreated) {
