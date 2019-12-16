@@ -272,7 +272,7 @@ public class UserController {
 		user.setUsername(userCreateForm.getUsername());
 		user.setName(userCreateForm.getName());
 		user.setEmail(userCreateForm.getEmail());
-		
+		user.setRcpNumber("");
 		user.getRoles().add(userRole);
 		userRole.getUsers().add(user);
 		

@@ -131,44 +131,55 @@
 				</div>
 				<!-- /YOU USE MICROSOFT BROWSER WARNING -->
 				<!-- LIVE FEED -->
-				<div id="liveContainer">
-					<div id="live" class="alert alert-info bold" th:if="${live}">
-						<span th:text="${live}">error</span>
+				<div id="liveContainer" >
+					<div id="live" class="alert alert-info bold" th:if="${live}"
+						style="margin-bottom: 10px;">
+						<span th:utext="${live}">error</span>
 					</div>
 				</div>
 				<!-- /LIVE FEED -->
 				<!-- ERROR -->
-				<div id="errorMessage" class="alert alert-danger" th:if="${error}">
-					<span th:text="${error}">error</span>
+				<div id="errorMessage" class="alert alert-danger" th:if="${error}"
+					style="margin-bottom: 10px;">
+					<span th:utext="${error}">error</span>
 				</div>
 				<!-- /ERROR -->
 				<!-- WARNING -->
 				<div id="warningMessage" class="alert alert-warning"
-					th:if="${warning}">
-					<span th:text="${warning}">error</span>
+					th:if="${warning}" style="margin-bottom: 10px;">
+					<span th:utext="${warning}">error</span>
 				</div>
 				<!-- /WARNING -->
 				<!-- MESSAGE -->
-				<div class="alert alert-success alert-dismissable" th:if="${msg}">
+				<div class="alert alert-success alert-dismissable" th:if="${msg}"
+					style="margin-bottom: 10px;">
 					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-					<span th:text="${msg}">ok message</span>
+					<span th:utext="${msg}">ok message</span>
 				</div>
 				<!-- /MESSAGE -->
 			</div>
 		</div>
 		<!-- /POPUPS -->
 		<!-- RCP INFO -->
-		<div th:if="${userHolder}" style="font-weight: bold; font-size: 85%;" >
+		<div th:if="${userHolder}"
+			style="font-weight: bold; font-size: 85%; margin-bottom: -25px;">
 			<!-- if identified -->
 			<div th:if="${userHolder.set}">
 				<div class="panel-group">
 					<div class="panel panel-info">
-						<div class="panel-heading"><span class="glyphicon glyphicon-user" style="margin-right: 10px;"></span><span th:text="#{industry.rcp.identification}"></span></div>
+						<div class="panel-heading">
+							<span class="glyphicon glyphicon-user"
+								style="margin-right: 10px;"></span><span
+								th:text="#{rcp.identification}"></span>
+						</div>
 						<div class="panel-body">
-							<span th:text="|${userHolder.info.firstName} ${userHolder.info.lastName}, ${userHolder.info.department}, ${userHolder.info.position}|"></span>
-							<a style="float: right;" th:onclick="|return confirm('#{general.areyousure}')|"
-								class=" " href="javascript: document.logoutForm.submit()">
-								<span th:text="#{action.forget}">list</span> <span class="glyphicon glyphicon-remove"></span>
+							<span
+								th:text="|${userHolder.info.firstName} ${userHolder.info.lastName}, ${userHolder.info.department}, ${userHolder.info.position}|"></span>
+							<a style="float: right;"
+								th:onclick="|return confirm('#{general.areyousure}')|" class=" "
+								href="javascript: document.logoutForm.submit()"> <span
+								th:text="#{action.forget}">list</span> <span
+								class="glyphicon glyphicon-remove"></span>
 							</a>
 						</div>
 					</div>
@@ -176,19 +187,22 @@
 			</div>
 			<!-- if not identified -->
 			<div th:if="!${userHolder.set}">
-			<div class="panel-group">
+				<div class="panel-group">
 					<div class="panel panel-warning">
-						<div class="panel-heading"><span class="glyphicon glyphicon-user" style="margin-right: 10px;"></span><span th:text="#{industry.rcp.identification}"></span></div>
+						<div class="panel-heading">
+							<span class="glyphicon glyphicon-user"
+								style="margin-right: 10px;"></span><span
+								th:text="#{rcp.identification}"></span>
+						</div>
 						<div class="panel-body">
-							<span th:text="#{industry.user.unidentified}"></span>
-							<br/>
-							<span sec:authorize="!isAuthenticated()">
-							<span class="glyphicon glyphicon-arrow-right"></span>&nbsp;&nbsp;
-							<a th:href="@{/readcard}">
-							 <span th:text="#{industry.rcp.identification}"></span>
+							<span th:text="#{rcp.user.unidentified}"></span> <br /> <span
+								sec:authorize="!isAuthenticated()"> <span
+								class="glyphicon glyphicon-arrow-right"></span>&nbsp;&nbsp; <a
+								th:href="@{/readcard}"> <span
+									th:text="#{rcp.identification}"></span>
 							</a>
-							</span>
-							<span sec:authorize="isAuthenticated()" th:text="|TODO: MSG: log out and identify|"></span>
+							</span> <span sec:authorize="isAuthenticated()"
+								th:text="|#{rcp.identification.instructions}|"></span>
 						</div>
 					</div>
 				</div>

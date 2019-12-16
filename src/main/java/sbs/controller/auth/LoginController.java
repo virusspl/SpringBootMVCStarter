@@ -4,7 +4,6 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -67,8 +65,8 @@ public class LoginController {
 		HrUserInfo hrInfo = optimaService.findCurrentlyEmployedByCardNo(cardNo);
 		if (hrInfo != null) {
 			userHolder.setInfo(hrInfo);
-			message = messageSource.getMessage("rcplogin.userfound", null, locale) + ": "
-					+ userHolder.getInfo().getFirstName() + " " + userHolder.getInfo().getLastName();
+			message = messageSource.getMessage("rcplogin.userfound", null, locale) + ": <b>"
+					+ userHolder.getInfo().getFirstName() + " " + userHolder.getInfo().getLastName() + "</b>";
 		} else {
 			bindingResult.rejectValue("cardNumber", "error.rcp.incorrect", "ERROR");
 			return "various/readcard";
@@ -79,7 +77,7 @@ public class LoginController {
 			UserDetails principal = userDetailsService.loadUserByUsername(user.getUsername());
 			Authentication auth = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(auth);
-			message += ". " + messageSource.getMessage("rcplogin.usermatch", null, locale) + ": " + user.getUsername();
+			message += ". " + messageSource.getMessage("rcplogin.usermatch", null, locale) + ": <b>" + user.getUsername() + "</b>";
 		} else {
 			redirectAttrs.addFlashAttribute("warning", messageSource.getMessage("rcplogin.nousermatch", null, locale));
 		}
@@ -98,8 +96,8 @@ public class LoginController {
 			HrUserInfo hrInfo = optimaService.findCurrentlyEmployedByCardNo(current.getRcpNumber());
 			if (hrInfo != null) {
 				userHolder.setInfo(hrInfo);
-				message = messageSource.getMessage("rcplogin.userfound", null, locale) + ": "
-						+ userHolder.getInfo().getFirstName() + " " + userHolder.getInfo().getLastName();
+				message = messageSource.getMessage("rcplogin.userfound", null, locale) + ": <b>"
+						+ userHolder.getInfo().getFirstName() + " " + userHolder.getInfo().getLastName() + "</b>";
 				redirectAttrs.addFlashAttribute("msg", message);
 			}
 		}
