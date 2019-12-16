@@ -29,24 +29,24 @@ public class Downtime {
 	private DowntimeType type;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "dt_dtrt_response_type", nullable = false)
+	private DowntimeResponseType responseType;
+	
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "dt_dtc_cause", nullable = false)
 	private DowntimeCause cause;
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "downtime")
 	Set<DowntimeDetailsMaterial> materialDetails;
-	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "downtime")
 	Set<DowntimeDetailsFailure> failureDetails;
 	
 	@Column(name = "dt_machine_code", length = 15, nullable = false)
 	private String machineCode;
-	
 	@Column(name = "dt_machine_name", length = 75, nullable = false)
 	private String machineName;
-	
 	@Column(name = "dt_comment", length = 255, nullable = true)
 	private String comment;
-	
 	@Column(name = "dt_opened", nullable = false )
 	private boolean opened;
 	
@@ -75,10 +75,13 @@ public class Downtime {
 	private String endPosition;
 	@Column(name = "dt_end_department", length = 150, nullable = true)
 	private String endDepartment;
-	
 	@Column(name = "dt_end_comment", length = 255, nullable = true)
 	private String endComment;
 
+	@Column(name = "dt_response_date", nullable = true)
+	private Timestamp responseDate;
+	@Column(name = "dt_response_comment", length = 255, nullable = true)
+	private String responseComment;
 	
 	public Downtime() {
 	

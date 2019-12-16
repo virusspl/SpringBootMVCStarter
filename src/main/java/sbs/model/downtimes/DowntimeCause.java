@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import sbs.model.users.User;
+
 @Entity
 @Table(name = "downtime_causes")
 public class DowntimeCause {
@@ -17,6 +19,10 @@ public class DowntimeCause {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "dtc_dtt_type_id", nullable = false)
 	private DowntimeType downtimeType;
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "dtc_responsible_user_id", nullable = false)
+	private User responsibleUser;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -86,6 +92,15 @@ public class DowntimeCause {
 
 	public void setShortText(String shortText) {
 		this.shortText = shortText;
+	}
+	
+	
+	public User getResponsibleUser() {
+		return responsibleUser;
+	}
+
+	public void setResponsibleUser(User responsibleUser) {
+		this.responsibleUser = responsibleUser;
 	}
 
 	@Override

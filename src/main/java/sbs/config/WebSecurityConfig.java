@@ -269,6 +269,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"ADMIN", 
 				"ENVIRONMENTUSER"
 				)
+		.antMatchers(
+				"/downtimes/create/**"
+				)		
+		.hasAnyRole(
+				"ADMIN", 
+				"DTNOTIFIER"
+				)
+		.antMatchers(
+				"/downtimes/response/**"
+				)		
+		.hasAnyRole(
+				"ADMIN", 
+				"DTRESPONSIBLE"
+				)
 		 // ** old modules to delete **
 		.antMatchers(
 				"/qualitysurveys/**")

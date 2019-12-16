@@ -23,6 +23,7 @@ import sbs.helpers.ExcelContents;
 import sbs.helpers.ExcelExportHelper;
 import sbs.helpers.MathHelper;
 import sbs.model.bhptickets.BhpTicketState;
+import sbs.model.downtimes.DowntimeResponseType;
 import sbs.model.downtimes.DowntimeType;
 import sbs.model.inventory.InventoryDataType;
 import sbs.model.qcheck.QCheckState;
@@ -33,6 +34,7 @@ import sbs.model.users.Role;
 import sbs.model.users.User;
 import sbs.service.bhptickets.BhpTicketStateService;
 import sbs.service.bhptickets.BhpTicketsService;
+import sbs.service.downtimes.DowntimeResponseTypesService;
 import sbs.service.downtimes.DowntimeTypesService;
 import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.inventory.InventoryDataTypesService;
@@ -83,6 +85,8 @@ public class VariousPagesController {
 	InventoryDataTypesService inventoryDataTypesService;
 	@Autowired
 	DowntimeTypesService downtimeTypesService;
+	@Autowired
+	DowntimeResponseTypesService downtimeResponseTypesService;
 	@Autowired 
 	MathHelper mathHelper;
 	@Autowired
@@ -490,6 +494,22 @@ public class VariousPagesController {
 			msg += "[role: " + environment.getName() + "], ";
 		}
 		
+		Role downtimeResponsible = roleService.findByName("ROLE_DTRESPONSIBLE");
+		if (downtimeResponsible == null) {
+			downtimeResponsible = new Role();
+			downtimeResponsible.setName("ROLE_DTRESPONSIBLE");
+			roleService.save(downtimeResponsible);
+			msg += "[role: " + downtimeResponsible.getName() + "], ";
+		}
+		
+		Role downtimeNotifier = roleService.findByName("ROLE_DTNOTIFIER");
+		if (downtimeNotifier == null) {
+			downtimeNotifier = new Role();
+			downtimeNotifier.setName("ROLE_DTNOTIFIER");
+			roleService.save(downtimeNotifier);
+			msg += "[role: " + downtimeNotifier.getName() + "], ";
+		}
+		
 		// ROLE END
 
 		User admin = userService.findByUsername("Admin");
@@ -855,7 +875,43 @@ public class VariousPagesController {
 			msg += "[downtimeType: " + downtimeType.getOrder() + " " + downtimeType.getInternalTitle() + "], ";
 		}
 		
-				 
+		DowntimeResponseType downtimeResponseType;
+		
+		if (downtimeResponseTypesService.findByOrder(10) == null) {
+			downtimeResponseType = new DowntimeResponseType();
+			downtimeResponseType.setOrder(10);
+			downtimeResponseType.setInternalTitle("no response");
+			downtimeResponseType.setCode("downtimes.response.empty");
+			downtimeResponseTypesService.save(downtimeResponseType);
+			msg += "[downtimeResponseType: " + downtimeResponseType.getOrder() + " " + downtimeResponseType.getInternalTitle() + "], ";
+		}	 
+		
+		if (downtimeResponseTypesService.findByOrder(20) == null) {
+			downtimeResponseType = new DowntimeResponseType();
+			downtimeResponseType.setOrder(20);
+			downtimeResponseType.setInternalTitle("accepted");
+			downtimeResponseType.setCode("downtimes.response.accepted");
+			downtimeResponseTypesService.save(downtimeResponseType);
+			msg += "[downtimeResponseType: " + downtimeResponseType.getOrder() + " " + downtimeResponseType.getInternalTitle() + "], ";
+		}	 
+		
+		if (downtimeResponseTypesService.findByOrder(30) == null) {
+			downtimeResponseType = new DowntimeResponseType();
+			downtimeResponseType.setOrder(30);
+			downtimeResponseType.setInternalTitle("rejected");
+			downtimeResponseType.setCode("downtimes.response.rejected");
+			downtimeResponseTypesService.save(downtimeResponseType);
+			msg += "[downtimeResponseType: " + downtimeResponseType.getOrder() + " " + downtimeResponseType.getInternalTitle() + "], ";
+		}	 
+		
+		if (downtimeResponseTypesService.findByOrder(40) == null) {
+			downtimeResponseType = new DowntimeResponseType();
+			downtimeResponseType.setOrder(40);
+			downtimeResponseType.setInternalTitle("forwarded");
+			downtimeResponseType.setCode("downtimes.response.forwarded");
+			downtimeResponseTypesService.save(downtimeResponseType);
+			msg += "[downtimeResponseType: " + downtimeResponseType.getOrder() + " " + downtimeResponseType.getInternalTitle() + "], ";
+		}	 
 		
 		InventoryDataType invDataType;
 		// i18n codes
