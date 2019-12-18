@@ -9,6 +9,8 @@ public interface DowntimesRepository extends GenericRepository<Downtime,Integer>
 
 	List<Downtime> findAllPending();
 
+	List<Downtime> findWithoutResponseForUser(Long userId);
+
 	
 }
 

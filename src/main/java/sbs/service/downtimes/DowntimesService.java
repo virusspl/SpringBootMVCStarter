@@ -9,5 +9,7 @@ public interface DowntimesService extends GenericService<Downtime, Integer>{
 
 	List<Downtime> findAllPending();
 
+	List<Downtime> findWithoutResponseForUser(Long userId);
+
 	
 }

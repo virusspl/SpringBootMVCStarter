@@ -21,8 +21,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javassist.NotFoundException;
 import sbs.model.downtimes.DowntimeCause;
 import sbs.model.downtimes.DowntimeType;
+import sbs.model.users.User;
 import sbs.service.downtimes.DowntimeCausesService;
 import sbs.service.downtimes.DowntimeTypesService;
+import sbs.service.users.UserService;
 
 @Controller
 @RequestMapping("downtimes/manage")
@@ -34,6 +36,8 @@ public class DowntimesManageController {
 	DowntimeTypesService downtimeTypesService;
 	@Autowired
 	DowntimeCausesService downtimeCausesService;
+	@Autowired
+	UserService userService;
 	
 	
 	@Cacheable("downtimeTypes")
@@ -41,6 +45,12 @@ public class DowntimesManageController {
 	public List<DowntimeType> getDowntimeTypes(){
 	    return downtimeTypesService.findAll();
 	}
+	
+	@ModelAttribute("responsibleUsers")
+	public List<User> getResponsibleUsers() {
+		return userService.findByRole("ROLE_DTRESPONSIBLE");
+	}
+	
 	
 	@RequestMapping(value = "causes")
 	public String showManageCauses(Model model) {
@@ -65,7 +75,12 @@ public class DowntimesManageController {
 		
 		DowntimeType type = downtimeTypesService.findById(formCause.getTypeId());
 		if (type == null) {
-			throw new NotFoundException("Unknown downtime type");
+			throw new NotFoundException("Downtime type not found: " + formCause.getTypeId());
+		}
+		
+		User user = userService.findById(formCause.getResponsibleId());
+		if (user == null) {
+			throw new NotFoundException("Responsible user not found: " + formCause.getResponsibleId());
 		}
 		
 		DowntimeCause cause = new DowntimeCause();
@@ -74,6 +89,7 @@ public class DowntimesManageController {
 		cause.setShortText(formCause.getShortText());
 		cause.setText(formCause.getText());
 		cause.setDowntimeType(type);
+		cause.setResponsibleUser(user);
 		
 		downtimeCausesService.save(cause);
 
@@ -98,6 +114,7 @@ public class DowntimesManageController {
 		form.setShortText(cause.getShortText());
 		form.setText(cause.getText());
 		form.setTypeId(cause.getDowntimeType().getId());
+		form.setResponsibleId(cause.getResponsibleUser().getId());
 
 		model.addAttribute("formCause", form);		
 		
@@ -126,9 +143,17 @@ public class DowntimesManageController {
 		if(cause.getDowntimeType().getId() != formCause.getTypeId()){
 			DowntimeType type = downtimeTypesService.findById(formCause.getTypeId());
 			if (type == null) {
-				throw new NotFoundException("Downtime type not found");
+				throw new NotFoundException("Downtime type not found: " + formCause.getTypeId());
 			}
 			cause.setDowntimeType(type);
+		}
+		
+		if(cause.getResponsibleUser().getId() != formCause.getResponsibleId()){
+			User user = userService.findById(formCause.getResponsibleId());
+			if (user == null) {
+				throw new NotFoundException("Responsible user not found: " + formCause.getResponsibleId());
+			}
+			cause.setResponsibleUser(user);
 		}
 		
 		downtimeCausesService.save(cause);

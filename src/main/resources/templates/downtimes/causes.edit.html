@@ -58,6 +58,22 @@
 				</div>
 			</div>
 			<div class="row">
+				<!-- responsible -->
+				<div class="col-xs-6 col-sm-4">
+					<div class="form-group">
+						<label for="responsible" th:text="#{downtimes.responsible}"></label> <select
+							class="form-control" id="responsible" name="responsible"
+							th:placeholder="#{downtimes.responsible}" th:field="*{responsibleId}">
+							<option th:each="obj,stat : ${responsibleUsers}"
+								th:value="${responsibleUsers[__${stat.index}__].id}"
+								th:text="|${responsibleUsers[__${stat.index}__].name}|">
+							</option>
+						</select>
+						<div th:errors="*{responsibleId}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
 				<!-- short text -->
 				<div class="col-xs-6 col-sm-4">
 					<div class="form-group">

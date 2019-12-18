@@ -880,7 +880,7 @@ public class VariousPagesController {
 		if (downtimeResponseTypesService.findByOrder(10) == null) {
 			downtimeResponseType = new DowntimeResponseType();
 			downtimeResponseType.setOrder(10);
-			downtimeResponseType.setInternalTitle("no response");
+			downtimeResponseType.setInternalTitle("empty");
 			downtimeResponseType.setCode("downtimes.response.empty");
 			downtimeResponseTypesService.save(downtimeResponseType);
 			msg += "[downtimeResponseType: " + downtimeResponseType.getOrder() + " " + downtimeResponseType.getInternalTitle() + "], ";

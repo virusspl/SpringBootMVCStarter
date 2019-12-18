@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
 	layout:decorator="layout/main">
 <head>
 </head>
@@ -9,24 +10,25 @@
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-xs-12 col-xs-offset-0">
-				<h2 th:if="${dt.opened}" th:text="#{downtimes.show.opened.title}" class="text-primary">Hello
-					on a page</h2>
-				<h2 th:if="!${dt.opened}" th:text="#{downtimes.show.closed.title}" class="text-primary">Hello
-					on a page</h2>
+				<h2 th:if="${dt.opened}" th:text="#{downtimes.show.opened.title}"
+					class="text-primary">Hello on a page</h2>
+				<h2 th:if="!${dt.opened}" th:text="#{downtimes.show.closed.title}"
+					class="text-primary">Hello on a page</h2>
 			</div>
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
-				<span th:if="${dt.opened}" th:text="#{downtimes.show.opened.message}"> Welcome
-					message </span>
-				<span th:if="!${dt.opened}" th:text="#{downtimes.show.closed.message}"> Welcome
-					message </span>
+				<span th:if="${dt.opened}"
+					th:text="#{downtimes.show.opened.message}"> Welcome message
+				</span> <span th:if="!${dt.opened}"
+					th:text="#{downtimes.show.closed.message}"> Welcome message
+				</span>
 			</div>
 			<a th:href="@{/downtimes/dispatch}" class="btn btn-link btn-sm">
 				<span class="glyphicon glyphicon-menu-left"></span> <span
 				th:text="#{action.back}">back</span>
 			</a>
 		</div>
-		<form th:action="@{/downtimes/close}"
-			th:object="${formDowntimeClose}" method="post">
+		<form th:action="@{/downtimes/close}" th:object="${formDowntimeClose}"
+			method="post">
 			<!-- INFO -->
 			<div class="row">
 				<div class="col-xs-12">
@@ -63,7 +65,7 @@
 								<strong th:text="${dt.startDate}" class="text-primary">value</strong>
 							</div>
 						</div>
-						<div class="row">
+						<div class="row margin-top-5">
 							<div class="col-xs-4 col-md-3 col-lg-2">
 								<span th:text="#{general.machine.name}">param</span>
 							</div>
@@ -79,14 +81,62 @@
 								<strong th:text="${dt.machineCode}" class="text-primary">value</strong>
 							</div>
 						</div>
+						<div class="row margin-top-5">
+							<div class="col-xs-4 col-md-3 col-lg-2">
+								<span th:text="#{downtimes.responsible}">param</span>
+							</div>
+							<div class="col-xs-8 col-md-9 col-lg-10">
+								<strong th:text="${dt.cause.responsibleUser.name}"
+									class="text-primary">value</strong>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-4 col-md-3 col-lg-2">
+								<span th:text="#{downtimes.response}">param</span>
+							</div>
+							<div class="col-xs-8 col-md-9 col-lg-10">
+								<strong th:text="#{${dt.responseType.code}}"
+									class="text-primary">value</strong>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-4 col-md-3 col-lg-2">
+								<span th:text="#{downtimes.date.response}">param</span>
+							</div>
+							<div class="col-xs-8 col-md-9 col-lg-10">
+								<strong th:text="${dt.responseDate}"
+									class="text-primary">value</strong>
+							</div>
+						</div>
+						<div class="row margin-top-5">
+							<div class="col-xs-4 col-md-3 col-lg-2">
+								<span th:text="#{downtimes.opened}">param</span>
+							</div>
+							<div class="col-xs-8 col-md-9 col-lg-10" th:if="${dt.opened}">
+								<strong th:text="#{general.yes}" class="text-primary">value</strong>
+							</div>
+							<div class="col-xs-8 col-md-9 col-lg-10" th:if="!${dt.opened}">
+								<strong th:text="#{general.no}" class="text-primary">value</strong>
+							</div>
+						</div>
 						<div class="row margin-top-10"
 							th:if="${#strings.length(dt.comment)>0}">
 							<div class="col-xs-12">
 								<strong><span class="text-primary"
-									th:text="#{general.comment}">param</span> </strong>
+									th:text="|#{general.comment} - #{downtimes.person.reporting}|">param</span> </strong>
 							</div>
 							<div class="col-xs-8 col-md-9 col-lg-10">
 								<span th:text="${dt.comment}">param</span>
+							</div>
+						</div>
+						<div class="row margin-top-10"
+							th:if="${#strings.length(dt.responseComment)>0}">
+							<div class="col-xs-12">
+								<strong><span class="text-primary"
+									th:text="|#{general.comment} - #{downtimes.responsible}|">param</span> </strong>
+							</div>
+							<div class="col-xs-8 col-md-9 col-lg-10">
+								<span th:text="${dt.responseComment}">param</span>
 							</div>
 						</div>
 					</div>
@@ -228,7 +278,45 @@
 							</div>
 						</div>
 					</div>
-					<!-- /PERSON INIT -->
+					<!-- ASSIGNED PERSON OPTIONS -->
+					<div class="row"
+						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_DTRESPONSIBLE')"
+						th:if="${dt.responseType.order} &lt; 20"
+						>
+						<div class="col-xs-12">
+							<div class="row">
+								<div class="col-xs-12">
+									<h3 th:text="|#{downtimes.responsible}|"
+										class="text-primary underline"></h3>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-4 col-md-3 col-lg-2">
+									<span th:text="#{downtimes.responsible}">param</span>
+								</div>
+								<div class="col-xs-8 col-md-9 col-lg-10">
+									<strong th:text="${dt.cause.responsibleUser.name}"
+										class="text-primary">value</strong>
+								</div>
+								<div class="col-xs-4 col-md-3 col-lg-2">
+									<span th:text="#{downtimes.response}">param</span>
+								</div>
+								<div class="col-xs-8 col-md-9 col-lg-10">
+									<strong th:text="#{${dt.responseType.code}}"
+										class="text-primary">value</strong>
+								</div>
+								<div class="col-xs-12 margin-top-5">
+									<a class="btn btn-info btn-md"
+										th:href="|@{/downtimes/response/}${dt.id}|"> <span
+										class="glyphicon glyphicon-arrow-right"></span> <span
+										th:text="#{downtimes.actions}">txt</span>
+									</a>
+								</div>
+
+							</div>
+						</div>
+					</div>
+					<!-- /ASSIGNED PERSON OPTIONS -->
 					<!-- PERSON END -->
 					<div class="row" th:if="${dt.endRcpNumber != null}">
 						<div class="col-xs-12">
@@ -306,39 +394,42 @@
 							<h3 th:text="|#{action.close}|" class="text-primary underline"></h3>
 						</div>
 					</div>
-					<div class="col-xs-12 col-md-9 col-lg-8">
-					<div class="form-group">
-						<label for="endComment"
-							th:text="|#{general.comment} (#{general.optional})|">Description</label>
-						<input type="text" class="form-control" id="endComment"
-							name="endComment" th:placeholder="#{general.comment}"
-							th:field="*{endComment}"></input>
-						<div th:errors="*{endComment}"
-							class="alert alert-danger margin-top-5">error</div>
+
+					<div class="col-xs-12 margin-bottom-10">
+						<span th:text="#{downtimes.finishedonly}">sadasd</span>
 					</div>
+
+					<div class="col-xs-12 col-md-9 col-lg-8">
+						<div class="form-group">
+							<label for="endComment"
+								th:text="|#{general.comment} (#{general.optional})|">Description</label>
+							<input type="text" class="form-control" id="endComment"
+								name="endComment" th:placeholder="#{general.comment}"
+								th:field="*{endComment}"></input>
+							<div th:errors="*{endComment}"
+								class="alert alert-danger margin-top-5">error</div>
+						</div>
 					</div>
 					<div class="row">
-					<div class="col-xs-12">
-					<a th:href="@{/downtimes/dispatch}" class="btn btn-link btn-sm">
-						<span class="glyphicon glyphicon-menu-left"></span> <span
-						th:text="#{action.back}">back</span>
-					</a>
-					<button class="btn btn-primary btn-sm" type="submit" name="close"
-						th:value="${dt.id}"
-						th:onclick="|return confirm('#{general.areyousure}')|"
-						data-toggle="tooltip" data-placement="top"
-						th:title="#{downtimes.close.tooltip}">
-						<span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;<span
-							th:text="|#{downtimes.close}|">search</span>
-					</button>
-					</div>
+						<div class="col-xs-12">
+							<a th:href="@{/downtimes/dispatch}" class="btn btn-link btn-sm">
+								<span class="glyphicon glyphicon-menu-left"></span> <span
+								th:text="#{action.back}">back</span>
+							</a>
+							<button class="btn btn-primary btn-sm" type="submit" name="close"
+								th:value="${dt.id}"
+								th:onclick="|return confirm('#{general.areyousure}')|"
+								data-toggle="tooltip" data-placement="top"
+								th:title="#{downtimes.close.tooltip}">
+								<span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;<span
+									th:text="|#{downtimes.close}|">search</span>
+							</button>
+						</div>
 					</div>
 				</div>
 
 			</div>
 		</form>
-
-
 	</div>
 </body>
 </html>

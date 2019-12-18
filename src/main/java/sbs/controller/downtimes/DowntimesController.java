@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javassist.NotFoundException;
@@ -24,15 +25,19 @@ import sbs.model.downtimes.Downtime;
 import sbs.model.downtimes.DowntimeCause;
 import sbs.model.downtimes.DowntimeDetailsFailure;
 import sbs.model.downtimes.DowntimeDetailsMaterial;
+import sbs.model.downtimes.DowntimeResponseType;
 import sbs.model.downtimes.DowntimeType;
+import sbs.model.users.User;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3UtrFault;
 import sbs.model.x3.X3Workstation;
 import sbs.service.downtimes.DowntimeCausesService;
 import sbs.service.downtimes.DowntimeDetailsFailureService;
 import sbs.service.downtimes.DowntimeDetailsMaterialService;
+import sbs.service.downtimes.DowntimeResponseTypesService;
 import sbs.service.downtimes.DowntimeTypesService;
 import sbs.service.downtimes.DowntimesService;
+import sbs.service.users.UserService;
 import sbs.service.x3.JdbcOracleX3Service;
 
 @Controller
@@ -55,6 +60,10 @@ public class DowntimesController {
 	DowntimeTypesService typesService;
 	@Autowired
 	HrUserInfoSessionHolder userHolder;
+	@Autowired
+	UserService userService;
+	@Autowired
+	DowntimeResponseTypesService responseTypeService;
 
 	private List<DowntimeCause> currentCauses;
 	private DowntimeType currentType;
@@ -81,6 +90,13 @@ public class DowntimesController {
 
 	@RequestMapping(value = "/dispatch")
 	public String dispatch(Model model) {
+		User current = userService.getAuthenticatedUser();
+		if (current != null) {
+			List<Downtime> waiting = downtimesService.findWithoutResponseForUser(current.getId());
+			if (waiting.size() > 0) {
+				model.addAttribute("waiting", waiting);
+			}
+		}
 		model.addAttribute("downtimes", downtimesService.findAllPending());
 		return "downtimes/dispatch";
 	}
@@ -125,6 +141,7 @@ public class DowntimesController {
 		Downtime downtime = null;
 		DowntimeDetailsFailure failure = null;
 		DowntimeDetailsMaterial material = null;
+		
 
 		// validate special fields
 		if (formDowntimeCreate.getTypeInternalTitle().equals(DowntimeCausesService.CAUSE_FAULT)) {
@@ -175,10 +192,16 @@ public class DowntimesController {
 			throw new NotFoundException("Downtime cause not found: " + formDowntimeCreate.getMachineCode());
 		}
 
+		DowntimeResponseType responseType = responseTypeService.findByInternalTitle("empty");
+		if (responseType == null) {
+			throw new NotFoundException("Response type not found: " + "empty");
+		}		
+		
 		// SAVE
 		downtime = new Downtime();
 		downtime.setType(type);
 		downtime.setCause(cause);
+		downtime.setResponseType(responseType);
 		downtime.setOpened(true);
 		downtime.setMachineCode(workstation.getCode());
 		downtime.setMachineName(workstation.getName());
@@ -189,6 +212,7 @@ public class DowntimesController {
 		downtime.setInitLastName(userHolder.getInfo().getLastName());
 		downtime.setInitPosition(userHolder.getInfo().getPosition());
 		downtime.setInitDepartment(userHolder.getInfo().getDepartment());
+		
 
 		downtimesService.save(downtime);
 
@@ -224,9 +248,14 @@ public class DowntimesController {
 			model.addAttribute("ddm", downtime.getMaterialDetails().toArray()[0]);
 		}
 
+		User user = userService.getAuthenticatedUser();
+		if (user != null && user.getId() == downtime.getCause().getResponsibleUser().getId()) {
+			model.addAttribute("responseAllowed", true);
+		}
+
 		return "downtimes/show";
 	}
-	
+
 	@RequestMapping(value = "/close", method = RequestMethod.POST)
 	@Transactional
 	public String close(@Valid FormDowntimeClose formDowntimeClose, BindingResult bindingResult,
@@ -237,14 +266,17 @@ public class DowntimesController {
 					messageSource.getMessage("error.user.not.authenticated", null, locale));
 			return "redirect:/industry/dispatch";
 		}
-		
-		
+
 		Downtime downtime = downtimesService.findById(formDowntimeClose.getDowntimeId());
 		if (downtime == null) {
 			throw new NotFoundException("Downtime not found: #" + formDowntimeClose.getDowntimeId());
 		}
 
-		if(bindingResult.hasErrors()){
+		if (bindingResult.hasErrors()) {
+			User user = userService.getAuthenticatedUser();
+			if (user != null && user.getId() == downtime.getCause().getResponsibleUser().getId()) {
+				model.addAttribute("responseAllowed", true);
+			}
 			model.addAttribute("dt", downtime);
 			if (!downtime.getFailureDetails().isEmpty()) {
 				model.addAttribute("ddf", downtime.getFailureDetails().toArray()[0]);
@@ -254,7 +286,7 @@ public class DowntimesController {
 			}
 			return "downtimes/show";
 		}
-		
+
 		downtime.setOpened(false);
 		downtime.setEndComment(formDowntimeClose.getEndComment().trim());
 		downtime.setEndDate(new Timestamp(new java.util.Date().getTime()));
@@ -265,9 +297,77 @@ public class DowntimesController {
 		downtime.setEndDepartment(userHolder.getInfo().getDepartment());
 
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
-		return "redirect:/downtimes/show/"+downtime.getId();
-
+		return "redirect:/downtimes/show/" + downtime.getId();
 	}
-	
+
+	@RequestMapping(value = "/response/{id}")
+	public String takeAction(@PathVariable("id") int id, Model model) throws NotFoundException {
+
+		User current = userService.getAuthenticatedUser();
+		if (current == null) {
+			throw new NotFoundException("User not authenticated");
+		}
+
+		Downtime downtime = downtimesService.findById(id);
+		if (downtime == null) {
+			throw new NotFoundException("Downtime not found: " + id);
+		}
+
+		if (current.getId() == downtime.getCause().getResponsibleUser().getId()
+				&& downtime.getResponseType().getOrder() <= 10) {
+			model.addAttribute("modAllowed", true);
+		} else {
+			model.addAttribute("modAllowed", false);
+		}
+
+		model.addAttribute("formDowntimeClose", new FormDowntimeClose(downtime.getId()));
+
+		return "downtimes/actions";
+	}
+
+	@RequestMapping(value = "/response", params = { "action" }, method = RequestMethod.POST)
+	@Transactional
+	public String response(@Valid FormDowntimeClose formDowntimeClose, BindingResult bindingResult,
+			RedirectAttributes redirectAttrs, Locale locale, Model model, @RequestParam String action)
+			throws NotFoundException {
+
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("modAllowed", true);
+			return "downtimes/actions";
+		}
+		
+		DowntimeResponseType response;
+		
+		switch(action) {
+			case "acc":
+				response = responseTypeService.findByInternalTitle("accepted");
+			break;
+			case "fwd":
+				response = responseTypeService.findByInternalTitle("forwarded");
+				break;
+			case "rjct":
+				response = responseTypeService.findByInternalTitle("rejected");
+				break;
+			default:
+				throw new NotFoundException("Unknown action: " + action);
+		}
+		
+		if(response == null) {
+			throw new NotFoundException("Response type not found: " + action);
+		}
+		
+		Downtime dt = downtimesService.findById(formDowntimeClose.downtimeId);
+		if(dt == null) {
+			throw new NotFoundException("Downtime not found: " + formDowntimeClose.downtimeId);
+		}
+		
+		dt.setResponseType(response);
+		dt.setResponseComment(formDowntimeClose.getEndComment().trim());
+		dt.setResponseDate(new Timestamp(new java.util.Date().getTime()));
+		downtimesService.save(dt);
+
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/downtimes/show/" + formDowntimeClose.downtimeId;
+	}
 
 }

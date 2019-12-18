@@ -74,6 +74,7 @@
 								<th th:text="#{qsurveys.questions.order}">head</th>
 								<th th:text="#{general.type}">head</th>
 								<th th:text="#{general.text}">head</th>
+								<th th:text="#{downtimes.responsible}">head</th>
 								<th class="center">#id</th>
 								<th th:text="#{general.active}" class="center">head</th>
 								<th th:text="#{general.options}" class="center">head</th>
@@ -84,6 +85,7 @@
 								<td><span th:text="${cause.order}">txt</span></td>
 								<td><span th:text="#{${cause.downtimeType.code}}"></span></td>
 								<td><span th:text="${cause.text}"></span></td>
+								<td><span th:text="${cause.responsibleUser.name}"></span></td>
 								<td class="center"><span th:text="|#${cause.id}|"></span></td>
 								<td class="center"><span th:text="${cause.active}"></span></td>
 								<td class="center"><a

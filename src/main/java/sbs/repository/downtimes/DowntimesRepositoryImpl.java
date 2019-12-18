@@ -16,13 +16,28 @@ public class DowntimesRepositoryImpl extends GenericRepositoryAdapter<Downtime, 
 
 	@Override
 	public List<Downtime> findAllPending() {
-		String hql = "from Downtime d where d.opened = :bool ";
-		hql += " order by d.startDate asc ";
+		String hql = "from Downtime d where d.opened = :bool "
+				+ " order by d.startDate asc ";
 		@SuppressWarnings("unchecked")
 		List<Downtime> result = (List<Downtime>) 
 		currentSession()
 		.createQuery(hql)
 		.setBoolean("bool", true)
+		.list();
+
+		return result;
+	}
+
+	@Override
+	public List<Downtime> findWithoutResponseForUser(Long userId) {
+		String hql = "from Downtime d where d.responseType.order = :ord "
+				+ "and d.cause.responsibleUser.id = :uid";
+		@SuppressWarnings("unchecked")
+		List<Downtime> result = (List<Downtime>) 
+		currentSession()
+		.createQuery(hql)
+		.setInteger("ord", 10)
+		.setLong("uid", userId)
 		.list();
 
 		return result;

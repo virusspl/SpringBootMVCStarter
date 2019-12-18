@@ -27,4 +27,9 @@ public class DowntimesServiceImpl extends GenericServiceAdapter<Downtime, Intege
 		return downtimesRepository.findAllPending();
 	}
 
+	@Override
+	public List<Downtime> findWithoutResponseForUser(Long userId) {
+		return downtimesRepository.findWithoutResponseForUser(userId);
+	}
+
 }

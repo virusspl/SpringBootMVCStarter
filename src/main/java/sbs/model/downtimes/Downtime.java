@@ -31,7 +31,7 @@ public class Downtime {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "dt_dtrt_response_type", nullable = false)
 	private DowntimeResponseType responseType;
-	
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "dt_dtc_cause", nullable = false)
 	private DowntimeCause cause;
@@ -263,6 +263,30 @@ public class Downtime {
 		this.endComment = endComment;
 	}
 
+	public DowntimeResponseType getResponseType() {
+		return responseType;
+	}
+
+	public void setResponseType(DowntimeResponseType responseType) {
+		this.responseType = responseType;
+	}
+
+	public Timestamp getResponseDate() {
+		return responseDate;
+	}
+
+	public void setResponseDate(Timestamp responseDate) {
+		this.responseDate = responseDate;
+	}
+
+	public String getResponseComment() {
+		return responseComment;
+	}
+
+	public void setResponseComment(String responseComment) {
+		this.responseComment = responseComment;
+	}
+	
 	@Override
 	public String toString() {
 		return "Downtime [id=" + id + ", type=" + type + ", cause=" + cause + ", materialDetails=" + materialDetails

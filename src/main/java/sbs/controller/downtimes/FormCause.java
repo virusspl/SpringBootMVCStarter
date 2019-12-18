@@ -9,6 +9,8 @@ public class FormCause {
 	@NotNull
 	private int id;
 	private int typeId;
+	@Min(1)
+	private long responsibleId;
 	@NotNull
 	@Min(1)
 	private int order;
@@ -69,12 +71,21 @@ public class FormCause {
 	public void setShortText(String shortText) {
 		this.shortText = shortText;
 	}
+	
+	public long getResponsibleId() {
+		return responsibleId;
+	}
+
+	public void setResponsibleId(long responsibleId) {
+		this.responsibleId = responsibleId;
+	}
 
 	@Override
 	public String toString() {
-		return "FormCause [id=" + id + ", typeId=" + typeId + ", order=" + order + ", text=" + text + ", shortText="
-				+ shortText + ", active=" + active + "]";
+		return "FormCause [id=" + id + ", typeId=" + typeId + ", responsibleId=" + responsibleId + ", order=" + order
+				+ ", text=" + text + ", shortText=" + shortText + ", active=" + active + "]";
 	}
+
 
 
 	

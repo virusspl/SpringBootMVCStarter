@@ -60,7 +60,7 @@
 							<option th:each="obj,stat : ${causes}"
 								th:value="${causes[__${stat.index}__].id}"
 								th:text="|${causes[__${stat.index}__].text}
-								(#${causes[__${stat.index}__].id})
+								[${causes[__${stat.index}__].responsibleUser.name}]
 								|">txt</option>
 						</select>
 						<div th:errors="*{causeId}"

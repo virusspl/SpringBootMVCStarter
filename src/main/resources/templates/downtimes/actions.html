@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script"></div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12 col-xs-offset-0">
+				<h2 th:text="|#{downtimes.actions}: #${formDowntimeClose.downtimeId}|" class="text-primary">Hello
+					on a page</h2>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{downtimes.actions.message}"> Welcome message
+				</span>
+			</div>
+			<!-- BACK -->
+			<a th:href="|@{/downtimes/show/}${formDowntimeClose.downtimeId}|"
+				class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+		<div class="underline"></div>
+		<!-- ASSIGNED PERSON OPTIONS -->
+		<div class="row" th:if="${modAllowed}">
+			<div class="col-xs-12">
+				<div class="row">
+					<div class="col-xs-12">
+						<h3 th:text="|#{action.choose}|"
+							class="text-primary underline"></h3>
+					</div>
+				</div>
+			</div>
+			<form th:action="@{/downtimes/response}"
+				th:object="${formDowntimeClose}" method="post">
+				<input type="hidden" th:field="*{downtimeId}"/>
+				<div class="col-xs-12 margin-top-10">
+					<div class="row">
+						<div class="col-xs-12 col-md-9 col-lg-8">
+							<div class="form-group">
+								<label for="endComment"
+									th:text="|#{general.comment} (#{general.optional})|">Description</label>
+								<input type="text" class="form-control" id="endComment"
+									name="endComment" th:placeholder="#{general.comment}"
+									th:field="*{endComment}"></input>
+								<div th:errors="*{endComment}"
+									class="alert alert-danger margin-top-5">error</div>
+							</div>
+						</div>
+						<div class="col-xs-12">
+							<button class="btn btn-success btn-md" 
+								type="submit" name="action"
+								th:value="|acc|"
+								th:onclick="|return confirm('#{action.accept}?')|">
+								<span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;<span
+									th:text="|#{action.accept}|">search</span>
+							</button>
+							<button class="btn btn-warning btn-md" 
+								type="submit" name="action"
+								th:value="|fwd|"
+								th:onclick="|return confirm('#{action.forward}?')|">
+								<span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;<span
+									th:text="|#{action.forward}|">search</span>
+							</button>
+							<button class="btn btn-danger btn-md" 
+								type="submit" name="action"
+								th:value="|rjct|"
+								th:onclick="|return confirm('#{action.reject}?')|">
+								<span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;<span
+									th:text="|#{action.reject}|">search</span>
+							</button>
+						</div>
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- BACK -->
+								<a th:href="|@{/downtimes/show/}${formDowntimeClose.downtimeId}|"
+									class="btn btn-link btn-sm"> <span
+									class="glyphicon glyphicon-menu-left"></span> <span
+									th:text="#{action.back}">back</span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="row" th:if="!${modAllowed}">
+			<div class="col-xs-12">
+				<div class="row">
+					<div class="col-xs-12">
+						<h3 th:text="|#{downtimes.actions.impossible}|"
+							class="text-primary underline"></h3>
+					</div>
+				</div>
+				<div class="row margin-top-5">
+					<div class="col-xs-12">
+						<span th:text="#{downtimes.actions.impossible.explain}">param</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /ASSIGNED PERSON OPTIONS -->
+	</div>
+</body>
+</html>
