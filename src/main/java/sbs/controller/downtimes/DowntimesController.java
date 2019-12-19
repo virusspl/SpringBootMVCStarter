@@ -1,9 +1,13 @@
 package sbs.controller.downtimes;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
@@ -18,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import javassist.NotFoundException;
 import sbs.controller.auth.HrUserInfoSessionHolder;
@@ -37,6 +43,7 @@ import sbs.service.downtimes.DowntimeDetailsMaterialService;
 import sbs.service.downtimes.DowntimeResponseTypesService;
 import sbs.service.downtimes.DowntimeTypesService;
 import sbs.service.downtimes.DowntimesService;
+import sbs.service.mail.MailService;
 import sbs.service.users.UserService;
 import sbs.service.x3.JdbcOracleX3Service;
 
@@ -64,6 +71,11 @@ public class DowntimesController {
 	UserService userService;
 	@Autowired
 	DowntimeResponseTypesService responseTypeService;
+	@Autowired
+	MailService mailService;
+	@Autowired
+	TemplateEngine templateEngine;
+	
 
 	private List<DowntimeCause> currentCauses;
 	private DowntimeType currentType;
@@ -130,7 +142,7 @@ public class DowntimesController {
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	@Transactional
 	public String addCause(@Valid FormDowntimeCreate formDowntimeCreate, BindingResult bindingResult,
-			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
+			RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException, UnknownHostException, MessagingException {
 
 		if (!userHolder.isSet()) {
 			redirectAttrs.addFlashAttribute("error",
@@ -224,9 +236,35 @@ public class DowntimesController {
 			failure.setDowntime(downtime);
 			failureDetailsService.save(failure);
 		}
+		
+		// send e-mail notification
+		List<String> recipients = new ArrayList<>();
+		recipients.add(downtime.getCause().getResponsibleUser().getEmail());
+		
+		String title = messageSource.getMessage(downtime.getType().getCode(), null, locale) + " - " + downtime.getMachineCode() + " [Downtimes]" 
+				
+				;
+		this.sendMail(title, downtime, recipients);
 
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/downtimes/dispatch";
+	}
+	
+	private void sendMail(String title, Downtime downtime, List<String> recipients) throws UnknownHostException, MessagingException {
+
+		ArrayList<String> mailTo = new ArrayList<>();
+		for (String addr : recipients) {
+			mailTo.add(addr);
+		}
+
+		Context context = new Context();
+		context.setVariable("host", InetAddress.getLocalHost().getHostAddress());
+		context.setVariable("title", title);
+		context.setVariable("dt", downtime);
+		String body = templateEngine.process("downtimes/mailtemplate", context);
+		if(mailTo.size()>0){
+			mailService.sendEmail("webapp@atwsystem.pl", mailTo.toArray(new String[0]), new String[0], title, body);
+		}
 	}
 
 	@RequestMapping(value = "/show/{id}")
