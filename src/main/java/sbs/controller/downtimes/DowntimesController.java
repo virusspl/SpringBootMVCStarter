@@ -214,6 +214,7 @@ public class DowntimesController {
 		downtime.setType(type);
 		downtime.setCause(cause);
 		downtime.setResponseType(responseType);
+		downtime.setResponseComment("");
 		downtime.setOpened(true);
 		downtime.setMachineCode(workstation.getCode());
 		downtime.setMachineName(workstation.getName());
@@ -240,10 +241,7 @@ public class DowntimesController {
 		// send e-mail notification
 		List<String> recipients = new ArrayList<>();
 		recipients.add(downtime.getCause().getResponsibleUser().getEmail());
-		
-		String title = messageSource.getMessage(downtime.getType().getCode(), null, locale) + " - " + downtime.getMachineCode() + " [Downtimes]" 
-				
-				;
+		String title = messageSource.getMessage(downtime.getType().getCode(), null, locale) + " - " + downtime.getMachineCode() + " - [Downtimes]";
 		this.sendMail(title, downtime, recipients);
 
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));

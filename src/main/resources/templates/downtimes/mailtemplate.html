@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"></meta>
+<style>
+body {
+	font-family: Calibri, "Trebuchet MS", Helvetica, sans-serif;
+}
+
+table {
+	width: 100%;
+}
+
+.color {
+	background: #5AC4F2;
+	color: #F3FBFE;
+	font-weight: bold;
+}
+
+a {
+	color: #3AA4D2;
+}
+
+td {
+	padding: 5px 10px 5px 10px;
+	border: 1px solid gray;
+}
+
+.titlecell {
+	width: 30%;
+}
+.valuecell {
+	width: 70%;
+}
+
+#footer {
+	font-size: 80%;
+}
+
+</style>
+</head>
+<body>
+	<table>
+		<!-- PAGE TITLE -->
+		<tr class="color">
+			<td>
+				<h1>
+					<span th:text="|#{${dt.type.code}} - ${dt.machineCode}|">title</span>
+				</h1>
+			</td>
+		</tr>
+		<tr>
+			<td><span>Zgłoszono nowy przestój stanowiska pracy.
+					Zapoznaj się z informacjami poniżej. Bezpośredni link do zgłoszenia
+					znajdziesz w tabeli. </span></td>
+		</tr>
+	</table>
+	<!-- USERS LOOP -->
+	<table>
+		<tr>
+			<td align="right" class="color titlecell">Identyfikator zgłoszenia</td>
+			<td class="valuecell"><span th:text="|#${dt.id}|">#1</span></td>
+		</tr>
+		<tr>
+			<td align="right" class="color titlecell">Kategoria</td>
+			<td class="valuecell"><span th:text="#{${dt.type.code}}">txt</span></td>
+		</tr>
+		<tr>
+			<td align="right" class="color titlecell">Przyczyna</td>
+			<td class="valuecell"><span th:text="${dt.cause.text}">txt</span></td>
+		</tr>
+		<tr>
+			<td align="right" class="color titlecell">Data i godzina</td>
+			<td class="valuecell"><span th:text="${dt.startDate}">txt</span></td>
+		</tr>
+		<tr>
+			<td align="right" class="color titlecell">Maszyna</td>
+			<td class="valuecell"><span th:text="${dt.machineCode}">txt</span></td>
+		</tr>
+		<tr>
+			<td align="right" class="color titlecell">Nazwa maszyny</td>
+			<td class="valuecell"><span th:text="${dt.machineName}">txt</span></td>
+		</tr>
+		<tr>
+			<td align="right" class="color titlecell">Wydział</td>
+			<td class="valuecell"><span th:text="${dt.initDepartment}">txt</span></td>
+		</tr>
+		<tr>
+			<td align="right" class="color titlecell">Osoba zgłaszająca</td>
+			<td class="valuecell"><span th:text="|${dt.initFirstName} ${dt.initLastName}|">txt</span></td>
+		</tr>
+		<tr th:if="${#strings.length(dt.comment)>0}">
+			<td align="right" class="color titlecell">Komentarz</td>
+			<td class="valuecell"><span th:text="${dt.comment}">txt</span></td>
+		</tr>
+		<tr>
+			<td align="right" class="color titlecell">Bezpośredni link</td>
+			<td class="valuecell">
+			<a th:href="|${host}:8080@{'~/adr/downtimes/show/' + ${dt.id}}|"><span
+					th:text="|/downtimes/show/${dt.id}|">/downtimes/show/1</span></a>
+			</td>
+		</tr>
+
+	</table>
+	<!-- FOOTER -->
+	<table>
+		<tr id="footer">
+			<td class="color titlecell"><span>Mail został wygenerowany
+					automatycznie przez aplikację webową ADR Polska S.A., moduł
+					zgłoszeń BHP. Proszę nie odpowiadać na tę wiadomość.</span></td>
+		</tr>
+	</table>
+</body>
+</html>
