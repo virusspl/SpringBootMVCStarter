@@ -90,12 +90,12 @@
 								<td class="center"><span th:text="${cause.active}"></span></td>
 								<td class="center"><a
 									th:href="|@{/downtimes/manage/causes/edit/}${cause.id}|"
-									class="btn btn-info btn-sm"> <span
+									class="btn btn-info btn-sm margin-top-5"> <span
 										class="glyphicon glyphicon-pencil"></span> <span
 										th:text="#{action.edit}">back</span>
 								</a> <a th:href="|@{/downtimes/manage/causes/delete/}${cause.id}|"
 									th:onclick="|return confirm('#{action.remove}: &quot;${cause.shortText}&quot;?')|"
-									class="btn btn-danger btn-sm"> <span
+									class="btn btn-danger btn-sm margin-top-5"> <span
 										class="glyphicon glyphicon-remove"></span> <span
 										th:text="#{action.remove}">back</span>
 								</a></td>
