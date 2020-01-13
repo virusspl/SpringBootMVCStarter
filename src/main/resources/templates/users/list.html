@@ -90,7 +90,7 @@
 								<th th:text="#{user.username}">Username</th>
 								<th th:text="#{user.name}">Name</th>
 								<th th:text="#{user.email}">Email</th>
-								<th class="text-center" th:text="#{user.avatar}">Avatar</th>
+								<th class="text-center" th:text="|RFID|">Avatar</th>
 								<th class="text-center"  th:text="#{user.roles}" style="max-width: 10%;">Roles</th>
 								<th class="text-center" th:text="#{user.active}">Active</th>
 								<th class="text-center" th:text="#{users.options}" style="min-width: 10%;">Options</th>								
@@ -107,7 +107,7 @@
 								th:href="|mailto:${user.email}|"><span th:text="${user.email}"></span></a>
 								
 								</td>
-								<td class="text-center"><span class="label label-default"></span><span th:class="${user.avatarfilename != null}? 'glyphicon glyphicon-ok' : 'glyphicon glyphicon-remove'"></span></td>
+								<td class="text-center"><span th:text="${user.rcpNumber}"></span></td>
 								<td >
 								<ul style="margin: 0px; padding: 0px;">
 								<li style="display: inline;" th:each="role : ${user.roles}">
