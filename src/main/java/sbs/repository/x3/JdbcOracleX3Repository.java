@@ -7,6 +7,7 @@ import java.util.Map;
 import sbs.controller.dirrcpship.DirectReceptionsShipmentLine;
 import sbs.model.proprog.Project;
 import sbs.model.wpslook.WpslookRow;
+import sbs.model.x3.X3AvgPriceLine;
 import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3ConsumptionProductInfo;
@@ -115,6 +116,8 @@ public interface JdbcOracleX3Repository  {
 	public Map<String, Double> getCurrentStandardCostsMap(String company);
 	public List<X3EnvironmentInfo> getEnvironmentInfoInPeriod(Date startDate, Date endDate, String type,
 			String company);
+	public List<X3AvgPriceLine> getAveragePricesByInvoices(String company);
+	public List<X3AvgPriceLine> getAveragePricesByOrders(String company);
 
 	
 	

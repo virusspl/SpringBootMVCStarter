@@ -261,10 +261,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				)
 		.antMatchers(
 				"/downtimes/response/**"
-				)		
+				)
 		.hasAnyRole(
 				"ADMIN", 
 				"DTRESPONSIBLE"
+				)
+		.antMatchers(
+				"/avgprices/**"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"AVGPRICESUSER"
 				)
 		 // ** old modules to delete **
 		.antMatchers(

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import sbs.controller.dirrcpship.DirectReceptionsShipmentLine;
 import sbs.model.proprog.Project;
 import sbs.model.wpslook.WpslookRow;
+import sbs.model.x3.X3AvgPriceLine;
 import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3ConsumptionProductInfo;
@@ -458,6 +459,16 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	public List<X3EnvironmentInfo> getEnvironmentInfoInPeriod(Date startDate, Date endDate, String type,
 			String company) {
 		return jdbcOracleX3Repository.getEnvironmentInfoInPeriod(startDate, endDate, type, company);
+	}
+
+	@Override
+	public List<X3AvgPriceLine> getAveragePricesByInvoices(String company) {
+		return jdbcOracleX3Repository.getAveragePricesByInvoices(company);
+	}
+
+	@Override
+	public List<X3AvgPriceLine> getAveragePricesByOrders(String company) {
+		return jdbcOracleX3Repository.getAveragePricesByOrders(company);
 	}
 
 }

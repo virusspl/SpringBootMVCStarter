@@ -98,5 +98,7 @@ public interface JdbcOracleX3Service {
 	public List<X3Workstation> getWorkstations(String company);
 	public Map<String, Double> getCurrentStandardCostsMap(String company);
 	public List<X3EnvironmentInfo> getEnvironmentInfoInPeriod(Date startDate, Date endDate, String type, String company);
+	public List<X3AvgPriceLine> getAveragePricesByInvoices(String company);
+	public List<X3AvgPriceLine> getAveragePricesByOrders(String company);
 	
 }

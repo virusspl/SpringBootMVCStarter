@@ -39,16 +39,15 @@
 					<div class="panel-body center">
 						<p>
 							<span th:text="#{welcome.auth.message}"></span>
-							</p><p>
-							 <a
-								th:href="@{/login}" class="btn btn-primary btn-sm"> <span
+						</p>
+						<p>
+							<a th:href="@{/login}" class="btn btn-primary btn-sm"> <span
 								class="glyphicon glyphicon-lock"></span>&nbsp;&nbsp;<span
-								th:text="#{action.login.pass}"></span> 
-							</a> <b>/</b> 
-							<a
-								th:href="@{/readcard}" class="btn btn-primary btn-sm"> <span
+								th:text="#{action.login.pass}"></span>
+							</a> <b>/</b> <a th:href="@{/readcard}"
+								class="btn btn-primary btn-sm"> <span
 								class="glyphicon glyphicon-credit-card"></span>&nbsp;&nbsp;<span
-								th:text="#{action.login.rcp}"></span> 
+								th:text="#{action.login.rcp}"></span>
 							</a>
 						</p>
 					</div>
@@ -248,7 +247,8 @@
 			'ROLE_COMPONENTSUSER', 
 			'ROLE_PRODORIGINUSER', 
 			'ROLE_CONSUMPTIONUSER',
-			'ROLE_ENVIRONMENTUSER'
+			'ROLE_ENVIRONMENTUSER',
+			'ROLE_AVGPRICESUSER'
 			)">
 				<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
 					<h3 class="text-info" th:text="#{department.offices}">Panel
@@ -285,6 +285,11 @@
 						class="btn btn-info btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-tree-deciduous"></span> <span
 						th:text="#{environment.environment}">consumption</span>
+					</a> <a th:href="@{/avgprices/main}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_AVGPRICESUSER')"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-euro"></span> <span
+						th:text="#{avgprices.title}">consumption</span>
 					</a> <a th:href="@{/consumption/dispatch}"
 						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_CONSUMPTIONUSER')"
 						class="btn btn-info btn-md margin-top-5"> <span

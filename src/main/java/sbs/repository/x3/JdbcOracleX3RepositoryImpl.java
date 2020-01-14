@@ -26,6 +26,7 @@ import sbs.controller.dirrcpship.DirectReceptionsShipmentLine;
 import sbs.helpers.DateHelper;
 import sbs.model.proprog.Project;
 import sbs.model.wpslook.WpslookRow;
+import sbs.model.x3.X3AvgPriceLine;
 import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3ConsumptionProductInfo;
@@ -2950,6 +2951,123 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			
 			list.add(einfo);
 		}
+		return list;
+	}
+
+	@Override
+	public List<X3AvgPriceLine> getAveragePricesByInvoices(String company) {
+		
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, 2018);
+		cal.set(Calendar.MONTH, Calendar.JANUARY);
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "SID.ITMREF_0 AS code, "
+				+ "ITM.ITMDES1_0 AS descr, "
+				+ "ITM.TCLCOD_0 AS category, "
+				+ "ITM.TSICOD_1 AS gr2, "
+				+ "Sum(SID.QTYSTU_0) AS quantity, "
+				+ "AVG(SID.NETPRI_0 * SIV.RATMLT_0) AS average, "
+				+ "Sum(SID.NETPRI_0 * SIV.RATMLT_0 * SID.QTYSTU_0) AS w_ingr_pric "
+				+ "FROM "
+				+ "(" + company + ".SINVOICE SIV INNER JOIN " + company + ".SINVOICED SID "
+				+ "ON SIV.NUM_0 = SID.NUM_0) "
+				+ "INNER JOIN "  + company + ".ITMMASTER ITM "
+				+ "ON SID.ITMREF_0 = ITM.ITMREF_0 "
+				+ "WHERE "
+				+ "SIV.ACCDAT_0 >= ? "
+				+ "GROUP BY "
+				+ "SID.ITMREF_0, "
+				+ "ITM.ITMDES1_0, "
+				+ "ITM.TCLCOD_0, "
+				+ "ITM.TSICOD_1 "
+				+ "ORDER BY SID.ITMREF_0"
+				,
+                new Object[]{new Timestamp(cal.getTime().getTime())});
+		
+		List<X3AvgPriceLine> list = new ArrayList<>();
+		X3AvgPriceLine line;
+        for(Map<String,Object> row: resultSet ){
+        	line = new X3AvgPriceLine();
+        	line.setProductCode((String)row.get("code"));
+        	line.setProductDescription((String)row.get("descr"));
+        	line.setCategory((String)row.get("category"));
+        	line.setGr2((String)row.get("gr2"));
+        	line.setQuantity(((BigDecimal)row.get("quantity")).doubleValue());
+        	line.setAvgPrice(((BigDecimal)row.get("average")).doubleValue());
+        	line.setWeightAvgPrice(
+        			((BigDecimal)row.get("w_ingr_pric")).doubleValue()
+        			/
+        			((BigDecimal)row.get("quantity")).doubleValue()
+        			);        	
+        	
+        	list.add(line);
+        }
+        
+		return list;
+	}
+
+	@Override
+	public List<X3AvgPriceLine> getAveragePricesByOrders(String company) {
+		
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, 2018);
+		cal.set(Calendar.MONTH, Calendar.JANUARY);
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "SOQ.ITMREF_0 AS code, "
+				+ "ITM.ITMDES1_0 AS descr, "
+				+ "ITM.TCLCOD_0 AS category, "
+				+ "ITM.TSICOD_1 AS gr2, "
+				+ "Sum(SOQ.QTYSTU_0) AS quantity, "
+				+ "Avg(SOP.NETPRI_0 * SOR.CHGRAT_0) AS average, "
+				+ "Sum(SOP.NETPRI_0 * SOR.CHGRAT_0 * SOQ.QTYSTU_0) AS w_ingr_pric "
+				+ "FROM "
+				+ "(" + company + ".SORDERP SOP INNER JOIN "
+				+ "(" + company + ".ITMMASTER ITM INNER JOIN " + company + ".SORDERQ SOQ "
+				+ "ON ITM.ITMREF_0 = SOQ.ITMREF_0) "
+				+ "ON "
+				+ "(SOP.SOPSEQ_0 = SOQ.SOQSEQ_0) AND "
+				+ "(SOP.SOPLIN_0 = SOQ.SOPLIN_0) AND "
+				+ "(SOP.SOHNUM_0 = SOQ.SOHNUM_0)) "
+				+ "INNER JOIN " + company + ".SORDER SOR "
+				+ "ON SOQ.SOHNUM_0 = SOR.SOHNUM_0 "
+				+ "WHERE "
+				+ "SOQ.DEMDLVDAT_0 >= ? "
+				+ "GROUP BY "
+				+ "SOQ.ITMREF_0, "
+				+ "ITM.ITMDES1_0, "
+				+ "ITM.TCLCOD_0, "
+				+ "ITM.TSICOD_1 "
+				+ "ORDER BY "
+				+ "SOQ.ITMREF_0"
+				,
+                new Object[]{new Timestamp(cal.getTime().getTime())});
+		
+		List<X3AvgPriceLine> list = new ArrayList<>();
+		X3AvgPriceLine line;
+        for(Map<String,Object> row: resultSet ){
+        	line = new X3AvgPriceLine();
+        	line.setProductCode((String)row.get("code"));
+        	line.setProductDescription((String)row.get("descr"));
+        	line.setCategory((String)row.get("category"));
+        	line.setGr2((String)row.get("gr2"));
+        	line.setQuantity(((BigDecimal)row.get("quantity")).doubleValue());
+        	line.setAvgPrice(((BigDecimal)row.get("average")).doubleValue());
+        	line.setWeightAvgPrice(
+        			((BigDecimal)row.get("w_ingr_pric")).doubleValue()
+        			/
+        			((BigDecimal)row.get("quantity")).doubleValue()
+        			);
+        	
+        	
+        	list.add(line);
+        }
+        
 		return list;
 	}
 

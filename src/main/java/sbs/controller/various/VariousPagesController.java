@@ -60,7 +60,7 @@ public class VariousPagesController {
 	@Autowired
 	MessageSource messageSource;
 	@Autowired
-	JdbcOracleX3Service jdbcOracleX3Service;
+	JdbcOracleX3Service x3Service;
 	@Autowired
 	JdbcAdrOptimaService jdbcAdrOptimaService;
 	@Autowired
@@ -94,7 +94,9 @@ public class VariousPagesController {
 	
 	@RequestMapping("/test")
 	public String test(Model model, Locale locale) throws InterruptedException {
-
+		
+		System.out.println(x3Service.getAveragePricesByInvoices("WPS"));
+		
 		return "various/test";
 	}
 	
@@ -508,6 +510,14 @@ public class VariousPagesController {
 			downtimeNotifier.setName("ROLE_DTNOTIFIER");
 			roleService.save(downtimeNotifier);
 			msg += "[role: " + downtimeNotifier.getName() + "], ";
+		}
+		
+		Role avgPricesUser = roleService.findByName("ROLE_AVGPRICESUSER");
+		if (avgPricesUser == null) {
+			avgPricesUser = new Role();
+			avgPricesUser.setName("ROLE_AVGPRICESUSER");
+			roleService.save(avgPricesUser);
+			msg += "[role: " + avgPricesUser.getName() + "], ";
 		}
 		
 		// ROLE END
