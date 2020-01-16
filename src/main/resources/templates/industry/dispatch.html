@@ -40,6 +40,11 @@
 					<span class="glyphicon glyphicon-time"></span>
 					<span th:text="|#{downtimes.title}|">Codification</span>
 				</a>
+				<a class="btn btn-link btn-md margin-top-5"
+					href="http://192.168.1.23/DOCS/IND.4.0-Downtimes_User_Responsible.pdf" target="_blank">
+					<span class="glyphicon glyphicon-time"></span>
+					<span th:text="|#{downtimes.title} - #{downtimes.actions}|">Codification</span>
+				</a>
 				<a 
 					sec:authorize="hasAnyRole('ROLE_OWNER', 'ROLE_ADMIN', 'ROLE_INDUSTRYMANAGER')"
 					class="btn btn-link btn-md margin-top-5"

@@ -348,13 +348,15 @@ public class DowntimesController {
 		if (downtime == null) {
 			throw new NotFoundException("Downtime not found: " + id);
 		}
-
-		if (current.getId() == downtime.getCause().getResponsibleUser().getId()
+		
+		if (current.getId().equals(downtime.getCause().getResponsibleUser().getId())
 				&& downtime.getResponseType().getOrder() <= 10) {
 			model.addAttribute("modAllowed", true);
 		} else {
 			model.addAttribute("modAllowed", false);
 		}
+		
+		
 
 		model.addAttribute("formDowntimeClose", new FormDowntimeClose(downtime.getId()));
 

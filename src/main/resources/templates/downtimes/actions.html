@@ -63,14 +63,14 @@
 								type="submit" name="action"
 								th:value="|fwd|"
 								th:onclick="|return confirm('#{action.forward}?')|">
-								<span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;<span
+								<span class="glyphicon glyphicon-forward"></span>&nbsp;&nbsp;<span
 									th:text="|#{action.forward}|">search</span>
 							</button>
 							<button class="btn btn-danger btn-md" 
 								type="submit" name="action"
 								th:value="|rjct|"
 								th:onclick="|return confirm('#{action.reject}?')|">
-								<span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;<span
+								<span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;<span
 									th:text="|#{action.reject}|">search</span>
 							</button>
 						</div>
