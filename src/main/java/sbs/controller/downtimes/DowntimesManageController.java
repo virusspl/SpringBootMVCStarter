@@ -1,5 +1,7 @@
 package sbs.controller.downtimes;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javassist.NotFoundException;
@@ -24,6 +27,7 @@ import sbs.model.downtimes.DowntimeType;
 import sbs.model.users.User;
 import sbs.service.downtimes.DowntimeCausesService;
 import sbs.service.downtimes.DowntimeTypesService;
+import sbs.service.downtimes.DowntimesService;
 import sbs.service.users.UserService;
 
 @Controller
@@ -38,6 +42,8 @@ public class DowntimesManageController {
 	DowntimeCausesService downtimeCausesService;
 	@Autowired
 	UserService userService;
+	@Autowired
+	DowntimesService downtimesService;
 	
 	
 	@Cacheable("downtimeTypes")
@@ -180,6 +186,40 @@ public class DowntimesManageController {
 		}
 
 		return "redirect:/downtimes/manage/causes";
+	}
+	
+	@RequestMapping(value = "/reports")
+	@Transactional
+	public String showReportsView(Model model) {
+		FormDowntimesReports form = new FormDowntimesReports();
+		Calendar cal = Calendar.getInstance();
+		
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		cal.add(Calendar.MONTH, -1);
+		form.setStartDate(new Timestamp(cal.getTimeInMillis()));
+		
+		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+		form.setEndDate(new Timestamp(cal.getTimeInMillis()));
+
+		model.addAttribute("dtReportsForm", form);
+		return "downtimes/reports";
+	}
+	
+	@RequestMapping(value = "/reports/makelist", method = RequestMethod.POST)
+	public String viewList(@Valid FormDowntimesReports dtReportsForm, @RequestParam String type, BindingResult bindingResult,
+			RedirectAttributes redirectAttrs) throws NotFoundException {
+		
+		if (bindingResult.hasErrors()) {
+			return "downtimes/reports";
+		}
+		
+		List<ReportNotifierLine> notifierList = downtimesService.getReportByNotifier(dtReportsForm.getStartDate(), dtReportsForm.getEndDate());
+		List<ReportResponsibleLine> responsibleList = downtimesService.getReportByResponsible(dtReportsForm.getStartDate(), dtReportsForm.getEndDate());
+
+		redirectAttrs.addFlashAttribute("notifierList", notifierList);
+		redirectAttrs.addFlashAttribute("responsibleList", responsibleList);
+		
+		return "redirect:/downtimes/manage/reports";		
 	}
 	
 }

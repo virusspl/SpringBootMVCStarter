@@ -18,6 +18,15 @@ public class DateHelper {
 	private SimpleDateFormat YyyyMmDdHhMmFormat;
 	private SimpleDateFormat YyyyMmDdHhMmSsNoSpecialFormat;
 	
+	//TODO
+	/*
+	Long diff = endDate.getTime() - startDate.getTime();
+	long seconds = diff / 1000;
+	long minutes = seconds / 60;
+	long hours = minutes / 60;
+	long days = hours / 24;
+	length = days + "d " + hours % 24 + "h " + minutes % 60 + "m " + seconds % 60 + "s ";
+	*/
 	
 	public DateHelper(){
 		YyyyMmDdFormat = new SimpleDateFormat("yyyy/MM/dd");

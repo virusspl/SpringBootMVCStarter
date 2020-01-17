@@ -1,11 +1,14 @@
 package sbs.service.downtimes;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import sbs.controller.downtimes.ReportNotifierLine;
+import sbs.controller.downtimes.ReportResponsibleLine;
 import sbs.model.downtimes.Downtime;
 import sbs.repository.GenericRepository;
 import sbs.repository.downtimes.DowntimesRepository;
@@ -30,6 +33,16 @@ public class DowntimesServiceImpl extends GenericServiceAdapter<Downtime, Intege
 	@Override
 	public List<Downtime> findWithoutResponseForUser(Long userId) {
 		return downtimesRepository.findWithoutResponseForUser(userId);
+	}
+
+	@Override
+	public List<ReportNotifierLine> getReportByNotifier(Date startDate, Date endDate) {
+		return downtimesRepository.getReportByNotifier(startDate, endDate);
+	}
+
+	@Override
+	public List<ReportResponsibleLine> getReportByResponsible(Date startDate, Date endDate) {
+		return downtimesRepository.getReportByResponsible(startDate, endDate);
 	}
 
 }
