@@ -256,7 +256,7 @@ public class DowntimesController {
 		}
 
 		Context context = new Context();
-		context.setVariable("host", InetAddress.getLocalHost().getHostAddress());
+		context.setVariable("host", InetAddress.getLocalHost().getHostName());
 		context.setVariable("title", title);
 		context.setVariable("dt", downtime);
 		String body = templateEngine.process("downtimes/mailtemplate", context);
