@@ -86,4 +86,10 @@ public class JdbcOracleGeodeServiceImpl implements JdbcOracleGeodeService {
 	public List<GeodeMovement> findShipmentMovementsInPeriod(Date startDate, Date endDate) {
 		return jdbcOracleGeodeRepository.findShipmentMovementsInPeriod(startDate, endDate); 
 	}
+
+
+	@Override
+	public Map<String, Integer> findStockListForStoreType(String type) {
+		return jdbcOracleGeodeRepository.findStockListForStoreType(type);
+	}
 }

@@ -471,4 +471,9 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 		return jdbcOracleX3Repository.getAveragePricesByOrders(company);
 	}
 
+	@Override
+	public Map<String, Integer> findStockForAllProductsWithStock(String company) {
+		return jdbcOracleX3Repository.findStockForAllProductsWithStock(company);
+	}
+
 }

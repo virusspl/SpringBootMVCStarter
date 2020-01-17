@@ -1819,6 +1819,9 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	}*/
 
 	@Override
+	/**
+	 * getsALLdemand, not only ACV
+	 */
 	public Map<String, Integer> getAcvDemandList(String company) {
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
@@ -3069,6 +3072,26 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         }
         
 		return list;
+	}
+
+	@Override
+	public Map<String, Integer> findStockForAllProductsWithStock(String company) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "itv.ITMREF_0, "
+				+ "itv.PHYSTO_0 "
+				+ "FROM " 
+				+ company + ".ITMMVT itv "
+				+ "WHERE itv.PHYSTO_0 > 0"
+				,
+                new Object[]{}
+				);
+		
+		Map<String, Integer> map = new HashMap<>();
+		for(Map<String,Object> row: resultSet ){
+			map.put((String)row.get("ITMREF_0"), ((BigDecimal)row.get("PHYSTO_0")).intValue());
+		}
+		return map;
 	}
 
 }

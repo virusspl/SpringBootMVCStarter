@@ -219,4 +219,31 @@ public class JdbcOracleGeodeRepositoryImpl implements JdbcOracleGeodeRepository 
 		return result;
 	}
 
+
+	@Override
+	public Map<String, Integer> findStockListForStoreType(String type) {
+		
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "GEOATW.STOCKOBJ.ITM_0 AS CODE, "
+				+ "Sum(GEOATW.STOCKOBJ.CSUQTY_0) AS STOCK "
+				+ "FROM "
+				+ "GEOATW.STOCKOBJ INNER JOIN GEOATW.STORE "
+				+ "ON GEOATW.STOCKOBJ.STO_0 = GEOATW.STORE.STO_0 "
+				+ "WHERE "
+				+ "GEOATW.STORE.YTYPE_0 = ? "
+				+ "GROUP BY "
+				+ "GEOATW.STOCKOBJ.ITM_0"
+				,
+                new Object[]{type});
+        
+		Map<String, Integer> result = new HashMap<>();
+
+        for(Map<String,Object> row: resultSet ){
+        	result.put((String)row.get("CODE"), ((BigDecimal)row.get("STOCK")).intValue());
+        }
+        
+		return result;
+	}
+
 }
