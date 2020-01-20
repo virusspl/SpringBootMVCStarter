@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import sbs.model.x3.X3Product;
 import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.x3.JdbcOracleX3Service;
 
@@ -21,17 +22,24 @@ public class StockSumController {
 	@Autowired
 	JdbcOracleGeodeService geodeService;
 
+	@RequestMapping("/dispatch")
+	public String viewDispatch(Model model, Locale locale) {
+		return "stocksum/main";
+	}
+	
+	
 	@RequestMapping("/main")
-	public String view(Model model, Locale locale) {
-		double start = System.currentTimeMillis();
+	public String viewList(Model model, Locale locale) {
 
+		//long start = System.currentTimeMillis();
+
+		Map<String, X3Product> products = x3Service.findAllActiveProductsMap("ATW");
 		Map<String, Integer> stockA = x3Service.findStockForAllProductsWithStock("ATW");
 		Map<String, Integer> stockGeoProd = geodeService
 				.findStockListForStoreType(JdbcOracleGeodeService.STORE_TYPE_PRODUCTION);
 		Map<String, Integer> stockGeoRcp = geodeService
 				.findStockListForStoreType(JdbcOracleGeodeService.STORE_TYPE_RECEPTIONS);
 		Map<String, Integer> demand = x3Service.getAcvDemandList("ATW");
-		// model.addAttribute("list", list);
 
 		Map<String, StockLine> list = new HashMap<>();
 		
@@ -42,7 +50,7 @@ public class StockSumController {
 			} else {
 				list.put(
 					entry.getKey(), 
-					new StockLine(entry.getKey(), entry.getValue(), 0, 0, 0)
+					new StockLine(entry.getKey(), "", entry.getValue(), 0, 0, 0)
 				);
 			}
 		}
@@ -53,7 +61,7 @@ public class StockSumController {
 			} else {
 				list.put(
 						entry.getKey(), 
-						new StockLine(entry.getKey(), 0, entry.getValue(), 0, 0)
+						new StockLine(entry.getKey(), "", 0, entry.getValue(), 0, 0)
 						);
 			}
 		}
@@ -64,7 +72,7 @@ public class StockSumController {
 			} else {
 				list.put(
 						entry.getKey(), 
-						new StockLine(entry.getKey(), 0, 0, entry.getValue(), 0)
+						new StockLine(entry.getKey(), "" , 0, 0, entry.getValue(), 0)
 						);
 			}
 		}
@@ -75,13 +83,23 @@ public class StockSumController {
 			} else {
 				list.put(
 						entry.getKey(), 
-						new StockLine(entry.getKey(), 0, 0, 0, entry.getValue())
+						new StockLine(entry.getKey(), "", 0, 0, 0, entry.getValue())
 						);
 			}
 		}
 		
+		for(StockLine line: list.values()) {
+			if(products.containsKey(line.getCode())) {
+				line.setCategory(products.get(line.getCode()).getCategory());
+			}
+			else {
+				line.setCategory("N/D");
+			}
+		}
+		
+		//System.out.println("time: " + (System.currentTimeMillis() - start) + "ms");
 		model.addAttribute("list", list.values());
-		System.out.println((System.currentTimeMillis() - start) + " ms");
+
 		return "stocksum/main";
 	}
 

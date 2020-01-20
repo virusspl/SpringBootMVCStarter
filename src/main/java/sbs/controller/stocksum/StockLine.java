@@ -7,15 +7,17 @@ public class StockLine {
 	private double stockGeodeProd;
 	private double stockGeodeRcp;
 	private double demand;
+	private String category;
 	
 	public StockLine() {
 	
 	}
 	
 
-	public StockLine(String code, double stockX3, double stockGeodeProd, double stockGeodeRcp, double demand) {
+	public StockLine(String code, String category, double stockX3, double stockGeodeProd, double stockGeodeRcp, double demand) {
 		super();
 		this.code = code;
+		this.category = category;
 		this.stockX3 = stockX3;
 		this.stockGeodeProd = stockGeodeProd;
 		this.stockGeodeRcp = stockGeodeRcp;
@@ -29,6 +31,14 @@ public class StockLine {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	public double getStockX3() {

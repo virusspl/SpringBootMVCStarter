@@ -273,6 +273,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"ADMIN", 
 				"AVGPRICESUSER"
 				)
+		.antMatchers(
+				"/stocksum/**"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"STOCKSUMUSER"
+				)
 		 // ** old modules to delete **
 		.antMatchers(
 				"/qualitysurveys/**")

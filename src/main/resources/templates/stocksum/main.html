@@ -65,43 +65,61 @@
 			</a>
 		</div>
 		<div class="underline"></div>
-		<div class="row">
-			<div class="col-xs-12">
-				<h3 th:text="#{general.list}" class="text-primary"></h3>
+		<div th:if="!${list}" class="row">
+			<div class="col-xs-12 margin-top-10">
+				<a th:href="@{/stocksum/main}"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-object-align-left"></span> <span
+						th:text="|#{action.show}|">title</span>
+					</a>
 			</div>
 		</div>
-		<div class="row margin-top-20">
-			<div class="col-xs-12 col-xs-offset-0">
-				<div class="table-responsive">
-					<table id="srv" class="display">
-						<thead>
-							<tr>
-								<th th:text="|#{general.productCode}|">head</th>
-								<th th:text="|#{general.stock} X3|">head</th>
-								<th th:text="|Geode PRD|">head</th>
-								<th th:text="|Geode RIC|">head</th>
-								<th th:text="|#{general.demand}|">head</th>
-							</tr>
-						</thead>
-						<tfoot>
-							<tr>
-								<th th:text="|#{general.productCode}|">head</th>
-								<th th:text="|#{general.stock} X3|">head</th>
-								<th th:text="|Geode PRD|">head</th>
-								<th th:text="|Geode RIC|">head</th>
-								<th th:text="|#{general.demand}|">head</th>
-							</tr>
-						</tfoot>
-						<tbody>
-							<tr th:each="line : ${list}">
-								<td><span th:text="${line.code}"></span></td>
-								<td><span th:text="${#numbers.formatDecimal(line.stockX3,1,0)}"></span></td>
-								<td><span th:text="${#numbers.formatDecimal(line.stockGeodeProd,1,0)}"></span></td>
-								<td><span th:text="${#numbers.formatDecimal(line.stockGeodeRcp,1,0)}"></span></td>
-								<td><span th:text="${#numbers.formatDecimal(line.demand,1,0)}"></span></td>
-							</tr>
-						</tbody>
-					</table>
+		<div th:if="${list}">
+			<div class="row">
+				<div class="col-xs-12">
+					<h3 th:text="#{general.list}" class="text-primary"></h3>
+				</div>
+			</div>
+			<div class="row margin-top-20">
+				<div class="col-xs-12 col-xs-offset-0">
+					<div class="table-responsive">
+						<table id="srv" class="display">
+							<thead>
+								<tr>
+									<th th:text="|#{general.productCode}|">head</th>
+									<th th:text="|#{general.category}|">head</th>
+									<th th:text="|#{general.stock} X3|">head</th>
+									<th th:text="|Geode PRD|">head</th>
+									<th th:text="|Geode RIC|">head</th>
+									<th th:text="|#{general.demand}|">head</th>
+								</tr>
+							</thead>
+							<tfoot>
+								<tr>
+									<th th:text="|#{general.productCode}|">head</th>
+									<th th:text="|#{general.category}|">head</th>
+									<th th:text="|#{general.stock} X3|">head</th>
+									<th th:text="|Geode PRD|">head</th>
+									<th th:text="|Geode RIC|">head</th>
+									<th th:text="|#{general.demand}|">head</th>
+								</tr>
+							</tfoot>
+							<tbody>
+								<tr th:each="line : ${list}">
+									<td><span th:text="${line.code}"></span></td>
+									<td><span th:text="${line.category}"></span></td>
+									<td><span
+										th:text="${#numbers.formatDecimal(line.stockX3,1,0)}"></span></td>
+									<td><span
+										th:text="${#numbers.formatDecimal(line.stockGeodeProd,1,0)}"></span></td>
+									<td><span
+										th:text="${#numbers.formatDecimal(line.stockGeodeRcp,1,0)}"></span></td>
+									<td><span
+										th:text="${#numbers.formatDecimal(line.demand,1,0)}"></span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>

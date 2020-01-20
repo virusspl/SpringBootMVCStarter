@@ -520,6 +520,14 @@ public class VariousPagesController {
 			msg += "[role: " + avgPricesUser.getName() + "], ";
 		}
 		
+		Role stockSumUser = roleService.findByName("ROLE_STOCKSUMUSER");
+		if (stockSumUser == null) {
+			stockSumUser = new Role();
+			stockSumUser.setName("ROLE_STOCKSUMUSER");
+			roleService.save(stockSumUser);
+			msg += "[role: " + stockSumUser.getName() + "], ";
+		}
+		
 		// ROLE END
 
 		User admin = userService.findByUsername("Admin");
