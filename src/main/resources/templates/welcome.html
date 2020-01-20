@@ -191,6 +191,14 @@
 						class="btn btn-info btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-th"></span> <span
 						th:text="|#{geolook.warehouses.map} ADRP|">title</span>
+					</a> <a th:href="@{/stocksum/main}"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-object-align-left"></span> <span
+						th:text="|#{stocksum.title}|">title</span>
+					</a> <a th:href="@{/inventory/list}"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-indent-right"></span> <span
+						th:text="#{inventory.inventory}">title</span>
 					</a> <a th:href="@{/geolook/search}"
 						class="btn btn-info btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-search"></span> <span
@@ -199,10 +207,6 @@
 						class="btn btn-info btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-search"></span> <span
 						th:text="#{wpslook.warehouses.lookup}">WPS Lookup</span>
-					</a> <a th:href="@{/inventory/list}"
-						class="btn btn-info btn-md margin-top-5"> <span
-						class="glyphicon glyphicon-indent-left"></span> <span
-						th:text="#{inventory.inventory}">title</span>
 					</a> <a th:href="@{/nameplates/list}"
 						class="btn btn-info btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-list"></span> <span

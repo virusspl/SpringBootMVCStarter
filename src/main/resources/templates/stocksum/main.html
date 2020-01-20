@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script">
+		<script th:src="@{/datatables/jquery.dataTables.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/dataTables.helper.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/buttons.flash.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/buttons.html5.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/buttons.print.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/dataTables.buttons.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/jszip.min.js}" type="text/javascript"></script>
+		<script th:src="@{/datatables/pdfmake.min.js}" type="text/javascript"></script>
+		<script th:src="@{/datatables/vfs_fonts.js}" type="text/javascript"></script>
+		<script th:if="__${#locale}__ == 'pl'">
+			var file = "polish.json";
+		</script>
+		<script th:if="__${#locale}__ == 'en'">
+			var file = "english.json";
+		</script>
+		<script th:if="__${#locale}__ == 'it'">
+			var file = "italian.json";
+		</script>
+		<script>
+			$('#srv').DataTable({
+				language : {
+					url : getUrl() + file,
+				},
+				order : [ [ 0, 'asc' ] ],
+				paging : true,
+				dom : 'Bfrtip',
+				buttons : [ {
+					extend : 'excel',
+					text : 'Excel'
+				}, {
+					extend : 'pdfHtml5',
+					orientation : 'portrait'
+				} ]
+			});
+		</script>
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12 col-xs-offset-0">
+				<h2 th:text="|#{stocksum.title}|" class="text-primary">Hello on
+					a page</h2>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-20">
+				<span th:utext="|#{stocksum.message}|" class="flow-text ">
+					Welcome message </span>
+			</div>
+			<a th:href="@{/}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+		<div class="underline"></div>
+		<div class="row">
+			<div class="col-xs-12">
+				<h3 th:text="#{general.list}" class="text-primary"></h3>
+			</div>
+		</div>
+		<div class="row margin-top-20">
+			<div class="col-xs-12 col-xs-offset-0">
+				<div class="table-responsive">
+					<table id="srv" class="display">
+						<thead>
+							<tr>
+								<th th:text="|#{general.productCode}|">head</th>
+								<th th:text="|#{general.stock} X3|">head</th>
+								<th th:text="|Geode PRD|">head</th>
+								<th th:text="|Geode RIC|">head</th>
+								<th th:text="|#{general.demand}|">head</th>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<th th:text="|#{general.productCode}|">head</th>
+								<th th:text="|#{general.stock} X3|">head</th>
+								<th th:text="|Geode PRD|">head</th>
+								<th th:text="|Geode RIC|">head</th>
+								<th th:text="|#{general.demand}|">head</th>
+							</tr>
+						</tfoot>
+						<tbody>
+							<tr th:each="line : ${list}">
+								<td><span th:text="${line.code}"></span></td>
+								<td><span th:text="${#numbers.formatDecimal(line.stockX3,1,0)}"></span></td>
+								<td><span th:text="${#numbers.formatDecimal(line.stockGeodeProd,1,0)}"></span></td>
+								<td><span th:text="${#numbers.formatDecimal(line.stockGeodeRcp,1,0)}"></span></td>
+								<td><span th:text="${#numbers.formatDecimal(line.demand,1,0)}"></span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

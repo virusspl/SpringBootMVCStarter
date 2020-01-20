@@ -1,5 +1,6 @@
 package sbs.controller.stocksum;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -22,19 +23,66 @@ public class StockSumController {
 
 	@RequestMapping("/main")
 	public String view(Model model, Locale locale) {
-		
-		//Map<String, Integer> stockA = x3Service.findStockForAllProductsWithStock("ATW");
-		//Map<String, Integer> stockGeoProd = geodeService.findStockListForStoreType(JdbcOracleGeodeService.STORE_TYPE_PRODUCTION);
-		//Map<String, Integer> stockGeoRcp = geodeService.findStockListForStoreType(JdbcOracleGeodeService.STORE_TYPE_RECEPTIONS);
+		double start = System.currentTimeMillis();
+
+		Map<String, Integer> stockA = x3Service.findStockForAllProductsWithStock("ATW");
+		Map<String, Integer> stockGeoProd = geodeService
+				.findStockListForStoreType(JdbcOracleGeodeService.STORE_TYPE_PRODUCTION);
+		Map<String, Integer> stockGeoRcp = geodeService
+				.findStockListForStoreType(JdbcOracleGeodeService.STORE_TYPE_RECEPTIONS);
 		Map<String, Integer> demand = x3Service.getAcvDemandList("ATW");
+		// model.addAttribute("list", list);
+
+		Map<String, StockLine> list = new HashMap<>();
 		
-		System.out.println(demand);
+		// STOCK A 
+		for (Map.Entry<String, Integer> entry : stockA.entrySet()) {
+			if (list.containsKey(entry.getKey())) {
+				list.get(entry.getKey()).setStockX3(entry.getValue());
+			} else {
+				list.put(
+					entry.getKey(), 
+					new StockLine(entry.getKey(), entry.getValue(), 0, 0, 0)
+				);
+			}
+		}
+		// STOCK PROD
+		for (Map.Entry<String, Integer> entry : stockGeoProd.entrySet()) {
+			if (list.containsKey(entry.getKey())) {
+				list.get(entry.getKey()).setStockGeodeProd(entry.getValue());
+			} else {
+				list.put(
+						entry.getKey(), 
+						new StockLine(entry.getKey(), 0, entry.getValue(), 0, 0)
+						);
+			}
+		}
+		// STOCK RCP
+		for (Map.Entry<String, Integer> entry : stockGeoRcp.entrySet()) {
+			if (list.containsKey(entry.getKey())) {
+				list.get(entry.getKey()).setStockGeodeRcp(entry.getValue());
+			} else {
+				list.put(
+						entry.getKey(), 
+						new StockLine(entry.getKey(), 0, 0, entry.getValue(), 0)
+						);
+			}
+		}
+		// DEMAND
+		for (Map.Entry<String, Integer> entry : demand.entrySet()) {
+			if (list.containsKey(entry.getKey())) {
+				list.get(entry.getKey()).setDemand(entry.getValue());
+			} else {
+				list.put(
+						entry.getKey(), 
+						new StockLine(entry.getKey(), 0, 0, 0, entry.getValue())
+						);
+			}
+		}
 		
-		//model.addAttribute("list", list);
-		
+		model.addAttribute("list", list.values());
+		System.out.println((System.currentTimeMillis() - start) + " ms");
 		return "stocksum/main";
 	}
-
-
 
 }

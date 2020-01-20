@@ -11,6 +11,17 @@ public class StockLine {
 	public StockLine() {
 	
 	}
+	
+
+	public StockLine(String code, double stockX3, double stockGeodeProd, double stockGeodeRcp, double demand) {
+		super();
+		this.code = code;
+		this.stockX3 = stockX3;
+		this.stockGeodeProd = stockGeodeProd;
+		this.stockGeodeRcp = stockGeodeRcp;
+		this.demand = demand;
+	}
+
 
 	public String getCode() {
 		return code;
