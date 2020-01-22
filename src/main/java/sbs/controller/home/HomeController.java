@@ -27,9 +27,15 @@ public class HomeController {
 	@RequestMapping("/")
 	public String home(Model model) {
 		Calendar cal = Calendar.getInstance();
+		String key = cal.get(Calendar.DAY_OF_MONTH) + "." + (cal.get(Calendar.MONTH) + 1);
+		
 		model.addAttribute("today", dateHelper.formatDdMmYyyyDot(cal.getTime()));
-		model.addAttribute("nameDay", getNameDay(cal.get(Calendar.DAY_OF_MONTH) + "." + (cal.get(Calendar.MONTH) + 1)));
+		model.addAttribute("nameDay", getNameDay(key));
 		model.addAttribute("dayCode", "general.calendar.day" + cal.get(Calendar.DAY_OF_WEEK));
+		String strange = getStrangeDay(key);
+		if(strange.length() > 0){
+			model.addAttribute("strangeDay", getStrangeDay(key));
+		}
 
 		return "welcome";
 	}
@@ -60,6 +66,26 @@ public class HomeController {
 			}
 			br.close();
 
+		} catch (Exception ex) {
+		}
+		return "";
+	}
+	
+	private String getStrangeDay(String key) {
+		try {
+			File resource = new ClassPathResource("data/strange.dat").getFile();
+			
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(resource), "UTF8"));
+			
+			String st;
+			while ((st = br.readLine()) != null) {
+				if (st.split(";")[0].equals(key)) {
+					br.close();
+					return st.split(";")[1];
+				}
+			}
+			br.close();
+			
 		} catch (Exception ex) {
 		}
 		return "";

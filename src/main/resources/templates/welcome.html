@@ -20,12 +20,22 @@
 		<div class="row">
 			<!-- NAMEDAY -->
 			<div id="social" class="col-md-6" th:if="${dayCode}">
-				<h3 class="text-primary" th:text="|#{welcome.dontforget}!|">tickets</h3>
+				<h3 class="text-primary" th:text="|#{welcome.goodmorning}!|">tickets</h3>
 				<div class="underline margin-bottom-5"></div>
-				<span class="btn-sm glyphicon glyphicon-calendar"></span> <span
-					th:utext="|#{welcome.todaywegot} &lt;b&gt;#{${dayCode}}&lt;/b&gt;, ${today}|"></span>
-				<br /> <span class="btn-sm glyphicon glyphicon-gift"></span> <span
-					th:utext="|#{welcome.nameday} &lt;b&gt;${nameDay}&lt;/b&gt;|"></span>
+				<table>
+				<tr>
+				<td style="vertical-align: top;"><span class="btn-sm glyphicon glyphicon-calendar"></span></td>
+				<td><span th:utext="|#{welcome.todaywegot} &lt;b&gt;#{${dayCode}}&lt;/b&gt;, ${today}|"></span></td>
+				</tr>
+				<tr>
+				<td style="vertical-align: top;"><span class="btn-sm glyphicon glyphicon-gift"></span></td>
+				<td><span th:utext="|#{welcome.nameday} &lt;b&gt;${nameDay}&lt;/b&gt;|"></span></td>
+				</tr>
+				<tr th:if="${strangeDay}" >
+				<td style="vertical-align: top;"><span class="btn-sm glyphicon glyphicon-arrow-right"></span></td>
+				<td style="padding-top: 4px;"><span th:utext="|${strangeDay}|"></span></td>
+				</tr>
+				</table>
 			</div>
 			<!-- NO AUTH -->
 			<div class="col-md-6 margin-top-10" id="no-login"
