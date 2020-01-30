@@ -341,7 +341,8 @@ public class CebsController {
 		}
 
 		Context context = new Context();
-		context.setVariable("host", InetAddress.getLocalHost().getHostAddress());
+		//context.setVariable("host", InetAddress.getLocalHost().getHostAddress());
+		context.setVariable("host", InetAddress.getLocalHost().getHostName());
 		context.setVariable("title", title);
 		context.setVariable("message", message);
 		String body = templateEngine.process("cebs/mailtemplate", context);
