@@ -11,7 +11,9 @@ public class ReportResponsibleLine {
 	private String responsible;
 	private boolean opened;
 	private String response;
-	
+	private String initComment;
+	private String respComment;
+	private String endComment;
 	
 	public int getId() {
 		return id;
@@ -57,6 +59,32 @@ public class ReportResponsibleLine {
 	public void setResponse(String response) {
 		this.response = response;
 	}
+	
+	
+	public String getInitComment() {
+		return initComment;
+	}
+
+	public void setInitComment(String initComment) {
+		this.initComment = initComment;
+	}
+
+	public String getRespComment() {
+		return respComment;
+	}
+
+	public void setRespComment(String respComment) {
+		this.respComment = respComment;
+	}
+
+	public String getEndComment() {
+		return endComment;
+	}
+
+	public void setEndComment(String endComment) {
+		this.endComment = endComment;
+	}
+
 	@Override
 	public String toString() {
 		return "ReportResponsibleLine [date=" + date + ", cause=" + cause + ", type=" + type + ", responsible="

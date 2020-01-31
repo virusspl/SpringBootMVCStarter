@@ -14,6 +14,9 @@ public class ReportNotifierLine {
 	private String notifier;
 	private String department;
 	private boolean opened;
+	private String initComment;
+	private String respComment;
+	private String endComment;
 		
 	public ReportNotifierLine() {
 
@@ -97,6 +100,36 @@ public class ReportNotifierLine {
 
 	public void setOpened(boolean opened) {
 		this.opened = opened;
+	}
+
+
+	public String getInitComment() {
+		return initComment;
+	}
+
+
+	public void setInitComment(String initComment) {
+		this.initComment = initComment;
+	}
+
+
+	public String getRespComment() {
+		return respComment;
+	}
+
+
+	public void setRespComment(String respComment) {
+		this.respComment = respComment;
+	}
+
+
+	public String getEndComment() {
+		return endComment;
+	}
+
+
+	public void setEndComment(String endComment) {
+		this.endComment = endComment;
 	}
 
 

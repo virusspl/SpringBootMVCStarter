@@ -75,6 +75,9 @@ public class DowntimesRepositoryImpl extends GenericRepositoryAdapter<Downtime, 
 			line.setNotifier(dt.getInitLastName() + " " + dt.getInitFirstName());
 			line.setOpened(dt.isOpened());
 			line.setId(dt.getId());
+			line.setInitComment(dt.getComment());
+			line.setRespComment(dt.getResponseComment());
+			line.setEndComment(dt.getEndComment());
 			list.add(line);
 		}
 		
@@ -106,6 +109,9 @@ public class DowntimesRepositoryImpl extends GenericRepositoryAdapter<Downtime, 
 			line.setOpened(dt.isOpened());
 			line.setResponse(dt.getResponseType().getCode());
 			line.setId(dt.getId());
+			line.setInitComment(dt.getComment());
+			line.setRespComment(dt.getResponseComment());
+			line.setEndComment(dt.getEndComment());			
 			list.add(line);
 		}
 		
