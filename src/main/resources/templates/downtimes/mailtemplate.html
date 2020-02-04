@@ -96,7 +96,7 @@ td {
 		<tr>
 			<td align="right" class="color titlecell">Bezpośredni link</td>
 			<td class="valuecell">
-			<a th:href="|${host}:8080@{'~/adr/downtimes/show/' + ${dt.id}}|"><span
+			<a th:href="|http://${host}:8080@{'~/adr/downtimes/show/' + ${dt.id}}|"><span
 					th:text="|/downtimes/show/${dt.id}|">/downtimes/show/1</span></a>
 			</td>
 		</tr>
