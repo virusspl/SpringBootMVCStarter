@@ -86,7 +86,8 @@ public class BhpTicketsController {
 		}
 		Context context = new Context();
 		context.setVariable("loop", holders);
-		context.setVariable("host", InetAddress.getLocalHost().getHostAddress());
+		//context.setVariable("host", InetAddress.getLocalHost().getHostAddress());
+		context.setVariable("host", InetAddress.getLocalHost().getHostName());
 		String body = templateEngine.process("bhptickets/mailtemplate", context);
 		mailService.sendEmail("webapp@atwsystem.pl", mailingList.toArray(new String[0]),
 				supervisorsMailingList.toArray(new String[0]), "ADR Polska S.A. - BHP", body);
