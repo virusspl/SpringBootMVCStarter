@@ -28,8 +28,47 @@
 					th:text="#{action.back}">back</span>
 				</a>
 		</div>
-		<!-- MODULES -->
+		<div class="underline"></div>
+		<!-- BLOCK MESSAGE -->
 		<div class="row">
+		<div class="col-xs-12">
+		<h3 style="color: red;">Warning</h3>
+		 <p>As requested in redmine <a target="_blank" href="http://10.1.1.226/redmine/issues/14522">#14522</a>, this functionality is disabled. We wait for solution in X3.</p>
+		 <p>Initially module was a copy of CONSUMO reports, which were generated too slow in X3, next there were add-ons like demand column and last supply information. The full list of fields available below.</p>
+		 <ul>
+		 <li>	Product code	</li>
+<li>	Product decription PL	</li>
+<li>	Product description EN	</li>
+<li>	Purchase family code	</li>
+<li>	Purchasing family name	</li>
+<li>	Reorder point	</li>
+<li>	Safety stock	</li>
+<li>	Max stock	</li>
+<li>	EWZ	</li>
+<li>	Technical lot	</li>
+<li>	Stock A	</li>
+<li>	Average cost	</li>
+<li>	Current demand	</li>
+<li>	Quantity in order	</li>
+<li>	Buyer	</li>
+<li>	Lead time	</li>
+<li>	Last issue date	</li>
+<li>	Last supplier	</li>
+<li>	Last supplier name	</li>
+<li>	Last supply date	</li>
+<li>	Usage by month in previous year (12 columns: I, II, III, IV... XII)	</li>
+<li>	Usage by month in current year (12 columns: I, II, III, IV... XII)	</li>
+<li>	Consumption in 1-st half of year -2	</li>
+<li>	Consumption in 2-nd half of year-2	</li>
+<li>	Consumption in year-1	</li>
+<li>	Total consumption in current year 	</li>
+		 
+		 </ul>
+		</div>
+		</div>
+		
+		<!-- MODULES -->
+		<div class="row" style="display: none;">
 			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
 				<h3 class="text-primary" th:text="#{action.choose.action}">Panel With
 					title</h3>
