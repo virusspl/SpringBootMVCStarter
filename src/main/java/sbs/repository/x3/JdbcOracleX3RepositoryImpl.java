@@ -66,6 +66,9 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	@Autowired 
 	@Qualifier("oracleX3JdbcTemplate") 
 	protected JdbcTemplate jdbc;
+	@Autowired 
+	@Qualifier("oracleX3v11JdbcTemplate") 
+	protected JdbcTemplate jdbc11;
 	@Autowired
 	private DateHelper dateHelper; 
 	 

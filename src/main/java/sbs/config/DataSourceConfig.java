@@ -126,6 +126,24 @@ public class DataSourceConfig {
 	public JdbcTemplate oracleX3JdbcTemplate() throws SQLException {
 		return new JdbcTemplate(oracleX3DataSource());
 	}
+	
+	/*
+	 * ORACLE X3v11 DATASOURCE
+	 */
+	@Bean("oracleX3v11DataSource")
+	public DataSource oracleX3v11DataSource() throws SQLException {
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setDriverClassName(ORACLE_DRIVER);
+		dataSource.setUrl("jdbc:oracle:thin:@192.168.1.16:1521:SAGEX3P");
+		dataSource.setUsername("x3");
+		dataSource.setPassword("tiger");
+		return dataSource;
+	}
+	
+	@Bean(name = "oracleX3v11JdbcTemplate")
+	public JdbcTemplate oracleX3v11JdbcTemplate() throws SQLException {
+		return new JdbcTemplate(oracleX3v11DataSource());
+	}
 
 	/*
 	 * ORACLE GEODE DATASOURCE
