@@ -280,6 +280,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"ADMIN", 
 				"STOCKSUMUSER"
 				)
+		.antMatchers(
+				"/rcptosale/**"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"RCPTOSALEUSER",
+				"RCPMANAGER"
+				)
 		 // ** old modules to delete **
 		.antMatchers(
 				"/qualitysurveys/**")

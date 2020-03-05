@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import sbs.model.geode.GeodeMovement;
+import sbs.model.geode.GeodeObject;
 
 public interface JdbcOracleGeodeRepository  {
     public List<Map<String,Object>> findLocationsOfProduct(String product);
@@ -14,4 +15,5 @@ public interface JdbcOracleGeodeRepository  {
 	public Map<String, Double> getStockOnProductionAndReceptions();
 	public List<GeodeMovement> findShipmentMovementsInPeriod(Date startDate, Date endDate);
 	public Map<String, Integer> findStockListForStoreType(String type);
+	public List<GeodeObject> findObjectsByStoreType(String storeType);
 }

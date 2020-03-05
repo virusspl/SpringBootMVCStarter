@@ -23,18 +23,24 @@
 				<h3 class="text-primary" th:text="|#{welcome.goodmorning}!|">tickets</h3>
 				<div class="underline margin-bottom-5"></div>
 				<table>
-				<tr>
-				<td style="vertical-align: top;"><span class="btn-sm glyphicon glyphicon-calendar"></span></td>
-				<td><span th:utext="|#{welcome.todaywegot} &lt;b&gt;#{${dayCode}}&lt;/b&gt;, ${today}|"></span></td>
-				</tr>
-				<tr>
-				<td style="vertical-align: top;"><span class="btn-sm glyphicon glyphicon-gift"></span></td>
-				<td><span th:utext="|#{welcome.nameday} &lt;b&gt;${nameDay}&lt;/b&gt;|"></span></td>
-				</tr>
-				<tr th:if="${strangeDay}" >
-				<td style="vertical-align: top;"><span class="btn-sm glyphicon glyphicon-arrow-right"></span></td>
-				<td style="padding-top: 4px;"><span th:utext="|${strangeDay}|"></span></td>
-				</tr>
+					<tr>
+						<td style="vertical-align: top;"><span
+							class="btn-sm glyphicon glyphicon-calendar"></span></td>
+						<td><span
+							th:utext="|#{welcome.todaywegot} &lt;b&gt;#{${dayCode}}&lt;/b&gt;, ${today}|"></span></td>
+					</tr>
+					<tr>
+						<td style="vertical-align: top;"><span
+							class="btn-sm glyphicon glyphicon-gift"></span></td>
+						<td><span
+							th:utext="|#{welcome.nameday} &lt;b&gt;${nameDay}&lt;/b&gt;|"></span></td>
+					</tr>
+					<tr th:if="${strangeDay}">
+						<td style="vertical-align: top;"><span
+							class="btn-sm glyphicon glyphicon-arrow-right"></span></td>
+						<td style="padding-top: 4px;"><span
+							th:utext="|${strangeDay}|"></span></td>
+					</tr>
 				</table>
 			</div>
 			<!-- NO AUTH -->
@@ -399,7 +405,8 @@
 			'ROLE_MOVEMENTSUSER', 
 			'ROLE_MOVEMENTSSUPERUSER', 
 			'ROLE_RCPMANAGER',
-			'ROLE_STOCKSUMUSER'
+			'ROLE_STOCKSUMUSER',
+			'ROLE_RCPTOSALEUSER'
 			)">
 
 				<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
@@ -435,6 +442,11 @@
 						class="btn btn-info btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-upload"></span> <span
 						th:text="#{dirrcpship.dirrcpship}">title</span>
+					</a> <a th:href="@{/rcptosale/dispatch}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_RCPTOSALEUSER', 'ROLE_RCPMANAGER')"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-upload"></span> <span
+						th:text="#{rcptosale.title}">title</span>
 					</a>
 				</div>
 			</div>

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import sbs.model.geode.GeodeMovement;
+import sbs.model.geode.GeodeObject;
 import sbs.model.geode.GeolookRow;
 import sbs.repository.geode.JdbcOracleGeodeRepository;
 
@@ -91,5 +92,11 @@ public class JdbcOracleGeodeServiceImpl implements JdbcOracleGeodeService {
 	@Override
 	public Map<String, Integer> findStockListForStoreType(String type) {
 		return jdbcOracleGeodeRepository.findStockListForStoreType(type);
+	}
+
+
+	@Override
+	public List<GeodeObject> findObjectsByStoreType(String storeType) {
+		return jdbcOracleGeodeRepository.findObjectsByStoreType(storeType);
 	}
 }

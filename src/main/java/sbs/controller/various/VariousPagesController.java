@@ -1,6 +1,7 @@
 package sbs.controller.various;
 
 import java.util.ArrayList;
+import java.util.List;
 /*
 import java.io.InputStream;
 import java.net.URL;
@@ -25,6 +26,7 @@ import sbs.helpers.MathHelper;
 import sbs.model.bhptickets.BhpTicketState;
 import sbs.model.downtimes.DowntimeResponseType;
 import sbs.model.downtimes.DowntimeType;
+import sbs.model.geode.GeodeObject;
 import sbs.model.inventory.InventoryDataType;
 import sbs.model.qcheck.QCheckState;
 import sbs.model.qsurveys.QSurveyQuestionType;
@@ -95,7 +97,7 @@ public class VariousPagesController {
 	@RequestMapping("/test")
 	public String test(Model model, Locale locale) throws InterruptedException {
 		
-		System.out.println(x3Service.getAveragePricesByInvoices("WPS"));
+		//List<GeodeObject> objects = jdbcOracleGeodeService.findObjectsByStoreType(jdbcOracleGeodeService.STORE_TYPE_RECEPTIONS);
 		
 		return "various/test";
 	}
@@ -526,6 +528,14 @@ public class VariousPagesController {
 			stockSumUser.setName("ROLE_STOCKSUMUSER");
 			roleService.save(stockSumUser);
 			msg += "[role: " + stockSumUser.getName() + "], ";
+		}
+		
+		Role rcpToSaleUser = roleService.findByName("ROLE_RCPTOSALEUSER");
+		if (rcpToSaleUser == null) {
+			rcpToSaleUser = new Role();
+			rcpToSaleUser.setName("ROLE_RCPTOSALEUSER");
+			roleService.save(rcpToSaleUser);
+			msg += "[role: " + rcpToSaleUser.getName() + "], ";
 		}
 		
 		// ROLE END

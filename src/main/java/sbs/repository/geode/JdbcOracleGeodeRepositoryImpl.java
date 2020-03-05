@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import sbs.model.geode.GeodeMovement;
+import sbs.model.geode.GeodeObject;
 
 @Repository
 public class JdbcOracleGeodeRepositoryImpl implements JdbcOracleGeodeRepository {
@@ -244,6 +245,42 @@ public class JdbcOracleGeodeRepositoryImpl implements JdbcOracleGeodeRepository 
         }
         
 		return result;
+	}
+
+
+	@Override
+	public List<GeodeObject> findObjectsByStoreType(String storeType) {
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "GEOATW.STORE.STO_0, "
+				+ "GEOATW.STOCKOBJ.ADD_0, "
+				+ "GEOATW.STOCKOBJ.SKONUM_0, "
+				+ "GEOATW.STOCKOBJ.INPDAT_0,"
+				+ "GEOATW.STOCKOBJ.ITM_0, "
+				+ "GEOATW.STOCKOBJ.CSUQTY_0 "
+				+ "FROM GEOATW.STOCKOBJ INNER JOIN GEOATW.STORE "
+				+ "ON "
+				+ "GEOATW.STOCKOBJ.STO_0 = GEOATW.STORE.STO_0 "
+				+ "WHERE GEOATW.STORE.YTYPE_0 = ?"
+		        ,
+                new Object[]{storeType});
+        
+		List<GeodeObject> result = new ArrayList<>();
+		GeodeObject obj = null;
+		
+        for(Map<String,Object> row: resultSet ){
+        	obj = new GeodeObject();
+        	obj.setStore((String)row.get("STO_0"));
+        	obj.setAddress((String)row.get("ADD_0"));
+        	obj.setNumber((String)row.get("SKONUM_0"));
+        	obj.setInputDate((Timestamp)row.get("INPDAT_0"));
+        	obj.setItemCode((String)row.get("ITM_0"));
+        	obj.setQuantity(((BigDecimal)row.get("CSUQTY_0")).doubleValue());
+        	result.add(obj);
+ 
+        }
+        
+        return result;
 	}
 
 }
