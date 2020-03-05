@@ -1,7 +1,6 @@
 package sbs.controller.various;
 
 import java.util.ArrayList;
-import java.util.List;
 /*
 import java.io.InputStream;
 import java.net.URL;
@@ -26,7 +25,6 @@ import sbs.helpers.MathHelper;
 import sbs.model.bhptickets.BhpTicketState;
 import sbs.model.downtimes.DowntimeResponseType;
 import sbs.model.downtimes.DowntimeType;
-import sbs.model.geode.GeodeObject;
 import sbs.model.inventory.InventoryDataType;
 import sbs.model.qcheck.QCheckState;
 import sbs.model.qsurveys.QSurveyQuestionType;
