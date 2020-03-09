@@ -1,6 +1,6 @@
 package sbs.controller.rcptosale;
 
-public class ReceptionToSaleLine {
+public class ReceptionToSaleLine implements Comparable<ReceptionToSaleLine>{
 	
 	private String orderNumberAndLine;
 	private String itemCode;
@@ -104,6 +104,13 @@ public class ReceptionToSaleLine {
 				+ ", Gr1OrObjectNumber=" + Gr1OrObjectNumber + ", Gr2OrAddress=" + Gr2OrAddress + ", date=" + date
 				+ ", toSendOrQuantity=" + toSendOrQuantity + ", ordered=" + ordered + "]";
 	}
+
+	@Override
+	public int compareTo(ReceptionToSaleLine o) {
+		return new Double(this.getToSendOrQuantity()).compareTo(new Double(o.getToSendOrQuantity()));
+	}
+	
+	
 	
 	
 	

@@ -2,6 +2,7 @@ package sbs.controller.rcptosale;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -106,7 +107,7 @@ public class ReceptionToSaleController {
 		
 		// result lines
 		List<ReceptionToSaleLine> result = new ArrayList<>();
-
+		List<ReceptionToSaleLine> tmpObjList;
 		ReceptionToSaleLine rl;
 		for(X3SalesOrderLine line: targetLines) {
 			rl = new ReceptionToSaleLine();
@@ -121,6 +122,8 @@ public class ReceptionToSaleController {
 			rl.setToSendOrQuantity(line.getQuantityLeftToSend());
 			rl.setOrdered(line.getQuantityOrdered());
 			result.add(rl);
+			// create list to sort (comparator in object - quantity)
+			tmpObjList = new ArrayList<>();
 			for(GeodeObject obj: obc.get(line.getProductCode())) {
 				rl = new ReceptionToSaleLine();
 				rl.setOrderNumberAndLine("");
@@ -133,9 +136,12 @@ public class ReceptionToSaleController {
 				rl.setDate(dateHelper.formatYyyyMmDd(obj.getInputDate()));
 				rl.setToSendOrQuantity(obj.getQuantity());
 				rl.setOrdered(0);
-				result.add(rl);
+				tmpObjList.add(rl);
 			}
-
+			Collections.sort(tmpObjList);
+			for(ReceptionToSaleLine tmpLine: tmpObjList) {
+				result.add(tmpLine);
+			}
 		}
 		
 		redirectAttrs.addFlashAttribute("lines", result);
