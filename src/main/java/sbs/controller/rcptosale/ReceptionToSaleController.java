@@ -111,7 +111,8 @@ public class ReceptionToSaleController {
 		ReceptionToSaleLine rl;
 		for(X3SalesOrderLine line: targetLines) {
 			rl = new ReceptionToSaleLine();
-			rl.setOrderNumberAndLine(line.getOrderNumber() + "/" + line.getOrderLineNumber());
+			rl.setOrderNumber(line.getOrderNumber());
+			rl.setOrderLine(""+line.getOrderLineNumber());
 			rl.setItemCode(line.getProductCode());
 			rl.setItemDescription(line.getProductDescription());
 			rl.setClientCode(line.getClientCode());
@@ -126,7 +127,8 @@ public class ReceptionToSaleController {
 			tmpObjList = new ArrayList<>();
 			for(GeodeObject obj: obc.get(line.getProductCode())) {
 				rl = new ReceptionToSaleLine();
-				rl.setOrderNumberAndLine("");
+				rl.setOrderNumber("");
+				rl.setOrderLine("");
 				rl.setItemCode("");
 				rl.setItemDescription("");
 				rl.setClientCode("");

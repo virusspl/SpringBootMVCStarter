@@ -2,7 +2,8 @@ package sbs.controller.rcptosale;
 
 public class ReceptionToSaleLine implements Comparable<ReceptionToSaleLine>{
 	
-	private String orderNumberAndLine;
+	private String orderNumber;
+	private String orderLine;
 	private String itemCode;
 	private String itemDescription;
 	private String clientCode;
@@ -13,17 +14,31 @@ public class ReceptionToSaleLine implements Comparable<ReceptionToSaleLine>{
 	private double toSendOrQuantity;
 	private double ordered;
 	
+	
 	public ReceptionToSaleLine() {
 	
 	}
 
-	public String getOrderNumberAndLine() {
-		return orderNumberAndLine;
+	
+	public String getOrderNumber() {
+		return orderNumber;
 	}
 
-	public void setOrderNumberAndLine(String orderNumberAndLine) {
-		this.orderNumberAndLine = orderNumberAndLine;
+	
+	public void setOrderNumber(String orderNumber) {
+		this.orderNumber = orderNumber;
 	}
+
+
+	public String getOrderLine() {
+		return orderLine;
+	}
+
+
+	public void setOrderLine(String orderLine) {
+		this.orderLine = orderLine;
+	}
+
 
 	public String getItemCode() {
 		return itemCode;
@@ -99,10 +114,31 @@ public class ReceptionToSaleLine implements Comparable<ReceptionToSaleLine>{
 
 	@Override
 	public String toString() {
-		return "ReceptionToSaleLine [orderNumberAndLine=" + orderNumberAndLine + ", itemCode=" + itemCode
-				+ ", itemDescription=" + itemDescription + ", clientCode=" + clientCode + ", clientName=" + clientName
-				+ ", Gr1OrObjectNumber=" + Gr1OrObjectNumber + ", Gr2OrAddress=" + Gr2OrAddress + ", date=" + date
-				+ ", toSendOrQuantity=" + toSendOrQuantity + ", ordered=" + ordered + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("ReceptionToSaleLine [orderNumber=");
+		builder.append(orderNumber);
+		builder.append(", orderLine=");
+		builder.append(orderLine);
+		builder.append(", itemCode=");
+		builder.append(itemCode);
+		builder.append(", itemDescription=");
+		builder.append(itemDescription);
+		builder.append(", clientCode=");
+		builder.append(clientCode);
+		builder.append(", clientName=");
+		builder.append(clientName);
+		builder.append(", Gr1OrObjectNumber=");
+		builder.append(Gr1OrObjectNumber);
+		builder.append(", Gr2OrAddress=");
+		builder.append(Gr2OrAddress);
+		builder.append(", date=");
+		builder.append(date);
+		builder.append(", toSendOrQuantity=");
+		builder.append(toSendOrQuantity);
+		builder.append(", ordered=");
+		builder.append(ordered);
+		builder.append("]");
+		return builder.toString();
 	}
 
 	@Override
