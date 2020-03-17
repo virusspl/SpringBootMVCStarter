@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script">
+
+		<script th:src="@{/datatables/jquery.dataTables.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/dataTables.helper.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/buttons.flash.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/buttons.html5.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/buttons.print.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/dataTables.buttons.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/jszip.min.js}" type="text/javascript"></script>
+		<script th:src="@{/datatables/pdfmake.min.js}" type="text/javascript"></script>
+		<script th:src="@{/datatables/vfs_fonts.js}" type="text/javascript"></script>
+		<script th:if="__${#locale}__ == 'pl'">
+			var file = "polish.json";
+		</script>
+		<script th:if="__${#locale}__ == 'en'">
+			var file = "english.json";
+		</script>
+		<script th:if="__${#locale}__ == 'it'">
+			var file = "italian.json";
+		</script>
+		<script>
+			$('#srv').DataTable({
+				language : {
+					url : getUrl() + file,
+				},
+				order : [ [ 0, 'asc' ] ],
+				paging : true,
+				dom : 'Bfrtip',
+				buttons : [ {
+					extend : 'excel',
+					text : 'Excel'
+				}, {
+					extend : 'pdfHtml5',
+					orientation : 'portrait'
+				} ]
+			});
+		</script>
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h1 th:text="#{prodcomp.title}" class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{prodcomp.message}"> Welcome message </span>
+			</div>
+			<a th:href="@{'/prodcomp/main'}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+		<div class="row" th:if="${components}">
+			<div class="col-xs-12">
+				<h1 th:text="#{general.list}" class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12">
+				<div class="table-responsive">
+					<table id="srv" class="display" style="font-size: 90%;">
+						<thead>
+							<tr>
+								<th th:text="#{general.productCode}">head</th>
+								<th th:text="#{general.productDescription}">head</th>
+								<th th:text="#{general.category}">head</th>
+								<th th:text="|Gr. 2|">head</th>
+								<th th:text="|#{general.stock} X3|">head</th>
+								<th th:text="|GEO Prd/Rcp|">head</th>
+								<th th:text="#{general.quantity}">head</th>
+								<th th:text="#{general.demand.short}">head</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="line : ${components}">
+								<td><span th:text="${line[0]}"></span></td>
+								<td><span th:text="${line[1]}"></span></td>
+								<td><span th:text="${line[2]}"></span></td>
+								<td><span th:text="${line[3]}"></span></td>
+								<td><span th:text="${line[4]}"></span></td>
+								<td><span th:text="${line[5]}"></span></td>
+								<td><span th:text="${line[6]}"></span></td>
+								<td><span th:text="${line[7]}"></span></td>
+							</tr>
+
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+		</div>
+
+		<div class="row" th:if="${salesObjects}">
+			<div class="col-xs-12">
+				<h3 th:text="|${component} - ${componentDescription}|"
+					class="text-primary"></h3>
+			</div>
+			<div class="col-xs-12">
+				<div class="table-responsive">
+					<table id="srv" class="display" style="font-size: 90%;">
+						<thead>
+							<tr>
+								<th th:text="#{general.order.sales}">head</th>
+								<th th:text="#{general.line}">head</th>
+								<th th:text="#{general.productCode}">head</th>
+								<th th:text="#{general.productDescription}">head</th>
+								<th th:text="#{general.date.demanded.short}">head</th>
+								<th th:text="#{prodtosale.ordered}">head</th>
+								<th th:text="#{prodtosale.lefttosend}">head</th>
+							</tr>
+						</thead>
+						<tbody>
+							<div th:each="obj : ${salesObjects}">
+							<tr>
+								<td><span th:text="${obj.line.orderNumber}"></span></td>
+								<td><span th:text="${obj.line.orderLineNumber}"></span></td>
+								<td><span th:text="${obj.line.productCode}"></span></td>
+								<td><span th:text="${obj.line.productDescription}"></span></td>
+								<td><span th:text="${obj.line.demandedDate}"></span></td>
+								<td><span th:text="${obj.line.quantityOrdered}"></span></td>
+								<td><span th:text="${obj.line.quantityLeftToSend}"></span></td>
+							</tr>
+							<tr th:each="chain : ${obj.chains}">
+								<td colspan="7">
+									<ul style="margin: 0px; padding: 0px;">
+										<li style="display: inline;" th:each="part: ${chain}"><span
+											th:text="|${part.parentCode} [${part.quantityDemand} / ${part.currentStock}]|"
+											th:class="${part.quantityDemand} > ${part.currentStock} ? 'btn btn-danger btn-xs margin-bottom-5 margin-right-5' : 'btn btn-info btn-xs margin-bottom-5'"></span>
+
+										</li>
+									</ul> 
+								</td>
+							</tr>
+							</div>
+						</tbody>
+						<tfoot>
+							<tr>
+								<th th:text="#{general.order.sales}">head</th>
+								<th th:text="#{general.line}">head</th>
+								<th th:text="#{general.productCode}">head</th>
+								<th th:text="#{general.productDescription}">head</th>
+								<th th:text="#{general.date.demanded.short}">head</th>
+								<th th:text="#{prodtosale.ordered}">head</th>
+								<th th:text="#{prodtosale.lefttosend}">head</th>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>

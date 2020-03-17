@@ -5,22 +5,30 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import sbs.helpers.TextHelper;
 import sbs.model.x3.X3BomItem;
+import sbs.model.x3.X3BomPart;
 import sbs.model.x3.X3Product;
+import sbs.model.x3.X3SalesOrderLine;
 import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.x3.JdbcOracleX3Service;
 
@@ -38,7 +46,19 @@ public class ProductionComponentsController {
 	TextHelper textHelper;
 
 	@RequestMapping("/main")
-	public String view() {
+	public String view(Model model) {
+		FormComponent formComponent = new FormComponent();
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.MONTH, -1);
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		formComponent.setStartDate(new Timestamp(cal.getTimeInMillis()));
+
+		cal = Calendar.getInstance();
+		cal.add(Calendar.MONTH, 1);
+		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+		formComponent.setEndDate(new Timestamp(cal.getTimeInMillis()));
+
+		model.addAttribute("formComponent", formComponent);
 		return "prodcomp/main";
 	}
 
@@ -74,10 +94,9 @@ public class ProductionComponentsController {
 					try {
 						code = split[0].toUpperCase().trim();
 						quantity = Math.abs(Integer.parseInt(split[1]));
-						if(fileInfo.containsKey(code)){
-							fileInfo.put(code, fileInfo.get(code)+quantity);
-						}
-						else{
+						if (fileInfo.containsKey(code)) {
+							fileInfo.put(code, fileInfo.get(code) + quantity);
+						} else {
 							fileInfo.put(code, quantity);
 						}
 					} catch (NumberFormatException ex) {
@@ -93,41 +112,39 @@ public class ProductionComponentsController {
 				br.close();
 				file.delete();
 			}
-			
+
 			// DO CALCULATION
 			// get all boms
 			Map<String, Double> allComponents = new TreeMap<>();
 			Map<String, Double> subComponents;
-			
+
 			Map<String, List<X3BomItem>> allBoms = x3Service.getAllBomPartsTopLevel("ATW");
-			
-			for(Map.Entry<String, Integer> main: fileInfo.entrySet()){
+
+			for (Map.Entry<String, Integer> main : fileInfo.entrySet()) {
 				subComponents = getComponentsQuantitiesMultilevel(allBoms, main.getKey());
-				for(Map.Entry<String, Double> sub: subComponents.entrySet()){
-					if(allComponents.containsKey(sub.getKey())){
-						allComponents.put(sub.getKey(), 
-								allComponents.get(sub.getKey()) + 
-								(sub.getValue() * main.getValue())
-						);
-					}
-					else{
+				for (Map.Entry<String, Double> sub : subComponents.entrySet()) {
+					if (allComponents.containsKey(sub.getKey())) {
+						allComponents.put(sub.getKey(),
+								allComponents.get(sub.getKey()) + (sub.getValue() * main.getValue()));
+					} else {
 						allComponents.put(sub.getKey(), sub.getValue() * main.getValue());
 					}
 				}
 			}
 
-			//Map<String, String> descriptions = x3Service.getDescriptionsByLanguage(JdbcOracleX3Service.LANG_POLISH, "ATW");
+			// Map<String, String> descriptions =
+			// x3Service.getDescriptionsByLanguage(JdbcOracleX3Service.LANG_POLISH, "ATW");
 			Map<String, Double> quantities = x3Service.getAllProductsQuantities("ATW");
 			Map<String, Double> geodeStock = geodeService.getStockOnProductionAndReceptions();
-			Map<String, X3Product> products =  x3Service.findAllActiveProductsMap("ATW");
-			
+			Map<String, X3Product> products = x3Service.findAllActiveProductsMap("ATW");
+
 			List<List<String>> table = new ArrayList<>();
 			List<String> line;
 			double x3, qty, geode;
-			for(Map.Entry<String, Double> entry: allComponents.entrySet()){
+			for (Map.Entry<String, Double> entry : allComponents.entrySet()) {
 
 				x3 = quantities.getOrDefault(entry.getKey(), 0.0);
-						//quantities.containsKey(entry.getKey()) ? quantities.get(entry.getKey()) : 0;
+				// quantities.containsKey(entry.getKey()) ? quantities.get(entry.getKey()) : 0;
 				qty = entry.getValue();
 				geode = geodeStock.getOrDefault(entry.getKey(), 0.0);
 
@@ -136,14 +153,13 @@ public class ProductionComponentsController {
 				line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getDescription() : "-");
 				line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getCategory() : "-");
 				line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getGr2() : "-");
-				line.add(textHelper.numberFormatIntegerRoundSpace(x3));				
-				line.add(textHelper.numberFormatIntegerRoundSpace(geode));												
+				line.add(textHelper.numberFormatIntegerRoundSpace(x3));
+				line.add(textHelper.numberFormatIntegerRoundSpace(geode));
 				line.add(textHelper.numberFormatIntegerRoundSpace(qty));
-				if(x3-qty >= 0){
+				if (x3 - qty >= 0) {
 					line.add(textHelper.numberFormatIntegerRoundSpace(0.0));
-				}
-				else{
-					line.add(textHelper.numberFormatIntegerRoundSpace(Math.abs(x3-qty)));
+				} else {
+					line.add(textHelper.numberFormatIntegerRoundSpace(Math.abs(x3 - qty)));
 				}
 				table.add(line);
 			}
@@ -153,8 +169,8 @@ public class ProductionComponentsController {
 			redirectAttrs.addFlashAttribute("main", messageSource.getMessage("action.choose.file", null, locale));
 			return "redirect:/prodcomp/main";
 		}
-		
-		return "prodcomp/main";
+
+		return "prodcomp/view";
 	}
 
 	private Map<String, Double> getComponentsQuantitiesMultilevel(Map<String, List<X3BomItem>> allBoms,
@@ -177,16 +193,16 @@ public class ProductionComponentsController {
 			} else {
 				resultMap.put(code, qty);
 			}
-				subMap = getComponentsQuantitiesMultilevel(allBoms, code);
-				for (Map.Entry<String, Double> entry : subMap.entrySet()) {
-					if (resultMap.containsKey(entry.getKey())) {
-						resultMap.put(entry.getKey(),
-								resultMap.get(entry.getKey()) + item.getModelQuantity() * entry.getValue());
-					} else {
-						resultMap.put(entry.getKey(), item.getModelQuantity() * entry.getValue());
-					}
+			subMap = getComponentsQuantitiesMultilevel(allBoms, code);
+			for (Map.Entry<String, Double> entry : subMap.entrySet()) {
+				if (resultMap.containsKey(entry.getKey())) {
+					resultMap.put(entry.getKey(),
+							resultMap.get(entry.getKey()) + item.getModelQuantity() * entry.getValue());
+				} else {
+					resultMap.put(entry.getKey(), item.getModelQuantity() * entry.getValue());
 				}
-			
+			}
+
 		}
 		return resultMap;
 	}
@@ -199,6 +215,181 @@ public class ProductionComponentsController {
 			}
 		}
 		return list;
+	}
+
+	@RequestMapping(value = "/findchains", params = { "find" }, method = RequestMethod.POST)
+	public String findChains(@Valid FormComponent formComponent, BindingResult bindingResult, Model model,
+			Locale locale, RedirectAttributes redirectAttrs) {
+
+		// standard validation
+		if (bindingResult.hasErrors()) {
+			return "prodcomp/main";
+		}
+
+		// check if component exist
+		String component;
+		String componentDescription;
+		formComponent.setComponent(formComponent.getComponent().toUpperCase());
+		component = formComponent.getComponent();
+		componentDescription = x3Service.findItemDescription("ATW", component);
+		if (componentDescription == null) {
+			bindingResult.rejectValue("component", "error.no.such.product", "ERROR");
+			return "prodcomp/main";
+		}
+
+		// get sales orders
+		List<X3SalesOrderLine> orders = x3Service.findOpenedSalesOrderLinesInPeriod(formComponent.getStartDate(), formComponent.getEndDate(), "ATW");
+		if(orders.size()==0) {
+			bindingResult.rejectValue("startDate", "prodcomp.error.noordersfund", "ERROR");
+			return "prodcomp/main";
+		}
+		
+		// get BOM parts association [long]
+		List<X3BomPart> allBoms = x3Service.getAllBomEntries("ATW");
+
+		// prepare for quantities calculation loop
+		List<List<X3BomPart>> allChains;
+		List<X3BomPart> chain;
+
+		X3BomPart initComponent = new X3BomPart();
+		initComponent.setParentCode(component);
+		initComponent.setPartCode(component);
+		initComponent.setQuantityOfSubcode(1.0);
+		initComponent.setQuantityOfSelf(1.0);
+
+		// check if component is used in any BOM
+		boolean found = false;
+		for (X3BomPart part : allBoms) {
+			if (initComponent.getParentCode().equalsIgnoreCase(part.getPartCode())) {
+				found = true;
+			}
+		}
+		if (!found) {
+			bindingResult.rejectValue("component", "prodcomp.error.notusedinbom", "ERROR");
+			return "prodcomp/main";
+		}
+
+		// prepare calculation variables
+		allChains = new ArrayList<>();
+		chain = new ArrayList<>();
+		chain.add(initComponent);
+
+		// just do it (BOM calculation)
+		calculateBomChains(initComponent, chain, allChains, allBoms);
+		List<List<X3BomPart>> finalChains = reverseLists(allChains);
+		calculateChainsQuantities(finalChains);
+
+		// get general stock info
+		Map<String, Integer> generalStock = x3Service.findGeneralStockForAllProducts("ATW");
+		
+		// create sales objects and calculate chains
+		List<SalesLineAndChains> salesObjects = new ArrayList<>();
+		SalesLineAndChains object;
+		for(X3SalesOrderLine line: orders) {
+			object = new SalesLineAndChains(line);
+			for (List<X3BomPart> finalChain : finalChains) {
+				if(finalChain.get(0).getParentCode().equalsIgnoreCase(line.getProductCode())) {
+					fillCurrentStockInfo(finalChain, generalStock);
+					object.addClonedAndCalculatedChain(finalChain);
+				}
+			}
+			if(object.getChains().size()>0) {
+				salesObjects.add(object);
+			}
+		}
+		
+		model.addAttribute("salesObjects", salesObjects);
+		/*
+		for(SalesLineAndChains obj: salesObjects) {
+			System.out.println(obj.getLine());
+			for(List<X3BomPart> schain: obj.getChains()){
+				System.out.println(chainToString(schain));
+			}
+		}
+		*/
+		
+		model.addAttribute("component", component);
+		model.addAttribute("componentDescription", componentDescription);
+		return "prodcomp/view";
+	}
+
+	private void fillCurrentStockInfo(List<X3BomPart> finalChain, Map<String, Integer> generalStock) {
+		for(X3BomPart part: finalChain) {
+			part.setCurrentStock(new Double(generalStock.getOrDefault(part.getParentCode(), 0)));
+		}
+	}
+
+	/**
+	 * chain has to be in correct order (after REV, main to detail)
+	 * 
+	 * @param chains
+	 */
+	private void calculateChainsQuantities(List<List<X3BomPart>> chains) {
+		double tmpMulti = 1.0;
+		for (List<X3BomPart> chain : chains) {
+			tmpMulti = 1.0;
+			for (X3BomPart part : chain) {
+				part.setQuantityOfSelf(part.getQuantityOfSelf() * tmpMulti);
+				tmpMulti = part.getQuantityOfSubcode() * part.getQuantityOfSelf();
+			}
+		}
+	}
+
+	private List<List<X3BomPart>> reverseLists(List<List<X3BomPart>> allChains) {
+		List<List<X3BomPart>> revLists = new ArrayList<>();
+		List<X3BomPart> revList;
+		for (int i = 0; i < allChains.size(); i++) {
+			revList = new ArrayList<>();
+			for (int j = allChains.get(i).size() - 1; j >= 0; j--) {
+				revList.add(allChains.get(i).get(j));
+			}
+			revLists.add(revList);
+		}
+		return revLists;
+
+	}
+
+	/**
+	 * 
+	 * @param component X3BomPart to add its parents to list
+	 * @param chain     list chain for current part
+	 * @param allChains list to save finished chain lists
+	 * @param allBoms   list of all BOM entries to check dependencies
+	 */
+	private boolean calculateBomChains(X3BomPart component, List<X3BomPart> chain, List<List<X3BomPart>> allChains,
+			List<X3BomPart> allBoms) {
+
+		boolean found = false;
+		List<X3BomPart> localChain;
+
+		for (X3BomPart part : allBoms) {
+			if (component.getParentCode().equalsIgnoreCase(part.getPartCode())) {
+				found = true;
+				localChain = cloneBomPartList(chain);
+				localChain.add(part);
+
+				if (!calculateBomChains(part, localChain, allChains, allBoms)) {
+					allChains.add(localChain);
+				}
+			}
+		}
+		return found;
+	}
+
+	private List<X3BomPart> cloneBomPartList(List<X3BomPart> list) {
+		List<X3BomPart> clone = new ArrayList<>();
+		for (X3BomPart part : list) {
+			clone.add(new X3BomPart(part));
+		}
+		return clone;
+	}
+
+	private String chainToString(List<X3BomPart> chain) {
+		String result = "*";
+		for (X3BomPart part : chain) {
+			result += " -> " + part.getParentCode() + " [" + part.getQuantityDemand() + " / " + part.getCurrentStock() + "]";
+		}
+		return result;
 	}
 
 }

@@ -28,6 +28,7 @@ import sbs.model.proprog.Project;
 import sbs.model.wpslook.WpslookRow;
 import sbs.model.x3.X3AvgPriceLine;
 import sbs.model.x3.X3BomItem;
+import sbs.model.x3.X3BomPart;
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3ConsumptionProductInfo;
 import sbs.model.x3.X3ConsumptionSupplyInfo;
@@ -2534,6 +2535,51 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         
         return map;
 	}
+	
+	@Override
+	public List<X3BomPart> getAllBomEntries(String company) {
+
+		Timestamp now = dateHelper.getCurrentTime();
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ company + ".BOMD.ITMREF_0, "
+				+ company + ".BOMD.CPNITMREF_0, "
+				+ company + ".BOMD.LIKQTY_0, "
+				+ company + ".BOMD.BOMSTRDAT_0, "
+				+ company + ".BOMD.BOMENDDAT_0 "
+				+ "FROM " + company + ".BOMD "
+				+ "WHERE "
+				+ company + ".BOMD.BOMALT_0 = 1 "
+				+ "AND ("
+					+ company + ".BOMD.BOMSTRDAT_0 < ? "
+					+ "OR "
+					+ company + ".BOMD.BOMSTRDAT_0 = TO_TIMESTAMP('1599/12/31 00:00:00')"
+				+ ")"
+				+ "AND ("
+					+ company + ".BOMD.BOMENDDAT_0 > ? "
+					+ "OR "
+					+ company + ".BOMD.BOMENDDAT_0 = TO_TIMESTAMP('1599/12/31 00:00:00')"
+				+ ") "
+				+ "ORDER BY "
+				+ company + ".BOMD.BOMSEQ_0",
+                new Object[]{now, now});
+        
+
+		List<X3BomPart> result = new ArrayList<>();
+		X3BomPart item;
+		
+        for(Map<String,Object> row: resultSet ){
+        	item = new X3BomPart();
+        	item.setParentCode((String)row.get("ITMREF_0"));
+        	item.setPartCode((String)row.get("CPNITMREF_0"));
+        	item.setQuantityOfSubcode(((BigDecimal)row.get("LIKQTY_0")).doubleValue());
+        	item.setQuantityOfSelf(1.0);
+        	result.add(item);
+        }
+        
+        return result;
+	}
+	
 
 	@Override
 	public Map<String, X3StandardCostEntry> getLastStandardCostsListFromCalculationTable(String company) {
@@ -3096,5 +3142,4 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		}
 		return map;
 	}
-
 }

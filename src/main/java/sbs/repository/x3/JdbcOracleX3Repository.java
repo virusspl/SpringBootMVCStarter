@@ -9,6 +9,7 @@ import sbs.model.proprog.Project;
 import sbs.model.wpslook.WpslookRow;
 import sbs.model.x3.X3AvgPriceLine;
 import sbs.model.x3.X3BomItem;
+import sbs.model.x3.X3BomPart;
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3ConsumptionProductInfo;
 import sbs.model.x3.X3ConsumptionSupplyInfo;
@@ -100,6 +101,7 @@ public interface JdbcOracleX3Repository  {
 	public Map<String, X3StoreInfo> getX3StoreInfoByCode(String company);
 	public Map<String, String> getVariousTableData(String company, String table, String x3language);
 	public Map<String, List<X3BomItem>> getAllBomPartsTopLevel(String company);
+	public List<X3BomPart> getAllBomEntries(String company);
 	public Map<String, Double> getAllProductsQuantities(String company);
 	public Map<String, X3StandardCostEntry> getLastStandardCostsListFromCalculationTable(String company);
 	public Map<String, X3StandardCostEntry> getStandardCostsMap(String company);

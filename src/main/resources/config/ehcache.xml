@@ -86,6 +86,9 @@
 	<cache name="x3AllBomPartsTopLevel" maxBytesLocalDisk="150m"
 		timeToLiveSeconds="604800">
 	</cache>
+	<cache name="getAllBomEntries" maxBytesLocalDisk="150m"
+		timeToLiveSeconds="604800">
+	</cache>
 	<cache name="x3RoutesMap" maxBytesLocalDisk="7m"
 		timeToLiveSeconds="86400">
 	</cache>

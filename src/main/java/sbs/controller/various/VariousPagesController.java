@@ -95,8 +95,6 @@ public class VariousPagesController {
 	@RequestMapping("/test")
 	public String test(Model model, Locale locale) throws InterruptedException {
 		
-		//List<GeodeObject> objects = jdbcOracleGeodeService.findObjectsByStoreType(jdbcOracleGeodeService.STORE_TYPE_RECEPTIONS);
-		
 		return "various/test";
 	}
 	

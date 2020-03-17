@@ -16,6 +16,7 @@ import sbs.model.proprog.Project;
 import sbs.model.wpslook.WpslookRow;
 import sbs.model.x3.X3AvgPriceLine;
 import sbs.model.x3.X3BomItem;
+import sbs.model.x3.X3BomPart;
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3ConsumptionProductInfo;
 import sbs.model.x3.X3ConsumptionSupplyInfo;
@@ -377,6 +378,12 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	}
 
 	@Override
+	@Cacheable(value="getAllBomEntries")	
+	public List<X3BomPart> getAllBomEntries(String company) {
+		return jdbcOracleX3Repository.getAllBomEntries(company);
+	}
+
+	@Override
 	public Map<String, Double> getAllProductsQuantities(String company) {
 		return jdbcOracleX3Repository.getAllProductsQuantities(company);
 	}
@@ -475,5 +482,6 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	public Map<String, Integer> findStockForAllProductsWithStock(String company) {
 		return jdbcOracleX3Repository.findStockForAllProductsWithStock(company);
 	}
+
 
 }

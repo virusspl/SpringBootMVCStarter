@@ -85,6 +85,7 @@ public interface JdbcOracleX3Service {
 	public Map<String, String> getVariousTableData(String company, String table, String x3language);
 	public Map<String, Integer> findStockByLocation(String company, String location);
 	public Map<String, List<X3BomItem>> getAllBomPartsTopLevel(String company);
+	public List<X3BomPart> getAllBomEntries(String company);
 	public Map<String, Double> getAllProductsQuantities(String company);
 	public String updateStandardCostsTable(String company);
 	public Map<String, X3StandardCostEntry> getStandardCostsMap(String company);
@@ -101,5 +102,6 @@ public interface JdbcOracleX3Service {
 	public List<X3AvgPriceLine> getAveragePricesByInvoices(String company);
 	public List<X3AvgPriceLine> getAveragePricesByOrders(String company);
 	public Map<String, Integer> findStockForAllProductsWithStock(String company);
+	
 	
 }
