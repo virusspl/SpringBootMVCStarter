@@ -77,6 +77,7 @@
 								<th th:text="#{general.category}">head</th>
 								<th th:text="|Gr. 2|">head</th>
 								<th th:text="#{general.stock.safe}">head</th>
+								<th th:text="#{general.replanishpoint.short}">head</th>
 								<th th:text="|#{general.stock} X3|">head</th>
 								<th th:text="|GEO Prd/Rcp|">head</th>
 								<th th:text="#{general.quantity}">head</th>
@@ -94,6 +95,7 @@
 								<td><span th:text="${line[6]}"></span></td>
 								<td><span th:text="${line[7]}"></span></td>
 								<td><span th:text="${line[8]}"></span></td>
+								<td><span th:text="${line[9]}"></span></td>
 							</tr>
 
 						</tbody>
@@ -122,6 +124,7 @@
 								<th th:text="#{general.date.demanded.short}">head</th>
 								<th th:text="#{prodtosale.ordered}">head</th>
 								<th th:text="#{prodtosale.lefttosend}">head</th>
+								<th th:text="|#{general.value} [PLN]|">head</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -136,9 +139,11 @@
 									<td><span th:text="${#dates.format(obj.line.demandedDate, 'yyyy.MM.dd')}"></span></td>
 									<td><span th:text="${obj.line.quantityOrdered}"></span></td>
 									<td><span th:text="${obj.line.quantityLeftToSend}"></span></td>
+									<td><span th:text="${#numbers.formatDecimal(obj.toSendValue, 1, 'WHITESPACE', 2, 'POINT')}"></span></td>
+									
 								</tr>
 								<tr th:each="chain : ${obj.chains}">
-									<td colspan="9">
+									<td colspan="10">
 										<ul style="margin: 0px; padding: 0px;">
 											<li style="display: inline;" th:each="part: ${chain}"><span
 												th:text="|
@@ -166,6 +171,7 @@
 								<th th:text="#{general.date.demanded.short}">head</th>
 								<th th:text="#{prodtosale.ordered}">head</th>
 								<th th:text="#{prodtosale.lefttosend}">head</th>
+								<th th:text="|#{general.value} [PLN]]|">head</th>		
 							</tr>
 						</tfoot>
 					</table>

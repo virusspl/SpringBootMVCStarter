@@ -1983,20 +1983,32 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "SOQ.SOPLIN_0, "
 				+ "SOQ.QTYSTU_0, "
 				+ "(SOQ.QTYSTU_0 - SOQ.ODLQTYSTU_0 - SOQ.DLVQTY_0) AS LEFT_TO_SEND,  "
+				+ "SOQ.DEMDLVDAT_0, "
+				+ "SOP.NETPRI_0, "
+				+ "SOR.CUR_0, "
+				+ "SOR.CHGRAT_0, "
 				+ "ITM.ITMREF_0, "
 				+ "ITM.ITMDES1_0, "
 				+ "ITM.TSICOD_0, "
 				+ "ITM.TSICOD_1, "
 				+ "ITM.TSICOD_2, "
-				+ "SOQ.DEMDLVDAT_0, "
 				+ "BPR.BPRNUM_0, "
 				+ "BPR.BPRNAM_0, "
 				+ "BPR.CRY_0 "
+				
 				+ "FROM ("
-				+ "(" + company + ".SORDERQ SOQ INNER JOIN " + company + ".ITMMASTER ITM "
+				+ "("
+				+ "(" + company + ".SORDERQ SOQ INNER JOIN " + company + ".SORDERP SOP "
+				+ "ON SOQ.SOHNUM_0 = SOP.SOHNUM_0 AND "
+				+ "SOQ.SOPLIN_0 = SOP.SOPLIN_0 AND "
+				+ "SOQ.SOQSEQ_0 = SOP.SOPSEQ_0 "
+				+ ") "
+				+ "INNER JOIN " + company + ".ITMMASTER ITM "
 				+ "ON SOQ.ITMREF_0 = ITM.ITMREF_0) "
 				+ "INNER JOIN " + company + ".SORDER SOR ON SOQ.SOHNUM_0 = SOR.SOHNUM_0) "
 				+ "INNER JOIN " + company + ".BPARTNER BPR ON SOR.X_CODCLI_0 = BPR.BPRNUM_0 "
+				
+				
 				+ "WHERE "
 				+ "SOQ.DEMDLVDAT_0 >= ? AND "
 				+ "SOQ.DEMDLVDAT_0 <= ? AND "
@@ -2027,6 +2039,9 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			line.setDemandedDate(((Timestamp)row.get("DEMDLVDAT_0")));
 			line.setQuantityLeftToSend(((BigDecimal)row.get("LEFT_TO_SEND")).intValue());
 			line.setQuantityOrdered(((BigDecimal)row.get("QTYSTU_0")).intValue());
+			line.setUnitPrice(((BigDecimal)row.get("NETPRI_0")).doubleValue());
+			line.setExchangeRate(((BigDecimal)row.get("CHGRAT_0")).doubleValue());
+			line.setCurrency((String)row.get("CUR_0"));
 			list.add(line);
 		}
 		return list;

@@ -16,6 +16,10 @@ public class X3SalesOrderLine {
 	private Timestamp demandedDate;
 	private int quantityLeftToSend;
 	private int quantityOrdered;
+	private double unitPrice;
+	private double exchangeRate;
+	private String currency;
+	
 	
 	public X3SalesOrderLine() {
 		
@@ -124,6 +128,31 @@ public class X3SalesOrderLine {
 	public void setQuantityOrdered(int quantityOrdered) {
 		this.quantityOrdered = quantityOrdered;
 	}
+	
+
+	public double getUnitPrice() {
+		return unitPrice;
+	}
+
+	public void setUnitPrice(double unitPrice) {
+		this.unitPrice = unitPrice;
+	}
+
+	public double getExchangeRate() {
+		return exchangeRate;
+	}
+
+	public void setExchangeRate(double exchangeRate) {
+		this.exchangeRate = exchangeRate;
+	}
+
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
 
 	@Override
 	public String toString() {
@@ -131,10 +160,9 @@ public class X3SalesOrderLine {
 				+ ", productCode=" + productCode + ", productDescription=" + productDescription + ", productGr1="
 				+ productGr1 + ", productGr2=" + productGr2 + ", productGr3=" + productGr3 + ", clientCode="
 				+ clientCode + ", clientName=" + clientName + ", country=" + country + ", demandedDate=" + demandedDate
-				+ ", quantityLeftToSend=" + quantityLeftToSend + ", quantityOrdered=" + quantityOrdered + "]";
+				+ ", quantityLeftToSend=" + quantityLeftToSend + ", quantityOrdered=" + quantityOrdered + ", unitPrice="
+				+ unitPrice + ", exchangeRate=" + exchangeRate + ", currency=" + currency + "]";
 	}
-	
-	
-	
+
 	
 }

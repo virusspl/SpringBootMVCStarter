@@ -138,12 +138,18 @@ public class ProductionComponentsController {
 			Map<String, Double> quantities = x3Service.getAllProductsQuantities("ATW");
 			Map<String, Double> geodeStock = geodeService.getStockOnProductionAndReceptions();
 			Map<String, X3Product> products = x3Service.findAllActiveProductsMap("ATW");
-			// get safety stock map
+			// get acv info
 			List<X3ConsumptionProductInfo> acvInfo = x3Service.getAcvListForConsumptionReport("ATW");
+			// safety stock map
 			Map<String, Integer> safetyStockMap = new TreeMap<>();
 			for(X3ConsumptionProductInfo info: acvInfo) {
 				safetyStockMap.put(info.getProductCode(), info.getSafetyStock());
 			}
+			// replanish point map
+			Map<String, Integer> replanishMap = new TreeMap<>();
+			for(X3ConsumptionProductInfo info: acvInfo) {
+				replanishMap.put(info.getProductCode(), info.getReorderPoint());
+			}			
 			
 			List<List<String>> table = new ArrayList<>();
 			List<String> line;
@@ -161,6 +167,7 @@ public class ProductionComponentsController {
 				line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getCategory() : "-");
 				line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getGr2() : "-");
 				line.add(safetyStockMap.containsKey(entry.getKey()) ? textHelper.numberFormatIntegerRoundSpace(safetyStockMap.get(entry.getKey())) : "-");
+				line.add(replanishMap.containsKey(entry.getKey()) ? textHelper.numberFormatIntegerRoundSpace(replanishMap.get(entry.getKey())) : "-");
 				line.add(textHelper.numberFormatIntegerRoundSpace(x3));
 				line.add(textHelper.numberFormatIntegerRoundSpace(geode));
 				line.add(textHelper.numberFormatIntegerRoundSpace(qty));

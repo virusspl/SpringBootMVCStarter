@@ -10,6 +10,7 @@ public class SalesLineAndChains {
 
 	private X3SalesOrderLine line;
 	private List<List<X3BomPart>> chains;
+	private double toSendValue;
 	
 	public SalesLineAndChains() {
 		chains = new ArrayList<>();
@@ -19,6 +20,7 @@ public class SalesLineAndChains {
 		super();
 		chains = new ArrayList<>();
 		this.line = line;
+		calculateToSendValue();
 	}
 
 	public X3SalesOrderLine getLine() {
@@ -27,6 +29,7 @@ public class SalesLineAndChains {
 
 	public void setLine(X3SalesOrderLine line) {
 		this.line = line;
+		calculateToSendValue();
 	}
 
 	public List<List<X3BomPart>> getChains() {
@@ -37,6 +40,15 @@ public class SalesLineAndChains {
 		this.chains = chains;
 	}
 	
+	
+	public double getToSendValue() {
+		return toSendValue;
+	}
+
+	public void setToSendValue(double toSendValue) {
+		this.toSendValue = toSendValue;
+	}
+
 	/**
 	 * clone chain and multiply each element selfQuantity by leftToSendQuantity from order line 
 	 * @param chain
@@ -50,6 +62,18 @@ public class SalesLineAndChains {
 			cloneList.add(clonePart);
 		}
 		this.chains.add(cloneList);
+	}
+	
+	private void calculateToSendValue() {
+		this.toSendValue = this.line.getExchangeRate() * this.line.getUnitPrice() * this.line.getQuantityLeftToSend();
+		System.out.println(
+				this.line.getExchangeRate() 
+				+ " * " + 
+				this.line.getUnitPrice()
+				 + " * " + 
+				this.line.getQuantityLeftToSend()
+				 + " = " + 
+				this.toSendValue);
 	}
 	
 }
