@@ -66,14 +66,6 @@ public class SalesLineAndChains {
 	
 	private void calculateToSendValue() {
 		this.toSendValue = this.line.getExchangeRate() * this.line.getUnitPrice() * this.line.getQuantityLeftToSend();
-		System.out.println(
-				this.line.getExchangeRate() 
-				+ " * " + 
-				this.line.getUnitPrice()
-				 + " * " + 
-				this.line.getQuantityLeftToSend()
-				 + " = " + 
-				this.toSendValue);
 	}
 	
 }
