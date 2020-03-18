@@ -399,12 +399,4 @@ public class ProductionComponentsController {
 		return clone;
 	}
 
-	private String chainToString(List<X3BomPart> chain) {
-		String result = "*";
-		for (X3BomPart part : chain) {
-			result += " -> " + part.getParentCode() + " [" + part.getQuantityDemand() + " / " + part.getCurrentStock() + "]";
-		}
-		return result;
-	}
-
 }
