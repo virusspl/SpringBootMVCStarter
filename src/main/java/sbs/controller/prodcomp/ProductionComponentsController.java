@@ -27,6 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sbs.helpers.TextHelper;
 import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3BomPart;
+import sbs.model.x3.X3ConsumptionProductInfo;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.service.geode.JdbcOracleGeodeService;
@@ -137,7 +138,13 @@ public class ProductionComponentsController {
 			Map<String, Double> quantities = x3Service.getAllProductsQuantities("ATW");
 			Map<String, Double> geodeStock = geodeService.getStockOnProductionAndReceptions();
 			Map<String, X3Product> products = x3Service.findAllActiveProductsMap("ATW");
-
+			// get safety stock map
+			List<X3ConsumptionProductInfo> acvInfo = x3Service.getAcvListForConsumptionReport("ATW");
+			Map<String, Integer> safetyStockMap = new TreeMap<>();
+			for(X3ConsumptionProductInfo info: acvInfo) {
+				safetyStockMap.put(info.getProductCode(), info.getSafetyStock());
+			}
+			
 			List<List<String>> table = new ArrayList<>();
 			List<String> line;
 			double x3, qty, geode;
@@ -153,6 +160,7 @@ public class ProductionComponentsController {
 				line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getDescription() : "-");
 				line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getCategory() : "-");
 				line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getGr2() : "-");
+				line.add(safetyStockMap.containsKey(entry.getKey()) ? textHelper.numberFormatIntegerRoundSpace(safetyStockMap.get(entry.getKey())) : "-");
 				line.add(textHelper.numberFormatIntegerRoundSpace(x3));
 				line.add(textHelper.numberFormatIntegerRoundSpace(geode));
 				line.add(textHelper.numberFormatIntegerRoundSpace(qty));

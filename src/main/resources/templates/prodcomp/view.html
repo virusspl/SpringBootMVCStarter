@@ -76,6 +76,7 @@
 								<th th:text="#{general.productDescription}">head</th>
 								<th th:text="#{general.category}">head</th>
 								<th th:text="|Gr. 2|">head</th>
+								<th th:text="#{general.stock.safe}">head</th>
 								<th th:text="|#{general.stock} X3|">head</th>
 								<th th:text="|GEO Prd/Rcp|">head</th>
 								<th th:text="#{general.quantity}">head</th>
@@ -92,6 +93,7 @@
 								<td><span th:text="${line[5]}"></span></td>
 								<td><span th:text="${line[6]}"></span></td>
 								<td><span th:text="${line[7]}"></span></td>
+								<td><span th:text="${line[8]}"></span></td>
 							</tr>
 
 						</tbody>
@@ -111,10 +113,12 @@
 					<table id="srv" class="display" style="font-size: 90%;">
 						<thead>
 							<tr>
-								<th th:text="#{general.order.sales}">head</th>
-								<th th:text="#{general.line}">head</th>
 								<th th:text="#{general.productCode}">head</th>
 								<th th:text="#{general.productDescription}">head</th>
+								<th th:text="#{general.client.code}">head</th>
+								<th th:text="#{general.client.name}">head</th>															
+								<th th:text="#{general.order.sales}">head</th>
+								<th th:text="#{general.line}">head</th>
 								<th th:text="#{general.date.demanded.short}">head</th>
 								<th th:text="#{prodtosale.ordered}">head</th>
 								<th th:text="#{prodtosale.lefttosend}">head</th>
@@ -122,34 +126,43 @@
 						</thead>
 						<tbody>
 							<div th:each="obj : ${salesObjects}">
-							<tr>
-								<td><span th:text="${obj.line.orderNumber}"></span></td>
-								<td><span th:text="${obj.line.orderLineNumber}"></span></td>
-								<td><span th:text="${obj.line.productCode}"></span></td>
-								<td><span th:text="${obj.line.productDescription}"></span></td>
-								<td><span th:text="${obj.line.demandedDate}"></span></td>
-								<td><span th:text="${obj.line.quantityOrdered}"></span></td>
-								<td><span th:text="${obj.line.quantityLeftToSend}"></span></td>
-							</tr>
-							<tr th:each="chain : ${obj.chains}">
-								<td colspan="7">
-									<ul style="margin: 0px; padding: 0px;">
-										<li style="display: inline;" th:each="part: ${chain}"><span
-											th:text="|${part.parentCode} [${part.quantityDemand} / ${part.currentStock}]|"
-											th:class="${part.quantityDemand} > ${part.currentStock} ? 'btn btn-danger btn-xs margin-bottom-5 margin-right-5' : 'btn btn-info btn-xs margin-bottom-5'"></span>
+								<tr>
+									<td><span th:text="${obj.line.productCode}"></span></td>
+									<td><span th:text="${obj.line.productDescription}"></span></td>
+									<td><span th:text="${obj.line.clientCode}"></span></td>
+									<td><span th:text="${obj.line.clientName}"></span></td>									
+									<td><span th:text="${obj.line.orderNumber}"></span></td>
+									<td><span th:text="${obj.line.orderLineNumber}"></span></td>									
+									<td><span th:text="${#dates.format(obj.line.demandedDate, 'yyyy.MM.dd')}"></span></td>
+									<td><span th:text="${obj.line.quantityOrdered}"></span></td>
+									<td><span th:text="${obj.line.quantityLeftToSend}"></span></td>
+								</tr>
+								<tr th:each="chain : ${obj.chains}">
+									<td colspan="9">
+										<ul style="margin: 0px; padding: 0px;">
+											<li style="display: inline;" th:each="part: ${chain}"><span
+												th:text="|
+												${part.parentCode} &nbsp; 
+												[${#numbers.formatDecimal(part.quantityDemand, 1, 'NONE', 0, 'POINT')} 
+												/ 
+												${#numbers.formatDecimal(part.currentStock, 1, 'NONE', 0, 'POINT')}] 
+												|"
+												th:class="${part.quantityDemand} > ${part.currentStock} ? 'btn btn-danger btn-xs margin-bottom-5 margin-right-5' : 'btn btn-success btn-xs margin-bottom-5'"></span>
 
-										</li>
-									</ul> 
-								</td>
-							</tr>
+											</li>
+										</ul>
+									</td>
+								</tr>
 							</div>
 						</tbody>
 						<tfoot>
 							<tr>
-								<th th:text="#{general.order.sales}">head</th>
-								<th th:text="#{general.line}">head</th>
 								<th th:text="#{general.productCode}">head</th>
 								<th th:text="#{general.productDescription}">head</th>
+								<th th:text="#{general.client.code}">head</th>
+								<th th:text="#{general.client.name}">head</th>															
+								<th th:text="#{general.order.sales}">head</th>
+								<th th:text="#{general.line}">head</th>
 								<th th:text="#{general.date.demanded.short}">head</th>
 								<th th:text="#{prodtosale.ordered}">head</th>
 								<th th:text="#{prodtosale.lefttosend}">head</th>
