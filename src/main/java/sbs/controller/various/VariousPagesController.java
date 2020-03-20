@@ -94,8 +94,8 @@ public class VariousPagesController {
 	
 	@RequestMapping("/test")
 	public String test(Model model, Locale locale) throws InterruptedException {
-		String result = x3Service.updateStandardCostsTable("WPS");
-		System.out.println(result);
+		//String result = x3Service.updateStandardCostsTable("WPS");
+		//System.out.println(result);
 		
 		/*String sql = "insert into foo (id) values (hextoraw(?))";
 		//PreparedStatement pstmt = connection.prepareStatement(sql);
