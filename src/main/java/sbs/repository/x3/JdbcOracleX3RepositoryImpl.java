@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -3364,62 +3365,121 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
 		if(company.equalsIgnoreCase("ATW")) {
+			// FOR ATW
 			jdbc = jdbc6;
+
+			String sql = "INSERT INTO " 
+							+ company + ".VSTDCST"
+							+ "(ITMREF_0, TOTAL_0, MATERIAL_0, MACHINE_0, LABOUR_0, CSTDATE_0) "
+							+ "VALUES (?, ?, ?, ?, ?, ?)";
+			jdbc.batchUpdate(sql, new BatchPreparedStatementSetter() {
+				@Override
+				public void setValues(PreparedStatement ps, int i) throws SQLException {
+					X3StandardCostEntry entry = insertList.get(i);
+					ps.setString(1, entry.getCode());
+					ps.setDouble(2, entry.getTotalCost());
+					ps.setDouble(3, entry.getMaterialCost());
+					ps.setDouble(4, entry.getMachineCost());
+					ps.setDouble(5, entry.getLabourCost());
+					ps.setTimestamp(6, entry.getDate());
+				}
+				@Override
+				public int getBatchSize() {
+					return insertList.size();
+				}
+			});
+			
+			sql = "UPDATE " 
+					+ company + ".VSTDCST SET "
+					+ "ITMREF_0 = ?, "
+					+ "TOTAL_0 = ?, "
+					+ "MATERIAL_0 = ?, "
+					+ "MACHINE_0 = ?, "
+					+ "LABOUR_0 = ?, "
+					+ "CSTDATE_0 = ? "
+					+ "WHERE "
+					+ "ITMREF_0 = ?";
+			jdbc.batchUpdate(sql, new BatchPreparedStatementSetter() {
+				@Override
+				public void setValues(PreparedStatement ps, int i) throws SQLException {
+					X3StandardCostEntry entry = updateList.get(i);
+					ps.setString(1, entry.getCode());
+					ps.setDouble(2, entry.getTotalCost());
+					ps.setDouble(3, entry.getMaterialCost());
+					ps.setDouble(4, entry.getMachineCost());
+					ps.setDouble(5, entry.getLabourCost());
+					ps.setTimestamp(6, entry.getDate());
+					ps.setString(7, entry.getCode());
+				}
+				@Override
+				public int getBatchSize() {
+					return updateList.size();
+				}
+			});
 		}
 		else {
+			// FOR WPS
 			jdbc = jdbc11;
+
+			String sql = "INSERT INTO " 
+							+ company + ".VSTDCST"
+							+ "(ITMREF_0, TOTAL_0, MATERIAL_0, MACHINE_0, LABOUR_0, CSTDATE_0, CREDATTIM_0, UPDDATTIM_0, AUUID_0, CREUSR_0, UPDUSR_0) "
+							+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, hextoraw(?), ?, ?)";
+			jdbc.batchUpdate(sql, new BatchPreparedStatementSetter() {
+				@Override
+				public void setValues(PreparedStatement ps, int i) throws SQLException {
+					X3StandardCostEntry entry = insertList.get(i);
+					ps.setString(1, entry.getCode());
+					ps.setDouble(2, entry.getTotalCost());
+					ps.setDouble(3, entry.getMaterialCost());
+					ps.setDouble(4, entry.getMachineCost());
+					ps.setDouble(5, entry.getLabourCost());
+					ps.setTimestamp(6, entry.getDate());
+					ps.setTimestamp(7, entry.getDate());
+					ps.setTimestamp(8, entry.getDate());
+					ps.setString(9, UUID.randomUUID().toString().replaceAll("-", ""));
+					ps.setString(10, "ADMIN");
+					ps.setString(11, "ADMIN");
+				}
+				@Override
+				public int getBatchSize() {
+					return insertList.size();
+				}
+			});
+			
+			sql = "UPDATE " 
+					+ company + ".VSTDCST SET "
+					+ "ITMREF_0 = ?, "
+					+ "TOTAL_0 = ?, "
+					+ "MATERIAL_0 = ?, "
+					+ "MACHINE_0 = ?, "
+					+ "LABOUR_0 = ?, "
+					+ "CSTDATE_0 = ?, "
+					+ "UPDDATTIM_0 = ? "
+					+ "WHERE "
+					+ "ITMREF_0 = ?";
+			jdbc.batchUpdate(sql, new BatchPreparedStatementSetter() {
+				@Override
+				public void setValues(PreparedStatement ps, int i) throws SQLException {
+					X3StandardCostEntry entry = updateList.get(i);
+					ps.setString(1, entry.getCode());
+					ps.setDouble(2, entry.getTotalCost());
+					ps.setDouble(3, entry.getMaterialCost());
+					ps.setDouble(4, entry.getMachineCost());
+					ps.setDouble(5, entry.getLabourCost());
+					ps.setTimestamp(6, entry.getDate());
+					ps.setTimestamp(7, entry.getDate());
+					ps.setString(8, entry.getCode());
+				}
+				@Override
+				public int getBatchSize() {
+					return updateList.size();
+				}
+			});
 		}
 		// ==== TMP JDBC DUALITY =====================================
 		// ===========================================================
 		
-		String sql = "INSERT INTO " 
-						+ company + ".VSTDCST"
-						+ "(ITMREF_0, TOTAL_0, MATERIAL_0, MACHINE_0, LABOUR_0, CSTDATE_0) "
-						+ "VALUES (?, ?, ?, ?, ?, ?)";
-		jdbc.batchUpdate(sql, new BatchPreparedStatementSetter() {
-			@Override
-			public void setValues(PreparedStatement ps, int i) throws SQLException {
-				X3StandardCostEntry entry = insertList.get(i);
-				ps.setString(1, entry.getCode());
-				ps.setDouble(2, entry.getTotalCost());
-				ps.setDouble(3, entry.getMaterialCost());
-				ps.setDouble(4, entry.getMachineCost());
-				ps.setDouble(5, entry.getLabourCost());
-				ps.setTimestamp(6, entry.getDate());
-			}
-			@Override
-			public int getBatchSize() {
-				return insertList.size();
-			}
-		});
-		
-		sql = "UPDATE " 
-				+ company + ".VSTDCST SET "
-				+ "ITMREF_0 = ?, "
-				+ "TOTAL_0 = ?, "
-				+ "MATERIAL_0 = ?, "
-				+ "MACHINE_0 = ?, "
-				+ "LABOUR_0 = ?, "
-				+ "CSTDATE_0 = ? "
-				+ "WHERE "
-				+ "ITMREF_0 = ?";
-		jdbc.batchUpdate(sql, new BatchPreparedStatementSetter() {
-			@Override
-			public void setValues(PreparedStatement ps, int i) throws SQLException {
-				X3StandardCostEntry entry = updateList.get(i);
-				ps.setString(1, entry.getCode());
-				ps.setDouble(2, entry.getTotalCost());
-				ps.setDouble(3, entry.getMaterialCost());
-				ps.setDouble(4, entry.getMachineCost());
-				ps.setDouble(5, entry.getLabourCost());
-				ps.setTimestamp(6, entry.getDate());
-				ps.setString(7, entry.getCode());
-			}
-			@Override
-			public int getBatchSize() {
-				return updateList.size();
-			}
-		});
 		
 	}
 

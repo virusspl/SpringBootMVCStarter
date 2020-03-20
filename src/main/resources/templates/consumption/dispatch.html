@@ -9,8 +9,8 @@
 
 	<div layout:fragment="script">
 		<script th:src="@{/js/preventDefault.js}" type="text/javascript"></script>
-	}
-	
+		}
+
 	</div>
 	<div layout:fragment="content">
 		<div class="row">
@@ -22,83 +22,87 @@
 				<span th:text="#{consumption.dispatch.message}"> Welcome
 					message </span>
 			</div>
-		<!-- BACK TO MAIN PAGE -->
-				<a th:href="@{/}" class="btn btn-link btn-sm"> <span
-					class="glyphicon glyphicon-menu-left"></span> <span
-					th:text="#{action.back}">back</span>
-				</a>
+			<!-- BACK TO MAIN PAGE -->
+			<a th:href="@{/}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
 		</div>
 		<div class="underline"></div>
-		<!-- BLOCK MESSAGE -->
-		<div class="row">
-		<div class="col-xs-12">
-		<h3 style="color: red;">Warning</h3>
-		 <p>As requested in redmine <a target="_blank" href="http://10.1.1.226/redmine/issues/14522">#14522</a>, this functionality is disabled. We wait for solution in X3.</p>
-		 <p>Initially module was a copy of CONSUMO reports, which were generated too slow in X3, next there were add-ons like demand column and last supply information. The full list of fields available below.</p>
-		 <ul>
-		 <li>	Product code	</li>
-<li>	Product decription PL	</li>
-<li>	Product description EN	</li>
-<li>	Purchase family code	</li>
-<li>	Purchasing family name	</li>
-<li>	Reorder point	</li>
-<li>	Safety stock	</li>
-<li>	Max stock	</li>
-<li>	EWZ	</li>
-<li>	Technical lot	</li>
-<li>	Stock A	</li>
-<li>	Average cost	</li>
-<li>	Current demand	</li>
-<li>	Quantity in order	</li>
-<li>	Buyer	</li>
-<li>	Lead time	</li>
-<li>	Last issue date	</li>
-<li>	Last supplier	</li>
-<li>	Last supplier name	</li>
-<li>	Last supply date	</li>
-<li>	Usage by month in previous year (12 columns: I, II, III, IV... XII)	</li>
-<li>	Usage by month in current year (12 columns: I, II, III, IV... XII)	</li>
-<li>	Consumption in 1-st half of year -2	</li>
-<li>	Consumption in 2-nd half of year-2	</li>
-<li>	Consumption in year-1	</li>
-<li>	Total consumption in current year 	</li>
-		 
-		 </ul>
-		</div>
-		</div>
-		
-		<!-- MODULES -->
-		<div class="row" style="display: none;">
-			<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
-				<h3 class="text-primary" th:text="#{action.choose.action}">Panel With
-					title</h3>
+		<div class="row" style="displays: none;">
+			<div class="col-xs-12">
+				<h3 class="text-primary" th:text="#{action.choose.action}">Panel
+					With title</h3>
 			</div>
 			<div class="col-xs-12 margin-top-10">
-			<!-- th:onclick="|return confirm('#{general.areyousure}')|"-->
+				<!-- th:onclick="|return confirm('#{general.areyousure}')|"-->
 				<a class="btn btn-primary btn-md margin-top-5" id="cnsA"
 					th:onclick="|return confirm('#{general.areyousure}')|"
-					data-toggle="tooltip" data-placement="bottom" th:title="#{general.warning.longtask}"
+					data-toggle="tooltip" data-placement="bottom"
+					th:title="|#{general.time} ~ 20 s|"
 					th:href="@{/consumption/exportConsumption/ATW}"> <span
 					class="glyphicon glyphicon-save-file" style="margin-right: 10px;"></span>
 					<span th:text="|#{consumption.export.consumption} ADR|">begin</span>
-				</a>  
-				<a class="btn btn-info btn-md margin-top-5" id="cvrA"
+				</a> <a class="btn btn-info btn-md margin-top-5" id="cvrA"
 					th:onclick="|return confirm('#{general.areyousure}')|"
-					data-toggle="tooltip" data-placement="bottom" th:title="#{general.warning.longtask}"
+					data-toggle="tooltip" data-placement="bottom"
+					th:title="|#{general.time} ~ 4,5 min|"
 					th:href="@{/consumption/exportCoverage}"> <span
 					class="glyphicon glyphicon-save-file" style="margin-right: 10px;"></span>
 					<span th:text="|#{consumption.export.coverage} ADR|">begin</span>
-				</a> 
-				<a class="btn btn-warning btn-md margin-top-5" id="cnsB"
+				</a> <a class="btn btn-warning btn-md margin-top-5" id="cnsB"
 					th:onclick="|return confirm('#{general.areyousure}')|"
-					data-toggle="tooltip" data-placement="bottom" th:title="#{general.warning.longtask}"
+					data-toggle="tooltip" data-placement="bottom"
+					th:title="|#{general.time} ~ 5 s|"
 					th:href="@{/consumption/exportConsumption/WPS}"> <span
 					class="glyphicon glyphicon-save-file" style="margin-right: 10px;"></span>
 					<span th:text="|#{consumption.export.consumption} WPS|">begin</span>
-				</a>				
- 
+				</a>
+			</div>
+		</div>
+		<div class="underline margin-top-20"></div>
+		<!-- BLOCK MESSAGE -->
+		<div class="row">
+			<div class="col-xs-12">
+				<h3 class="text-primary" th:text="#{general.information}">Panel With title</h3>
+			</div>
+			<div class="col-xs-12 margin-top-10">
+				<span th:utext="#{consumption.description}"></span>
 			</div>
 		</div>
 	</div>
 </body>
 </html>
+				<!-- 
+				<ul>
+					<li>Product code</li>
+					<li>Product decription PL</li>
+					<li>Product description EN</li>
+					<li>Purchase family code</li>
+					<li>Purchasing family name</li>
+					<li>Reorder point</li>
+					<li>Safety stock</li>
+					<li>Max stock</li>
+					<li>EWZ</li>
+					<li>Technical lot</li>
+					<li>Stock A</li>
+					<li>Average cost</li>
+					<li>Current demand</li>
+					<li>Quantity in order</li>
+					<li>Buyer</li>
+					<li>Lead time</li>
+					<li>Last issue date</li>
+					<li>Last supplier</li>
+					<li>Last supplier name</li>
+					<li>Last supply date</li>
+					<li>Usage by month in previous year (12 columns: I, II, III,
+						IV... XII)</li>
+					<li>Usage by month in current year (12 columns: I, II, III,
+						IV... XII)</li>
+					<li>Consumption in 1-st half of year -2</li>
+					<li>Consumption in 2-nd half of year-2</li>
+					<li>Consumption in year-1</li>
+					<li>Total consumption in current year</li>
+
+				</ul>
+				 -->
