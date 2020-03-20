@@ -61,8 +61,8 @@ import sbs.model.x3.X3WarehouseWeightLine;
 import sbs.model.x3.X3Workstation;
 import sbs.service.x3.JdbcOracleX3Service;
 
-@Repository
-public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
+//@Repository
+public class JdbcOracleX3RepositoryImpl_ORIG implements JdbcOracleX3Repository {
 
 	protected JdbcTemplate jdbc;
 	@Autowired 
@@ -548,17 +548,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public X3ProductionOrderDetails getProductionOrderInfoByNumber(String company, String number) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT " 
 				+ company + ".MFGITM.MFGNUM_0, "
@@ -633,17 +622,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public List<X3BomItem> findBomPartsByParent(String company, String productCode) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
+
 		Timestamp now = dateHelper.getCurrentTime();
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
@@ -695,17 +674,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public List<WpslookRow> findLocationsOfProduct(String company, String code) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		try {
 			String query = "SELECT " + company + ".STOCK.STOCOU_0, " + company + ".STOCK.ITMREF_0, " + company
 					+ ".STOCK.LOC_0, " + company + ".STOCK.QTYSTU_0, " + company + ".STOCK.PCU_0, " + company
@@ -754,17 +722,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	@Override
 	public List<X3BomItem> findProductionPartsByProductionOrderAndOperation(String company, String productionOrder,
 			int operationNumber) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
+
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ company + ".MFGMAT.BOMSEQ_0, "
@@ -804,17 +762,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	@Override
 	public String findOperationDescriptionByProductionOrder(String company, String productionOrder,
 			int operationNumber) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
+
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ company + ".MFGOPE.ROODES_0 "
@@ -836,17 +784,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public String findFinalClientByOrder(String company, String order) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ company + ".SORDER.XCLIORI_0 "
@@ -865,17 +802,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public Map<String, X3UtrMachine> findAllUtrMachines(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 /*
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
@@ -931,17 +857,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public Map<String, X3UtrWorker> findAllUtrWorkers(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				  
 				"SELECT "
@@ -970,17 +885,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	@Override
 	public List<X3ShipmentMovement> findAdrShipmentMovementsInPeriod(Date startDate, Date endDate) {
 		String company = "ATW";
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-				
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				
 				"SELECT "
@@ -1083,17 +987,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	@Override
 	public Map<String, X3UtrFault> findUtrFaultsInPeriod(Date startDate, Date endDate) {
 		String company = "ATW";
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ company + ".XMANUTGUA.XNUMMOD_0, "
@@ -1143,17 +1036,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	@Override
 	public Map<String, X3UtrFault> findAllUtrFaults() {
 		String company = "ATW";
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ company + ".XMANUTGUA.XNUMMOD_0, "
@@ -1196,17 +1078,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	@Override
 	public X3UtrFault findUtrFault(String number) {
 		String company = "ATW";
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-				
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ company + ".XMANUTGUA.XNUMMOD_0, "
@@ -1265,17 +1136,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	@Override
 	public List<X3UtrFaultLine> findUtrFaultLinesAfterDate(Date startDate) {
 		String company = "ATW";
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-				
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ company + ".XMANSTGUA.XNUMMOD_0, "
@@ -1313,17 +1173,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	@Override
 	public List<X3UtrFaultLine> findAllUtrFaultLines() {
 		String company = "ATW";
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-				
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ company + ".XMANSTGUA.XNUMMOD_0, "
@@ -1376,17 +1225,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public Map<String, X3ProductFinalMachine> findX3ProductFinalMachines(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-				
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ company + ".ROUOPE.ITMREF_0 AS ITM, "
@@ -1422,17 +1260,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	@Override
 	public List<Project> findPendingProjectsProgress() {
 		String company = "ATW";
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				// main project info
@@ -1480,17 +1307,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	@Override
 	public Project findProjectProgressByNumber(String number) {
 		String company = "ATW";
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-				
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				// main project info
@@ -1634,16 +1450,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	private String getWeightQuery(Date startDate, Date endDate, int weightQueryType){
 		String query = "";
 		String company = "ATW";
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
 		
 		if(weightQueryType == JdbcOracleX3Service.WEIGHT_QUERY_RECEPTION){
 			// 1 = reception
@@ -1771,17 +1577,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public Map<String, Integer> findAcvAverageUsageInPeriod(String startPeriod, String endPeriod, String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 					+ company + ".ITMMASTER.ITMREF_0, "
@@ -1814,17 +1609,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	
 	@Override
 	public Map<String, Integer> findAcvMagStock(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ company + ".ITMMASTER.ITMREF_0, "
@@ -1853,17 +1637,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	
 	@Override
 	public Map<String, Integer> findGeneralMagStock(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 						+ company + ".ITMMASTER.ITMREF_0, "
@@ -1890,17 +1663,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	
 	@Override
 	public Map<String, Integer> findAcvShipStock(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 						+ company + ".ITMMASTER.ITMREF_0, "
@@ -1934,17 +1696,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	
 	@Override
 	public Map<String, Integer> findGeneralShipStock(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 						+ company + ".ITMMASTER.ITMREF_0, "
@@ -1975,17 +1726,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	
 	@Override
 	public List<X3ShipmentStockLineWithPrice> findAllShipStockWithAveragePrice(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ "ITM.ITMREF_0, "
@@ -2034,17 +1774,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	
 	@Override
 	public List<String> findAcvNonProductionCodes(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ company + ".ITMMASTER.ITMREF_0 "
@@ -2073,17 +1802,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	
 	@Override
 	public Map<String, X3ProductSellDemand> findAcvProductSellDemand(Date startDate, Date endDate, String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ company + ".ITMMASTER.ITMREF_0, "
@@ -2127,17 +1845,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public List<DirectReceptionsShipmentLine> findDirectReceptionsShipmentLines(Date startDate, Date endDate, String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-				
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ "SOQ.SOHNUM_0, "
@@ -2188,17 +1895,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public Map<String, Map<Integer, Integer>> getAcvConsumptionListForYear(int year, String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ "xcs.XART_0, "
@@ -2255,17 +1951,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	 * getsALLdemand, not only ACV
 	 */
 	public Map<String, Integer> getAcvDemandList(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ "Sum(ord.RMNEXTQTY_0) AS theSum, "
@@ -2292,17 +1977,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	
 	@Override
 	public Map<String, String> getAcvProductsEnglishDescriptions(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ "txt.IDENT1_0, "
@@ -2332,17 +2006,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	
 	@Override
 	public Map<String, X3ConsumptionSupplyInfo> getAcvListOfLastSupplyInfo(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ "prcd.ITMREF_0, "
@@ -2379,17 +2042,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public List<X3ConsumptionProductInfo> getAcvListForConsumptionReport(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ "itm.ITMREF_0, "
@@ -2448,16 +2100,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public List<X3SalesOrderLine> findOpenedSalesOrderLinesInPeriod(Date startDate, Date endDate, String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
 		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
@@ -2531,17 +2173,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public Map<String, Integer> findGeneralStockForAllProducts(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
+
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ "itv.ITMREF_0, "
@@ -2561,16 +2193,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public X3Workstation findWorkstationByCode(String company, String code) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
 		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
@@ -2603,16 +2225,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	
 	@Override
 	public List<X3Workstation> getWorkstations(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
 		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
@@ -2645,17 +2257,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public boolean checkIfLocationExist(String company, String location) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 						"SELECT " 
 						+ company + ".STOLOC.LOC_0 "
@@ -2670,17 +2271,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public String findPackageDescription(String company, String packageCode) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ company + ".ATEXTRA.TEXTE_0 "
@@ -2708,17 +2298,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public Map<String, String> getDescriptionsByLanguage(String x3lang, String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(""
 				+ "SELECT "
 				+ "TXT.IDENT1_0, "
@@ -2743,17 +2322,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public List<X3UsageDetail> getAcvUsageDetailsListByYear(int year, String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(""
 				+ "SELECT "
 				+ "STJ.ITMREF_0, "
@@ -2792,17 +2360,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public List<X3CoverageData> getCoverageInitialData(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-				
 		List<Map<String,Object>> resultSet = jdbc.queryForList(""
 				+ "SELECT "
 				+ "ITM.ITMREF_0, "
@@ -2855,17 +2412,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	 * Map <product code, first supplier>
 	 */
 	public Map<String, X3Supplier> getFirstAcvSuppliers(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-				
 		List<Map<String,Object>> resultSet = jdbc.queryForList( ""
 				+ "SELECT "
 				+ "POQ.ITMREF_0, "
@@ -2894,17 +2440,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public List<X3SalesOrderItem> findAllSalesOrdersAfvItemsInPeriod(Date startDate, Date endDate, String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
+
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ "SOQ.SOHNUM_0, "
@@ -2946,17 +2482,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public List<X3ToolEntry> getAllToolsInRouting(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT " 
 				+ company + ".ROUOPE.ITMREF_0, "
@@ -2984,17 +2509,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public List<X3KeyValString> getAllBomPartsInBoms(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ company + ".BOMD.CPNITMREF_0, "
@@ -3013,17 +2527,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public Map<String, X3StoreInfo> getX3StoreInfoByCode(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ "STK.ITMREF_0, "
@@ -3069,17 +2572,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public Map<String, String> getVariousTableData(String company, String table, String x3language) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList( ""
 				+ "SELECT "
 				+ "TXT.IDENT2_0, "
@@ -3103,17 +2595,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public Map<String, Integer> findStockByLocation(String company, String location) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList( ""
 				+ "SELECT "
 				+ "STK.ITMREF_0, "
@@ -3137,16 +2618,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public Map<String, List<X3BomItem>> getAllBomPartsTopLevel(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
 		
 		Timestamp now = dateHelper.getCurrentTime();
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
@@ -3206,17 +2677,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	
 	@Override
 	public List<X3BomPart> getAllBomEntries(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
+
 		Timestamp now = dateHelper.getCurrentTime();
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
@@ -3261,17 +2722,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public Map<String, X3StandardCostEntry> getLastStandardCostsListFromCalculationTable(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
+	
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT  "
 				+ "x.code, "
@@ -3317,17 +2768,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	
 	@Override
 	public Map<String, X3StandardCostEntry> getStandardCostsMap(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ "VCSAT.ITMREF_0, "
@@ -3361,17 +2801,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	@Override
 	public void insertStandardCostsInQuickTable(List<X3StandardCostEntry> updateList,
 			List<X3StandardCostEntry> insertList, String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
+
 		String sql = "INSERT INTO " 
 						+ company + ".VSTDCST"
 						+ "(ITMREF_0, TOTAL_0, MATERIAL_0, MACHINE_0, LABOUR_0, CSTDATE_0) "
@@ -3425,16 +2855,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public List<X3Supplier> findProductSuppliers(String company, String productCode) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
 		
 		List<Map<String,Object>> resultSet = jdbc.queryForList( ""
 				+ "SELECT "
@@ -3471,17 +2891,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public X3SupplyStatInfo getSupplyStatistics(String company, String productCode, String supplierCode) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
+
 		List<Map<String,Object>> resultSet = jdbc.queryForList( ""
 				+ "SELECT "
 				+ "PRC.RCPDAT_0, "
@@ -3520,16 +2930,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public Map<String, Map<Integer, X3RouteLine>> getRoutesMap(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
 		
 		Map<String, Map<Integer, X3RouteLine>> result = new HashMap<>();
 		Map<Integer, X3RouteLine> route;
@@ -3591,17 +2991,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public Map<String, String> getWorkcenterNumbersMapByMachines(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
+
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 						"SELECT "
 						+ "WST.WST_0, "
@@ -3624,17 +3014,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	 * key & value format: "number/line"
 	 */
 	public Map<String, String> getPendingProductionOrdersBySaleOrders(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
+
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 						"SELECT "
 						+ "MFI.VCRNUMORI_0, "
@@ -3659,17 +3039,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public Map<String, Double> getCurrentStandardCostsMap(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ "VSTD.ITMREF_0, "
@@ -3691,17 +3060,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	@Override
 	public List<X3EnvironmentInfo> getEnvironmentInfoInPeriod(Date startDate, Date endDate, String type,
 			String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
+
 		String query = ""
 				+ "SELECT "
 				+ "ITM.ITMREF_0, "
@@ -3788,16 +3147,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public List<X3AvgPriceLine> getAveragePricesByInvoices(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
 		
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.YEAR, 2018);
@@ -3853,16 +3202,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public List<X3AvgPriceLine> getAveragePricesByOrders(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
 		
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.YEAR, 2018);
@@ -3925,17 +3264,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public Map<String, Integer> findStockForAllProductsWithStock(String company) {
-		// ===========================================================
-		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
-			jdbc = jdbc6;
-		}
-		else {
-			jdbc = jdbc11;
-		}
-		// ==== TMP JDBC DUALITY =====================================
-		// ===========================================================
-		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ "itv.ITMREF_0, "
