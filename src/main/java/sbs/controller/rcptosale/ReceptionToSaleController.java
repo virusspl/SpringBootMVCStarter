@@ -68,7 +68,16 @@ public class ReceptionToSaleController {
 
 		// database list
 		
-		List<GeodeObject> objects = geodeService.findObjectsByStoreType(JdbcOracleGeodeService.STORE_TYPE_RECEPTIONS);
+		List<GeodeObject> objectsRcp = geodeService.findObjectsByStoreType(JdbcOracleGeodeService.STORE_TYPE_RECEPTIONS);
+		List<GeodeObject> objectsProd = geodeService.findObjectsByStoreType(JdbcOracleGeodeService.STORE_TYPE_PRODUCTION);
+		// join rcp and prod objects in one list
+		List<GeodeObject> objects = new ArrayList<>();
+		for(GeodeObject objRcp: objectsRcp) {
+			objects.add(objRcp);
+		}
+		for(GeodeObject objProd: objectsProd) {
+			objects.add(objProd);
+		}
 		List<X3SalesOrderLine> allLines = x3Service.findOpenedSalesOrderLinesInPeriod(startDate, endDate, "ATW");
 
 		
