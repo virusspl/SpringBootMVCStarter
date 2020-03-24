@@ -209,12 +209,16 @@
 				<h1 th:text="#{bhp.tickets.photos.list}"
 					class="text-primary margin-top-30"></h1>
 			</div>
-			<div th:each="photo : ${photos}" class="col-xs-3">
-				<a th:href="@{'/bhptickets/getphoto/' + ${photo}}"
+			<div th:each="photo : ${photos}" class="col-xs-3 text-center">
+				<a th:href="@{'/bhptickets/getphoto/' + ${photo.name}}"
 					data-lightbox="image-1"> <img
-					th:src="@{'/bhptickets/getphoto/' + ${photo}}"
+					th:src="@{'/bhptickets/getphoto/' + ${photo.name}}"
 					class="img-responsive img-rounded margin-top-10"
 					style="border: 1px solid grey;"></img>
+				</a>
+				<a th:href="@{'/bhptickets/getphoto/' + ${photo.name}}"
+					data-lightbox="image-1"> 				
+				<span class="btn btn-default margin-top-10" th:text="${photo.creationDate}"></span>
 				</a>
 			</div>
 		</div>

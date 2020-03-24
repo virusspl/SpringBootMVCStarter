@@ -1,7 +1,12 @@
 package sbs.controller.bhptickets;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.attribute.FileTime;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +21,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,6 +34,7 @@ import org.thymeleaf.context.Context;
 
 import javassist.NotFoundException;
 import sbs.controller.upload.UploadController;
+import sbs.helpers.DateHelper;
 import sbs.helpers.TextHelper;
 import sbs.model.bhptickets.BhpTicket;
 import sbs.model.bhptickets.BhpTicketState;
@@ -56,6 +63,8 @@ public class BhpTicketsController {
 	TemplateEngine templateEngine;
 	@Autowired
 	TextHelper textHelper;
+	@Autowired
+	DateHelper dateHelper;
 
 	@RequestMapping(value = "/dispatch")
 	public String dispatch() {
@@ -192,12 +201,7 @@ public class BhpTicketsController {
 		}
 		model.addAttribute("ticket", ticket);
 
-		ArrayList<String> fileList = uploadController.listFiles(uploadController.getBhpPhotoPath());
-		for (int i = fileList.size() - 1; i >= 0; i--) {
-			if (!fileList.get(i).startsWith("bhp_" + id + "_")) {
-				fileList.remove(i);
-			}
-		}
+		List<BhpFileInfo> fileList = listBhpFiles(uploadController.getBhpPhotoPath(), id);
 		model.addAttribute("photos", fileList);
 		return "bhptickets/photos";
 	}
@@ -369,17 +373,37 @@ public class BhpTicketsController {
 
 		}
 
+		
 		// get photos list
-		ArrayList<String> fileList = uploadController.listFiles(uploadController.getBhpPhotoPath());
-		for (int i = fileList.size() - 1; i >= 0; i--) {
-			if (!fileList.get(i).startsWith("bhp_" + id + "_")) {
-				fileList.remove(i);
-			}
-		}
+		List<BhpFileInfo> fileList = listBhpFiles(uploadController.getBhpPhotoPath(), id);
+
 		model.addAttribute("ticketResponseForm", responseForm);
 		model.addAttribute("photos", fileList);
 		model.addAttribute("ticket", ticket);
 		return "bhptickets/show";
+	}
+
+	private List<BhpFileInfo> listBhpFiles(String path, int ticketId) {
+		ArrayList<BhpFileInfo> list = new ArrayList<>();
+		
+		try {
+			File[] filesList = (new DefaultResourceLoader()).getResource(path).getFile().listFiles();
+			FileTime creationTime;
+			String creationTimeString;
+			for(File file: filesList){
+				if(file.getName().startsWith("bhp_" + ticketId + "_")){
+					creationTime = (FileTime)Files.getAttribute(Paths.get(file.getPath()), "basic:creationTime");
+					creationTimeString = dateHelper.formatDdMmYyyyHhMmDot(new Timestamp(creationTime.toMillis()));
+					list.add(new BhpFileInfo(file.getName(), creationTimeString));
+				}
+				
+			}
+		} catch (IOException e) {
+		} catch (NullPointerException np){
+			list.clear();
+		}
+		
+		return list;
 	}
 
 	@RequestMapping("/print/{id}")

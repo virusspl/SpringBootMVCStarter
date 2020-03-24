@@ -16,6 +16,8 @@ public class DateHelper {
 	private SimpleDateFormat ddMmYyFormat;
 	private SimpleDateFormat ddMmYyyyHhMmFormat;
 	private SimpleDateFormat YyyyMmDdHhMmFormat;
+	private SimpleDateFormat ddMmYyyyHhMmFormatDot;
+	private SimpleDateFormat YyyyMmDdHhMmFormatDot;
 	private SimpleDateFormat YyyyMmDdHhMmSsNoSpecialFormat;
 	
 	//TODO
@@ -36,6 +38,8 @@ public class DateHelper {
 		ddMmYyFormat = new SimpleDateFormat("dd/MM/yy");
 		ddMmYyyyHhMmFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		YyyyMmDdHhMmFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+		ddMmYyyyHhMmFormatDot = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+		YyyyMmDdHhMmFormatDot = new SimpleDateFormat("yyyy.MM.dd HH:mm");
 		YyyyMmDdHhMmSsNoSpecialFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 	}
 	
@@ -102,6 +106,14 @@ public class DateHelper {
 	public String formatYyyyMmDdHhMm(Timestamp date) {
 		return YyyyMmDdHhMmFormat.format(date);
 	}
+	
+	public String formatYyyyMmDdHhMmDot(Date date) {
+		return YyyyMmDdHhMmFormatDot.format(date);
+	}
+	
+	public String formatYyyyMmDdHhMmDot(Timestamp date) {
+		return YyyyMmDdHhMmFormatDot.format(date);
+	}
 
 	public String formatYyyyMmDdHhMmSsNoSpecial(Date date) {
 		return YyyyMmDdHhMmSsNoSpecialFormat.format(date);
@@ -121,6 +133,14 @@ public class DateHelper {
 	
 	public String formatDdMmYyyyHhMm(Date date){
 		return ddMmYyyyHhMmFormat.format(date);
+	}
+	
+	public String formatDdMmYyyyHhMmDot(Timestamp date){
+		return ddMmYyyyHhMmFormatDot.format(date);
+	}
+	
+	public String formatDdMmYyyyHhMmDot(Date date){
+		return ddMmYyyyHhMmFormatDot.format(date);
 	}
 	
 	public boolean dateBeforeOrEqual(Calendar date, Calendar reference) {
