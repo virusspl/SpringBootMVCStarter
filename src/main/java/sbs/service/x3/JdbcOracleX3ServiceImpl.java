@@ -483,5 +483,10 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 		return jdbcOracleX3Repository.findStockForAllProductsWithStock(company);
 	}
 
+	@Override
+	public Map<String, Double> getExpectedDeliveriesByDate(Date date, String company) {
+		return jdbcOracleX3Repository.getExpectedDeliveriesByDate(date, company);
+	}
+
 
 }

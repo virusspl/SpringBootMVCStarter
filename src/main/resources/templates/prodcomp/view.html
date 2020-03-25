@@ -48,6 +48,21 @@
 					orientation : 'portrait'
 				} ]
 			});
+			$('#srv2').DataTable({
+				language : {
+					url : getUrl() + file,
+				},
+				ordering : false,
+				paging : true,
+				dom : 'Bfrtip',
+				buttons : [ {
+					extend : 'excel',
+					text : 'Excel'
+				}, {
+					extend : 'pdfHtml5',
+					orientation : 'portrait'
+				} ]
+			});
 		</script>
 	</div>
 	<div layout:fragment="content">
@@ -176,9 +191,47 @@
 						</tfoot>
 					</table>
 				</div>
+			</div>
+		</div>
+		
+		<div class="row" th:if="${planlines}">
+			<div class="col-xs-12">
+				<h1 th:text="#{general.list}" class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12">
+				<div class="table-responsive">
+					<table id="srv2" class="display" style="font-size: 90%;">
+						<thead>
+							<tr>
+								<th th:text="#{general.productCode}">head</th>
+								<th th:text="#{general.productDescription}">head</th>
+								<th th:text="#{general.category}">head</th>
+								<th th:text="|Gr. 2|">head</th>
+								<th th:text="#{general.stock.safe}">head</th>
+								<th th:text="#{general.replanishpoint.short}">head</th>
+								<th th:text="|#{general.stock} X3|">head</th>
+								<th th:text="|#{general.stock} X3|">head</th>								
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="line : ${planlines}">
+								<td><span th:text="${line[0]}"></span></td>
+								<td><span th:text="${line[1]}"></span></td>
+								<td><span th:text="${line[2]}"></span></td>
+								<td><span th:text="${line[3]}"></span></td>
+								<td><span th:text="${line[4]}"></span></td>
+								<td><span th:text="${line[5]}"></span></td>
+								<td><span th:text="${line[6]}"></span></td>
+								<td><span th:text="${line[7]}"></span></td>
+							</tr>
+
+						</tbody>
+					</table>
+				</div>
 
 			</div>
 		</div>
+				
 	</div>
 </body>
 </html>

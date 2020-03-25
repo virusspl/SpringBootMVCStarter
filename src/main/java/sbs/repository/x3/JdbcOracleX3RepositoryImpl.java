@@ -4013,4 +4013,46 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		}
 		return map;
 	}
+
+	@Override
+	public Map<String, Double> getExpectedDeliveriesByDate(Date date, String company) {
+		// ===========================================================
+				// ==== TMP JDBC DUALITY =====================================
+				if(company.equalsIgnoreCase("ATW")) {
+					jdbc = jdbc6;
+				}
+				else {
+					jdbc = jdbc11;
+				}
+				// ==== TMP JDBC DUALITY =====================================
+				// ===========================================================
+				
+				List<Map<String,Object>> resultSet = jdbc.queryForList(
+						"SELECT "
+						+ "POQ.ITMREF_0, (POQ.QTYSTU_0- POQ.RCPQTYSTU_0) AS TO_GET "
+						+ "FROM "
+						+ company + ".PORDERQ POQ "
+						+ "WHERE "
+						+ "(POQ.QTYSTU_0 - POQ.RCPQTYSTU_0) > 0 "
+						+ "AND POQ.LINCLEFLG_0 = 1 "
+						+ "AND POQ.X_RCPDAT_0 <= ?"
+						,
+		                new Object[]{dateHelper.getTime(date)}
+						);
+				
+				Map<String, Double> map = new HashMap<>();
+				String code;
+				double value;
+				for(Map<String,Object> row: resultSet ){
+					code = (String)row.get("ITMREF_0");
+					value = ((BigDecimal)row.get("TO_GET")).doubleValue();
+					if(map.containsKey(code)) {
+						map.put(code, map.get(code)+value);
+					}
+					else {
+						map.put(code, value);
+					}
+				}
+				return map;
+	}
 }

@@ -29,6 +29,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -147,7 +148,43 @@ public class UploadController {
 			redirectAttrs.addFlashAttribute("error", messageSource.getMessage("upload.io.exception", null, locale) + ": " + ioex.getMessage());
 			return "redirect:/prodcomp/main";
 		}
+	}
+	
+	@RequestMapping(value = "/upload/prodcomp/plan",  method = RequestMethod.POST)
+	public String onUploadProdComp(MultipartFile filePlan, @RequestParam String days, RedirectAttributes redirectAttrs,
+			Locale locale) {
 		
+		int timeDays = 0;
+		
+		try{
+			timeDays = Integer.parseInt(days);
+		}
+		catch (NumberFormatException ex) {
+			redirectAttrs.addFlashAttribute("daysError", messageSource.getMessage("error.mustbeanumber", null, locale));
+			return "redirect:/prodcomp/main";
+		}
+		
+		// is empty
+		if (filePlan.isEmpty()) {
+			redirectAttrs.addFlashAttribute("warning", messageSource.getMessage("action.choose.file", null, locale));
+			return "redirect:/prodcomp/main";
+		}
+		// copy file
+		try {
+			File convFile = File.createTempFile("prodcom", ".tmp");
+			convFile.deleteOnExit();
+			//new File(file.getOriginalFilename());
+			//convFile.createNewFile();
+			FileOutputStream fos = new FileOutputStream(convFile); 
+			fos.write(filePlan.getBytes());
+			fos.close(); 
+			redirectAttrs.addFlashAttribute("file", convFile);
+			redirectAttrs.addFlashAttribute("days", timeDays);
+			return "redirect:/prodcomp/makeplan";
+		} catch (IOException ioex) {
+			redirectAttrs.addFlashAttribute("error", messageSource.getMessage("upload.io.exception", null, locale) + ": " + ioex.getMessage());
+			return "redirect:/prodcomp/main";
+		}
 	}
 	
 	@RequestMapping(value = "/upload/avatar/{id}",  method = RequestMethod.POST)

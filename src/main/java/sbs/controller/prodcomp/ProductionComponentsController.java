@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -118,11 +119,17 @@ public class ProductionComponentsController {
 			// get all boms
 			Map<String, Double> allComponents = new TreeMap<>();
 			Map<String, Double> subComponents;
-
+			Map<String, Double> quantities = x3Service.getAllProductsQuantities("ATW");
+			Map<String, Double> geodeStock = geodeService.getStockOnProductionAndReceptions();
+			Map<String, X3Product> products = x3Service.findAllActiveProductsMap("ATW");
+			// get acv info
+			List<X3ConsumptionProductInfo> acvInfo = x3Service.getAcvListForConsumptionReport("ATW");
+			// safety stock map
+			Map<String, Integer> safetyStockMap = new TreeMap<>();
 			Map<String, List<X3BomItem>> allBoms = x3Service.getAllBomPartsTopLevel("ATW");
 
 			for (Map.Entry<String, Integer> main : fileInfo.entrySet()) {
-				subComponents = getComponentsQuantitiesMultilevel(allBoms, main.getKey());
+				subComponents = getComponentsQuantitiesMultilevel(allBoms, main.getKey(), products, false);
 				for (Map.Entry<String, Double> sub : subComponents.entrySet()) {
 					if (allComponents.containsKey(sub.getKey())) {
 						allComponents.put(sub.getKey(),
@@ -133,24 +140,15 @@ public class ProductionComponentsController {
 				}
 			}
 
-			// Map<String, String> descriptions =
-			// x3Service.getDescriptionsByLanguage(JdbcOracleX3Service.LANG_POLISH, "ATW");
-			Map<String, Double> quantities = x3Service.getAllProductsQuantities("ATW");
-			Map<String, Double> geodeStock = geodeService.getStockOnProductionAndReceptions();
-			Map<String, X3Product> products = x3Service.findAllActiveProductsMap("ATW");
-			// get acv info
-			List<X3ConsumptionProductInfo> acvInfo = x3Service.getAcvListForConsumptionReport("ATW");
-			// safety stock map
-			Map<String, Integer> safetyStockMap = new TreeMap<>();
-			for(X3ConsumptionProductInfo info: acvInfo) {
+			for (X3ConsumptionProductInfo info : acvInfo) {
 				safetyStockMap.put(info.getProductCode(), info.getSafetyStock());
 			}
 			// replanish point map
 			Map<String, Integer> replanishMap = new TreeMap<>();
-			for(X3ConsumptionProductInfo info: acvInfo) {
+			for (X3ConsumptionProductInfo info : acvInfo) {
 				replanishMap.put(info.getProductCode(), info.getReorderPoint());
-			}			
-			
+			}
+
 			List<List<String>> table = new ArrayList<>();
 			List<String> line;
 			double x3, qty, geode;
@@ -166,8 +164,12 @@ public class ProductionComponentsController {
 				line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getDescription() : "-");
 				line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getCategory() : "-");
 				line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getGr2() : "-");
-				line.add(safetyStockMap.containsKey(entry.getKey()) ? textHelper.numberFormatIntegerRoundSpace(safetyStockMap.get(entry.getKey())) : "-");
-				line.add(replanishMap.containsKey(entry.getKey()) ? textHelper.numberFormatIntegerRoundSpace(replanishMap.get(entry.getKey())) : "-");
+				line.add(safetyStockMap.containsKey(entry.getKey())
+						? textHelper.numberFormatIntegerRoundSpace(safetyStockMap.get(entry.getKey()))
+						: "-");
+				line.add(replanishMap.containsKey(entry.getKey())
+						? textHelper.numberFormatIntegerRoundSpace(replanishMap.get(entry.getKey()))
+						: "-");
 				line.add(textHelper.numberFormatIntegerRoundSpace(x3));
 				line.add(textHelper.numberFormatIntegerRoundSpace(geode));
 				line.add(textHelper.numberFormatIntegerRoundSpace(qty));
@@ -188,8 +190,169 @@ public class ProductionComponentsController {
 		return "prodcomp/view";
 	}
 
-	private Map<String, Double> getComponentsQuantitiesMultilevel(Map<String, List<X3BomItem>> allBoms,
-			String itemCode) {
+	@RequestMapping("/makeplan")
+	public String doMakePlan(Model model, Locale locale, RedirectAttributes redirectAttrs)
+			throws FileNotFoundException, IOException {
+
+		if(model.asMap().get("days") == null) {
+			return "redirect:/prodcomp/main";
+		}
+		
+		int days = (int) model.asMap().get("days");
+		File file = (File) model.asMap().get("file");
+
+		if (file != null) {
+			// file exist
+			List<PlanLine> fileInfo = new ArrayList<>();
+			// Map<String, Integer> fileInfo = new TreeMap<>();
+			// READ FILE
+			try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+				String line;
+				String[] split;
+				String order;
+				String code;
+				String description;
+				String date;
+				String clientName;
+				String country;
+				double quantity;
+				int lineNo = 0;
+				PlanLine planLine;
+
+				while ((line = br.readLine()) != null) {
+					lineNo++;
+					split = line.split(";");
+					// structure
+					if (split.length != 7) {
+						redirectAttrs.addFlashAttribute("error",
+								messageSource.getMessage("error.bad.file.structure", null, locale) + ". "
+										+ messageSource.getMessage("general.line", null, locale) + " " + lineNo + ": "
+										+ line);
+						br.close();
+						file.delete();
+						return "redirect:/prodcomp/main";
+					}
+					// values
+					try {
+						order = split[0].toUpperCase().trim();
+						code = split[1].toUpperCase().trim();
+						description = split[2].toUpperCase().trim();
+						date = split[3].toUpperCase().trim();
+						clientName = split[4].toUpperCase().trim();
+						country = split[5].toUpperCase().trim();
+						quantity = Math.abs(Double.parseDouble(split[6]));
+
+						planLine = new PlanLine();
+						planLine.setOrder(order);
+						planLine.setCode(code);
+						planLine.setDescription(description);
+						planLine.setDate(date);
+						planLine.setClientName(clientName);
+						planLine.setCountry(country);
+						planLine.setQuantity(quantity);
+						fileInfo.add(planLine);
+					} catch (NumberFormatException ex) {
+						redirectAttrs.addFlashAttribute("error",
+								messageSource.getMessage("error.mustbeanumber", null, locale) + ". "
+										+ messageSource.getMessage("general.line", null, locale) + " " + lineNo + ": "
+										+ line);
+						br.close();
+						file.delete();
+						return "redirect:/prodcomp/main";
+					}
+				}
+				br.close();
+				file.delete();
+			}
+			// DO CALCULATION
+			// get all boms
+			Map<String, List<X3BomItem>> allBoms = x3Service.getAllBomPartsTopLevel("ATW");
+			// get products info
+			Map<String, X3Product> products = x3Service.findAllActiveProductsMap("ATW");
+			// get acv info
+			List<X3ConsumptionProductInfo> acvInfo = x3Service.getAcvListForConsumptionReport("ATW");
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.DAY_OF_MONTH, days);
+			Map<String, Double> expectedDelivery = x3Service.getExpectedDeliveriesByDate(cal.getTime(), "ATW");
+			
+			// set in acv info: stock + expected delivery
+			Map <String, Integer> acvStock = new HashMap<>();
+			for(X3ConsumptionProductInfo info: acvInfo) {
+				if(expectedDelivery.containsKey(info.getProductCode())) {
+					info.setStock(info.getStock() + expectedDelivery.get(info.getProductCode()).intValue());
+				}
+				acvStock.put(info.getProductCode(), info.getStock());
+			}
+			
+			String code;
+			int qreq;
+			int qstock;
+			int shortage;
+			
+			Map<String, Integer> shortageList = new HashMap<>();
+			
+			// calculate shortage
+			for (PlanLine main : fileInfo) {
+				// FOR ALL LINES IN FILE
+				// set in lines: components requirement info
+				main.setRequirements(getComponentsQuantitiesMultilevel(allBoms, main.getCode(), products, true), main.getQuantity());
+				for(Map.Entry<String, Double> req: main.getRequirements().entrySet()) {
+					// FOR ALL REQUIREMENTS IN PRODUCT
+					// decreas acv stock and save info if shortage 
+					code = req.getKey();
+					qreq = req.getValue().intValue();
+					qstock = acvStock.getOrDefault(req.getKey(), 0);
+					shortage = qreq - qstock;
+					if(shortage > 0) {
+						qstock = 0;
+						main.addShortage(code, shortage);
+						if(shortageList.containsKey(code)) {
+							shortageList.put(code, shortageList.get(code)+shortage);
+						}
+						else {
+							shortageList.put(code, shortage);
+						}
+					}
+					else {
+						qstock -= qreq;
+					}
+					acvStock.put(code, qstock);
+				}
+			}
+			List<List<String>> table = new ArrayList<>();
+			List<String> line;
+			String shortages;
+			for (PlanLine main : fileInfo) {
+				shortages = "";
+				line = new ArrayList<>();
+				line.add(main.getOrder());
+				line.add(main.getCode());
+				line.add(main.getDescription());
+				line.add(main.getDate());
+				line.add(main.getClientName());
+				line.add(main.getCountry());
+				line.add(main.getQuantity()+"");
+				for(Map.Entry<String, Double> sh: main.getShortage().entrySet()) {
+					shortages += sh.getKey() + " (" + sh.getValue() + "); "; 
+				}
+				line.add(shortages);
+				table.add(line);
+			}
+			
+			
+			model.addAttribute("shortage", shortageList);
+			model.addAttribute("planlines", table);
+		} else {
+			// no file
+			redirectAttrs.addFlashAttribute("main", messageSource.getMessage("action.choose.file", null, locale));
+			return "redirect:/prodcomp/main";
+		}
+
+		return "prodcomp/view";
+	}
+
+	private Map<String, Double> getComponentsQuantitiesMultilevel(Map<String, List<X3BomItem>> allBoms, String itemCode,
+			Map<String, X3Product> products, boolean acvOnly) {
 		Map<String, Double> resultMap = new TreeMap<>();
 
 		List<X3BomItem> list = findBomPartsByParentCode(allBoms, itemCode);
@@ -198,17 +361,31 @@ public class ProductionComponentsController {
 		String code;
 		double qty;
 		Map<String, Double> subMap;
-
+		boolean toAdd;
 		for (X3BomItem item : list) {
 			code = item.getPartCode();
 			qty = item.getModelQuantity();
-
-			if (resultMap.containsKey(code)) {
-				resultMap.put(code, resultMap.get(code) + qty);
+			if (acvOnly) {
+				if(products.get(code)== null) {
+					continue;
+				}
+				if (products.get(code).getCategory().equalsIgnoreCase("ACV")) {
+					toAdd = true;
+				}
+				else {
+					toAdd = false;
+				}
 			} else {
-				resultMap.put(code, qty);
+				toAdd = true;
 			}
-			subMap = getComponentsQuantitiesMultilevel(allBoms, code);
+			if (toAdd) {
+				if (resultMap.containsKey(code)) {
+					resultMap.put(code, resultMap.get(code) + qty);
+				} else {
+					resultMap.put(code, qty);
+				}
+			}
+			subMap = getComponentsQuantitiesMultilevel(allBoms, code, products, acvOnly);
 			for (Map.Entry<String, Double> entry : subMap.entrySet()) {
 				if (resultMap.containsKey(entry.getKey())) {
 					resultMap.put(entry.getKey(),
@@ -253,12 +430,13 @@ public class ProductionComponentsController {
 		}
 
 		// get sales orders
-		List<X3SalesOrderLine> orders = x3Service.findOpenedSalesOrderLinesInPeriod(formComponent.getStartDate(), formComponent.getEndDate(), "ATW");
-		if(orders.size()==0) {
+		List<X3SalesOrderLine> orders = x3Service.findOpenedSalesOrderLinesInPeriod(formComponent.getStartDate(),
+				formComponent.getEndDate(), "ATW");
+		if (orders.size() == 0) {
 			bindingResult.rejectValue("startDate", "prodcomp.error.noordersfund", "ERROR");
 			return "prodcomp/main";
 		}
-		
+
 		// get BOM parts association [long]
 		List<X3BomPart> allBoms = x3Service.getAllBomEntries("ATW");
 
@@ -296,40 +474,37 @@ public class ProductionComponentsController {
 
 		// get general stock info
 		Map<String, Integer> generalStock = x3Service.findGeneralStockForAllProducts("ATW");
-		
+
 		// create sales objects and calculate chains
 		List<SalesLineAndChains> salesObjects = new ArrayList<>();
 		SalesLineAndChains object;
-		for(X3SalesOrderLine line: orders) {
+		for (X3SalesOrderLine line : orders) {
 			object = new SalesLineAndChains(line);
 			for (List<X3BomPart> finalChain : finalChains) {
-				if(finalChain.get(0).getParentCode().equalsIgnoreCase(line.getProductCode())) {
+				if (finalChain.get(0).getParentCode().equalsIgnoreCase(line.getProductCode())) {
 					fillCurrentStockInfo(finalChain, generalStock);
 					object.addClonedAndCalculatedChain(finalChain);
 				}
 			}
-			if(object.getChains().size()>0) {
+			if (object.getChains().size() > 0) {
 				salesObjects.add(object);
 			}
 		}
-		
+
 		model.addAttribute("salesObjects", salesObjects);
 		/*
-		for(SalesLineAndChains obj: salesObjects) {
-			System.out.println(obj.getLine());
-			for(List<X3BomPart> schain: obj.getChains()){
-				System.out.println(chainToString(schain));
-			}
-		}
-		*/
-		
+		 * for(SalesLineAndChains obj: salesObjects) {
+		 * S ystem.out.println(obj.getLine()); for(List<X3BomPart> schain:
+		 * obj.getChains()){ S ystem.out.println(chainToString(schain)); } }
+		 */
+
 		model.addAttribute("component", component);
 		model.addAttribute("componentDescription", componentDescription);
 		return "prodcomp/view";
 	}
 
 	private void fillCurrentStockInfo(List<X3BomPart> finalChain, Map<String, Integer> generalStock) {
-		for(X3BomPart part: finalChain) {
+		for (X3BomPart part : finalChain) {
 			part.setCurrentStock(new Double(generalStock.getOrDefault(part.getParentCode(), 0)));
 		}
 	}

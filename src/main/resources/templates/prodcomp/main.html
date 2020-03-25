@@ -30,46 +30,29 @@
 				}
 				reader.readAsDataURL(input.files[0]);
 			}
-		</script>
-		<!-- DATEPICKER -->
-		<script th:src="@{/datepicker/js/bootstrap-datepicker.min.js}"
-			charset="UTF-8" type="text/javascript"></script>
-		<script th:src="@{/datepicker/locales/bootstrap-datepicker.pl.min.js}"
-			charset="UTF-8" type="text/javascript"></script>
-		<script
-			th:src="@{/datepicker/locales/bootstrap-datepicker.en-GB.min.js}"
-			charset="UTF-8" type="text/javascript"></script>
-		<script th:src="@{/datepicker/locales/bootstrap-datepicker.it.min.js}"
-			charset="UTF-8" type="text/javascript"></script>
-		<script th:if="__${#locale}__ == 'pl'">
-			$('#startDate').datepicker({
-				autoclose : true,
-				language : 'pl'
-			});
-			$('#endDate').datepicker({
-				autoclose : true,
-				language : 'pl'
-			});
-		</script>
-		<script th:if="__${#locale}__ == 'en'">
-			$('#startDate').datepicker({
-				autoclose : true,
-				language : 'en-GB'
-			});
-			$('#endDate').datepicker({
-				autoclose : true,
-				language : 'en-GB'
-			});
-		</script>
-		<script th:if="__${#locale}__ == 'it'">
-			$('#startDate').datepicker({
-				autoclose : true,
-				language : 'it'
-			});
-			$('#endDate').datepicker({
-				autoclose : true,
-				language : 'it'
-			});
+			
+			document.getElementById('filePlan').onchange = function(evt) {
+				readURL(this);
+				document.getElementById('filenamePlan').textContent = this.value;
+				document.getElementById('hidedivPlan').style.display = 'block';
+			};
+			function readURL(input) {
+				if (!input.files) {
+					return;
+				}
+				if (!input.files[0]) {
+					return;
+				}
+				if (input.files[0].size > 2097000) {
+					alert("limit 2MB")
+				}
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					$('#prev').attr('src', e.target.result);
+				}
+				reader.readAsDataURL(input.files[0]);
+			}
+			<!-- /FILE UPLOAD HELPER -->
 		</script>
 	</div>
 	<div layout:fragment="content">
@@ -177,6 +160,49 @@
 			</div>
 		</form>
 		<!-- /COMPONENT FORM -->
+		<!-- PLAN FORM -->
+		<form th:action="@{'/upload/prodcomp/plan'}" method="post"
+			enctype="multipart/form-data">
+			<div class="row">
+				<!-- left -->
+				<div class="col-xs-12">
+					<h3 th:text="#{prodcomp.getplan}"
+						class="text-primary margin-top-20"></h3>
+					<span th:text="#{prodcomp.getplan.message}"></span>
+				</div>
+				<div class="col-md-3 col-xs-6 margin-top-10">
+					<div class="form-group">
+						<label for="days" th:text="#{prodcomp.days}"></label> 
+						<input class="form-control" name="days" id="days" type="text" 
+						th:placeholder="#{prodcomp.days}" value="14"/> 
+					</div>
+					<div th:if="${daysError}"
+							class="alert alert-danger margin-top-5">
+						<span th:text="${daysError}"></span></div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<label for="filePlan" th:text="#{general.file}"></label>
+					<br/>
+					<input type="file" id="filePlan" name="filePlan"
+						style="display: none" /> <label for="filePlan"
+						class="btn btn-info"> <span th:text="#{action.choose}"></span>
+					</label>
+					<button class="btn btn-primary" type="submit" name="upload"
+						onclick="disableLong(this)"
+						th:title="|#{general.warning.longtask} ~60-120s|"
+						data-toggle="tooltip" data-placement="bottom">
+						<span th:text="#{action.upload}">upload</span>
+					</button>
+
+					<div id="hidedivPlan" style="display: none;" class="margin-top-20">
+						<span id="filenamePlan" class="margin-top-10 text-muted">[file]</span>
+					</div>
+				</div>
+			</div>
+		</form>
+		<!-- /PLAN FORM -->
 	</div>
 </body>
 </html>

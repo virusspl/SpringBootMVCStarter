@@ -121,6 +121,7 @@ public interface JdbcOracleX3Repository  {
 	public List<X3AvgPriceLine> getAveragePricesByInvoices(String company);
 	public List<X3AvgPriceLine> getAveragePricesByOrders(String company);
 	public Map<String, Integer> findStockForAllProductsWithStock(String company);
+	public Map<String, Double> getExpectedDeliveriesByDate(Date date, String company);
 
 	
 	
