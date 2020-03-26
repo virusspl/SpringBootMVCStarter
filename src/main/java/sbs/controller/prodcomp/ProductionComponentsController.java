@@ -181,6 +181,7 @@ public class ProductionComponentsController {
 				table.add(line);
 			}
 			model.addAttribute("components", table);
+			model.addAttribute("title", messageSource.getMessage("general.list", null, locale));
 		} else {
 			// no file
 			redirectAttrs.addFlashAttribute("main", messageSource.getMessage("action.choose.file", null, locale));
@@ -215,7 +216,9 @@ public class ProductionComponentsController {
 				String date;
 				String clientName;
 				String country;
-				double quantity;
+				int quantity;
+				double lineValue;
+				
 				int lineNo = 0;
 				PlanLine planLine;
 
@@ -223,7 +226,7 @@ public class ProductionComponentsController {
 					lineNo++;
 					split = line.split(";");
 					// structure
-					if (split.length != 7) {
+					if (split.length != 8) {
 						redirectAttrs.addFlashAttribute("error",
 								messageSource.getMessage("error.bad.file.structure", null, locale) + ". "
 										+ messageSource.getMessage("general.line", null, locale) + " " + lineNo + ": "
@@ -240,8 +243,9 @@ public class ProductionComponentsController {
 						date = split[3].toUpperCase().trim();
 						clientName = split[4].toUpperCase().trim();
 						country = split[5].toUpperCase().trim();
-						quantity = Math.abs(Double.parseDouble(split[6]));
-
+						quantity = Math.abs(Integer.parseInt(split[6]));
+						lineValue = Math.abs(Double.parseDouble(split[7].replace(',', '.'))); 
+						
 						planLine = new PlanLine();
 						planLine.setOrder(order);
 						planLine.setCode(code);
@@ -250,6 +254,7 @@ public class ProductionComponentsController {
 						planLine.setClientName(clientName);
 						planLine.setCountry(country);
 						planLine.setQuantity(quantity);
+						planLine.setLineValue(lineValue);
 						fileInfo.add(planLine);
 					} catch (NumberFormatException ex) {
 						redirectAttrs.addFlashAttribute("error",
@@ -285,10 +290,14 @@ public class ProductionComponentsController {
 			}
 			
 			String code;
+			// total requirement
 			int qreq;
+			// unit requirement
+			double qunitreq;
 			int qstock;
 			int shortage;
-			
+			// max units that could be produced regarding shortages
+			int maxProd;
 			Map<String, Integer> shortageList = new HashMap<>();
 			
 			// calculate shortage
@@ -296,14 +305,19 @@ public class ProductionComponentsController {
 				// FOR ALL LINES IN FILE
 				// set in lines: components requirement info
 				main.setRequirements(getComponentsQuantitiesMultilevel(allBoms, main.getCode(), products, true), main.getQuantity());
+				maxProd = (int)main.getQuantity();
 				for(Map.Entry<String, Double> req: main.getRequirements().entrySet()) {
 					// FOR ALL REQUIREMENTS IN PRODUCT
 					// decreas acv stock and save info if shortage 
 					code = req.getKey();
 					qreq = req.getValue().intValue();
+					qunitreq = req.getValue()/main.getQuantity();
 					qstock = acvStock.getOrDefault(req.getKey(), 0);
 					shortage = qreq - qstock;
 					if(shortage > 0) {
+						if(qstock/qunitreq < maxProd) {
+							maxProd = (int)(qstock/qunitreq);
+						}
 						qstock = 0;
 						main.addShortage(code, shortage);
 						if(shortageList.containsKey(code)) {
@@ -318,6 +332,8 @@ public class ProductionComponentsController {
 					}
 					acvStock.put(code, qstock);
 				}
+				main.setMaxProduction(maxProd);
+					
 			}
 			List<List<String>> table = new ArrayList<>();
 			List<String> line;
@@ -331,8 +347,12 @@ public class ProductionComponentsController {
 				line.add(main.getDate());
 				line.add(main.getClientName());
 				line.add(main.getCountry());
+				line.add(main.getLineValue()+"");
+				line.add(main.getShortageValue()+"");
 				line.add(main.getQuantity()+"");
-				for(Map.Entry<String, Double> sh: main.getShortage().entrySet()) {
+				line.add(main.getMaxProduction()+"");
+				line.add(main.getShortageQuantity()+"");
+				for(Map.Entry<String, Integer> sh: main.getShortage().entrySet()) {
 					shortages += sh.getKey() + " (" + sh.getValue() + "); "; 
 				}
 				line.add(shortages);
@@ -342,6 +362,7 @@ public class ProductionComponentsController {
 			
 			model.addAttribute("shortage", shortageList);
 			model.addAttribute("planlines", table);
+			model.addAttribute("title", messageSource.getMessage("prodcomp.shortage.list", null, locale));
 		} else {
 			// no file
 			redirectAttrs.addFlashAttribute("main", messageSource.getMessage("action.choose.file", null, locale));
@@ -500,6 +521,7 @@ public class ProductionComponentsController {
 
 		model.addAttribute("component", component);
 		model.addAttribute("componentDescription", componentDescription);
+		model.addAttribute("title", component);
 		return "prodcomp/view";
 	}
 

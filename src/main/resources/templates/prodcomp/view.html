@@ -4,6 +4,7 @@
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
 	layout:decorator="layout/main">
 <head lang="pl">
+<title th:if="${title}" th:text="${title}"></title>
 </head>
 <body>
 	<div layout:fragment="script">
@@ -196,21 +197,25 @@
 		
 		<div class="row" th:if="${planlines}">
 			<div class="col-xs-12">
-				<h1 th:text="#{general.list}" class="text-primary"></h1>
+				<h1 th:text="#{prodcomp.shortage.list}" class="text-primary"></h1>
 			</div>
 			<div class="col-xs-12">
 				<div class="table-responsive">
 					<table id="srv2" class="display" style="font-size: 90%;">
 						<thead>
 							<tr>
+								<th th:text="#{general.order.sales}">head</th>
 								<th th:text="#{general.productCode}">head</th>
 								<th th:text="#{general.productDescription}">head</th>
-								<th th:text="#{general.category}">head</th>
-								<th th:text="|Gr. 2|">head</th>
-								<th th:text="#{general.stock.safe}">head</th>
-								<th th:text="#{general.replanishpoint.short}">head</th>
-								<th th:text="|#{general.stock} X3|">head</th>
-								<th th:text="|#{general.stock} X3|">head</th>								
+								<th th:text="#{general.date}">head</th>
+								<th th:text="#{general.client.name}">head</th>
+								<th th:text="#{general.country}">head</th>
+								<th th:text="#{general.line.value}">head</th>
+								<th th:text="#{prodcomp.shortage.value.short}">head</th>
+								<th th:text="#{general.quantity}">head</th>								
+								<th th:text="#{prodcomp.maxproduction.short}">head</th>								
+								<th th:text="#{prodcomp.shortage.quantity.short}">head</th>								
+								<th th:text="#{prodcomp.shortage.list}">head</th>								
 							</tr>
 						</thead>
 						<tbody>
@@ -223,9 +228,60 @@
 								<td><span th:text="${line[5]}"></span></td>
 								<td><span th:text="${line[6]}"></span></td>
 								<td><span th:text="${line[7]}"></span></td>
+								<td><span th:text="${line[8]}"></span></td>
+								<td><span th:text="${line[9]}"></span></td>
+								<td><span th:text="${line[10]}"></span></td>
+								<td><span th:text="${line[11]}"></span></td>
 							</tr>
-
 						</tbody>
+						<tfoot>
+							<tr>
+								<th th:text="#{general.order.sales}">head</th>
+								<th th:text="#{general.productCode}">head</th>
+								<th th:text="#{general.productDescription}">head</th>
+								<th th:text="#{general.date}">head</th>
+								<th th:text="#{general.client.name}">head</th>
+								<th th:text="#{general.country}">head</th>
+								<th th:text="#{general.line.value}">head</th>
+								<th th:text="#{prodcomp.shortage.value.short}">head</th>
+								<th th:text="#{general.quantity}">head</th>								
+								<th th:text="#{prodcomp.maxproduction.short}">head</th>								
+								<th th:text="#{prodcomp.shortage.quantity.short}">head</th>								
+								<th th:text="#{prodcomp.shortage.list}">head</th>								
+							</tr>
+						</tfoot>						
+					</table>
+				</div>
+
+			</div>
+		</div>
+		
+		
+		<div class="row" th:if="${shortage}">
+			<div class="col-xs-12">
+				<h1 th:text="#{prodcomp.shortage.list}" class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12">
+				<div class="table-responsive">
+					<table id="srv" class="display" style="font-size: 90%;">
+						<thead>
+							<tr>
+								<th th:text="#{general.productCode}">head</th>
+								<th th:text="#{general.quantity}">head</th>								
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="line : ${shortage}">
+								<td><span th:text="${line.key}"></span></td>
+								<td><span th:text="${line.value}"></span></td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<th th:text="#{general.productCode}">head</th>
+								<th th:text="#{general.quantity}">head</th>								
+							</tr>
+						</tfoot>						
 					</table>
 				</div>
 
