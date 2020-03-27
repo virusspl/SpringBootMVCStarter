@@ -87,11 +87,11 @@ public class PlanLine {
 		return requirements;
 	}
 
-	public void setRequirements(Map<String, Double> requirements, double multiplier) {
-		this.requirements = new HashMap<>();
-		for(Map.Entry<String, Double> entry: requirements.entrySet() ) {
+	public void setRequirements(Map<String, Double> requirements) {
+		this.requirements = requirements;
+		/*for(Map.Entry<String, Double> entry: requirements.entrySet() ) {
 			this.requirements.put(entry.getKey(), entry.getValue()*multiplier);
-		}
+		}*/
 	}
 
 	public Map<String, Integer> getShortage() {

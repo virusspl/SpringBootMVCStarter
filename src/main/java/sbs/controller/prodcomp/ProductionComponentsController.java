@@ -195,10 +195,10 @@ public class ProductionComponentsController {
 	public String doMakePlan(Model model, Locale locale, RedirectAttributes redirectAttrs)
 			throws FileNotFoundException, IOException {
 
-		if(model.asMap().get("days") == null) {
+		if (model.asMap().get("days") == null) {
 			return "redirect:/prodcomp/main";
 		}
-		
+
 		int days = (int) model.asMap().get("days");
 		File file = (File) model.asMap().get("file");
 
@@ -218,7 +218,7 @@ public class ProductionComponentsController {
 				String country;
 				int quantity;
 				double lineValue;
-				
+
 				int lineNo = 0;
 				PlanLine planLine;
 
@@ -244,8 +244,8 @@ public class ProductionComponentsController {
 						clientName = split[4].toUpperCase().trim();
 						country = split[5].toUpperCase().trim();
 						quantity = Math.abs(Integer.parseInt(split[6]));
-						lineValue = Math.abs(Double.parseDouble(split[7].replace(',', '.'))); 
-						
+						lineValue = Math.abs(Double.parseDouble(split[7].replace(',', '.')));
+
 						planLine = new PlanLine();
 						planLine.setOrder(order);
 						planLine.setCode(code);
@@ -274,21 +274,23 @@ public class ProductionComponentsController {
 			Map<String, List<X3BomItem>> allBoms = x3Service.getAllBomPartsTopLevel("ATW");
 			// get products info
 			Map<String, X3Product> products = x3Service.findAllActiveProductsMap("ATW");
+			// get general stockof all products
+			Map<String, Integer> stock = x3Service.findGeneralStockForAllProducts("ATW");
 			// get acv info
 			List<X3ConsumptionProductInfo> acvInfo = x3Service.getAcvListForConsumptionReport("ATW");
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.DAY_OF_MONTH, days);
 			Map<String, Double> expectedDelivery = x3Service.getExpectedDeliveriesByDate(cal.getTime(), "ATW");
-			
+
 			// set in acv info: stock + expected delivery
-			Map <String, Integer> acvStock = new HashMap<>();
-			for(X3ConsumptionProductInfo info: acvInfo) {
-				if(expectedDelivery.containsKey(info.getProductCode())) {
+			Map<String, Integer> acvStock = new HashMap<>();
+			for (X3ConsumptionProductInfo info : acvInfo) {
+				if (expectedDelivery.containsKey(info.getProductCode())) {
 					info.setStock(info.getStock() + expectedDelivery.get(info.getProductCode()).intValue());
 				}
 				acvStock.put(info.getProductCode(), info.getStock());
 			}
-			
+
 			String code;
 			// total requirement
 			int qreq;
@@ -299,41 +301,40 @@ public class ProductionComponentsController {
 			// max units that could be produced regarding shortages
 			int maxProd;
 			Map<String, Integer> shortageList = new HashMap<>();
-			
+
 			// calculate shortage
 			for (PlanLine main : fileInfo) {
 				// FOR ALL LINES IN FILE
 				// set in lines: components requirement info
-				main.setRequirements(getComponentsQuantitiesMultilevel(allBoms, main.getCode(), products, true), main.getQuantity());
-				maxProd = (int)main.getQuantity();
-				for(Map.Entry<String, Double> req: main.getRequirements().entrySet()) {
+				main.setRequirements(getCurrentAcvRequirementQuantitiesByStock(allBoms, main.getCode(), products, stock,
+						main.getQuantity()));
+				maxProd = (int) main.getQuantity();
+				for (Map.Entry<String, Double> req : main.getRequirements().entrySet()) {
 					// FOR ALL REQUIREMENTS IN PRODUCT
-					// decreas acv stock and save info if shortage 
+					// decrease acv stock and save info if shortage
 					code = req.getKey();
 					qreq = req.getValue().intValue();
-					qunitreq = req.getValue()/main.getQuantity();
+					qunitreq = req.getValue() / main.getQuantity();
 					qstock = acvStock.getOrDefault(req.getKey(), 0);
 					shortage = qreq - qstock;
-					if(shortage > 0) {
-						if(qstock/qunitreq < maxProd) {
-							maxProd = (int)(qstock/qunitreq);
+					if (shortage > 0) {
+						if (qstock / qunitreq < maxProd) {
+							maxProd = (int) (qstock / qunitreq);
 						}
 						qstock = 0;
 						main.addShortage(code, shortage);
-						if(shortageList.containsKey(code)) {
-							shortageList.put(code, shortageList.get(code)+shortage);
-						}
-						else {
+						if (shortageList.containsKey(code)) {
+							shortageList.put(code, shortageList.get(code) + shortage);
+						} else {
 							shortageList.put(code, shortage);
 						}
-					}
-					else {
+					} else {
 						qstock -= qreq;
 					}
 					acvStock.put(code, qstock);
 				}
 				main.setMaxProduction(maxProd);
-					
+
 			}
 			List<List<String>> table = new ArrayList<>();
 			List<String> line;
@@ -347,19 +348,18 @@ public class ProductionComponentsController {
 				line.add(main.getDate());
 				line.add(main.getClientName());
 				line.add(main.getCountry());
-				line.add(main.getLineValue()+"");
-				line.add(main.getShortageValue()+"");
-				line.add(main.getQuantity()+"");
-				line.add(main.getMaxProduction()+"");
-				line.add(main.getShortageQuantity()+"");
-				for(Map.Entry<String, Integer> sh: main.getShortage().entrySet()) {
-					shortages += sh.getKey() + " (" + sh.getValue() + "); "; 
+				line.add(main.getLineValue() + "");
+				line.add(main.getShortageValue() + "");
+				line.add(main.getQuantity() + "");
+				line.add(main.getMaxProduction() + "");
+				line.add(main.getShortageQuantity() + "");
+				for (Map.Entry<String, Integer> sh : main.getShortage().entrySet()) {
+					shortages += sh.getKey() + " (" + sh.getValue() + "); ";
 				}
 				line.add(shortages);
 				table.add(line);
 			}
-			
-			
+
 			model.addAttribute("shortage", shortageList);
 			model.addAttribute("planlines", table);
 			model.addAttribute("title", messageSource.getMessage("prodcomp.shortage.list", null, locale));
@@ -370,6 +370,72 @@ public class ProductionComponentsController {
 		}
 
 		return "prodcomp/view";
+	}
+
+	/**
+	 * 
+	 * @param allBoms           all BOM info from X3
+	 * @param code              main product code
+	 * @param products          all X3 products general info
+	 * @param stock             all X3 products stock
+	 * @param quantityToProduce quantity of main product to calculate requirements
+	 * @return
+	 */
+	private Map<String, Double> getCurrentAcvRequirementQuantitiesByStock(Map<String, List<X3BomItem>> allBoms,
+			String itemCode, Map<String, X3Product> products, Map<String, Integer> stock, double quantityToProduce) {
+
+		Map<String, Double> resultMap = new TreeMap<>();
+
+		List<X3BomItem> list = findBomPartsByParentCode(allBoms, itemCode);
+
+		String code;
+		double qtyReq;
+		int currentStock;
+		Map<String, Double> subMap;
+		for (X3BomItem item : list) {
+			code = item.getPartCode();
+			qtyReq = item.getModelQuantity() * quantityToProduce;
+			currentStock = stock.getOrDefault(code, 0);
+
+			// skip if empty line
+			if (products.get(code) == null) {
+				continue;
+			}
+
+			if (products.get(code).getCategory().equalsIgnoreCase("ACV")) {
+				// add to requirements list if ACV
+				if (resultMap.containsKey(code)) {
+					resultMap.put(code, resultMap.get(code) + qtyReq);
+				} else {
+					resultMap.put(code, qtyReq);
+				}
+			} else {
+				// for all production (AFV) codes:
+				if (currentStock >= qtyReq) {
+					// if there is stock for all current component req,
+					// decrease stock and ignore subcomponents
+					currentStock -= qtyReq;
+					continue;
+				} else {
+					qtyReq = qtyReq - currentStock;
+					currentStock = 0;
+				}
+				// SAVE NEW STOCK INFO
+				stock.put(code, currentStock);
+
+				subMap = getCurrentAcvRequirementQuantitiesByStock(allBoms, code, products, stock, qtyReq);
+				for (Map.Entry<String, Double> entry : subMap.entrySet()) {
+					if (resultMap.containsKey(entry.getKey())) {
+						resultMap.put(entry.getKey(),
+								resultMap.get(entry.getKey()) + entry.getValue());
+					} else {
+						resultMap.put(entry.getKey(), entry.getValue());
+					}
+				}
+			}
+
+		}
+		return resultMap;
 	}
 
 	private Map<String, Double> getComponentsQuantitiesMultilevel(Map<String, List<X3BomItem>> allBoms, String itemCode,
@@ -387,13 +453,12 @@ public class ProductionComponentsController {
 			code = item.getPartCode();
 			qty = item.getModelQuantity();
 			if (acvOnly) {
-				if(products.get(code)== null) {
+				if (products.get(code) == null) {
 					continue;
 				}
 				if (products.get(code).getCategory().equalsIgnoreCase("ACV")) {
 					toAdd = true;
-				}
-				else {
+				} else {
 					toAdd = false;
 				}
 			} else {
@@ -514,8 +579,8 @@ public class ProductionComponentsController {
 
 		model.addAttribute("salesObjects", salesObjects);
 		/*
-		 * for(SalesLineAndChains obj: salesObjects) {
-		 * S ystem.out.println(obj.getLine()); for(List<X3BomPart> schain:
+		 * for(SalesLineAndChains obj: salesObjects) { S
+		 * ystem.out.println(obj.getLine()); for(List<X3BomPart> schain:
 		 * obj.getChains()){ S ystem.out.println(chainToString(schain)); } }
 		 */
 
