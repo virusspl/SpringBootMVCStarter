@@ -267,18 +267,21 @@
 						<thead>
 							<tr>
 								<th th:text="#{general.productCode}">head</th>
+								<th th:text="#{general.productDescription}">head</th>
 								<th th:text="#{general.quantity}">head</th>								
 							</tr>
 						</thead>
 						<tbody>
 							<tr th:each="line : ${shortage}">
-								<td><span th:text="${line.key}"></span></td>
-								<td><span th:text="${line.value}"></span></td>
+								<td><span th:text="${line[0]}"></span></td>
+								<td><span th:text="${line[1]}"></span></td>
+								<td><span th:text="${line[2]}"></span></td>
 							</tr>
 						</tbody>
 						<tfoot>
 							<tr>
 								<th th:text="#{general.productCode}">head</th>
+								<th th:text="#{general.productDescription}">head</th>								
 								<th th:text="#{general.quantity}">head</th>								
 							</tr>
 						</tfoot>						

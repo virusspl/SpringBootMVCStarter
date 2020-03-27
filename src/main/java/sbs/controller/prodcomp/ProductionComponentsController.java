@@ -360,7 +360,17 @@ public class ProductionComponentsController {
 				table.add(line);
 			}
 
-			model.addAttribute("shortage", shortageList);
+			List<List<String>> shortageSummary = new ArrayList<>();
+			List<String> shortageLine;
+			for(Map.Entry<String, Integer> entry: shortageList.entrySet()) {
+				shortageLine = new ArrayList<>();
+				shortageLine.add(entry.getKey());
+				shortageLine.add(products.get(entry.getKey()).getDescription());
+				shortageLine.add(entry.getValue()+"");
+				shortageSummary.add(shortageLine);
+			}
+			
+			model.addAttribute("shortage", shortageSummary);
 			model.addAttribute("planlines", table);
 			model.addAttribute("title", messageSource.getMessage("prodcomp.shortage.list", null, locale));
 		} else {
