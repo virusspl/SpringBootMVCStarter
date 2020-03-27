@@ -129,6 +129,7 @@ public class ReceptionToSaleController {
 			rl.setGr1OrObjectNumber(line.getProductGr1());
 			rl.setGr2OrAddress(line.getProductGr2());
 			rl.setDate(dateHelper.formatYyyyMmDd(line.getDemandedDate()));
+			rl.setDateInput("");
 			rl.setToSendOrQuantity(line.getQuantityLeftToSend());
 			rl.setOrdered(line.getQuantityOrdered());
 			result.add(rl);
@@ -144,7 +145,8 @@ public class ReceptionToSaleController {
 				rl.setClientName("");
 				rl.setGr1OrObjectNumber(obj.getNumber());
 				rl.setGr2OrAddress(obj.getStore()+  obj.getAddress());
-				rl.setDate(dateHelper.formatYyyyMmDd(obj.getInputDate()));
+				rl.setDate("");
+				rl.setDateInput(dateHelper.formatYyyyMmDd(obj.getInputDate()));
 				rl.setToSendOrQuantity(obj.getQuantity());
 				rl.setOrdered(0);
 				tmpObjList.add(rl);
