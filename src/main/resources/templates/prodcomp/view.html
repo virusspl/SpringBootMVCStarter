@@ -259,7 +259,7 @@
 		
 		<div class="row" th:if="${shortage}">
 			<div class="col-xs-12">
-				<h1 th:text="#{prodcomp.shortage.list}" class="text-primary"></h1>
+				<h1 th:text="|#{prodcomp.shortage.list} - #{general.summary}|" class="text-primary"></h1>
 			</div>
 			<div class="col-xs-12">
 				<div class="table-responsive">
@@ -268,7 +268,9 @@
 							<tr>
 								<th th:text="#{general.productCode}">head</th>
 								<th th:text="#{general.productDescription}">head</th>
-								<th th:text="#{general.quantity}">head</th>								
+								<th th:text="#{prodcomp.initialQuantity.short}">head</th>
+								<th th:text="|#{prodcomp.inOrder.short} [${days}]|">head</th>
+								<th th:text="#{prodcomp.shortage}">head</th>								
 							</tr>
 						</thead>
 						<tbody>
@@ -276,13 +278,17 @@
 								<td><span th:text="${line[0]}"></span></td>
 								<td><span th:text="${line[1]}"></span></td>
 								<td><span th:text="${line[2]}"></span></td>
+								<td><span th:text="${line[3]}"></span></td>
+								<td><span th:text="${line[4]}"></span></td>
 							</tr>
 						</tbody>
 						<tfoot>
 							<tr>
 								<th th:text="#{general.productCode}">head</th>
-								<th th:text="#{general.productDescription}">head</th>								
-								<th th:text="#{general.quantity}">head</th>								
+								<th th:text="#{general.productDescription}">head</th>
+								<th th:text="#{prodcomp.initialQuantity.short}">head</th>
+								<th th:text="|#{prodcomp.inOrder.short} [${days}]|">head</th>								
+								<th th:text="#{prodcomp.shortage}">head</th>								
 							</tr>
 						</tfoot>						
 					</table>

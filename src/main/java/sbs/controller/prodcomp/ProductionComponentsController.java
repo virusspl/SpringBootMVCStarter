@@ -276,6 +276,10 @@ public class ProductionComponentsController {
 			Map<String, X3Product> products = x3Service.findAllActiveProductsMap("ATW");
 			// get general stockof all products
 			Map<String, Integer> stock = x3Service.findGeneralStockForAllProducts("ATW");
+			Map<String, Integer> initStock = new HashMap<>();
+			for(Map.Entry<String, Integer> entry: stock.entrySet()) {
+				initStock.put(entry.getKey(), entry.getValue());
+			}
 			// get acv info
 			List<X3ConsumptionProductInfo> acvInfo = x3Service.getAcvListForConsumptionReport("ATW");
 			Calendar cal = Calendar.getInstance();
@@ -366,10 +370,13 @@ public class ProductionComponentsController {
 				shortageLine = new ArrayList<>();
 				shortageLine.add(entry.getKey());
 				shortageLine.add(products.get(entry.getKey()).getDescription());
+				shortageLine.add(initStock.getOrDefault(entry.getKey(), 0)+"");
+				shortageLine.add((expectedDelivery.getOrDefault(entry.getKey(), 0.0)).intValue()+"");
 				shortageLine.add(entry.getValue()+"");
 				shortageSummary.add(shortageLine);
 			}
 			
+			model.addAttribute("days", days);
 			model.addAttribute("shortage", shortageSummary);
 			model.addAttribute("planlines", table);
 			model.addAttribute("title", messageSource.getMessage("prodcomp.shortage.list", null, locale));
