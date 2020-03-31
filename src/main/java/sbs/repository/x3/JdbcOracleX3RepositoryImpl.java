@@ -451,6 +451,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 						+ company + ".ITMMASTER.ITMREF_0, "
 						+ company + ".ITMMASTER.ITMDES1_0, "
 						+ company + ".ITMMASTER.ITMDES2_0, "
+						+ company + ".ITMMASTER.XVGIAC_0, "
 						+ company + ".ITMMASTER.TCLCOD_0, "
 						+ company + ".ITMMASTER.TSICOD_1 "
 						+ "FROM " 
@@ -461,13 +462,16 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		
 		Map<String, X3Product> result = new HashMap<>();
 		X3Product product = null;
-		
+		boolean tmpBoolean; 
 		for(Map<String,Object> row: resultSet ){
 			product = new X3Product();
 			product.setCode((String)row.get("ITMREF_0"));
 			product.setDescription(((String)row.get("ITMDES1_0")) + " " +  ((String)row.get("ITMDES2_0")));
 			product.setCategory((String)row.get("TCLCOD_0"));
 			product.setGr2((String)row.get("TSICOD_1"));
+			tmpBoolean = ((BigDecimal)row.get("XVGIAC_0")).intValue() == 2 ? true : false;
+			product.setVerifyStock(tmpBoolean);
+			
 			result.put(product.getCode(), product);
 		}
 		

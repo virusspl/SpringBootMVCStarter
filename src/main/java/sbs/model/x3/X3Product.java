@@ -6,6 +6,7 @@ public class X3Product {
 	private String description;
 	private String category;
 	private String gr2;
+	private boolean verifyStock;
 
 	public X3Product() {
 	
@@ -57,6 +58,14 @@ public class X3Product {
 
 	public void setGr2(String gr2) {
 		this.gr2 = gr2;
+	}
+	
+	public boolean isVerifyStock() {
+		return verifyStock;
+	}
+
+	public void setVerifyStock(boolean verifyStock) {
+		this.verifyStock = verifyStock;
 	}
 
 	@Override
