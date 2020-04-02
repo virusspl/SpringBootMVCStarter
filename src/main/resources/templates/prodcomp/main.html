@@ -7,6 +7,46 @@
 </head>
 <body>
 	<div layout:fragment="script">
+	<!-- DATEPICKER -->
+		<script th:src="@{/datepicker/js/bootstrap-datepicker.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:src="@{/datepicker/locales/bootstrap-datepicker.pl.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script
+			th:src="@{/datepicker/locales/bootstrap-datepicker.en-GB.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:src="@{/datepicker/locales/bootstrap-datepicker.it.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:if="__${#locale}__ == 'pl'">
+			$('#startDate').datepicker({
+				autoclose : true,
+				language : 'pl'
+			});
+			$('#endDate').datepicker({
+				autoclose : true,
+				language : 'pl'
+			});
+		</script>
+		<script th:if="__${#locale}__ == 'en'">
+			$('#startDate').datepicker({
+				autoclose : true,
+				language : 'en-GB'
+			});
+			$('#endDate').datepicker({
+				autoclose : true,
+				language : 'en-GB'
+			});
+		</script>
+		<script th:if="__${#locale}__ == 'it'">
+			$('#startDate').datepicker({
+				autoclose : true,
+				language : 'it'
+			});
+			$('#endDate').datepicker({
+				autoclose : true,
+				language : 'it'
+			});
+		</script>
 		<!-- FILE UPLOAD HELPER -->
 		<script>
 			document.getElementById('file').onchange = function(evt) {

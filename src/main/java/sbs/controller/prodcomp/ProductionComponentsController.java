@@ -528,7 +528,7 @@ public class ProductionComponentsController {
 		// check if component exist
 		String component;
 		String componentDescription;
-		formComponent.setComponent(formComponent.getComponent().toUpperCase());
+		formComponent.setComponent(formComponent.getComponent().toUpperCase().trim());
 		component = formComponent.getComponent();
 		componentDescription = x3Service.findItemDescription("ATW", component);
 		if (componentDescription == null) {
@@ -585,6 +585,7 @@ public class ProductionComponentsController {
 		// create sales objects and calculate chains
 		List<SalesLineAndChains> salesObjects = new ArrayList<>();
 		SalesLineAndChains object;
+		int targetCodeDemand = 0;
 		for (X3SalesOrderLine line : orders) {
 			object = new SalesLineAndChains(line);
 			for (List<X3BomPart> finalChain : finalChains) {
@@ -595,16 +596,18 @@ public class ProductionComponentsController {
 			}
 			if (object.getChains().size() > 0) {
 				salesObjects.add(object);
+				targetCodeDemand += object.getTargetProductDemand(component);
 			}
 		}
+		
 
 		model.addAttribute("salesObjects", salesObjects);
+		model.addAttribute("coverage", "[" + targetCodeDemand + "/" + generalStock.get(component) + "]");
 		/*
 		 * for(SalesLineAndChains obj: salesObjects) { S
 		 * ystem.out.println(obj.getLine()); for(List<X3BomPart> schain:
 		 * obj.getChains()){ S ystem.out.println(chainToString(schain)); } }
 		 */
-
 		model.addAttribute("component", component);
 		model.addAttribute("componentDescription", componentDescription);
 		model.addAttribute("title", component);

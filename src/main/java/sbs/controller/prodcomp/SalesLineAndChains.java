@@ -67,5 +67,17 @@ public class SalesLineAndChains {
 	private void calculateToSendValue() {
 		this.toSendValue = this.line.getExchangeRate() * this.line.getUnitPrice() * this.line.getQuantityLeftToSend();
 	}
+
+	public int getTargetProductDemand(String component) {
+		int demand = 0;
+		for(List<X3BomPart> chain: chains) {
+			for(X3BomPart part: chain) {
+				if(part.getParentCode().equalsIgnoreCase(component)) {
+					demand += part.getQuantityDemand();
+				}
+			}
+		}
+		return demand;
+	}
 	
 }
