@@ -49,6 +49,21 @@
 					orientation : 'portrait'
 				} ]
 			});
+			$('#srv1').DataTable({
+				language : {
+					url : getUrl() + file,
+				},
+				order : [ [ 0, 'asc' ] ],
+				paging : true,
+				dom : 'Bfrtip',
+				buttons : [ {
+					extend : 'excel',
+					text : 'Excel'
+				}, {
+					extend : 'pdfHtml5',
+					orientation : 'portrait'
+				} ]
+			});
 			$('#srv2').DataTable({
 				language : {
 					url : getUrl() + file,
@@ -128,13 +143,13 @@
 			</div>
 			<div class="col-xs-12">
 				<div class="table-responsive">
-					<table id="srv" class="display" style="font-size: 90%;">
+					<table id="srv1" class="display" style="font-size: 90%;">
 						<thead>
 							<tr>
 								<th th:text="#{general.productCode}">head</th>
 								<th th:text="#{general.productDescription}">head</th>
 								<th th:text="#{general.client.code}">head</th>
-								<th th:text="#{general.client.name}">head</th>															
+								<th th:text="#{general.client.name}">head</th>
 								<th th:text="#{general.order.sales}">head</th>
 								<th th:text="#{general.line}">head</th>
 								<th th:text="#{general.date.demanded.short}">head</th>
@@ -149,14 +164,16 @@
 									<td><span th:text="${obj.line.productCode}"></span></td>
 									<td><span th:text="${obj.line.productDescription}"></span></td>
 									<td><span th:text="${obj.line.clientCode}"></span></td>
-									<td><span th:text="${obj.line.clientName}"></span></td>									
+									<td><span th:text="${obj.line.clientName}"></span></td>
 									<td><span th:text="${obj.line.orderNumber}"></span></td>
-									<td><span th:text="${obj.line.orderLineNumber}"></span></td>									
-									<td><span th:text="${#dates.format(obj.line.demandedDate, 'yyyy.MM.dd')}"></span></td>
+									<td><span th:text="${obj.line.orderLineNumber}"></span></td>
+									<td><span
+										th:text="${#dates.format(obj.line.demandedDate, 'yyyy.MM.dd')}"></span></td>
 									<td><span th:text="${obj.line.quantityOrdered}"></span></td>
 									<td><span th:text="${obj.line.quantityLeftToSend}"></span></td>
-									<td><span th:text="${#numbers.formatDecimal(obj.toSendValue, 1, 'WHITESPACE', 2, 'POINT')}"></span></td>
-									
+									<td><span
+										th:text="${#numbers.formatDecimal(obj.toSendValue, 1, 'WHITESPACE', 2, 'POINT')}"></span></td>
+
 								</tr>
 								<tr th:each="chain : ${obj.chains}">
 									<td colspan="10">
@@ -181,20 +198,77 @@
 								<th th:text="#{general.productCode}">head</th>
 								<th th:text="#{general.productDescription}">head</th>
 								<th th:text="#{general.client.code}">head</th>
-								<th th:text="#{general.client.name}">head</th>															
+								<th th:text="#{general.client.name}">head</th>
 								<th th:text="#{general.order.sales}">head</th>
 								<th th:text="#{general.line}">head</th>
 								<th th:text="#{general.date.demanded.short}">head</th>
 								<th th:text="#{prodtosale.ordered}">head</th>
 								<th th:text="#{prodtosale.lefttosend}">head</th>
-								<th th:text="|#{general.value} [PLN]]|">head</th>		
+								<th th:text="|#{general.value} [PLN]]|">head</th>
 							</tr>
 						</tfoot>
 					</table>
 				</div>
 			</div>
 		</div>
-		
+
+		<div class="row" th:if="${salesObjects}">
+			<div class="col-xs-12">
+				<h3 th:text="|${component} - ${componentDescription} ${coverage}|"
+					class="text-primary"></h3>
+			</div>
+			<div class="col-xs-12">
+				<div class="table-responsive">
+					<table id="srv" class="display" style="font-size: 90%;">
+						<thead>
+							<tr>
+								<th th:text="#{general.productCode}">head</th>
+								<th th:text="#{general.productDescription}">head</th>
+								<th th:text="#{general.client.code}">head</th>
+								<th th:text="#{general.client.name}">head</th>
+								<th th:text="#{general.order.sales}">head</th>
+								<th th:text="#{general.line}">head</th>
+								<th th:text="#{general.date.demanded.short}">head</th>
+								<th th:text="#{prodtosale.ordered}">head</th>
+								<th th:text="#{prodtosale.lefttosend}">head</th>
+								<th th:text="|#{general.value} [PLN]|">head</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="obj : ${salesObjects}">
+								<td><span th:text="${obj.line.productCode}"></span></td>
+								<td><span th:text="${obj.line.productDescription}"></span></td>
+								<td><span th:text="${obj.line.clientCode}"></span></td>
+								<td><span th:text="${obj.line.clientName}"></span></td>
+								<td><span th:text="${obj.line.orderNumber}"></span></td>
+								<td><span th:text="${obj.line.orderLineNumber}"></span></td>
+								<td><span
+									th:text="${#dates.format(obj.line.demandedDate, 'yyyy.MM.dd')}"></span></td>
+								<td><span th:text="${obj.line.quantityOrdered}"></span></td>
+								<td><span th:text="${obj.line.quantityLeftToSend}"></span></td>
+								<td><span
+									th:text="${#numbers.formatDecimal(obj.toSendValue, 1, 'NONE', 2, 'POINT')}"></span></td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<th th:text="#{general.productCode}">head</th>
+								<th th:text="#{general.productDescription}">head</th>
+								<th th:text="#{general.client.code}">head</th>
+								<th th:text="#{general.client.name}">head</th>
+								<th th:text="#{general.order.sales}">head</th>
+								<th th:text="#{general.line}">head</th>
+								<th th:text="#{general.date.demanded.short}">head</th>
+								<th th:text="#{prodtosale.ordered}">head</th>
+								<th th:text="#{prodtosale.lefttosend}">head</th>
+								<th th:text="|#{general.value} [PLN]]|">head</th>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+
 		<div class="row" th:if="${planlines}">
 			<div class="col-xs-12">
 				<h1 th:text="#{prodcomp.shortage.list}" class="text-primary"></h1>
@@ -212,10 +286,10 @@
 								<th th:text="#{general.country}">head</th>
 								<th th:text="#{general.line.value}">head</th>
 								<th th:text="#{prodcomp.shortage.value.short}">head</th>
-								<th th:text="#{general.quantity}">head</th>								
-								<th th:text="#{prodcomp.maxproduction.short}">head</th>								
-								<th th:text="#{prodcomp.shortage.quantity.short}">head</th>								
-								<th th:text="#{prodcomp.shortage.list}">head</th>								
+								<th th:text="#{general.quantity}">head</th>
+								<th th:text="#{prodcomp.maxproduction.short}">head</th>
+								<th th:text="#{prodcomp.shortage.quantity.short}">head</th>
+								<th th:text="#{prodcomp.shortage.list}">head</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -244,22 +318,23 @@
 								<th th:text="#{general.country}">head</th>
 								<th th:text="#{general.line.value}">head</th>
 								<th th:text="#{prodcomp.shortage.value.short}">head</th>
-								<th th:text="#{general.quantity}">head</th>								
-								<th th:text="#{prodcomp.maxproduction.short}">head</th>								
-								<th th:text="#{prodcomp.shortage.quantity.short}">head</th>								
-								<th th:text="#{prodcomp.shortage.list}">head</th>								
+								<th th:text="#{general.quantity}">head</th>
+								<th th:text="#{prodcomp.maxproduction.short}">head</th>
+								<th th:text="#{prodcomp.shortage.quantity.short}">head</th>
+								<th th:text="#{prodcomp.shortage.list}">head</th>
 							</tr>
-						</tfoot>						
+						</tfoot>
 					</table>
 				</div>
 
 			</div>
 		</div>
-		
-		
+
+
 		<div class="row" th:if="${shortage}">
 			<div class="col-xs-12">
-				<h1 th:text="|#{prodcomp.shortage.list} - #{general.summary}|" class="text-primary"></h1>
+				<h1 th:text="|#{prodcomp.shortage.list} - #{general.summary}|"
+					class="text-primary"></h1>
 			</div>
 			<div class="col-xs-12">
 				<div class="table-responsive">
@@ -270,7 +345,7 @@
 								<th th:text="#{general.productDescription}">head</th>
 								<th th:text="#{prodcomp.initialQuantity.short}">head</th>
 								<th th:text="|#{prodcomp.inOrder.short} [${days}]|">head</th>
-								<th th:text="#{prodcomp.shortage}">head</th>								
+								<th th:text="#{prodcomp.shortage}">head</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -287,16 +362,16 @@
 								<th th:text="#{general.productCode}">head</th>
 								<th th:text="#{general.productDescription}">head</th>
 								<th th:text="#{prodcomp.initialQuantity.short}">head</th>
-								<th th:text="|#{prodcomp.inOrder.short} [${days}]|">head</th>								
-								<th th:text="#{prodcomp.shortage}">head</th>								
+								<th th:text="|#{prodcomp.inOrder.short} [${days}]|">head</th>
+								<th th:text="#{prodcomp.shortage}">head</th>
 							</tr>
-						</tfoot>						
+						</tfoot>
 					</table>
 				</div>
 
 			</div>
 		</div>
-				
+
 	</div>
 </body>
 </html>
