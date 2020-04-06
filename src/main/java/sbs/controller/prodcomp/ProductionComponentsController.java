@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -50,6 +49,7 @@ public class ProductionComponentsController {
 	@RequestMapping("/main")
 	public String view(Model model) {
 		FormComponent formComponent = new FormComponent();
+		/*
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.MONTH, -1);
 		cal.set(Calendar.DAY_OF_MONTH, 1);
@@ -57,9 +57,9 @@ public class ProductionComponentsController {
 
 		cal = Calendar.getInstance();
 		cal.add(Calendar.MONTH, 1);
-		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));	
 		formComponent.setEndDate(new Timestamp(cal.getTimeInMillis()));
-
+		 */
 		model.addAttribute("formComponent", formComponent);
 		return "prodcomp/main";
 	}
