@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script"></div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h2 th:text="|#{shipcust.transport.create}|" class="text-primary"></h2>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-20">
+				<span th:text="#{shipcust.transport.create}"> Welcome message
+				</span>
+			</div>
+		</div>
+		<div class="row">
+			<!-- BACK TO MAIN PAGE -->
+			<a th:href="@{/shipcust/sales/transport/manage}" class="btn btn-link btn-sm">
+				<span class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+		<div class="underline margin-top-20"></div>
+		<!-- BHP TICKET FORM -->
+		<form th:action="@{/shipcust/sales/transport/create}" method="post"
+			th:object="${formCreateTransport}">
+			<div class="row margin-top-10">
+				<div class="col-lg-7 col-md-9 col-xs-12">
+					<div class="form-group">
+						<label for="transport" th:text="#{general.carrier}">txt</label>
+						<input type="text" class="form-control" id="transport"
+							name="transport" th:placeholder="#{general.name}"
+							th:field="*{transport}"></input>
+						<div th:errors="*{transport}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="row margin-top-10">
+				<!-- BACK TO MAIN PAGE -->
+				<a th:href="@{/shipcust/sales/transport/manage}" class="btn btn-link btn-sm">
+					<span class="glyphicon glyphicon-menu-left"></span> <span
+					th:text="#{action.back}">back</span>
+				</a>
+				<button class="btn btn-primary btn-sm" type="submit" name="save">
+					<span class="glyphicon glyphicon-ok"></span> <span
+						th:text="#{action.save}">create</span>
+				</button>
+			</div>
+		</form>
+		<!-- /USER FORM -->
+	</div>
+</body>
+</html>

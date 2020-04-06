@@ -1,5 +1,7 @@
 package sbs.service.shipcust;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -12,13 +14,17 @@ import sbs.service.GenericServiceAdapter;
 @Service
 public class CustomShipmentLinesServiceImpl extends GenericServiceAdapter<CustomShipmentLine, Integer> implements CustomShipmentLinesService{
 	
-	@SuppressWarnings("unused")
 	private CustomShipmentLinesRepository customShipmentLinesRepository;
 	
     @Autowired
 	public CustomShipmentLinesServiceImpl(@Qualifier("customShipmentLinesRepositoryImpl") GenericRepository<CustomShipmentLine, Integer> genericRepository) {
 			super(genericRepository);
 			this.customShipmentLinesRepository = (CustomShipmentLinesRepository) genericRepository;
+	}
+
+	@Override
+	public List<CustomShipmentLine> findAllPendingSpare(int spareTypeProdOrAcq) {
+		return customShipmentLinesRepository.findAllPendingSpare(spareTypeProdOrAcq);
 	}
 
 

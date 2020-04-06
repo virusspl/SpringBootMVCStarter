@@ -288,6 +288,44 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"RCPTOSALEUSER",
 				"RCPMANAGER"
 				)
+		.antMatchers(
+				"/shipcust/sales/**"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"SHIPCUST_SALES"
+				)
+		.antMatchers(
+				"/shipcust/spare/**"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"SHIPCUST_SPARE"
+				)
+		.antMatchers(
+				"/shipcust/acq/**"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"SHIPCUST_ACQ"
+				)
+		.antMatchers(
+				"/shipcust/ship/**"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"SHIPCUST_SHIP"
+				)
+		.antMatchers(
+				"/shipcust/**"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"SHIPCUST_SALES",
+				"SHIPCUST_SPARE",
+				"SHIPCUST_ACQ",
+				"SHIPCUST_SHIP"
+				)		
 		 // ** old modules to delete **
 		.antMatchers(
 				"/qualitysurveys/**")

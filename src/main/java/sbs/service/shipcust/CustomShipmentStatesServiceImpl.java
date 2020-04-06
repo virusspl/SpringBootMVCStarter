@@ -12,13 +12,22 @@ import sbs.service.GenericServiceAdapter;
 @Service
 public class CustomShipmentStatesServiceImpl extends GenericServiceAdapter<ShipCustState, Integer> implements CustomShipmentStatesService{
 	
-	@SuppressWarnings("unused")
 	private CustomShipmentStatesRepository customShipmentStatesRepository;
 	
     @Autowired
 	public CustomShipmentStatesServiceImpl(@Qualifier("customShipmentStatesRepositoryImpl") GenericRepository<ShipCustState, Integer> genericRepository) {
 			super(genericRepository);
 			this.customShipmentStatesRepository = (CustomShipmentStatesRepository) genericRepository;
+	}
+
+	@Override
+	public ShipCustState findByOrder(int order) {
+		return customShipmentStatesRepository.findByOrder(order);
+	}
+
+	@Override
+	public ShipCustState findByInternalTitle(String typeInternalTitle) {
+		return customShipmentStatesRepository.findByInternalTitle(typeInternalTitle);
 	}
 
 

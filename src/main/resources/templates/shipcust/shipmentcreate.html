@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script">
+		<!-- SELECTIZE JS -->
+		<script th:src="@{/selectize/js/selectize.min.js}"
+			type="text/javascript">
+		</script>
+		<script>
+			$('#transport').selectize();
+		</script>
+		<!-- DATEPICKER -->
+		<script th:src="@{/datepicker/js/bootstrap-datepicker.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:src="@{/datepicker/locales/bootstrap-datepicker.pl.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script
+			th:src="@{/datepicker/locales/bootstrap-datepicker.en-GB.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:src="@{/datepicker/locales/bootstrap-datepicker.it.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:if="__${#locale}__ == 'pl'">
+			$('#startDate').datepicker({
+				autoclose : true,
+				language : 'pl'
+			});
+			$('#endDate').datepicker({
+				autoclose : true,
+				language : 'pl'
+			});
+		</script>
+		<script th:if="__${#locale}__ == 'en'">
+			$('#startDate').datepicker({
+				autoclose : true,
+				language : 'en-GB'
+			});
+			$('#endDate').datepicker({
+				autoclose : true,
+				language : 'en-GB'
+			});
+		</script>
+		<script th:if="__${#locale}__ == 'it'">
+			$('#startDate').datepicker({
+				autoclose : true,
+				language : 'it'
+			});
+			$('#endDate').datepicker({
+				autoclose : true,
+				language : 'it'
+			});
+		</script>
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h2 th:text="|#{shipcust.addorder}|" class="text-primary"></h2>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{shipcust.addorder}"> Welcome message </span>
+			</div>
+		</div>
+		<div class="row">
+			<!-- BACK TO MAIN PAGE -->
+			<a th:href="@{/shipcust/sales}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+		<div class="underline margin-top-10"></div>
+		<!-- BHP TICKET FORM -->
+		<form th:action="@{/shipcust/sales/order/create}" method="post"
+			th:object="${formCreateCustomShipment}">
+			<div class="row margin-top-10">
+				<div class="col-md-4 col-xs-11">
+					<div class="form-group">
+						<label for="clientCode"
+							th:text="#{general.client.code}">Description</label>
+						<input type="text" class="form-control" id="clientCode"
+							name="clientCode" th:placeholder="#{general.client.code}"
+							autocomplete="off" th:field="*{clientCode}"></input>
+						<div th:errors="*{clientCode}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-md-4 col-xs-11">
+					<div class="form-group">
+						<label for="transportId" th:text="#{general.carrier}">txt</label>
+						<select class="form-control" id="transportId" name="transportId"
+							th:placeholder="#{general.carrier}" th:field="*{transportId}">
+							<option th:each="obj,stat : ${transportList}"
+								th:value="${transportList[__${stat.index}__].id}"
+								th:text="|${transportList[__${stat.index}__].name}|">txt</option>
+						</select>
+						<div th:errors="*{transportId}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4 col-xs-11">
+					<div class="form-group">
+						<!-- start date -->
+						<label for="startDate" th:text="#{movements.date.start}">startDate</label>
+						<input type="text" class="form-control" id="startDate"
+							name="startDate" th:placeholder="#{movements.date.start}"
+							th:field="*{startDate}" autocomplete="off" />
+						<div th:errors="*{startDate}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-md-4 col-xs-11">
+					<div class="form-group">
+						<!-- end date -->
+						<label for="endDate" th:text="#{movements.date.end}">endDate</label>
+						<input type="text" class="form-control" id="endDate"
+							name="endDate" th:placeholder="#{movements.date.end}"
+							th:field="*{endDate}" autocomplete="off" />
+						<div th:errors="*{endDate}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				</div>
+				<div class="row">
+				<div class="col-md-8 col-xs-11">
+					<div class="form-group">
+						<label for="comment"
+							th:text="|#{general.comment} (#{general.optional})|">Description</label>
+						<input type="text" class="form-control" id="comment"
+							name="comment" th:placeholder="#{general.comment}"
+							autocomplete="off" th:field="*{comment}"></input>
+						<div th:errors="*{comment}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="row margin-top-10">
+				<!-- BACK TO MAIN PAGE -->
+				<a th:href="@{/shipcust/sales}" class="btn btn-link btn-sm"> <span
+					class="glyphicon glyphicon-menu-left"></span> <span
+					th:text="#{action.back}">back</span>
+				</a>
+				<button class="btn btn-primary btn-sm" type="submit" name="save">
+					<span class="glyphicon glyphicon-ok"></span> <span
+						th:text="#{action.save}">create</span>
+				</button>
+			</div>
+		</form>
+		<!-- /USER FORM -->
+	</div>
+</body>
+</html>

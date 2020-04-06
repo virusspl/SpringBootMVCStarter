@@ -28,10 +28,12 @@ public class CustomShipmentLine {
 	@JoinColumn(name = "scl_shipment_line_state_id", nullable = false)
 	private ShipCustLineState state;
 	
-	@Column(name = "scl_product_code", length = 45, nullable = false)
+	@Column(name = "scl_product_code", length = 25, nullable = false)
 	private String productCode;
 	@Column(name = "scl_product_description", length = 150, nullable = false)
 	private String productDescription;
+	@Column(name = "scl_product_category", length = 5, nullable = false)
+	private String productCategory;
 	
 	@Column(name = "scl_quantity_demanded", nullable = false)
 	private int quantityDemanded;
@@ -65,11 +67,11 @@ public class CustomShipmentLine {
 	private Timestamp shipmentActionDate;
 	
 	@Column(name = "scl_sales_action_user_name", length = 30, nullable = false)
-	private Timestamp salesActionUserName;
+	private String salesActionUserName;
 	@Column(name = "scl_spare_action_user_name", length = 30, nullable = true)
-	private Timestamp spareActionUserName;
+	private String spareActionUserName;
 	@Column(name = "scl_shipment_action_user_name", length = 30, nullable = true)
-	private Timestamp shipmentActionUserName;	
+	private String shipmentActionUserName;	
 	
 	public CustomShipmentLine() {
 	
@@ -219,27 +221,35 @@ public class CustomShipmentLine {
 		this.shipmentActionDate = shipmentActionDate;
 	}
 
-	public Timestamp getSalesActionUserName() {
+	public String getProductCategory() {
+		return productCategory;
+	}
+
+	public void setProductCategory(String productCategory) {
+		this.productCategory = productCategory;
+	}
+
+	public String getSalesActionUserName() {
 		return salesActionUserName;
 	}
 
-	public void setSalesActionUserName(Timestamp salesActionUserName) {
+	public void setSalesActionUserName(String salesActionUserName) {
 		this.salesActionUserName = salesActionUserName;
 	}
 
-	public Timestamp getSpareActionUserName() {
+	public String getSpareActionUserName() {
 		return spareActionUserName;
 	}
 
-	public void setSpareActionUserName(Timestamp spareActionUserName) {
+	public void setSpareActionUserName(String spareActionUserName) {
 		this.spareActionUserName = spareActionUserName;
 	}
 
-	public Timestamp getShipmentActionUserName() {
+	public String getShipmentActionUserName() {
 		return shipmentActionUserName;
 	}
 
-	public void setShipmentActionUserName(Timestamp shipmentActionUserName) {
+	public void setShipmentActionUserName(String shipmentActionUserName) {
 		this.shipmentActionUserName = shipmentActionUserName;
 	}
 

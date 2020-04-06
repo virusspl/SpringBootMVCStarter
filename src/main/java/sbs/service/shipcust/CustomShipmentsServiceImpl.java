@@ -1,5 +1,7 @@
 package sbs.service.shipcust;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,16 @@ public class CustomShipmentsServiceImpl extends GenericServiceAdapter<CustomShip
 	public CustomShipmentsServiceImpl(@Qualifier("customShipmentsRepositoryImpl") GenericRepository<CustomShipment, Integer> genericRepository) {
 			super(genericRepository);
 			this.customShipmentsRepository = (CustomShipmentsRepository) genericRepository;
+	}
+
+	@Override
+	public List<CustomShipment> findAllClosed() {
+		return customShipmentsRepository.findAllClosed();
+	}
+
+	@Override
+	public List<CustomShipment> findAllPending() {
+		return customShipmentsRepository.findAllPending();
 	}
 
 

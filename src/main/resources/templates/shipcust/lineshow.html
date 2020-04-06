@@ -1,0 +1,236 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head>
+</head>
+<body>
+	<div layout:fragment="script"></div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12 col-xs-offset-0">
+				<h2 th:text="|#{shipcust.line.view} [#${line.id}]|"
+					class="text-primary">Hello on a page</h2>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{shipcust.line.view}"> Welcome message </span>
+			</div>
+
+			<!-- DUAL BACK BUTTON -->
+			<a
+				sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SHIPCUST_SALES', 'ROLE_SHIPCUST_SHIP')"
+				th:href="|@{/shipcust/show/order/}${line.shipment.id}|"
+				class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{shipcust.order}">back</span>
+			</a> <a
+				sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SHIPCUST_ACQ', 'ROLE_SHIPCUST_SPARE')"
+				th:href="@{/shipcust/dispatch}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{general.list}">back</span>
+			</a>
+			<!-- /DUAL BACK BUTTON -->
+		</div>
+
+		<!-- INFO -->
+		<div class="row">
+			<div class="col-xs-12">
+				<!-- /MAIN INFO -->
+				<div class="row">
+					<div class="col-xs-12">
+						<h3 th:text="|#{general.generalinfo}|"
+							class="text-primary underline"></h3>
+					</div>
+				</div>
+				<div class="row margin-top-5">
+					<div class="col-xs-12">
+						<div class="row">
+							<div class="col-xs-4 col-md-3">
+								<span th:text="#{general.productCode}">param</span>
+							</div>
+							<div class="col-xs-6 col-md-9">
+								<strong th:text="${line.productCode}" class="text-primary">value</strong>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-4 col-md-3">
+								<span th:text="#{general.productDescription}">param</span>
+							</div>
+							<div class="col-xs-6 col-md-9">
+								<strong th:text="${line.productDescription}"
+									class="text-primary">value</strong>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-4 col-md-3">
+								<span th:text="#{general.order.sales}">param</span>
+							</div>
+							<div class="col-xs-6 col-md-9">
+								<strong th:text="${line.salesOrder}" class="text-primary">value</strong>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-4 col-md-3">
+								<span th:text="#{shipcust.spare}">param</span>
+							</div>
+							<div class="col-xs-6 col-md-9">
+								<strong th:if="${line.spare}"
+									class="text-primary glyphicon glyphicon-ok"></strong> <strong
+									th:if="!${line.spare}"
+									class="text-primary glyphicon glyphicon-remove"></strong>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-4 col-md-3">
+								<span th:text="#{general.quantity}">param</span>
+							</div>
+							<div class="col-xs-6 col-md-9">
+								<strong th:text="${line.quantityDemanded}" class="text-primary">value</strong>
+							</div>
+						</div>
+
+
+					</div>
+				</div>
+				<!-- SALES SECTION -->
+				<div class="row">
+					<div class="col-xs-12">
+						<h3 th:text="|#{shipcust.sales}|" class="text-primary underline"></h3>
+					</div>
+				</div>
+				<div class="row margin-top-5">
+					<div class="col-xs-12">
+						<div class="row">
+							<div class="col-xs-4 col-md-3">
+								<span th:text="#{general.user}">param</span>
+							</div>
+							<div class="col-xs-6 col-md-9">
+								<strong th:text="${line.salesActionUserName}"
+									class="text-primary">value</strong>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-4 col-md-3">
+								<span th:text="#{general.date.update}">param</span>
+							</div>
+							<div class="col-xs-6 col-md-9">
+								<strong
+									th:text="${#dates.format(line.salesActionDate, 'yyyy-MM-dd HH:mm')}"
+									class="text-primary">value</strong>
+							</div>
+						</div>
+						<div class="row" th:if="${#strings.length(line.salesComment)>0}">
+							<div class="col-xs-4 col-md-3">
+								<span th:text="#{general.comment}">param</span>
+							</div>
+							<div class="col-xs-6 col-md-9 italic">
+								<strong th:text="${line.salesComment}"
+									class="text-primary italic">value</strong>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- SPARE SECTION -->
+				<div class="row" th:if="${line.spare}">
+					<div class="col-xs-12">
+						<h3 th:text="|#{shipcust.spare}|" class="text-primary underline"></h3>
+					</div>
+				</div>
+				<div class="row margin-top-5" th:if="${line.spare}">
+					<div class="col-xs-12">
+						<div class="row">
+							<div class="col-xs-4 col-md-3">
+								<span th:text="#{general.user}">param</span>
+							</div>
+							<div class="col-xs-6 col-md-9">
+								<strong th:if="${line.spareActionUserName}"
+									th:text="${line.spareActionUserName}" class="text-primary">value</strong>
+								<strong th:if="!${line.spareActionUserName}">-</strong>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-4 col-md-3">
+								<span th:text="#{general.date.update}">param</span>
+							</div>
+							<div class="col-xs-6 col-md-9">
+								<strong th:if="${line.spareActionDate}"
+									th:text="${#dates.format(line.spareActionDate, 'yyyy-MM-dd HH:mm')}"
+									class="text-primary">value</strong> <strong
+									th:if="!${line.spareActionDate}">-</strong>
+							</div>
+						</div>
+						<div class="row" th:if="${#strings.length(line.spareComment)>0}">
+							<div class="col-xs-4 col-md-3">
+								<span th:text="#{general.comment}">param</span>
+							</div>
+							<div class="col-xs-6 col-md-9 italic">
+								<strong th:text="${line.spareComment}"
+									class="text-primary italic">value</strong>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- SHIPMENT SECTION -->
+				<div class="row">
+					<div class="col-xs-12">
+						<h3 th:text="|#{shipcust.ship}|" class="text-primary underline"></h3>
+					</div>
+				</div>
+				<div class="row margin-top-5">
+					<div class="col-xs-12">
+						<div class="row">
+							<div class="col-xs-4 col-md-3">
+								<span th:text="#{general.user}">param</span>
+							</div>
+							<div class="col-xs-6 col-md-9">
+								<strong th:if="${line.spareActionUserName}"
+									th:text="${line.spareActionUserName}" class="text-primary">value</strong>
+								<strong th:if="!${line.spareActionUserName}">-</strong>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-4 col-md-3">
+								<span th:text="#{general.date.update}">param</span>
+							</div>
+							<div class="col-xs-6 col-md-9">
+								<strong th:if="${line.spareActionDate}"
+									th:text="${#dates.format(line.spareActionDate, 'yyyy-MM-dd HH:mm')}"
+									class="text-primary">value</strong> <strong
+									th:if="!${line.spareActionDate}">-</strong>
+							</div>
+						</div>
+						<div class="row" th:if="${#strings.length(line.spareComment)>0}">
+							<div class="col-xs-4 col-md-3">
+								<span th:text="#{general.comment}">param</span>
+							</div>
+							<div class="col-xs-6 col-md-9 italic">
+								<strong th:text="${line.spareComment}"
+									class="text-primary italic">value</strong>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--  BUTTONS PANEL
+		<div class="row margin-top-10"
+			sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SHIPCUST_SALES')">
+			<div class="col-xs-12">
+				<a	th:href="|@{/shipcust/sales/line/create/}${sh.id}|"
+					class="btn btn-primary btn-sm"> <span
+					class="glyphicon glyphicon-plus"></span> <span
+					th:text="#{general.add.line}"></span>
+				</a>
+				<a	th:href="|@{/shipcust/sales/order/cancel/}${sh.id}|"
+					th:onclick="|return confirm('#{general.areyousure}')|"
+					class="btn btn-danger btn-sm"> <span
+					class="glyphicon glyphicon-remove"></span> <span
+					th:text="#{shipcust.order.cancel}"></span>
+				</a>
+			</div>
+		</div>
+ 		-->
+	</div>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script"></div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h2
+					th:text="|#{shipcust.title} [#${formCreateCustomShipmentLine.shipmentId}] - #{general.add.line}|"
+					class="text-primary"></h2>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{general.add.line}"> Welcome message </span>
+			</div>
+		</div>
+		<div class="row">
+			<!-- BACK TO MAIN PAGE -->
+			<a
+				th:href="|@{/shipcust/show/order/}${formCreateCustomShipmentLine.shipmentId}|"
+				class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+		<div class="underline margin-top-10"></div>
+		<!-- BHP TICKET FORM -->
+		<form th:action="@{/shipcust/sales/line/create}" method="post"
+			th:object="${formCreateCustomShipmentLine}">
+			<!-- HIDDEN -->
+			<input type="hidden" th:field="*{clientCode}" /> <input
+				type="hidden" th:field="*{clientName}" /> <input type="hidden"
+				th:field="*{transport}" /> <input type="hidden"
+				th:field="*{shipmentId}" />
+			<!-- /HIDDEN -->
+			<div class="row margin-top-10">
+				<div class="col-xs-11" style="font-size: 115%;">
+					<strong class="text-primary"
+						th:text="|*{clientName} [*{clientCode}] - *{transport}|"></strong>
+				</div>
+			</div>
+			<div class="underline margin-top-10"></div>
+			<div class="row margin-top-10">
+				<div class="col-md-4 col-xs-11">
+					<div class="form-group">
+						<label for="productCode" th:text="#{general.productCode}">Description</label>
+						<input type="text" class="form-control" id="productCode"
+							name="productCode" th:placeholder="#{general.productCode}"
+							autocomplete="off" th:field="*{productCode}"></input>
+						<div th:errors="*{productCode}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-md-4 col-xs-11">
+					<div class="form-group">
+						<label for="spare" th:text="#{shipcust.spare}"></label>
+						<div id="spare" class="checkbox">
+							<label><input type="checkbox" th:field="*{spare}" /><span
+								th:text="#{shipcust.spare}"></span></label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4 col-xs-11">
+					<div class="form-group">
+						<label for="salesOrder" th:text="#{general.order.sales}">Description</label>
+						<input type="text" class="form-control" id="salesOrder"
+							name="salesOrder" th:placeholder="#{general.order.sales}"
+							autocomplete="off" th:field="*{salesOrder}"></input>
+						<div th:errors="*{salesOrder}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-md-4 col-xs-11">
+					<div class="form-group">
+						<label for="quantityDemanded" th:text="#{general.quantity}">Description</label>
+						<input type="text" class="form-control" id="quantityDemanded"
+							name="quantityDemanded" th:placeholder="#{general.quantity}"
+							autocomplete="off" th:field="*{quantityDemanded}"></input>
+						<div th:errors="*{quantityDemanded}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-8 col-xs-11">
+					<div class="form-group">
+						<label for="comment"
+							th:text="|#{general.comment} (#{general.optional})|">Description</label>
+						<input type="text" class="form-control" id="comment"
+							name="comment" th:placeholder="#{general.comment}"
+							autocomplete="off" th:field="*{comment}"></input>
+						<div th:errors="*{comment}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="row">
+				<div class="col-md-4 col-xs-11">
+					<div class="form-group">
+						<label for="addition" th:text="#{shipcust.addition}"></label>
+						<div id="addition" class="checkbox">
+							<label><input type="checkbox" th:field="*{addition}" /><span
+								th:text="#{shipcust.addition}"></span></label>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4 col-xs-11">
+					<div class="form-group">
+						<label for="certificate" th:text="#{shipcust.certificate}"></label>
+						<div id="certificate" class="checkbox">
+							<label><input type="checkbox" th:field="*{certificate}" /><span
+								th:text="#{shipcust.certificate}"></span></label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row"></div>
+			<div class="row margin-top-10">
+				<!-- BACK TO MAIN PAGE -->
+				<a
+					th:href="|@{/shipcust/show/order/}${formCreateCustomShipmentLine.shipmentId}|"
+					class="btn btn-link btn-sm"> <span
+					class="glyphicon glyphicon-menu-left"></span> <span
+					th:text="#{action.back}">back</span>
+				</a>
+				<button class="btn btn-primary btn-sm" type="submit" name="save">
+					<span class="glyphicon glyphicon-ok"></span> <span
+						th:text="#{action.save}">create</span>
+				</button>
+			</div>
+		</form>
+		<!-- /USER FORM -->
+	</div>
+</body>
+</html>

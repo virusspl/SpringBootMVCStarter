@@ -28,6 +28,8 @@ import sbs.model.downtimes.DowntimeType;
 import sbs.model.inventory.InventoryDataType;
 import sbs.model.qcheck.QCheckState;
 import sbs.model.qsurveys.QSurveyQuestionType;
+import sbs.model.shipcust.ShipCustLineState;
+import sbs.model.shipcust.ShipCustState;
 import sbs.model.shipments.ShipmentState;
 import sbs.model.tools.ToolsProjectState;
 import sbs.model.users.Role;
@@ -43,6 +45,8 @@ import sbs.service.optima.JdbcAdrOptimaService;
 import sbs.service.qcheck.QCheckStatesService;
 import sbs.service.qsurveys.QSurveyQuestionTypesService;
 import sbs.service.redmine.RedmineService;
+import sbs.service.shipcust.CustomShipmentLineStatesService;
+import sbs.service.shipcust.CustomShipmentStatesService;
 import sbs.service.shipments.ShipmentStatesService;
 import sbs.service.tools.ToolsProjectStateService;
 import sbs.service.users.RoleService;
@@ -91,6 +95,10 @@ public class VariousPagesController {
 	MathHelper mathHelper;
 	@Autowired
 	RedmineService redmineService;
+	@Autowired
+	CustomShipmentStatesService customShipmentStatesService;
+	@Autowired
+	CustomShipmentLineStatesService customShipmentLineStatesService;
 	
 	@RequestMapping("/test")
 	public String test(Model model, Locale locale) throws InterruptedException {
@@ -543,6 +551,38 @@ public class VariousPagesController {
 			msg += "[role: " + rcpToSaleUser.getName() + "], ";
 		}
 		
+		Role shipCustSales = roleService.findByName("ROLE_SHIPCUST_SALES");
+		if (shipCustSales == null) {
+			shipCustSales = new Role();
+			shipCustSales.setName("ROLE_SHIPCUST_SALES");
+			roleService.save(shipCustSales);
+			msg += "[role: " + shipCustSales.getName() + "], ";
+		}
+		
+		Role shipCustSpare = roleService.findByName("ROLE_SHIPCUST_SPARE");
+		if (shipCustSpare == null) {
+			shipCustSpare = new Role();
+			shipCustSpare.setName("ROLE_SHIPCUST_SPARE");
+			roleService.save(shipCustSpare);
+			msg += "[role: " + shipCustSpare.getName() + "], ";
+		}
+		
+		Role shipCustAcq = roleService.findByName("ROLE_SHIPCUST_ACQ");
+		if (shipCustAcq == null) {
+			shipCustAcq = new Role();
+			shipCustAcq.setName("ROLE_SHIPCUST_ACQ");
+			roleService.save(shipCustAcq);
+			msg += "[role: " + shipCustAcq.getName() + "], ";
+		}
+		
+		Role shipCustShip = roleService.findByName("ROLE_SHIPCUST_SHIP");
+		if (shipCustShip == null) {
+			shipCustShip = new Role();
+			shipCustShip.setName("ROLE_SHIPCUST_SHIP");
+			roleService.save(shipCustShip);
+			msg += "[role: " + shipCustShip.getName() + "], ";
+		}
+		
 		// ROLE END
 
 		User admin = userService.findByUsername("Admin");
@@ -945,6 +985,102 @@ public class VariousPagesController {
 			downtimeResponseTypesService.save(downtimeResponseType);
 			msg += "[downtimeResponseType: " + downtimeResponseType.getOrder() + " " + downtimeResponseType.getInternalTitle() + "], ";
 		}	 
+		
+		ShipCustState shipCustState;
+		
+		if (customShipmentStatesService.findByOrder(10) == null) {
+			shipCustState = new ShipCustState();
+			shipCustState.setOrder(10);
+			shipCustState.setTitle("waiting");
+			shipCustState.setCode("shipcust.state.waiting");
+			customShipmentStatesService.save(shipCustState);
+			msg += "[shipCustState: " + shipCustState.getOrder() + " " + shipCustState.getTitle() + "], ";
+		}	
+		if (customShipmentStatesService.findByOrder(20) == null) {
+			shipCustState = new ShipCustState();
+			shipCustState.setOrder(20);
+			shipCustState.setTitle("partially");
+			shipCustState.setCode("shipcust.state.part");
+			customShipmentStatesService.save(shipCustState);
+			msg += "[shipCustState: " + shipCustState.getOrder() + " " + shipCustState.getTitle() + "], ";
+		}	
+		if (customShipmentStatesService.findByOrder(30) == null) {
+			shipCustState = new ShipCustState();
+			shipCustState.setOrder(30);
+			shipCustState.setTitle("closed");
+			shipCustState.setCode("shipcust.state.closed");
+			customShipmentStatesService.save(shipCustState);
+			msg += "[shipCustState: " + shipCustState.getOrder() + " " + shipCustState.getTitle() + "], ";
+		}	
+		if (customShipmentStatesService.findByOrder(40) == null) {
+			shipCustState = new ShipCustState();
+			shipCustState.setOrder(40);
+			shipCustState.setTitle("cancelled");
+			shipCustState.setCode("shipcust.state.cancelled");
+			customShipmentStatesService.save(shipCustState);
+			msg += "[shipCustState: " + shipCustState.getOrder() + " " + shipCustState.getTitle() + "], ";
+		}	
+
+		ShipCustLineState shipCustLineState;
+		
+		if (customShipmentLineStatesService.findByOrder(5) == null) {
+			shipCustLineState = new ShipCustLineState();
+			shipCustLineState.setOrder(5);
+			shipCustLineState.setTitle("spare");
+			shipCustLineState.setCode("shipcust.line.state.spare");
+			customShipmentLineStatesService.save(shipCustLineState);
+			msg += "[shipCustLineState: " + shipCustLineState.getOrder() + " " + shipCustLineState.getTitle() + "], ";
+		}
+		
+		if (customShipmentLineStatesService.findByOrder(10) == null) {
+			shipCustLineState = new ShipCustLineState();
+			shipCustLineState.setOrder(10);
+			shipCustLineState.setTitle("waiting");
+			shipCustLineState.setCode("shipcust.line.state.waiting");
+			customShipmentLineStatesService.save(shipCustLineState);
+			msg += "[shipCustLineState: " + shipCustLineState.getOrder() + " " + shipCustLineState.getTitle() + "], ";
+		}
+		if (customShipmentLineStatesService.findByOrder(20) == null) {
+			shipCustLineState = new ShipCustLineState();
+			shipCustLineState.setOrder(20);
+			shipCustLineState.setTitle("lack");
+			shipCustLineState.setCode("shipcust.line.state.lack");
+			customShipmentLineStatesService.save(shipCustLineState);
+			msg += "[shipCustLineState: " + shipCustLineState.getOrder() + " " + shipCustLineState.getTitle() + "], ";
+		}
+		if (customShipmentLineStatesService.findByOrder(30) == null) {
+			shipCustLineState = new ShipCustLineState();
+			shipCustLineState.setOrder(30);
+			shipCustLineState.setTitle("ready");
+			shipCustLineState.setCode("shipcust.line.state.ready");
+			customShipmentLineStatesService.save(shipCustLineState);
+			msg += "[shipCustLineState: " + shipCustLineState.getOrder() + " " + shipCustLineState.getTitle() + "], ";
+		}
+		if (customShipmentLineStatesService.findByOrder(40) == null) {
+			shipCustLineState = new ShipCustLineState();
+			shipCustLineState.setOrder(40);
+			shipCustLineState.setTitle("shipped");
+			shipCustLineState.setCode("shipcust.line.state.shipped");
+			customShipmentLineStatesService.save(shipCustLineState);
+			msg += "[shipCustLineState: " + shipCustLineState.getOrder() + " " + shipCustLineState.getTitle() + "], ";
+		}
+		if (customShipmentLineStatesService.findByOrder(50) == null) {
+			shipCustLineState = new ShipCustLineState();
+			shipCustLineState.setOrder(50);
+			shipCustLineState.setTitle("notshipped");
+			shipCustLineState.setCode("shipcust.line.state.notshipped");
+			customShipmentLineStatesService.save(shipCustLineState);
+			msg += "[shipCustLineState: " + shipCustLineState.getOrder() + " " + shipCustLineState.getTitle() + "], ";
+		}
+		if (customShipmentLineStatesService.findByOrder(60) == null) {
+			shipCustLineState = new ShipCustLineState();
+			shipCustLineState.setOrder(60);
+			shipCustLineState.setTitle("cancelled");
+			shipCustLineState.setCode("shipcust.line.state.cancelled");
+			customShipmentLineStatesService.save(shipCustLineState);
+			msg += "[shipCustLineState: " + shipCustLineState.getOrder() + " " + shipCustLineState.getTitle() + "], ";
+		}
+		
 		
 		InventoryDataType invDataType;
 		// i18n codes
