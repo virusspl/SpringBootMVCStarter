@@ -281,6 +281,7 @@
 								<th th:text="#{general.order.sales}">head</th>
 								<th th:text="#{general.productCode}">head</th>
 								<th th:text="#{general.productDescription}">head</th>
+								<th th:text="|Gr. 2|">head</th>
 								<th th:text="#{general.date}">head</th>
 								<th th:text="#{general.client.name}">head</th>
 								<th th:text="#{general.country}">head</th>
@@ -306,6 +307,7 @@
 								<td><span th:text="${line[9]}"></span></td>
 								<td><span th:text="${line[10]}"></span></td>
 								<td><span th:text="${line[11]}"></span></td>
+								<td><span th:text="${line[12]}"></span></td>
 							</tr>
 						</tbody>
 						<tfoot>
@@ -343,6 +345,7 @@
 							<tr>
 								<th th:text="#{general.productCode}">head</th>
 								<th th:text="#{general.productDescription}">head</th>
+								<th th:text="|Gr. 2|">head</th>
 								<th th:text="#{prodcomp.initialQuantity.short}">head</th>
 								<th th:text="|#{prodcomp.inOrder.short} [${days}]|">head</th>
 								<th th:text="#{prodcomp.shortage}">head</th>
@@ -355,6 +358,7 @@
 								<td><span th:text="${line[2]}"></span></td>
 								<td><span th:text="${line[3]}"></span></td>
 								<td><span th:text="${line[4]}"></span></td>
+								<td><span th:text="${line[5]}"></span></td>
 							</tr>
 						</tbody>
 						<tfoot>

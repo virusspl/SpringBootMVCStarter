@@ -11,6 +11,7 @@ public class PlanLine {
 	private String date;
 	private String clientName;
 	private String country;
+	private String gr2;
 	private int quantity;
 	private int maxProduction;
 	private int shortageQuantity;
@@ -121,6 +122,14 @@ public class PlanLine {
 
 	public int getMaxProduction() {
 		return maxProduction;
+	}
+	
+	public String getGr2() {
+		return gr2;
+	}
+
+	public void setGr2(String gr2) {
+		this.gr2 = gr2;
 	}
 
 	public void setMaxProduction(int maxProduction) {

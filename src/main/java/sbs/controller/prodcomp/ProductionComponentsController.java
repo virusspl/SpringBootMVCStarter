@@ -349,6 +349,7 @@ public class ProductionComponentsController {
 				line.add(main.getOrder());
 				line.add(main.getCode());
 				line.add(main.getDescription());
+				line.add(products.containsKey(main.getCode()) ? products.get(main.getCode()).getGr2() : "XXX");
 				line.add(main.getDate());
 				line.add(main.getClientName());
 				line.add(main.getCountry());
@@ -369,7 +370,8 @@ public class ProductionComponentsController {
 			for(Map.Entry<String, Integer> entry: shortageList.entrySet()) {
 				shortageLine = new ArrayList<>();
 				shortageLine.add(entry.getKey());
-				shortageLine.add(products.get(entry.getKey()).getDescription());
+				shortageLine.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getDescription() : "XXX");				
+				shortageLine.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getGr2() : "XXX");				
 				shortageLine.add(initStock.getOrDefault(entry.getKey(), 0)+"");
 				shortageLine.add((expectedDelivery.getOrDefault(entry.getKey(), 0.0)).intValue()+"");
 				shortageLine.add(entry.getValue()+"");
