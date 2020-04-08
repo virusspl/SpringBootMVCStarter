@@ -108,7 +108,8 @@ public class CustomShipmentsController {
 	@RequestMapping(value = "/spare")
 	@Transactional
 	public String dispatchSpare(Model model) {
-		List<CustomShipmentLine> lines = shipmentLinesService.findAllPendingSpare(CustomShipmentLinesService.SPARE_PROD);
+		List<CustomShipmentLine> lines = shipmentLinesService
+				.findAllPendingSpare(CustomShipmentLinesService.SPARE_PROD);
 		model.addAttribute("spare", lines);
 		model.addAttribute("subtitle", "shipcust.spare");
 		return "shipcust/list";
@@ -118,7 +119,7 @@ public class CustomShipmentsController {
 	@Transactional
 	public String dispatchAcq(Model model) {
 		List<CustomShipmentLine> lines = shipmentLinesService.findAllPendingSpare(CustomShipmentLinesService.SPARE_ACQ);
-		model.addAttribute("spare", lines);		
+		model.addAttribute("spare", lines);
 		model.addAttribute("subtitle", "shipcust.acq");
 		return "shipcust/list";
 	}
@@ -130,6 +131,7 @@ public class CustomShipmentsController {
 	}
 
 	@RequestMapping(value = "/sales/transport/switch/{id}")
+	@Transactional
 	public String switchTransport(@PathVariable("id") int id, Model model) throws NotFoundException {
 		ShipCustTransport tr = transportService.findById(id);
 		if (tr == null) {
@@ -229,6 +231,14 @@ public class CustomShipmentsController {
 			throw new NotFoundException("Unknown shipment order: #" + id);
 		}
 
+		// return if closed or cancelled
+		if (shipment.getState().getOrder() >= 30) {
+			redirectAttrs.addFlashAttribute("warning",
+					messageSource.getMessage("shipcust.error.cantmodify", null, locale) + ": "
+							+ shipment.getState().getTitle());
+			return "redirect:/shipcust/show/order/" + shipment.getId();
+		}
+
 		ShipCustLineState stateLine = shipmentLineStatesService.findByOrder(60);
 		if (stateLine == null) {
 			throw new NotFoundException("Unknown custom shipment line state: " + 60);
@@ -239,18 +249,23 @@ public class CustomShipmentsController {
 			throw new NotFoundException("Unknown custom shipment state: " + 40);
 		}
 
+		String updateUser = userService.getAuthenticatedUser().getName();
+		Timestamp updateDate = new Timestamp((new java.util.Date()).getTime());
+		
 		shipment.setState(stateOrder);
 		for (CustomShipmentLine line : shipment.getLines()) {
 			if (line.getState().getOrder() < 40) {
 				line.setState(stateLine);
+				line.setSalesActionDate(updateDate);
+				line.setSalesActionUserName(updateUser);
 				shipmentLinesService.update(line);
 			}
 		}
 		shipmentsService.update(shipment);
 
-		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.cancelled", null, locale) 
-				+ ": #" + shipment.getId() + "[" + shipment.getClientName() + "]");
-		return "redirect:/shipcust/sales/transport/manage";
+		redirectAttrs.addFlashAttribute("warning", messageSource.getMessage("action.cancelled", null, locale) + ": #"
+				+ shipment.getId() + " [" + shipment.getClientName() + "]");
+		return "redirect:/shipcust/show/order/"+shipment.getId();
 	}
 
 	@RequestMapping(value = "/show/order/{id}")
@@ -270,11 +285,20 @@ public class CustomShipmentsController {
 	}
 
 	@RequestMapping(value = "/sales/line/create/{id}")
-	public String showCreateLine(@PathVariable("id") int id, Model model) throws NotFoundException {
+	public String showCreateLine(@PathVariable("id") int id, Model model, RedirectAttributes redirectAttrs,
+			Locale locale) throws NotFoundException {
 
 		CustomShipment shipment = shipmentsService.findById(id);
 		if (shipment == null) {
 			throw new NotFoundException("Unknown shipment order: #" + id);
+		}
+
+		// return if closed or cancelled
+		if (shipment.getState().getOrder() >= 30) {
+			redirectAttrs.addFlashAttribute("warning",
+					messageSource.getMessage("shipcust.error.cantmodify", null, locale) + ": "
+							+ shipment.getState().getTitle());
+			return "redirect:/shipcust/show/order/" + shipment.getId();
 		}
 
 		FormCreateCustomShipmentLine formCreateCustomShipmentLine = new FormCreateCustomShipmentLine(shipment);
@@ -290,6 +314,7 @@ public class CustomShipmentsController {
 			throws NotFoundException {
 
 		// VALIDATE
+		// short name :)
 		FormCreateCustomShipmentLine form = formCreateCustomShipmentLine;
 		// validate
 		if (bindingResult.hasErrors()) {
@@ -356,7 +381,7 @@ public class CustomShipmentsController {
 		return "redirect:/shipcust/show/order/" + shipment.getId();
 
 	}
-	
+
 	@RequestMapping(value = "/show/line/{id}")
 	@Transactional
 	public String showLine(@PathVariable("id") int id, Model model) throws NotFoundException {
@@ -368,5 +393,246 @@ public class CustomShipmentsController {
 		model.addAttribute("line", line);
 		return "shipcust/lineshow";
 	}
+
+	@RequestMapping(value = "/sales/line/cancel/{id}")
+	@Transactional
+	public String lineCancel(@PathVariable("id") int id, Model model, RedirectAttributes redirectAttrs, Locale locale)
+			throws NotFoundException {
+
+		// get line
+		CustomShipmentLine line = shipmentLinesService.findById(id);
+		if (line == null) {
+			throw new NotFoundException("Unknown shipment line: #" + id);
+		}
+
+		// allow only for pending
+		if (line.getState().getOrder() < 40) {
+			ShipCustLineState stateLineCancel = shipmentLineStatesService.findByOrder(60);
+			if (stateLineCancel == null) {
+				throw new NotFoundException("Unknown custom shipment line state: " + 60);
+			}
+			line.setState(stateLineCancel);
+			line.setSalesActionDate(new Timestamp((new java.util.Date()).getTime()));
+			line.setSalesActionUserName(userService.getAuthenticatedUser().getName());
+			shipmentLinesService.update(line);
+			redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		} else {
+			redirectAttrs.addFlashAttribute("warning",
+					messageSource.getMessage("shipcust.error.cantmodify", null, locale) + ": "
+							+ line.getState().getTitle());
+		}
+		return "redirect:/shipcust/show/line/" + line.getId();
+	}
+
+	@RequestMapping(value = "/sales/line/delete/{id}")
+	@Transactional
+	public String lineDelete(@PathVariable("id") int id, Model model, RedirectAttributes redirectAttrs, Locale locale)
+			throws NotFoundException {
+
+		// get line
+		CustomShipmentLine line = shipmentLinesService.findById(id);
+		if (line == null) {
+			throw new NotFoundException("Unknown shipment line: #" + id);
+		}
+
+		// allow only for not started
+		if (line.getState().getOrder() < 20) {
+			int shipId = line.getShipment().getId();
+			shipmentLinesService.remove(line);
+			redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.deleted", null, locale));
+			return "redirect:/shipcust/show/order/" + shipId;
+		} else {
+			redirectAttrs.addFlashAttribute("warning",
+					messageSource.getMessage("shipcust.error.cantmodify", null, locale) + ": "
+							+ line.getState().getTitle());
+			return "redirect:/shipcust/show/line/" + line.getId();
+		}
+	}
+
+	@RequestMapping(value = "/line/lack/{id}")
+	@Transactional
+	public String lineLack(@PathVariable("id") int id, Model model, RedirectAttributes redirectAttrs, Locale locale)
+			throws NotFoundException {
+		return serveSpareAction(id, model, redirectAttrs, locale, 20);
+	}
+
+	@RequestMapping(value = "/line/ready/{id}")
+	@Transactional
+	public String lineReady(@PathVariable("id") int id, Model model, RedirectAttributes redirectAttrs, Locale locale)
+			throws NotFoundException {
+		return serveSpareAction(id, model, redirectAttrs, locale, 30);
+	}
+
+	private String serveSpareAction(int id, Model model, RedirectAttributes redirectAttrs, Locale locale,
+			int stateOrder) throws NotFoundException {
+
+		// get line
+		CustomShipmentLine line = shipmentLinesService.findById(id);
+		if (line == null) {
+			throw new NotFoundException("Unknown shipment line: #" + id);
+		}
+
+		// allow only for spare state
+		if (line.getState().getOrder() == 5) {
+			// check if code type is correct for user role
+			if ((line.getProductCategory().equalsIgnoreCase("ACV")
+					&& !userService.getAuthenticatedUser().hasRole("ROLE_SHIPCUST_ACQ"))
+					|| (!line.getProductCategory().equalsIgnoreCase("ACV")
+							&& !userService.getAuthenticatedUser().hasRole("ROLE_SHIPCUST_SPARE"))) {
+				redirectAttrs.addFlashAttribute("warning",
+						messageSource.getMessage("shipcust.error.cantmodify", null, locale) + ": "
+								+ line.getProductCategory() + " vs. USER_ROLE");
+				return "redirect:/shipcust/show/line/" + line.getId();
+			}
+
+			ShipCustLineState stateLine = shipmentLineStatesService.findByOrder(stateOrder);
+			if (stateLine == null) {
+				throw new NotFoundException("Unknown custom shipment line state: " + stateOrder);
+			}
+			line.setState(stateLine);
+			line.setSpareActionDate(new Timestamp((new java.util.Date()).getTime()));
+			line.setSpareActionUserName(userService.getAuthenticatedUser().getName());
+			shipmentLinesService.update(line);
+			redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		} else {
+			redirectAttrs.addFlashAttribute("warning",
+					messageSource.getMessage("shipcust.error.cantmodify", null, locale) + ": "
+							+ line.getState().getTitle());
+			return "redirect:/shipcust/show/line/" + line.getId();
+		}
+
+		return "redirect:/shipcust/dispatch";
+	}
+
+	@RequestMapping(value = "/ship/line/manage/{id}")
+	@Transactional
+	public String showLineManageForShipments(@PathVariable("id") int id, Model model, RedirectAttributes redirectAttrs,
+			Locale locale) throws NotFoundException {
+
+		// get line
+		CustomShipmentLine line = shipmentLinesService.findById(id);
+		if (line == null) {
+			throw new NotFoundException("Unknown shipment line: #" + id);
+		}
+
+		// return if not waiting or ready (from warehouse)
+		if (line.getState().getOrder() != 10 && line.getState().getOrder() != 20 && line.getState().getOrder() != 30) {
+			redirectAttrs.addFlashAttribute("warning",
+					messageSource.getMessage("shipcust.error.cantmodify", null, locale) + ": "
+							+ line.getState().getTitle());
+			return "redirect:/shipcust/show/line/" + line.getId();
+		}
+
+		FormShipmentLineManage formShipmentLineManage = new FormShipmentLineManage(line, line.getShipment().getId());
+		model.addAttribute("formShipmentLineManage", formShipmentLineManage);
+
+		return "shipcust/linemanage";
+	}
 	
+	@RequestMapping(value = "/ship/line/manage", params = { "save" }, method = RequestMethod.POST)
+	@Transactional
+	public String saveShipLineAction(@Valid FormShipmentLineManage formShipmentLineManage,
+			BindingResult bindingResult, RedirectAttributes redirectAttrs, Locale locale, Model model)
+			throws NotFoundException {
+
+		// validate
+		if (bindingResult.hasErrors()) {
+			return "shipcust/linemanage";
+		}
+		
+		// get line
+		CustomShipmentLine line = shipmentLinesService.findById(formShipmentLineManage.getLineId());
+		if (line == null) {
+			throw new NotFoundException("Unknown shipment line: #" + formShipmentLineManage.getLineId());
+		}
+				
+		// get shipped line state
+		ShipCustLineState state = shipmentLineStatesService.findByOrder(40);
+		if (state == null) {
+			throw new NotFoundException("Unknown shipment line state:" + 40);
+		}
+		
+		line.setState(state);
+		
+		line.setShipmentActionDate(new Timestamp((new java.util.Date()).getTime()));
+		line.setShipmentActionUserName(userService.getAuthenticatedUser().getName());
+		line.setShipmentComment(formShipmentLineManage.getComment().trim());
+		
+		line.setQuantityShipped(formShipmentLineManage.getShipped());
+		line.setWaybill(formShipmentLineManage.getWaybill().trim().toUpperCase());
+		shipmentLinesService.update(line);
+
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		// calculate shipment main state and give redirect + message
+		return updateMainShipmentOrderState(line.getShipment(),redirectAttrs, locale);
+
+	}
+	
+	@RequestMapping(value = "/ship/line/manage", params = { "cancel" }, method = RequestMethod.POST)
+	@Transactional
+	public String cancelShipLineAction(@Valid FormShipmentLineManage formShipmentLineManage,
+			BindingResult bindingResult, RedirectAttributes redirectAttrs, Locale locale, Model model)
+					throws NotFoundException {
+		
+		// get line
+		CustomShipmentLine line = shipmentLinesService.findById(formShipmentLineManage.getLineId());
+		if (line == null) {
+			throw new NotFoundException("Unknown shipment line: #" + formShipmentLineManage.getLineId());
+		}
+		
+		// get shipped line state
+		ShipCustLineState state = shipmentLineStatesService.findByOrder(50);
+		if (state == null) {
+			throw new NotFoundException("Unknown shipment line state:" + 50);
+		}
+		
+		line.setState(state);
+		
+		line.setShipmentActionDate(new Timestamp((new java.util.Date()).getTime()));
+		line.setShipmentActionUserName(userService.getAuthenticatedUser().getName());
+		line.setShipmentComment(formShipmentLineManage.getComment().trim());
+		
+		line.setQuantityShipped(0);
+		line.setWaybill("");
+		shipmentLinesService.update(line);
+		
+		// calculate shipment main state and give redirect + message
+		return updateMainShipmentOrderState(line.getShipment(),redirectAttrs, locale);
+		
+	}
+
+	private String updateMainShipmentOrderState(CustomShipment shipment, RedirectAttributes redirectAttrs, Locale locale) {
+		boolean finished = true;
+		for(CustomShipmentLine line: shipment.getLines()) {
+			if(line.getState().getOrder() < 40) {
+				finished=false;
+				break;
+			}
+		}
+		
+		Timestamp date = new Timestamp((new java.util.Date()).getTime());
+		ShipCustState state;
+		
+		if(finished) {
+			// closed state
+			state = shipmentStatesService.findByOrder(30);
+			shipment.setState(state);
+			shipment.setUpdateDate(date);
+			shipment.setCloseDate(date);
+			shipmentsService.update(shipment);
+			redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("shipcust.action.finished", null, locale));
+			return "redirect:/shipcust/show/order/" + shipment.getId();
+		}
+		else {
+			// partial state
+			state = shipmentStatesService.findByOrder(20);
+			shipment.setState(state);
+			shipment.setUpdateDate(date);
+			shipmentsService.update(shipment);
+			redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+			return "redirect:/shipcust/show/order/" + shipment.getId();
+		}
+		
+	}
+
 }

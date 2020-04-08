@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script"></div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h2
+					th:text="|#{shipcust.line.manage} [#${formShipmentLineManage.lineId}]|"
+					class="text-primary"></h2>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{shipcust.line.manage}"> Welcome message </span>
+			</div>
+		</div>
+		<div class="row">
+			<!-- BACK TO MAIN PAGE -->
+			<a
+				th:href="|@{/shipcust/show/line/}${formShipmentLineManage.lineId}|"
+				class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+		<div class="underline margin-top-10"></div>
+		<!-- BHP TICKET FORM -->
+		<form th:action="@{/shipcust/ship/line/manage}" method="post"
+			th:object="${formShipmentLineManage}">
+			<!-- HIDDEN -->
+			<input type="hidden" th:field="*{lineId}" /> 
+			<input type="hidden" th:field="*{orderId}" /> 
+			<input type="hidden"
+				th:field="*{productCode}" /> <input type="hidden"
+				th:field="*{productDescription}" /> <input type="hidden"
+				th:field="*{stateCode}" /> <input type="hidden"
+				th:field="*{ordered}" />
+			<!-- /HIDDEN -->
+
+			<div class="row margin-top-10">
+				<div class="col-xs-12">
+					<div class="row">
+						<div class="col-xs-4 col-md-3">
+							<span th:text="#{general.productCode}">param</span>
+						</div>
+						<div class="col-xs-6 col-md-9">
+							<strong th:text="*{productCode}" class="text-primary">value</strong>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4 col-md-3">
+							<span th:text="#{general.productDescription}">param</span>
+						</div>
+						<div class="col-xs-6 col-md-9">
+							<strong th:text="*{productDescription}" class="text-primary">value</strong>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4 col-md-3">
+							<span th:text="#{general.state}">param</span>
+						</div>
+						<div class="col-xs-6 col-md-9">
+							<strong th:text="#{*{stateCode}}" class="text-primary">value</strong>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4 col-md-3">
+							<span th:text="#{general.ordered}">param</span>
+						</div>
+						<div class="col-xs-6 col-md-9">
+							<strong th:text="*{ordered}" class="text-primary">value</strong>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="underline margin-top-10"></div>
+			<div class="row">
+				<div class="col-xs-12">
+					<h3 class="text-primary" th:text="#{action.complete}"></h3>
+				</div>
+			</div>
+			<div class="row margin-top-10">
+				<div class="col-md-4 col-xs-11">
+					<div class="form-group">
+						<label for="shipped" th:text="#{general.shipped}">Description</label>
+						<input type="text" class="form-control" id="shipped"
+							name="shipped" th:placeholder="#{general.shipped}"
+							autocomplete="off" th:field="*{shipped}"></input>
+						<div th:errors="*{shipped}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-md-4 col-xs-11">
+					<div class="form-group">
+						<label for="waybill" th:text="#{general.waybill}">Description</label>
+						<input type="text" class="form-control" id="waybill"
+							name="waybill" th:placeholder="#{general.waybill}"
+							autocomplete="off" th:field="*{waybill}"></input>
+						<div th:errors="*{waybill}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-8 col-xs-11">
+					<div class="form-group">
+						<label for="comment"
+							th:text="|#{general.comment} (#{general.optional})|">Description</label>
+						<input type="text" class="form-control" id="comment"
+							name="comment" th:placeholder="#{general.comment}"
+							autocomplete="off" th:field="*{comment}"></input>
+						<div th:errors="*{comment}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row"></div>
+			<div class="row margin-top-10">
+				<!-- BACK TO MAIN PAGE -->
+				<a
+					th:href="|@{/shipcust/show/line/}${formShipmentLineManage.lineId}|"
+					class="btn btn-link btn-sm"> <span
+					class="glyphicon glyphicon-menu-left"></span> <span
+					th:text="#{action.back}">back</span>
+				</a>
+				<button class="btn btn-primary btn-sm" type="submit" name="save"
+					th:onclick="|return confirm('#{general.areyousure}')|">
+					<span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;<span
+						th:text="#{shipcust.line.confirm}">create</span>
+				</button>
+				<button class="btn btn-danger btn-sm" type="submit" name="cancel"
+					th:onclick="|return confirm('#{general.areyousure}')|">
+					<span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;<span
+						th:text="#{shipcust.line.cancel}">create</span>
+				</button>
+			</div>
+		</form>
+		<!-- /USER FORM -->
+	</div>
+</body>
+</html>
