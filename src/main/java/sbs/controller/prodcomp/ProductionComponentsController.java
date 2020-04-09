@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import sbs.helpers.DateHelper;
 import sbs.helpers.TextHelper;
 import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3BomPart;
@@ -45,20 +47,20 @@ public class ProductionComponentsController {
 	JdbcOracleGeodeService geodeService;
 	@Autowired
 	TextHelper textHelper;
+	@Autowired 
+	DateHelper dateHelper;
 
 	@RequestMapping("/main")
 	public String view(Model model) {
 		FormComponent formComponent = new FormComponent();
 		/*
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.MONTH, -1);
-		cal.set(Calendar.DAY_OF_MONTH, 1);
-		formComponent.setStartDate(new Timestamp(cal.getTimeInMillis()));
-
-		cal = Calendar.getInstance();
-		cal.add(Calendar.MONTH, 1);
-		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));	
-		formComponent.setEndDate(new Timestamp(cal.getTimeInMillis()));
+		 * Calendar cal = Calendar.getInstance(); cal.add(Calendar.MONTH, -1);
+		 * cal.set(Calendar.DAY_OF_MONTH, 1); formComponent.setStartDate(new
+		 * Timestamp(cal.getTimeInMillis()));
+		 * 
+		 * cal = Calendar.getInstance(); cal.add(Calendar.MONTH, 1);
+		 * cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+		 * formComponent.setEndDate(new Timestamp(cal.getTimeInMillis()));
 		 */
 		model.addAttribute("formComponent", formComponent);
 		return "prodcomp/main";
@@ -277,15 +279,25 @@ public class ProductionComponentsController {
 			// get general stockof all products
 			Map<String, Integer> stock = x3Service.findGeneralStockForAllProducts("ATW");
 			Map<String, Integer> initStock = new HashMap<>();
-			for(Map.Entry<String, Integer> entry: stock.entrySet()) {
+			// for working list of stock and expected delivery
+			// copy when making initStock list and avcStock list, used to calculate current
+			// store stock decrease
+			Map<String, Integer> workStock = new HashMap<>();
+			Map<String, Integer> workDelivery = new HashMap<>();
+			for (Map.Entry<String, Integer> entry : stock.entrySet()) {
 				initStock.put(entry.getKey(), entry.getValue());
+				workStock.put(entry.getKey(), entry.getValue());
 			}
 			// get acv info
 			List<X3ConsumptionProductInfo> acvInfo = x3Service.getAcvListForConsumptionReport("ATW");
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.DAY_OF_MONTH, days);
 			Map<String, Double> expectedDelivery = x3Service.getExpectedDeliveriesByDate(cal.getTime(), "ATW");
-
+			Map<String, Date> latestExpectedDeliveryDates = x3Service.getLatestExpectedDeliveryDateForCodeByDate(cal.getTime(), "ATW");
+			// copy exp delivery to work delivery for calculation of coverage
+			for (Map.Entry<String, Double> entry : expectedDelivery.entrySet()) {
+				workDelivery.put(entry.getKey(), entry.getValue().intValue());
+			}
 			// set in acv info: stock + expected delivery
 			Map<String, Integer> acvStock = new HashMap<>();
 			for (X3ConsumptionProductInfo info : acvInfo) {
@@ -306,8 +318,31 @@ public class ProductionComponentsController {
 			int maxProd;
 			Map<String, Integer> shortageList = new HashMap<>();
 
+			// for stock vs. delivery part
+			int wstck;
+			int wdlv;
+			int wstckAfter;
+			int wdlvAfter;
+			int componentCoverState;
+			Map<Integer, String> coverCode = new HashMap<>();
+			coverCode.put(PlanLine.COVER_STOCK, "prodcomp.cover.stock");
+			coverCode.put(PlanLine.COVER_DELIVEY, "prodcomp.cover.delivery");
+			coverCode.put(PlanLine.COVER_SHORTAGE, "prodcomp.cover.shortage");
+			Date latestDeliveryDate;
+			String latestDeliveryInfo;
+			Calendar year3000 = Calendar.getInstance();
+			cal.set(Calendar.DAY_OF_YEAR, 3000);
+			// /for stock vs. delivery part
+			
+			
 			// calculate shortage
 			for (PlanLine main : fileInfo) {
+				// set init coverage for line as stock (optimistic) - for stock vs. delivery
+				latestDeliveryDate = null;
+				latestDeliveryInfo = "";
+				componentCoverState = 1;
+				main.setCoverLineState(PlanLine.COVER_STOCK);
+				
 				// FOR ALL LINES IN FILE
 				// set in lines: components requirement info
 				main.setRequirements(getCurrentAcvRequirementQuantitiesByStock(allBoms, main.getCode(), products, stock,
@@ -336,15 +371,57 @@ public class ProductionComponentsController {
 						qstock -= qreq;
 					}
 					acvStock.put(code, qstock);
-				}
-				main.setMaxProduction(maxProd);
 
+					// stock vs. delivery part
+					wstck = workStock.getOrDefault(code, 0);
+					wdlv = workDelivery.getOrDefault(code, 0);
+					// initially set cover from stock (optimistic)
+					componentCoverState = PlanLine.COVER_STOCK;
+					wstckAfter = wstck - qreq;
+					if (wstckAfter < 0) {
+						workStock.put(code, 0);
+						qreq = (-1) * wstckAfter;
+						// set cover from delivery (optimistic)
+						componentCoverState = PlanLine.COVER_DELIVEY;
+					} else {
+						workStock.put(code, wstckAfter);
+					}
+
+					if (componentCoverState == PlanLine.COVER_DELIVEY) {
+						wdlvAfter = wdlv - qreq;
+						if (wdlvAfter < 0) {
+							workDelivery.put(code, 0);
+							qreq = (-1) * wdlvAfter;
+							// set cover to general shortage
+							componentCoverState = PlanLine.COVER_SHORTAGE;
+						} else {
+							if(latestDeliveryDate == null) {
+								latestDeliveryDate = latestExpectedDeliveryDates.getOrDefault(code, year3000.getTime());
+								latestDeliveryInfo = dateHelper.formatYyyyMmDd(latestDeliveryDate) + " [" + code + "]";
+							}
+							else if(latestDeliveryDate.before(latestExpectedDeliveryDates.getOrDefault(code, year3000.getTime()))) {
+								latestDeliveryDate = latestExpectedDeliveryDates.getOrDefault(code, year3000.getTime());
+								latestDeliveryInfo = dateHelper.formatYyyyMmDd(latestDeliveryDate) + " [" + code + "]";
+							}
+							workDelivery.put(code, wdlvAfter);
+							main.setLatestDeliveryInfo(latestDeliveryInfo);
+							main.addInOrderCode(code);
+						}
+					}
+					
+					main.setCoverLineState(Integer.max(main.getCoverLineState(), componentCoverState));					
+					// /stock vs. delivery part
+				}
+				// stock vs. delivery - take min state from current component vs main coverage
+				main.setMaxProduction(maxProd);
 			}
 			List<List<String>> table = new ArrayList<>();
 			List<String> line;
 			String shortages;
+			String delivery;
 			for (PlanLine main : fileInfo) {
 				shortages = "";
+				delivery = "";
 				line = new ArrayList<>();
 				line.add(main.getOrder());
 				line.add(main.getCode());
@@ -358,6 +435,12 @@ public class ProductionComponentsController {
 				line.add(main.getQuantity() + "");
 				line.add(main.getMaxProduction() + "");
 				line.add(main.getShortageQuantity() + "");
+				line.add(coverCode.get(main.getCoverLineState()));
+				for (String dl : main.getInDeliverySet()) {
+					delivery += dl + "; ";
+				}
+				line.add(delivery);
+				line.add(main.getLatestDeliveryInfo());				
 				for (Map.Entry<String, Integer> sh : main.getShortage().entrySet()) {
 					shortages += sh.getKey() + " (" + sh.getValue() + "); ";
 				}
@@ -367,17 +450,18 @@ public class ProductionComponentsController {
 
 			List<List<String>> shortageSummary = new ArrayList<>();
 			List<String> shortageLine;
-			for(Map.Entry<String, Integer> entry: shortageList.entrySet()) {
+			for (Map.Entry<String, Integer> entry : shortageList.entrySet()) {
 				shortageLine = new ArrayList<>();
 				shortageLine.add(entry.getKey());
-				shortageLine.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getDescription() : "XXX");				
-				shortageLine.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getGr2() : "XXX");				
-				shortageLine.add(initStock.getOrDefault(entry.getKey(), 0)+"");
-				shortageLine.add((expectedDelivery.getOrDefault(entry.getKey(), 0.0)).intValue()+"");
-				shortageLine.add(entry.getValue()+"");
+				shortageLine.add(
+						products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getDescription() : "XXX");
+				shortageLine.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getGr2() : "XXX");
+				shortageLine.add(initStock.getOrDefault(entry.getKey(), 0) + "");
+				shortageLine.add((expectedDelivery.getOrDefault(entry.getKey(), 0.0)).intValue() + "");
+				shortageLine.add(entry.getValue() + "");
 				shortageSummary.add(shortageLine);
 			}
-			
+
 			model.addAttribute("days", days);
 			model.addAttribute("shortage", shortageSummary);
 			model.addAttribute("planlines", table);
@@ -449,8 +533,7 @@ public class ProductionComponentsController {
 				subMap = getCurrentAcvRequirementQuantitiesByStock(allBoms, code, products, stock, qtyReq);
 				for (Map.Entry<String, Double> entry : subMap.entrySet()) {
 					if (resultMap.containsKey(entry.getKey())) {
-						resultMap.put(entry.getKey(),
-								resultMap.get(entry.getKey()) + entry.getValue());
+						resultMap.put(entry.getKey(), resultMap.get(entry.getKey()) + entry.getValue());
 					} else {
 						resultMap.put(entry.getKey(), entry.getValue());
 					}
@@ -601,7 +684,6 @@ public class ProductionComponentsController {
 				targetCodeDemand += object.getTargetProductDemand(component);
 			}
 		}
-		
 
 		model.addAttribute("salesObjects", salesObjects);
 		model.addAttribute("coverage", "[" + targetCodeDemand + "/" + generalStock.get(component) + "]");

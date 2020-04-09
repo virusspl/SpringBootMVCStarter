@@ -488,5 +488,10 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 		return jdbcOracleX3Repository.getExpectedDeliveriesByDate(date, company);
 	}
 
+	@Override
+	public Map<String, Date> getLatestExpectedDeliveryDateForCodeByDate(Date date, String company) {
+		return jdbcOracleX3Repository.getLatestExpectedDeliveryDateForCodeByDate(date, company);
+	}
+
 
 }

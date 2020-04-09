@@ -4020,7 +4020,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public Map<String, Double> getExpectedDeliveriesByDate(Date date, String company) {
-		// ===========================================================
+				// ===========================================================
 				// ==== TMP JDBC DUALITY =====================================
 				if(company.equalsIgnoreCase("ATW")) {
 					jdbc = jdbc6;
@@ -4058,5 +4058,52 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 					}
 				}
 				return map;
+	}
+
+	@Override
+	public Map<String, Date> getLatestExpectedDeliveryDateForCodeByDate(Date date, String company) {
+		// ===========================================================
+		// ==== TMP JDBC DUALITY =====================================
+		if(company.equalsIgnoreCase("ATW")) {
+			jdbc = jdbc6;
+		}
+		else {
+			jdbc = jdbc11;
+		}
+		// ==== TMP JDBC DUALITY =====================================
+		// ===========================================================
+		
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "POQ.ITMREF_0, "
+				+ "POQ.X_RCPDAT_0 "
+				+ "FROM "
+				+ company + ".PORDERQ POQ "
+				+ "WHERE "
+				+ "(POQ.QTYSTU_0 - POQ.RCPQTYSTU_0) > 0 "
+				+ "AND POQ.LINCLEFLG_0 = 1 "
+				+ "AND POQ.X_RCPDAT_0 <= ?"
+				,
+                new Object[]{dateHelper.getTime(date)}
+				);
+		
+		Map<String, Date> map = new HashMap<>();
+		String code;
+		Date tmpDate;
+		
+		for(Map<String,Object> row: resultSet ){
+			code = (String)row.get("ITMREF_0");
+			tmpDate = new Date(((Timestamp)row.get("X_RCPDAT_0")).getTime());
+			
+			if(map.containsKey(code)) {
+				if(tmpDate.after(map.get(code))) {
+					map.put(code, tmpDate);
+				}
+			}
+			else {
+				map.put(code, tmpDate);
+			}
+		}
+		return map;
 	}
 }

@@ -1,9 +1,15 @@
 package sbs.controller.prodcomp;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class PlanLine {
+	
+	public static final int COVER_STOCK = 1;
+	public static final int COVER_DELIVEY = 2;
+	public static final int COVER_SHORTAGE = 3;
 	
 	private String order;
 	private String code;
@@ -15,16 +21,23 @@ public class PlanLine {
 	private int quantity;
 	private int maxProduction;
 	private int shortageQuantity;
+	private int coverLineState;
+	
+	private int currentStock;
+	private int currentDelivery;
 	
 	private double lineValue;
 	private double shortageValue;
 	
 	private Map<String, Double> requirements;
 	private Map<String, Integer> shortage;
+	private Set<String> inDeliverySet;
+	private String latestDeliveryInfo;
 	
 	public PlanLine() {
 		requirements = new HashMap<>();
 		shortage = new HashMap<>();
+		inDeliverySet =new HashSet<>();
 		shortageValue = 0;
 	}
 
@@ -119,11 +132,34 @@ public class PlanLine {
 		this.shortageValue = shortageValue;
 	}
 	
+	public int getCoverLineState() {
+		return coverLineState;
+	}
+
+	public void setCoverLineState(int coverLineState) {
+		this.coverLineState = coverLineState;
+	}
 
 	public int getMaxProduction() {
 		return maxProduction;
 	}
 	
+	public int getCurrentStock() {
+		return currentStock;
+	}
+
+	public void setCurrentStock(int currentStock) {
+		this.currentStock = currentStock;
+	}
+
+	public int getCurrentDelivery() {
+		return currentDelivery;
+	}
+
+	public void setCurrentDelivery(int currentDelivery) {
+		this.currentDelivery = currentDelivery;
+	}
+
 	public String getGr2() {
 		return gr2;
 	}
@@ -169,6 +205,26 @@ public class PlanLine {
 		else {
 			shortage.put(code, quantity);
 		}
+	}
+	
+	public void addInOrderCode(String code) {
+		this.inDeliverySet.add(code);
+	}
+
+	public Set<String> getInDeliverySet() {
+		return inDeliverySet;
+	}
+
+	public void setInDeliverySet(Set<String> inDeliverySet) {
+		this.inDeliverySet = inDeliverySet;
+	}
+	
+	public String getLatestDeliveryInfo() {
+		return latestDeliveryInfo;
+	}
+
+	public void setLatestDeliveryInfo(String latestDeliveryInfo) {
+		this.latestDeliveryInfo = latestDeliveryInfo;
 	}
 
 	@Override

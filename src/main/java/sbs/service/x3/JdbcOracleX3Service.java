@@ -103,6 +103,7 @@ public interface JdbcOracleX3Service {
 	public List<X3AvgPriceLine> getAveragePricesByOrders(String company);
 	public Map<String, Integer> findStockForAllProductsWithStock(String company);
 	public Map<String, Double> getExpectedDeliveriesByDate(Date date, String company);
+	public Map<String, Date> getLatestExpectedDeliveryDateForCodeByDate(Date date, String string);
 	
 	
 }
