@@ -86,7 +86,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="line,iter : ${lines}" th:if="${line.state.order == 10 or line.state.order == 30}">
+					<tr th:each="line,iter : ${lines}" th:if="${line.state.order == 5 or line.state.order == 10 or line.state.order == 30}">
 						<td class="text-center"><span th:if="${line.addition}"
 							th:text="#{general.yes}"></span> <span th:if="!${line.addition}"></span>
 						</td>
