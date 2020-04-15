@@ -58,12 +58,16 @@
 			</div>
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
 				<span th:text="|#{shipcust.title} - #{${subtitle}}|">Hello on
-					a page</span>
+					a page</span> 
 			</div>
 			<a th:href="@{/}" class="btn btn-link btn-sm"> <span
 				class="glyphicon glyphicon-menu-left"></span> <span
 				th:text="#{action.back}">back</span>
 			</a>
+			<a href="http://192.168.1.23/DOCS/shipcust.pdf" target="_blank"> 
+					<span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;<span th:text="#{general.manual}"></span>
+					
+				</a>
 		</div>
 		<div class="row">
 			<div class="col-xs-12">
@@ -71,8 +75,7 @@
 					class="text-primary underline"></h3>
 			</div>
 			<div class="col-xs-12"
-				sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SHIPCUST_SALES', 'ROLE_SHIPCUST_SHIP')"
-			>
+				sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SHIPCUST_SALES', 'ROLE_SHIPCUST_SHIP')">
 				<a th:href="@{/shipcust/dispatch}" class="btn btn-info btn-sm">
 					<span class="glyphicon glyphicon-list"></span> <span
 					th:text="#{general.list}">list</span>
@@ -92,7 +95,7 @@
 				</a>
 			</div>
 		</div>
-		<!-- ORDERS LIST -->		
+		<!-- ORDERS LIST -->
 		<div th:if="${orders}" class="row margin-top-20">
 			<div class="col-xs-12 col-xs-offset-0">
 				<div class="table-responsive">
@@ -130,11 +133,10 @@
 								<td><span th:text="|#${order.id}|"></span></td>
 								<td><span th:text="${order.creator.name}"></span></td>
 								<td><span th:text="${order.clientCode}"></span></td>
-								<td>
-								<a th:href="|@{/shipcust/show/order/}${order.id}|"
+								<td><a th:href="|@{/shipcust/show/order/}${order.id}|"
 									data-toggle="tooltip" data-placement="top"
-									th:title="#{action.view}"><span th:text="${order.clientName}"></span></a>
-								</td>
+									th:title="#{action.view}"><span
+										th:text="${order.clientName}"></span></a></td>
 								<td><span th:text="${order.transport.name}"></span></td>
 								<td><span th:text="#{${order.state.code}}"></span></td>
 								<td><span
@@ -146,7 +148,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<!-- SPARE LIST -->
 		<div th:if="${spare}" class="row margin-top-20">
 			<div class="col-xs-12 col-xs-offset-0">
@@ -179,11 +181,10 @@
 								<td><span
 									th:text="${#dates.format(line.salesActionDate, 'yyyy.MM.dd HH:mm')}"></span></td>
 								<td><span th:text="|#${line.id}|"></span></td>
-																<td>
-								<a th:href="|@{/shipcust/show/line/}${line.id}|"
+								<td><a th:href="|@{/shipcust/show/line/}${line.id}|"
 									data-toggle="tooltip" data-placement="top"
-									th:title="#{action.view}"><span th:text="${line.productCode}"></span></a>
-								</td>
+									th:title="#{action.view}"><span
+										th:text="${line.productCode}"></span></a></td>
 								<td><span th:text="${line.productDescription}"></span></td>
 								<td><span th:text="${line.salesOrder}"></span></td>
 								<td><span th:text="${line.quantityDemanded}"></span></td>
