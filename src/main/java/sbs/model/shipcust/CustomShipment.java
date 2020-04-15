@@ -64,6 +64,10 @@ public class CustomShipment {
 	@Column(name = "scsh_end_date", nullable = false)
 	private Timestamp endDate;
 
+	@Column(name = "scsh_notified", nullable = false)
+	private boolean notifiedByMail;
+	
+	
 	public CustomShipment() {
 
 	}
@@ -171,14 +175,26 @@ public class CustomShipment {
 	public void setEndDate(Timestamp endDate) {
 		this.endDate = endDate;
 	}
+	
+	
+
+	public boolean isNotifiedByMail() {
+		return notifiedByMail;
+	}
+
+	public void setNotifiedByMail(boolean notifiedByMail) {
+		this.notifiedByMail = notifiedByMail;
+	}
 
 	@Override
 	public String toString() {
 		return "CustomShipment [creator=" + creator + ", state=" + state + ", transport=" + transport + ", id=" + id
 				+ ", clientCode=" + clientCode + ", clientName=" + clientName + ", comment=" + comment
 				+ ", creationDate=" + creationDate + ", closeDate=" + closeDate + ", updateDate=" + updateDate
-				+ ", startDate=" + startDate + ", endDate=" + endDate + "]";
+				+ ", startDate=" + startDate + ", endDate=" + endDate + ", notifiedByMail=" + notifiedByMail + "]";
 	}
+
+
 
 	
 	

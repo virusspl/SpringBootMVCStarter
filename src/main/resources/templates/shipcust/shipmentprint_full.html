@@ -1,0 +1,148 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/print">
+<head>
+
+<title th:text="|#{shipcust.order} ${sh.id}|"></title>
+
+<style>
+.nb {
+	border: none;
+}
+
+.nb td {
+	border: none;
+}
+
+.sep {
+	width: 20px;
+}
+</style>
+
+</head>
+<body>
+	<div layout:fragment="script"></div>
+	<div layout:fragment="content">
+		<div class="hideonprint">
+			<div class="margin-top-10">
+				<span th:text="#{shipcust.shipment.view}"> Welcome message </span>
+			</div>
+			<a th:href="|@{/shipcust/show/order/}${sh.id}|"> <span
+				th:text="#{action.back}">back</span></a>
+		</div>
+
+		<div id="TITLE">
+			<span><strong th:text="|#{shipcust.order}  #${sh.id}|"
+				style="font-size: 120%;"></strong></span>
+
+		</div>
+		<div class="underline margin-top-10"></div>
+		<div id="INFO" class="margin-top-10">
+			<table class="nb">
+				<tr>
+					<td><span th:text="#{general.creator}">param</span></td>
+					<td><strong th:text="${sh.creator.name}" class="text-primary">value</strong>
+					</td>
+					<td class="sep"></td>
+					<td><span th:text="#{general.client.code}">param</span></td>
+					<td><strong th:text="${sh.clientCode}" class="text-primary">value</strong>
+					</td>
+				</tr>
+				<tr>
+					<td><span th:text="#{general.date.creation}">param</span></td>
+					<td><strong
+						th:text="${#dates.format(sh.creationDate, 'yyyy-MM-dd HH:mm')}"
+						class="text-primary">value</strong></td>
+					<td class="sep"></td>
+					<td><span th:text="#{general.client.name}">param</span></td>
+					<td><strong th:text="${sh.clientName}" class="text-primary">value</strong>
+					</td>
+				</tr>
+				<tr>
+					<td><span th:text="#{general.date.update}">param</span></td>
+					<td><strong
+						th:text="${#dates.format(sh.updateDate, 'yyyy-MM-dd HH:mm')}"
+						class="text-primary">value</strong></td>
+					<td class="sep"></td>
+					<td><span th:text="#{general.carrier}">param</span></td>
+					<td><strong th:text="${sh.transport.name}"
+						class="text-primary">value</strong></td>
+				</tr>
+				<tr>
+					<td><span th:text="#{general.state}">param</span></td>
+					<td><strong th:text="#{${sh.state.code}}" class="text-primary">value</strong>
+					</td>
+					<td class="sep"></td>
+					<td><span th:text="#{general.date.start}">param</span></td>
+					<td><strong
+						th:text="${#dates.format(sh.startDate, 'yyyy-MM-dd')}"
+						class="text-primary">value</strong></td>
+				</tr>
+				<tr>
+					<td><span th:text="#{general.date.close}">param</span></td>
+					<td><strong th:if="${sh.closeDate}"
+						th:text="${#dates.format(sh.closeDate, 'yyyy-MM-dd HH:mm')}"
+						class="text-primary">value</strong> <strong
+						th:if="!${sh.closeDate}" th:text="|-|" class="text-primary">value</strong>
+					</td>
+					<td class="sep"></td>
+					<td><span th:text="#{general.date.end}">param</span></td>
+					<td><strong
+						th:text="${#dates.format(sh.endDate, 'yyyy-MM-dd')}"
+						class="text-primary">value</strong></td>
+				</tr>
+
+				<tr th:if="${#strings.length(sh.comment)>0}">
+					<td><span class="text-primary" th:text="#{general.comment}">param</span>
+					</td>
+					<td colspan="3"><strong><span th:text="${sh.comment}"
+							style="font-style: italic;">param</span></strong></td>
+				</tr>
+			</table>
+		</div>
+		<div class="underline margin-top-10"></div>
+		<div id="TABLE" class="margin-top-10">
+			<table>
+				<thead>
+					<tr>
+						<th><span th:text="#{general.line}"></span></th>
+						<th><span th:text="#{general.state}"></span></th>
+						<th><span th:text="#{general.productCode}"></span></th>
+						<th><span th:text="#{general.order.sales}"></span></th>
+						<th><span th:text="#{general.quantity}"></span></th>
+						<th><span th:text="#{general.shipped}"></span></th>
+						<th><span th:text="#{general.comment}"></span></th>
+						<th><span th:text="#{shipcust.addition}"></span></th>
+						<th><span th:text="#{shipcust.certificate}"></span></th>
+						<th><span th:text="|#id|"></span></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="line,iter : ${lines}">
+						<td><span th:text="${iter.index}+1"></span></td>
+						<td><span th:text="#{${line.state.code}}"></span></td>
+						<td><span th:text="${line.productCode}"></span></td>
+						<td><span th:text="${line.salesOrder}"></span></td>
+						<td class="text-center"><span
+							th:text="${line.quantityDemanded}"></span></td>
+						<td class="text-center"><span
+							th:text="${line.quantityShipped}"></span></td>
+						<td class="text-center"><span th:text="${line.salesComment}"></span></td>
+						<td class="text-center">
+							<span th:if="${line.addition}" th:text="#{general.yes}"></span>
+							<span th:if="!${line.addition}"></span>
+						</td>
+						<td class="text-center">
+							<span th:if="${line.certificate}" th:text="#{general.yes}"></span>
+							<span th:if="!${line.certificate}"></span>
+						</td>
+						<td class="text-center"><span th:text="|#${line.id}|">id</span></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+</html>

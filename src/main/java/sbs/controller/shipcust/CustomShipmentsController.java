@@ -1,9 +1,15 @@
 package sbs.controller.shipcust;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
@@ -17,6 +23,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import javassist.NotFoundException;
 import sbs.helpers.TextHelper;
@@ -29,6 +37,7 @@ import sbs.model.users.User;
 import sbs.model.x3.X3Client;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3SalesOrder;
+import sbs.service.mail.MailService;
 import sbs.service.shipcust.CustomShipmentLineStatesService;
 import sbs.service.shipcust.CustomShipmentLinesService;
 import sbs.service.shipcust.CustomShipmentStatesService;
@@ -40,6 +49,12 @@ import sbs.service.x3.JdbcOracleX3Service;
 @Controller
 @RequestMapping("shipcust")
 public class CustomShipmentsController {
+
+	private static final int MAIL_NEW_ORDER = 1;
+	private static final int MAIL_NEW_SPARE_LINE = 2;
+	private static final int MAIL_NEW_ACQ_LINE = 3;
+	private static final int MAIL_LINE_SERVED = 4;
+	private static final int MAIL_ORDER_CLOSED = 5;
 
 	@Autowired
 	CustomShipmentsService shipmentsService;
@@ -59,6 +74,10 @@ public class CustomShipmentsController {
 	UserService userService;
 	@Autowired
 	TextHelper textHelper;
+	@Autowired
+	MailService mailService;
+	@Autowired
+	TemplateEngine templateEngine;
 
 	public CustomShipmentsController() {
 
@@ -179,7 +198,7 @@ public class CustomShipmentsController {
 	@Transactional
 	public String saveShipmentOrder(@Valid FormCreateCustomShipment formCreateCustomShipment,
 			BindingResult bindingResult, RedirectAttributes redirectAttrs, Locale locale, Model model)
-			throws NotFoundException {
+			throws NotFoundException, UnknownHostException, MessagingException {
 
 		// validate
 		if (bindingResult.hasErrors()) {
@@ -217,6 +236,7 @@ public class CustomShipmentsController {
 		ship.setEndDate(new Timestamp(formCreateCustomShipment.getEndDate().getTime()));
 
 		shipmentsService.save(ship);
+		this.sendMail(ship.getId(), MAIL_NEW_ORDER, locale);
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/shipcust/show/order/" + ship.getId();
 	}
@@ -251,7 +271,7 @@ public class CustomShipmentsController {
 
 		String updateUser = userService.getAuthenticatedUser().getName();
 		Timestamp updateDate = new Timestamp((new java.util.Date()).getTime());
-		
+
 		shipment.setState(stateOrder);
 		for (CustomShipmentLine line : shipment.getLines()) {
 			if (line.getState().getOrder() < 40) {
@@ -265,7 +285,7 @@ public class CustomShipmentsController {
 
 		redirectAttrs.addFlashAttribute("warning", messageSource.getMessage("action.cancelled", null, locale) + ": #"
 				+ shipment.getId() + " [" + shipment.getClientName() + "]");
-		return "redirect:/shipcust/show/order/"+shipment.getId();
+		return "redirect:/shipcust/show/order/" + shipment.getId();
 	}
 
 	@RequestMapping(value = "/show/order/{id}")
@@ -278,10 +298,34 @@ public class CustomShipmentsController {
 		}
 
 		model.addAttribute("sh", shipment);
-		Hibernate.initialize(shipment.getLines());
-		model.addAttribute("lines", shipment.getLines());
+		Map<Integer, CustomShipmentLine> linesMap = new TreeMap<>();
+		for (CustomShipmentLine line : shipment.getLines()) {
+			linesMap.put(line.getId(), line);
+		}
+
+		model.addAttribute("lines", linesMap.values());
 
 		return "shipcust/shipmentshow";
+	}
+
+	@RequestMapping(value = "/print/order/{id}")
+	@Transactional
+	public String printOrder(@PathVariable("id") int id, Model model) throws NotFoundException {
+
+		CustomShipment shipment = shipmentsService.findById(id);
+		if (shipment == null) {
+			throw new NotFoundException("Unknown shipment order: #" + id);
+		}
+
+		model.addAttribute("sh", shipment);
+		Map<Integer, CustomShipmentLine> linesMap = new TreeMap<>();
+		for (CustomShipmentLine line : shipment.getLines()) {
+			linesMap.put(line.getId(), line);
+		}
+
+		model.addAttribute("lines", linesMap.values());
+
+		return "shipcust/shipmentprint";
 	}
 
 	@RequestMapping(value = "/sales/line/create/{id}")
@@ -311,7 +355,7 @@ public class CustomShipmentsController {
 	@Transactional
 	public String saveShipmentLine(@Valid FormCreateCustomShipmentLine formCreateCustomShipmentLine,
 			BindingResult bindingResult, RedirectAttributes redirectAttrs, Locale locale, Model model)
-			throws NotFoundException {
+			throws NotFoundException, UnknownHostException, MessagingException {
 
 		// VALIDATE
 		// short name :)
@@ -374,6 +418,14 @@ public class CustomShipmentsController {
 
 		shipmentLinesService.save(line);
 		shipment.getLines().add(line);
+
+		if (line.isSpare()) {
+			if (line.getProductCategory().equalsIgnoreCase("ACV")) {
+				this.sendMail(line.getId(), MAIL_NEW_ACQ_LINE, locale);
+			} else {
+				this.sendMail(line.getId(), MAIL_NEW_SPARE_LINE, locale);
+			}
+		}
 
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale) + ": "
 				+ line.getProductCode() + " - " + line.getProductDescription());
@@ -452,19 +504,19 @@ public class CustomShipmentsController {
 	@RequestMapping(value = "/line/lack/{id}")
 	@Transactional
 	public String lineLack(@PathVariable("id") int id, Model model, RedirectAttributes redirectAttrs, Locale locale)
-			throws NotFoundException {
+			throws NotFoundException, UnknownHostException, MessagingException {
 		return serveSpareAction(id, model, redirectAttrs, locale, 20);
 	}
 
 	@RequestMapping(value = "/line/ready/{id}")
 	@Transactional
 	public String lineReady(@PathVariable("id") int id, Model model, RedirectAttributes redirectAttrs, Locale locale)
-			throws NotFoundException {
+			throws NotFoundException, UnknownHostException, MessagingException {
 		return serveSpareAction(id, model, redirectAttrs, locale, 30);
 	}
 
 	private String serveSpareAction(int id, Model model, RedirectAttributes redirectAttrs, Locale locale,
-			int stateOrder) throws NotFoundException {
+			int stateOrder) throws NotFoundException, UnknownHostException, MessagingException {
 
 		// get line
 		CustomShipmentLine line = shipmentLinesService.findById(id);
@@ -493,6 +545,7 @@ public class CustomShipmentsController {
 			line.setSpareActionDate(new Timestamp((new java.util.Date()).getTime()));
 			line.setSpareActionUserName(userService.getAuthenticatedUser().getName());
 			shipmentLinesService.update(line);
+			this.sendMail(line.getShipment().getId(), MAIL_LINE_SERVED, locale);
 			redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		} else {
 			redirectAttrs.addFlashAttribute("warning",
@@ -528,102 +581,103 @@ public class CustomShipmentsController {
 
 		return "shipcust/linemanage";
 	}
-	
+
 	@RequestMapping(value = "/ship/line/manage", params = { "save" }, method = RequestMethod.POST)
 	@Transactional
-	public String saveShipLineAction(@Valid FormShipmentLineManage formShipmentLineManage,
-			BindingResult bindingResult, RedirectAttributes redirectAttrs, Locale locale, Model model)
-			throws NotFoundException {
+	public String saveShipLineAction(@Valid FormShipmentLineManage formShipmentLineManage, BindingResult bindingResult,
+			RedirectAttributes redirectAttrs, Locale locale, Model model)
+			throws NotFoundException, UnknownHostException, MessagingException {
 
 		// validate
 		if (bindingResult.hasErrors()) {
 			return "shipcust/linemanage";
 		}
-		
+
 		// get line
 		CustomShipmentLine line = shipmentLinesService.findById(formShipmentLineManage.getLineId());
 		if (line == null) {
 			throw new NotFoundException("Unknown shipment line: #" + formShipmentLineManage.getLineId());
 		}
-				
+
 		// get shipped line state
 		ShipCustLineState state = shipmentLineStatesService.findByOrder(40);
 		if (state == null) {
 			throw new NotFoundException("Unknown shipment line state:" + 40);
 		}
-		
+
 		line.setState(state);
-		
+
 		line.setShipmentActionDate(new Timestamp((new java.util.Date()).getTime()));
 		line.setShipmentActionUserName(userService.getAuthenticatedUser().getName());
 		line.setShipmentComment(formShipmentLineManage.getComment().trim());
-		
+
 		line.setQuantityShipped(formShipmentLineManage.getShipped());
 		line.setWaybill(formShipmentLineManage.getWaybill().trim().toUpperCase());
 		shipmentLinesService.update(line);
 
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		// calculate shipment main state and give redirect + message
-		return updateMainShipmentOrderState(line.getShipment(),redirectAttrs, locale);
+		return updateMainShipmentOrderState(line.getShipment(), redirectAttrs, locale);
 
 	}
-	
+
 	@RequestMapping(value = "/ship/line/manage", params = { "cancel" }, method = RequestMethod.POST)
 	@Transactional
 	public String cancelShipLineAction(@Valid FormShipmentLineManage formShipmentLineManage,
 			BindingResult bindingResult, RedirectAttributes redirectAttrs, Locale locale, Model model)
-					throws NotFoundException {
-		
+			throws NotFoundException, UnknownHostException, MessagingException {
+
 		// get line
 		CustomShipmentLine line = shipmentLinesService.findById(formShipmentLineManage.getLineId());
 		if (line == null) {
 			throw new NotFoundException("Unknown shipment line: #" + formShipmentLineManage.getLineId());
 		}
-		
+
 		// get shipped line state
 		ShipCustLineState state = shipmentLineStatesService.findByOrder(50);
 		if (state == null) {
 			throw new NotFoundException("Unknown shipment line state:" + 50);
 		}
-		
+
 		line.setState(state);
-		
+
 		line.setShipmentActionDate(new Timestamp((new java.util.Date()).getTime()));
 		line.setShipmentActionUserName(userService.getAuthenticatedUser().getName());
 		line.setShipmentComment(formShipmentLineManage.getComment().trim());
-		
+
 		line.setQuantityShipped(0);
 		line.setWaybill("");
 		shipmentLinesService.update(line);
-		
+
 		// calculate shipment main state and give redirect + message
-		return updateMainShipmentOrderState(line.getShipment(),redirectAttrs, locale);
-		
+		return updateMainShipmentOrderState(line.getShipment(), redirectAttrs, locale);
+
 	}
 
-	private String updateMainShipmentOrderState(CustomShipment shipment, RedirectAttributes redirectAttrs, Locale locale) {
+	private String updateMainShipmentOrderState(CustomShipment shipment, RedirectAttributes redirectAttrs,
+			Locale locale) throws UnknownHostException, MessagingException {
 		boolean finished = true;
-		for(CustomShipmentLine line: shipment.getLines()) {
-			if(line.getState().getOrder() < 40) {
-				finished=false;
+		for (CustomShipmentLine line : shipment.getLines()) {
+			if (line.getState().getOrder() < 40) {
+				finished = false;
 				break;
 			}
 		}
-		
+
 		Timestamp date = new Timestamp((new java.util.Date()).getTime());
 		ShipCustState state;
-		
-		if(finished) {
+
+		if (finished) {
 			// closed state
 			state = shipmentStatesService.findByOrder(30);
 			shipment.setState(state);
 			shipment.setUpdateDate(date);
 			shipment.setCloseDate(date);
 			shipmentsService.update(shipment);
+			this.sendMail(shipment.getId(), MAIL_ORDER_CLOSED, locale);
 			redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("shipcust.action.finished", null, locale));
 			return "redirect:/shipcust/show/order/" + shipment.getId();
-		}
-		else {
+		} else {
 			// partial state
 			state = shipmentStatesService.findByOrder(20);
 			shipment.setState(state);
@@ -632,7 +686,61 @@ public class CustomShipmentsController {
 			redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 			return "redirect:/shipcust/show/order/" + shipment.getId();
 		}
-		
+
+	}
+
+	private void sendMail(int shipOrLineId, int type, Locale locale) throws UnknownHostException, MessagingException {
+
+		Context context = new Context();
+		List<User> users = new ArrayList<>();
+		String title;
+
+		switch (type) {
+		case MAIL_NEW_ORDER:
+			context.setVariable("shipmentId", shipOrLineId);
+			users = userService.findByAnyRole(new String[] { "ROLE_SHIPCUST_SHIP" });
+			title = messageSource.getMessage("shipcust.mail.title.neworder", null, locale);
+			break;
+		case MAIL_NEW_SPARE_LINE:
+			context.setVariable("lineId", shipOrLineId);
+			users = userService.findByAnyRole(new String[] { "ROLE_SHIPCUST_SPARE" });
+			title = messageSource.getMessage("shipcust.mail.title.newspare", null, locale);
+			break;
+		case MAIL_NEW_ACQ_LINE:
+			context.setVariable("lineId", shipOrLineId);
+			users = userService.findByAnyRole(new String[] { "ROLE_SHIPCUST_ACQ" });
+			title = messageSource.getMessage("shipcust.mail.title.newacq", null, locale);
+			break;
+		case MAIL_LINE_SERVED:
+			context.setVariable("shipmentId", shipOrLineId);
+			users = userService.findByAnyRole(new String[] { "ROLE_SHIPCUST_SHIP" });
+			title = messageSource.getMessage("shipcust.mail.title.lineserved", null, locale);
+			break;
+		case MAIL_ORDER_CLOSED:
+			context.setVariable("shipmentId", shipOrLineId);
+			users = userService.findByAnyRole(new String[] { "ROLE_SHIPCUST_SALES" });
+			title = messageSource.getMessage("shipcust.mail.title.orderclosed", null, locale);
+			break;
+		default:
+			title = messageSource.getMessage("shipcust.order", null, locale);
+			break;
+		}
+
+		ArrayList<String> mailTo = new ArrayList<>();
+		for (User user : users) {
+			mailTo.add(user.getEmail());
+		}
+
+		// context.setVariable("host", InetAddress.getLocalHost().getHostAddress());
+		context.setVariable("host", InetAddress.getLocalHost().getHostName());
+		context.setVariable("title", title);
+		context.setVariable("message", messageSource.getMessage("shipcust.mail.message", null, locale));
+
+		String body = templateEngine.process("shipcust/mailtemplate", context);
+		if (mailTo.size() > 0) {
+			mailService.sendEmail("webapp@atwsystem.pl", mailTo.toArray(new String[0]), new String[0],
+					messageSource.getMessage("shipcust.title", null, locale) + " - " + title, body);
+		}
 	}
 
 }
