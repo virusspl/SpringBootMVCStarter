@@ -234,11 +234,28 @@ public class CustomShipmentsController {
 		ship.setUpdateDate(ship.getCreationDate());
 		ship.setStartDate(new Timestamp(formCreateCustomShipment.getStartDate().getTime()));
 		ship.setEndDate(new Timestamp(formCreateCustomShipment.getEndDate().getTime()));
+		ship.setNotifiedByMail(false);
 
 		shipmentsService.save(ship);
-		this.sendMail(ship.getId(), MAIL_NEW_ORDER, locale);
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/shipcust/show/order/" + ship.getId();
+	}
+
+	@RequestMapping(value = "/sales/order/notify/{id}")
+	@Transactional
+	public String sendNotification(@PathVariable("id") int id, Model model, Locale locale,
+			RedirectAttributes redirectAttrs) throws NotFoundException, UnknownHostException, MessagingException {
+
+		CustomShipment shipment = shipmentsService.findById(id);
+		if (shipment == null) {
+			throw new NotFoundException("Unknown shipment order: #" + id);
+		}
+		shipment.setNotifiedByMail(true);
+		shipmentsService.update(shipment);
+
+		this.sendMail(shipment.getId(), MAIL_NEW_ORDER, locale);
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("email.sent", null, locale));
+		return "redirect:/shipcust/show/order/" + shipment.getId();
 	}
 
 	@RequestMapping(value = "/sales/order/cancel/{id}")

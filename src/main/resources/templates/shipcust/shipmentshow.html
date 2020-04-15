@@ -39,15 +39,15 @@
 				},
 				order : [ [ 0, 'asc' ] ],
 				paging : false
-				//,
-				//dom : 'Bfrtip',
-				//buttons : [ {
-				//	extend : 'excel',
-				//	text : 'Excel'
-				//}, {
-				//	extend : 'pdfHtml5',
-				//	orientation : 'portrait'
-				//} ]
+			//,
+			//dom : 'Bfrtip',
+			//buttons : [ {
+			//	extend : 'excel',
+			//	text : 'Excel'
+			//}, {
+			//	extend : 'pdfHtml5',
+			//	orientation : 'portrait'
+			//} ]
 			});
 		</script>
 
@@ -193,33 +193,41 @@
 		</div>
 		<div class="row margin-top-10">
 			<div class="col-xs-12">
-				<a	
-					th:href="|@{/shipcust/print/order/}${sh.id}|"
+				<a th:href="|@{/shipcust/print/order/}${sh.id}|"
 					class="btn btn-primary btn-sm"> <span
 					class="glyphicon glyphicon-print"></span>&nbsp;&nbsp;<span
 					th:text="#{action.print}"></span>
-				</a>				
-				<a
-					style="margin-left: 20px;"
-					th:if="${sh.state.order} &lt; 30"	
+				</a> <a style="margin-left: 20px;" th:if="${sh.state.order} &lt; 30"
 					sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SHIPCUST_SALES')"
 					th:href="|@{/shipcust/sales/line/create/}${sh.id}|"
 					class="btn btn-primary btn-sm"> <span
 					class="glyphicon glyphicon-plus"></span> <span
 					th:text="#{general.add.line}"></span>
-				</a>
-				<a	
-					th:if="${sh.state.order} &lt; 30"
+				</a> <a th:if="${sh.state.order} &lt; 30"
 					sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SHIPCUST_SALES')"
 					th:href="|@{/shipcust/sales/order/cancel/}${sh.id}|"
-					th:onclick="|return confirm('#{general.areyousure}')|"
+					th:onclick="|return confirm('#{shipcust.order.cancel}. #{general.areyousure}')|"
 					class="btn btn-danger btn-sm"> <span
 					class="glyphicon glyphicon-remove"></span> <span
 					th:text="#{shipcust.order.cancel}"></span>
+				</a> <a style="margin-left: 20px;"
+					sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SHIPCUST_SALES')"
+					th:href="|@{/shipcust/sales/order/notify/}${sh.id}|"
+					th:onclick="|return confirm('#{action.send.notification}. #{general.areyousure}')|"
+					class="btn btn-info btn-sm"> <span
+					class="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;<span
+					th:text="#{action.send.notification}"></span>
 				</a>
 			</div>
 		</div>
-		
+		<div class="row margin-top-20 text-center">
+			<div class="col-xs-12">
+				<div id="warningMessage" class="alert alert-danger"
+					th:if="!${sh.notifiedByMail}" style="margin-bottom: 10px;">
+					<span th:utext="|#{shipcust.pleasenotify}|">error</span>
+				</div>
+			</div>
+		</div>
 		<div class="row margin-top-20">
 			<div class="col-xs-12 col-xs-offset-0">
 				<div class="table-responsive">
@@ -231,7 +239,7 @@
 								<th><span th:text="#{general.productCode}"></span></th>
 								<th><span th:text="#{general.order.sales}"></span></th>
 								<th><span th:text="#{general.quantity}"></span></th>
-								<th><span th:text="#{general.shipped}"></span></th>								
+								<th><span th:text="#{general.shipped}"></span></th>
 								<th><span th:text="#{general.comment}"></span></th>
 								<th><span th:text="#{shipcust.addition}"></span></th>
 								<th><span th:text="#{shipcust.certificate}"></span></th>
@@ -240,15 +248,14 @@
 						</thead>
 						<tbody>
 							<tr th:each="line,iter : ${lines}">
-								<td><span
-									th:text="${iter.index}+1"></span></td>
-								<td>
-										<span th:if="${line.state.order} &lt; 10" class="glyphicon glyphicon-home"></span>
-										<span th:if="${line.state.order} == 10 or ${line.state.order} == 20 or ${line.state.order} == 30" class="glyphicon glyphicon-time"></span>
-										<span th:if="${line.state.order} &gt; 30 " class="glyphicon glyphicon-ok"></span>
-								&nbsp;
-								<span th:text="#{${line.state.code}}"></span>
-								</td>
+								<td><span th:text="${iter.index}+1"></span></td>
+								<td><span th:if="${line.state.order} &lt; 10"
+									class="glyphicon glyphicon-home"></span> <span
+									th:if="${line.state.order} == 10 or ${line.state.order} == 20 or ${line.state.order} == 30"
+									class="glyphicon glyphicon-time"></span> <span
+									th:if="${line.state.order} &gt; 30 "
+									class="glyphicon glyphicon-ok"></span> &nbsp; <span
+									th:text="#{${line.state.code}}"></span></td>
 								<td><a th:href="|@{/shipcust/show/line/}${line.id}|"
 									data-toggle="tooltip" data-placement="top"
 									th:title="#{action.show}"> <span
