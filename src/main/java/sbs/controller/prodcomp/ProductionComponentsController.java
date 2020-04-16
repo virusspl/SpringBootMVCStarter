@@ -1,9 +1,11 @@
 package sbs.controller.prodcomp;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -51,8 +53,7 @@ public class ProductionComponentsController {
 	DateHelper dateHelper;
 
 	@RequestMapping("/main")
-	public String view(Model model) {
-		FormComponent formComponent = new FormComponent();
+	public String view(Model model) { 
 		/*
 		 * Calendar cal = Calendar.getInstance(); cal.add(Calendar.MONTH, -1);
 		 * cal.set(Calendar.DAY_OF_MONTH, 1); formComponent.setStartDate(new
@@ -62,15 +63,60 @@ public class ProductionComponentsController {
 		 * cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 		 * formComponent.setEndDate(new Timestamp(cal.getTimeInMillis()));
 		 */
-		model.addAttribute("formComponent", formComponent);
+		model.addAttribute("formComponent", new FormComponent());
+		model.addAttribute("formFindComponents", new FormFindComponents());
 		return "prodcomp/main";
 	}
 
+	@RequestMapping(value = "/findcomponents", params = { "find" }, method = RequestMethod.POST)
+	public String findChains(@Valid FormFindComponents formFindComponents, BindingResult bindingResult, RedirectAttributes redirectAttrs, Model model) {
+		
+		if(bindingResult.hasErrors()) {
+			model.addAttribute("formComponent", new FormComponent());
+			return "prodcomp/main";
+		}
+		
+		formFindComponents.setItem(formFindComponents.getItem().toUpperCase().trim());
+		String itemDescription = x3Service.findItemDescription("ATW", formFindComponents.getItem());
+		if (itemDescription == null) {
+			bindingResult.rejectValue("item", "error.no.such.product", "ERROR");
+			model.addAttribute("formComponent", new FormComponent());
+			return "prodcomp/main";
+		}
+		
+		
+		
+		redirectAttrs.addFlashAttribute("code", formFindComponents.getItem());
+		redirectAttrs.addFlashAttribute("quantity", formFindComponents.getQuantity());
+		redirectAttrs.addFlashAttribute("single", true);
+
+		
+		return "redirect:/prodcomp/make";
+	}
+	
 	@RequestMapping("/make")
 	public String doMake(Model model, Locale locale, RedirectAttributes redirectAttrs)
 			throws FileNotFoundException, IOException {
+
 		// get file
-		File file = (File) model.asMap().get("file");
+		File file;
+		
+		if(model.asMap().containsKey("single")) {
+			String code = (String)model.asMap().get("code");
+			int quantity = (int)model.asMap().get("quantity");
+			
+			File tmpFile = File.createTempFile("prodcom", ".tmp");
+			tmpFile.deleteOnExit();
+			BufferedWriter bw = new BufferedWriter(new FileWriter(tmpFile));
+    	    bw.write(code + ";" + quantity);
+    	    bw.close();
+			file = tmpFile;
+		}
+		else {
+			file = (File) model.asMap().get("file");
+		}
+
+		
 		if (file != null) {
 			// file exist
 			Map<String, Integer> fileInfo = new TreeMap<>();
@@ -607,6 +653,7 @@ public class ProductionComponentsController {
 
 		// standard validation
 		if (bindingResult.hasErrors()) {
+			model.addAttribute("formFindComponents", new FormFindComponents());
 			return "prodcomp/main";
 		}
 
@@ -618,6 +665,7 @@ public class ProductionComponentsController {
 		componentDescription = x3Service.findItemDescription("ATW", component);
 		if (componentDescription == null) {
 			bindingResult.rejectValue("component", "error.no.such.product", "ERROR");
+			model.addAttribute("formFindComponents", new FormFindComponents());
 			return "prodcomp/main";
 		}
 
@@ -626,6 +674,7 @@ public class ProductionComponentsController {
 				formComponent.getEndDate(), "ATW");
 		if (orders.size() == 0) {
 			bindingResult.rejectValue("startDate", "prodcomp.error.noordersfund", "ERROR");
+			model.addAttribute("formFindComponents", new FormFindComponents());
 			return "prodcomp/main";
 		}
 
@@ -651,6 +700,7 @@ public class ProductionComponentsController {
 		}
 		if (!found) {
 			bindingResult.rejectValue("component", "prodcomp.error.notusedinbom", "ERROR");
+			model.addAttribute("formFindComponents", new FormFindComponents());
 			return "prodcomp/main";
 		}
 
