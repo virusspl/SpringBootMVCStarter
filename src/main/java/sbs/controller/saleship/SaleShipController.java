@@ -141,6 +141,7 @@ public class SaleShipController {
 			line.setProductionOrderAndLine(productionOrderAndLineInt);
 			line.setClientCode(ord.getClientCode());
 			line.setClientName(ord.getClientName());
+			line.setCountry(ord.getCountry());
 			line.setDemandedDate(ord.getDemandedDate());
 			line.setProductCode(ord.getProductCode());
 			line.setProductDescription(ord.getProductDescription());

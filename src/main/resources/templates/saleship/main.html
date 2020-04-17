@@ -211,6 +211,7 @@
 									<th th:text="|#{general.order.production} / #{general.line}|">head</th>									
 									<th th:text="#{general.client.code}">head</th>
 									<th th:text="#{general.client.name}">head</th>
+									<th th:text="#{general.country}">head</th>
 									<th th:text="#{general.demandedDate.short}">head</th>
 									<th th:text="#{general.productCode}">head</th>
 									<th th:text="#{general.productDescription}">head</th>
@@ -231,6 +232,7 @@
 									<th th:text="|#{general.order.production} / #{general.line}|">head</th>									
 									<th th:text="#{general.client.code}">head</th>
 									<th th:text="#{general.client.name}">head</th>
+									<th th:text="#{general.country}">head</th>
 									<th th:text="#{general.demandedDate.short}">head</th>									
 									<th th:text="#{general.productCode}">head</th>
 									<th th:text="#{general.productDescription}">head</th>
@@ -251,6 +253,7 @@
 									<td><span th:text="${line.productionOrderAndLine}"></span></td>
 									<td><span th:text="${line.clientCode}"></span></td>
 									<td><span th:text="${line.clientName}"></span></td>
+									<td><span th:text="${line.country}"></span></td>
 									<td><span th:text="${#dates.format(line.demandedDate, 'yyyy.MM.dd')}"></span></td>
 									<td><span th:text="${line.productCode}"></span></td>
 									<td><span th:text="${line.productDescription}"></span></td>

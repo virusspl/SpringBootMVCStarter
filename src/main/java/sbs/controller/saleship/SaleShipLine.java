@@ -20,6 +20,7 @@ public class SaleShipLine {
 	private int quantityRemainingToShip;
 	private int quantityShipped;
 	private int quantityToGive;
+	private String country;
 	
 	public SaleShipLine() {
 	
@@ -153,6 +154,14 @@ public class SaleShipLine {
 
 	public void setProductGr1(String productGr1) {
 		this.productGr1 = productGr1;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
 	}
 
 

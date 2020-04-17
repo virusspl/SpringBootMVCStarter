@@ -1,7 +1,11 @@
 package sbs.model.x3;
 
-public class X3RouteLine {
+import java.io.Serializable;
 
+public class X3RouteLine implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
 	String code;
 	int operationNumber;
 	String operationDescription;
