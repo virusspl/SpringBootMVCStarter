@@ -119,6 +119,9 @@ public class ReceptionToSaleController {
 		List<ReceptionToSaleLine> tmpObjList;
 		ReceptionToSaleLine rl;
 		for(X3SalesOrderLine line: targetLines) {
+			if(line.getProductCode().startsWith("W")) {
+				continue;
+			}
 			rl = new ReceptionToSaleLine();
 			rl.setOrderNumber(line.getOrderNumber());
 			rl.setOrderLine(""+line.getOrderLineNumber());
