@@ -15,6 +15,7 @@ public class ReceptionToSaleLine implements Comparable<ReceptionToSaleLine>{
 	
 	private double toSendOrQuantity;
 	private double ordered;
+	private double valueToSend;
 	
 	
 	public ReceptionToSaleLine() {
@@ -123,6 +124,13 @@ public class ReceptionToSaleLine implements Comparable<ReceptionToSaleLine>{
 	}
 
 
+	public double getValueToSend() {
+		return valueToSend;
+	}
+
+	public void setValueToSend(double valueToSend) {
+		this.valueToSend = valueToSend;
+	}
 
 	@Override
 	public String toString() {

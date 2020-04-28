@@ -92,6 +92,7 @@
 								<th th:text="|#{general.date.demanded.short}|">head</th>								
 								<th th:text="|#{prodtosale.lefttosend} / #{general.quantity} |">head</th>
 								<th th:text="#{prodtosale.ordered}">head</th>
+								<th th:text="|#{general.value} [PLN]|">head</th>
 							</tr>
 						</thead>
 						<tfoot>
@@ -106,9 +107,10 @@
 								<th th:text="|Gr. 2 / #{geolook.address}|">head</th>
 								<th th:text="|#{general.date.input}|">head</th>
 								<th th:text="|#{general.date.demanded.short}|">head</th>
-								
 								<th th:text="|#{prodtosale.lefttosend} / #{general.quantity} |">head</th>
-								<th th:text="#{prodtosale.ordered}">head</th>					</tr>
+								<th th:text="#{prodtosale.ordered}">head</th>					
+								<th th:text="|#{general.value} [PLN]|">head</th>					
+							</tr>
 						</tfoot>
 						<tbody>
 							<tr th:each="line : ${lines}">
@@ -124,8 +126,14 @@
 								<td><span th:text="${line.date}"></span></td>
 								<td><span th:text="${line.toSendOrQuantity}"></span></td>
 								<td>
-									<span th:if="${line.ordered} >0" th:text="${line.ordered}"></span>
-									<span th:if="${line.ordered} ==0"></span>
+									<span th:if="${line.ordered} > 0" th:text="${line.ordered}"></span>
+									<span th:if="${line.ordered} == 0"></span>
+								</td>
+								<td>
+									<span th:if="${line.valueToSend} > 0" 
+										th:text="${#numbers.formatDecimal(line.valueToSend, 1, 'NONE', 2, 'POINT')}">
+									</span>
+									<span th:if="${line.valueToSend} == 0"></span>
 								</td>
 							</tr>
 						</tbody>

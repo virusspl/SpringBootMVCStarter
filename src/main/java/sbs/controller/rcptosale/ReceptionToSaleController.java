@@ -135,6 +135,7 @@ public class ReceptionToSaleController {
 			rl.setDateInput("");
 			rl.setToSendOrQuantity(line.getQuantityLeftToSend());
 			rl.setOrdered(line.getQuantityOrdered());
+			rl.setValueToSend(line.getExchangeRate()*line.getUnitPrice()*line.getQuantityLeftToSend());
 			result.add(rl);
 			// create list to sort (comparator in object - quantity)
 			tmpObjList = new ArrayList<>();
@@ -152,6 +153,7 @@ public class ReceptionToSaleController {
 				rl.setDateInput(dateHelper.formatYyyyMmDd(obj.getInputDate()));
 				rl.setToSendOrQuantity(obj.getQuantity());
 				rl.setOrdered(0);
+				rl.setValueToSend(0);
 				tmpObjList.add(rl);
 			}
 			Collections.sort(tmpObjList);
