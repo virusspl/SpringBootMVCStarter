@@ -404,7 +404,7 @@ public class ProductionComponentsController {
 					shortage = qreq - qstock;
 					if (shortage > 0) {
 						if (qstock / qunitreq < maxProd) {
-							maxProd = (int) (qstock / qunitreq);
+							maxProd = Math.min(maxProd, (int) (qstock / qunitreq));
 						}
 						qstock = 0;
 						main.addShortage(code, shortage);
@@ -602,8 +602,18 @@ public class ProductionComponentsController {
 		Map<String, Double> subMap;
 		boolean toAdd;
 		for (X3BomItem item : list) {
+			
+			
+			
 			code = item.getPartCode();
 			qty = item.getModelQuantity();
+			
+			// skip if not verify stock
+			if(products.get(code)!= null && !products.get(code).isVerifyStock()) {
+				continue;
+			}
+			
+			// decide 
 			if (acvOnly) {
 				if (products.get(code) == null) {
 					continue;
@@ -616,6 +626,7 @@ public class ProductionComponentsController {
 			} else {
 				toAdd = true;
 			}
+			
 			if (toAdd) {
 				if (resultMap.containsKey(code)) {
 					resultMap.put(code, resultMap.get(code) + qty);
@@ -623,6 +634,7 @@ public class ProductionComponentsController {
 					resultMap.put(code, qty);
 				}
 			}
+			
 			subMap = getComponentsQuantitiesMultilevel(allBoms, code, products, acvOnly);
 			for (Map.Entry<String, Double> entry : subMap.entrySet()) {
 				if (resultMap.containsKey(entry.getKey())) {
