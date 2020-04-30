@@ -21,6 +21,7 @@ import sbs.model.x3.X3Client;
 import sbs.model.x3.X3ConsumptionProductInfo;
 import sbs.model.x3.X3ConsumptionSupplyInfo;
 import sbs.model.x3.X3CoverageData;
+import sbs.model.x3.X3DeliverySimpleInfo;
 import sbs.model.x3.X3EnvironmentInfo;
 import sbs.model.x3.X3KeyValString;
 import sbs.model.x3.X3Product;
@@ -491,6 +492,16 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	@Override
 	public Map<String, Date> getLatestExpectedDeliveryDateForCodeByDate(Date date, String company) {
 		return jdbcOracleX3Repository.getLatestExpectedDeliveryDateForCodeByDate(date, company);
+	}
+
+	@Override
+	public Map<String, X3DeliverySimpleInfo> getFirstUpcomingDeliveriesMapByCodeAfterDate(Date date, String company) {
+		return jdbcOracleX3Repository.getFirstUpcomingDeliveriesMapByCodeAfterDate(date, company);
+	}
+
+	@Override
+	public Map<String, X3DeliverySimpleInfo> getMostRecentDeliveriesMapByCodeBeforeDate(Date date, String company) {
+		return jdbcOracleX3Repository.getMostRecentDeliveriesMapByCodeBeforeDate(date, company);
 	}
 
 

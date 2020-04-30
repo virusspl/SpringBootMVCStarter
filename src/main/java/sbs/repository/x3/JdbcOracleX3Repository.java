@@ -14,6 +14,7 @@ import sbs.model.x3.X3Client;
 import sbs.model.x3.X3ConsumptionProductInfo;
 import sbs.model.x3.X3ConsumptionSupplyInfo;
 import sbs.model.x3.X3CoverageData;
+import sbs.model.x3.X3DeliverySimpleInfo;
 import sbs.model.x3.X3EnvironmentInfo;
 import sbs.model.x3.X3KeyValString;
 import sbs.model.x3.X3Product;
@@ -123,6 +124,8 @@ public interface JdbcOracleX3Repository  {
 	public Map<String, Integer> findStockForAllProductsWithStock(String company);
 	public Map<String, Double> getExpectedDeliveriesByDate(Date date, String company);
 	public Map<String, Date> getLatestExpectedDeliveryDateForCodeByDate(Date date, String company);
+	public Map<String, X3DeliverySimpleInfo> getFirstUpcomingDeliveriesMapByCodeAfterDate(Date date, String company);
+	public Map<String, X3DeliverySimpleInfo> getMostRecentDeliveriesMapByCodeBeforeDate(Date date, String company);
 
 	
 	

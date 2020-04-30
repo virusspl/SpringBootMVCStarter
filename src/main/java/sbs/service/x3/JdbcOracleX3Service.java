@@ -104,6 +104,8 @@ public interface JdbcOracleX3Service {
 	public Map<String, Integer> findStockForAllProductsWithStock(String company);
 	public Map<String, Double> getExpectedDeliveriesByDate(Date date, String company);
 	public Map<String, Date> getLatestExpectedDeliveryDateForCodeByDate(Date date, String string);
+	public Map<String, X3DeliverySimpleInfo> getFirstUpcomingDeliveriesMapByCodeAfterDate(Date date, String company);
+	public Map<String, X3DeliverySimpleInfo> getMostRecentDeliveriesMapByCodeBeforeDate(Date date, String company);
 	
 	
 }

@@ -102,6 +102,18 @@ public class VariousPagesController {
 	
 	@RequestMapping("/test")
 	public String test(Model model, Locale locale) throws InterruptedException {
+
+		/*ArrayList<String> list = new ArrayList<>();
+		try {
+			int stop = 0;
+			while(stop<1) {
+				list.add("!@#$%^&*()!@#$%^&*()_!@#$%^&*()_+!@#$%^&*()!@#$%^&*())!@#$%^&*()))))_");
+			}
+			
+		}
+		catch (OutOfMemoryError er) {
+			System.out.println("out of memory!!");
+		}
 		//String result = x3Service.updateStandardCostsTable("WPS");
 		//System.out.println(result);
 		

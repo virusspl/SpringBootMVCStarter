@@ -341,7 +341,6 @@
 			</div>
 		</div>
 
-
 		<div class="row" th:if="${shortage}">
 			<div class="col-xs-12">
 				<h1 th:text="|#{prodcomp.shortage.list} - #{general.summary}|"
@@ -358,18 +357,19 @@
 								<th th:text="#{prodcomp.initialQuantity.short}">head</th>
 								<th th:text="|#{prodcomp.inOrder.short} [${days}]|">head</th>
 								<th th:text="#{prodcomp.shortage}">head</th>
+								<th th:text="#{prodcomp.shortage.cost}">head</th>								
+								<th th:text="|#{prodcomp.recent} - #{general.date}|">head</th>
+								<th th:text="|#{prodcomp.recent} - #{general.quantity}|">head</th>
+								<th th:text="|#{prodcomp.recent} - #{general.supplier.code}|">head</th>
+								<th th:text="|#{prodcomp.recent} - #{general.supplier.name}|">head</th>
+								<th th:text="|#{prodcomp.recent} - #{general.country}|">head</th>
+								<th th:text="|#{prodcomp.upcoming} - #{general.date}|">head</th>
+								<th th:text="|#{prodcomp.upcoming} - #{general.quantity}|">head</th>
+								<th th:text="|#{prodcomp.upcoming} - #{general.supplier.code}|">head</th>
+								<th th:text="|#{prodcomp.upcoming} - #{general.supplier.name}|">head</th>
+								<th th:text="|#{prodcomp.upcoming} - #{general.country}|">head</th>		
 							</tr>
 						</thead>
-						<tbody>
-							<tr th:each="line : ${shortage}">
-								<td><span th:text="${line[0]}"></span></td>
-								<td><span th:text="${line[1]}"></span></td>
-								<td><span th:text="${line[2]}"></span></td>
-								<td><span th:text="${line[3]}"></span></td>
-								<td><span th:text="${line[4]}"></span></td>
-								<td><span th:text="${line[5]}"></span></td>
-							</tr>
-						</tbody>
 						<tfoot>
 							<tr>
 								<th th:text="#{general.productCode}">head</th>
@@ -378,8 +378,40 @@
 								<th th:text="#{prodcomp.initialQuantity.short}">head</th>
 								<th th:text="|#{prodcomp.inOrder.short} [${days}]|">head</th>
 								<th th:text="#{prodcomp.shortage}">head</th>
+								<th th:text="#{prodcomp.shortage.cost}">head</th>								
+								<th th:text="|#{prodcomp.recent} - #{general.date}|">head</th>
+								<th th:text="|#{prodcomp.recent} - #{general.quantity}|">head</th>
+								<th th:text="|#{prodcomp.recent} - #{general.supplier.code}|">head</th>
+								<th th:text="|#{prodcomp.recent} - #{general.supplier.name}|">head</th>
+								<th th:text="|#{prodcomp.recent} - #{general.country}|">head</th>
+								<th th:text="|#{prodcomp.upcoming} - #{general.date}|">head</th>
+								<th th:text="|#{prodcomp.upcoming} - #{general.quantity}|">head</th>
+								<th th:text="|#{prodcomp.upcoming} - #{general.supplier.code}|">head</th>
+								<th th:text="|#{prodcomp.upcoming} - #{general.supplier.name}|">head</th>
+								<th th:text="|#{prodcomp.upcoming} - #{general.country}|">head</th>						
 							</tr>
-						</tfoot>
+						</tfoot>						
+						<tbody>
+							<tr th:each="line : ${shortage}">
+								<td><span th:text="${line[0]}"></span></td>
+								<td><span th:text="${line[1]}"></span></td>
+								<td><span th:text="${line[2]}"></span></td>
+								<td><span th:text="${line[3]}"></span></td>
+								<td><span th:text="${line[4]}"></span></td>
+								<td><span th:text="${line[5]}"></span></td>
+								<td><span th:text="${#numbers.formatDecimal(line[6], 0, 'NONE', 2, 'POINT')}"></span></td>
+								<td><span th:text="${line[7]}"></span></td>
+								<td><span th:text="${line[8]}"></span></td>
+								<td><span th:text="${line[9]}"></span></td>
+								<td><span th:text="${line[10]}"></span></td>
+								<td><span th:text="${line[11]}"></span></td>
+								<td><span th:text="${line[12]}"></span></td>
+								<td><span th:text="${line[13]}"></span></td>
+								<td><span th:text="${line[14]}"></span></td>
+								<td><span th:text="${line[15]}"></span></td>
+								<td><span th:text="${line[16]}"></span></td>
+							</tr>
+						</tbody>
 					</table>
 				</div>
 

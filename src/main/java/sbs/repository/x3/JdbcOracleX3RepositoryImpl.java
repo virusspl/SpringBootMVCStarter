@@ -34,6 +34,7 @@ import sbs.model.x3.X3Client;
 import sbs.model.x3.X3ConsumptionProductInfo;
 import sbs.model.x3.X3ConsumptionSupplyInfo;
 import sbs.model.x3.X3CoverageData;
+import sbs.model.x3.X3DeliverySimpleInfo;
 import sbs.model.x3.X3EnvironmentInfo;
 import sbs.model.x3.X3KeyValString;
 import sbs.model.x3.X3Product;
@@ -4106,4 +4107,111 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		}
 		return map;
 	}
+	
+	@Override
+	public Map<String, X3DeliverySimpleInfo> getFirstUpcomingDeliveriesMapByCodeAfterDate(Date date, String company) {
+		// ===========================================================
+		// ==== TMP JDBC DUALITY =====================================
+		if(company.equalsIgnoreCase("ATW")) {
+			jdbc = jdbc6;
+		}
+		else {
+			jdbc = jdbc11;
+		}
+		// ==== TMP JDBC DUALITY =====================================
+		// ===========================================================
+		
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT * FROM ( " 
+					+ "SELECT "
+					+ "POQ.POHNUM_0, " 
+					+ "POQ.POPLIN_0, " 
+					+ "POQ.ITMREF_0, " 
+					+ "POQ.QTYSTU_0, " 
+					+ "POQ.RCPQTYSTU_0, " 
+					+ "BPR.BPRNUM_0, "
+					+ "BPR.BPRNAM_0, " 
+					+ "BPR.CRY_0, "
+					+ "POQ.X_RCPDAT_0, " 
+					+ "(POQ.QTYSTU_0 - POQ.RCPQTYSTU_0) AS TO_GET, "
+					+ "ROW_NUMBER() OVER (PARTITION BY POQ.ITMREF_0 ORDER BY POQ.X_RCPDAT_0 ASC) AS ROWNUMBER "
+					+ "FROM " + company + ".PORDERQ POQ INNER JOIN "  + company + ".BPARTNER BPR ON POQ.BPSNUM_0 = BPR.BPRNUM_0 "
+					+ "WHERE POQ.LINCLEFLG_0 = 1  AND POQ.X_RCPDAT_0 >= ? AND (POQ.QTYSTU_0 - POQ.RCPQTYSTU_0) > 0 "
+				+ ")  WHERE ROWNUMBER = 1 "
+				,
+                new Object[]{dateHelper.getTime(date)}
+				);
+		
+		Map<String, X3DeliverySimpleInfo> map = new HashMap<>();
+		X3DeliverySimpleInfo info;
+		for(Map<String,Object> row: resultSet ){
+			info = new X3DeliverySimpleInfo();
+			info.setDocumentNr((String)row.get("POHNUM_0"));
+			info.setDocumentLine(((BigDecimal)row.get("POPLIN_0")).intValue()+ "");
+			info.setProductCode((String)row.get("ITMREF_0"));
+			info.setQuantityOrdered(((BigDecimal)row.get("QTYSTU_0")).intValue());
+			info.setQuantityReceived(((BigDecimal)row.get("RCPQTYSTU_0")).intValue());
+			info.setQuantityLeftToGet(((BigDecimal)row.get("TO_GET")).intValue());
+			info.setSupplierCode((String)row.get("BPRNUM_0"));
+			info.setSupplierName((String)row.get("BPRNAM_0"));
+			info.setCountry((String)row.get("CRY_0"));
+			info.setDate((Timestamp)row.get("X_RCPDAT_0"));
+			map.put(info.getProductCode(), info); 
+		}
+		return map;
+	}
+
+	@Override
+	public Map<String, X3DeliverySimpleInfo> getMostRecentDeliveriesMapByCodeBeforeDate(Date date, String company) {
+				// ===========================================================
+				// ==== TMP JDBC DUALITY =====================================
+				if(company.equalsIgnoreCase("ATW")) {
+					jdbc = jdbc6;
+				}
+				else {
+					jdbc = jdbc11;
+				}
+				// ==== TMP JDBC DUALITY =====================================
+				// ===========================================================
+				
+				List<Map<String,Object>> resultSet = jdbc.queryForList(
+						"SELECT * FROM ( "
+							+ "SELECT "
+							+ "PRD.PTHNUM_0, "
+							+ "PRD.PTDLIN_0, "
+							+ "PRD.ITMREF_0, "
+							+ "PRD.QTYSTU_0, "
+							+ "BPR.BPRNUM_0, "
+							+ "BPR.BPRNAM_0, "
+							+ "BPR.CRY_0, "
+							+ "PRD.RCPDAT_0, "
+							+ "ROW_NUMBER() OVER (PARTITION BY PRD.ITMREF_0 ORDER BY PRD.RCPDAT_0 DESC) AS ROWNUMBER "
+							+ "FROM "
+							+ company + ".PRECEIPTD PRD INNER JOIN " + company + ".BPARTNER BPR ON PRD.BPSNUM_0 = BPR.BPRNUM_0 "
+							+ "WHERE PRD.RCPDAT_0 <= ? "
+						+ ")  WHERE ROWNUMBER = 1 "
+						,
+		                new Object[]{dateHelper.getTime(date)}
+						);
+				
+				Map<String, X3DeliverySimpleInfo> map = new HashMap<>();
+				X3DeliverySimpleInfo info;
+				for(Map<String,Object> row: resultSet ){
+					info = new X3DeliverySimpleInfo();
+					info.setDocumentNr((String)row.get("PTHNUM_0"));
+					info.setDocumentLine(((BigDecimal)row.get("PTDLIN_0")).intValue()+ "");
+					info.setProductCode((String)row.get("ITMREF_0"));
+					info.setQuantityOrdered(((BigDecimal)row.get("QTYSTU_0")).intValue());
+					info.setQuantityReceived(((BigDecimal)row.get("QTYSTU_0")).intValue());
+					info.setQuantityLeftToGet(0);
+					info.setSupplierCode((String)row.get("BPRNUM_0"));
+					info.setSupplierName((String)row.get("BPRNAM_0"));
+					info.setCountry((String)row.get("CRY_0"));
+					info.setDate((Timestamp)row.get("RCPDAT_0"));
+					map.put(info.getProductCode(), info);
+				}
+				return map;
+	}
+
+	
 }
