@@ -212,6 +212,8 @@
 									<th th:text="#{general.client.code}">head</th>
 									<th th:text="#{general.client.name}">head</th>
 									<th th:text="#{general.country}">head</th>
+									<th th:text="#{general.date.creation.short}">head</th>
+									<th th:text="#{general.date.update.short}">head</th>
 									<th th:text="#{general.demandedDate.short}">head</th>
 									<th th:text="#{general.productCode}">head</th>
 									<th th:text="#{general.productDescription}">head</th>
@@ -233,6 +235,8 @@
 									<th th:text="#{general.client.code}">head</th>
 									<th th:text="#{general.client.name}">head</th>
 									<th th:text="#{general.country}">head</th>
+									<th th:text="#{general.date.creation.short}">head</th>								
+									<th th:text="#{general.date.update.short}">head</th>									
 									<th th:text="#{general.demandedDate.short}">head</th>									
 									<th th:text="#{general.productCode}">head</th>
 									<th th:text="#{general.productDescription}">head</th>
@@ -254,6 +258,10 @@
 									<td><span th:text="${line.clientCode}"></span></td>
 									<td><span th:text="${line.clientName}"></span></td>
 									<td><span th:text="${line.country}"></span></td>
+									<td><span th:text="${#dates.format(line.creationDate, 'yyyy.MM.dd')}"></span></td>
+									<td><span th:if="${line.updateDate.after(#dates.create(1600,1,1))}"
+									th:text="${#dates.format(line.updateDate, 'yyyy.MM.dd')}">
+									</span></td>
 									<td><span th:text="${#dates.format(line.demandedDate, 'yyyy.MM.dd')}"></span></td>
 									<td><span th:text="${line.productCode}"></span></td>
 									<td><span th:text="${line.productDescription}"></span></td>

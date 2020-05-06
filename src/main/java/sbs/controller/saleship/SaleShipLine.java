@@ -10,6 +10,8 @@ public class SaleShipLine {
 	private String clientCode;
 	private String clientName;
 	private Timestamp demandedDate;
+	private Timestamp creationDate;
+	private Timestamp updateDate;
 	private String productCode;
 	private String productDescription;
 	private String productGr1;
@@ -73,6 +75,23 @@ public class SaleShipLine {
 
 	public void setDemandedDate(Timestamp demandedDate) {
 		this.demandedDate = demandedDate;
+	}
+
+	
+	public Timestamp getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Timestamp creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public Timestamp getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Timestamp updateDate) {
+		this.updateDate = updateDate;
 	}
 
 	public String getProductCode() {

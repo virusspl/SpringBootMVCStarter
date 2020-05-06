@@ -143,6 +143,8 @@ public class SaleShipController {
 			line.setClientName(ord.getClientName());
 			line.setCountry(ord.getCountry());
 			line.setDemandedDate(ord.getDemandedDate());
+			line.setCreationDate(ord.getCreationDate());
+			line.setUpdateDate(ord.getUpdateDate());
 			line.setProductCode(ord.getProductCode());
 			line.setProductDescription(ord.getProductDescription());
 			line.setProductGr1(ord.getProductGr1());
