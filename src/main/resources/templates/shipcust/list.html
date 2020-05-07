@@ -37,7 +37,7 @@
 				language : {
 					url : getUrl() + file,
 				},
-				order : [ [ 0, 'asc' ] ],
+				order : [ [ 7, 'asc' ] ],
 				paging : true,
 				dom : 'Bfrtip',
 				buttons : [ {
@@ -109,7 +109,7 @@
 								<th th:text="#{general.client.name}">head</th>
 								<th th:text="#{general.carrier}">head</th>
 								<th th:text="#{general.state}">head</th>
-								<th th:text="#{general.date.update}">head</th>
+								<th th:text="#{shipcust.date.start}">head</th>
 								<th th:text="#{general.comment}">head</th>
 							</tr>
 						</thead>
@@ -122,7 +122,7 @@
 								<th th:text="#{general.client.name}">head</th>
 								<th th:text="#{general.carrier}">head</th>
 								<th th:text="#{general.state}">head</th>
-								<th th:text="#{general.date.update}">head</th>
+								<th th:text="#{shipcust.date.start}">head</th>
 								<th th:text="#{general.comment}">head</th>
 							</tr>
 						</tfoot>
@@ -140,7 +140,7 @@
 								<td><span th:text="${order.transport.name}"></span></td>
 								<td><span th:text="#{${order.state.code}}"></span></td>
 								<td><span
-									th:text="${#dates.format(order.updateDate, 'yyyy.MM.dd HH:mm')}"></span></td>
+									th:text="${#dates.format(order.startDate, 'yyyy.MM.dd')}"></span></td>
 								<td><span th:text="${order.comment}"></span></td>
 							</tr>
 						</tbody>

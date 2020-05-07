@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script"></div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h2
+					th:text="|#{shipcust.mass.confirm} [#${formShipmentMassConfirm.orderId}]|"
+					class="text-primary"></h2>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{shipcust.mass.confirm.message}"> Welcome message </span>
+			</div>
+		</div>
+		<div class="row">
+			<!-- BACK TO MAIN PAGE -->
+			<a
+				th:href="|@{/shipcust/ship/order/manage/}${formShipmentMassConfirm.orderId}|"
+				class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+		<div class="underline margin-top-10"></div>
+		<!-- BHP TICKET FORM -->
+		<form th:action="@{/shipcust/ship/order/manage}" method="post"
+			th:object="${formShipmentMassConfirm}">
+			<!-- HIDDEN -->
+			<input type="hidden" th:field="*{orderId}" />  
+			<!-- /HIDDEN -->
+
+			<div class="row">
+				<div class="col-xs-12">
+					<h3 class="text-primary" th:text="#{shipcust.complete.mass}"></h3>
+				</div>
+			</div>
+			<div class="row margin-top-10">
+				<div class="col-md-4 col-xs-11">
+					<div class="form-group">
+						<label for="waybill" th:text="|#{general.waybill} (#{general.optional})|">Description</label>
+						<input type="text" class="form-control" id="waybill"
+							name="waybill" th:placeholder="#{general.waybill}"
+							autocomplete="off" th:field="*{waybill}"></input>
+						<div th:errors="*{waybill}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-8 col-xs-11">
+					<div class="form-group">
+						<label for="comment"
+							th:text="|#{general.comment} (#{general.optional})|">Description</label>
+						<input type="text" class="form-control" id="comment"
+							name="comment" th:placeholder="#{general.comment}"
+							autocomplete="off" th:field="*{comment}"></input>
+						<div th:errors="*{comment}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="row"></div>
+			<div class="row margin-top-10">
+				<!-- BACK TO MAIN PAGE -->
+				<a
+					th:href="|@{/shipcust/ship/order/manage/}${formShipmentMassConfirm.orderId}|"
+					class="btn btn-link btn-sm"> <span
+					class="glyphicon glyphicon-menu-left"></span> <span
+					th:text="#{action.back}">back</span>
+				</a>
+				<button class="btn btn-primary btn-sm" type="submit" name="save"
+					th:onclick="|return confirm('#{shipcust.mass.confirm}. #{general.areyousure}')|">
+					<span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;<span
+						th:text="#{shipcust.mass.confirm}">create</span>
+				</button>
+			</div>
+		</form>
+		<!-- /USER FORM -->
+	</div>
+</body>
+</html>

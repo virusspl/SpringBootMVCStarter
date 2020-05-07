@@ -55,15 +55,14 @@
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-xs-12 col-xs-offset-0">
-				<h2 th:text="#{shipcust.shipment.view}" class="text-primary">Hello
+				<h2 th:text="#{shipcust.managepending.title}" class="text-primary">Hello
 					on a page</h2>
 			</div>
-			<!-- 
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
-				<span th:text="#{shipcust.shipment.view}"> Welcome message </span>
+				<span th:text="#{shipcust.managepending.message}"> Welcome
+					message </span>
 			</div>
-			-->
-			<a th:href="@{/shipcust/dispatch}" class="btn btn-link btn-sm"> <span
+			<a th:href="|@{/shipcust/show/order/}${sh.id}|" class="btn btn-link btn-sm"> <span
 				class="glyphicon glyphicon-menu-left"></span> <span
 				th:text="#{action.back}">back</span>
 			</a>
@@ -187,47 +186,16 @@
 				<!-- /MAIN INFO -->
 			</div>
 		</div>
-		<div class="row margin-top-10">
-			<div class="col-xs-12"></div>
-			<div class="underline"></div>
-		</div>
-		<div class="row margin-top-10">
+
+		<div class="row">
 			<div class="col-xs-12">
-				<a th:href="|@{/shipcust/print/order/}${sh.id}|"
-					class="btn btn-primary btn-sm"> <span
-					class="glyphicon glyphicon-print"></span>&nbsp;&nbsp;<span
-					th:text="#{action.print}"></span>
-				</a> <a style="margin-left: 20px;" th:if="${sh.state.order} &lt; 30"
-					sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SHIPCUST_SALES')"
-					th:href="|@{/shipcust/sales/line/create/}${sh.id}|"
-					class="btn btn-primary btn-sm"> <span
-					class="glyphicon glyphicon-plus"></span> <span
-					th:text="#{general.add.line}"></span>
-				</a> <a th:if="${sh.state.order} &lt; 30"
-					sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SHIPCUST_SALES')"
-					th:href="|@{/shipcust/sales/order/cancel/}${sh.id}|"
-					th:onclick="|return confirm('#{shipcust.order.cancel}. #{general.areyousure}')|"
-					class="btn btn-danger btn-sm"> <span
-					class="glyphicon glyphicon-remove"></span> <span
-					th:text="#{shipcust.order.cancel}"></span>
-				</a> <a style="margin-left: 20px;"
-					sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SHIPCUST_SALES')"
-					th:href="|@{/shipcust/sales/order/notify/}${sh.id}|"
-					th:onclick="|return confirm('#{action.send.notification}. #{general.areyousure}')|"
-					class="btn btn-info btn-sm"> <span
-					class="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;<span
-					th:text="#{action.send.notification}"></span>
-				</a> <a style="margin-left: 20px;"
-					sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SHIPCUST_SHIP')"
-					th:if="(${sh.state.order} &lt; 30) and (${sh.notifiedByMail})"
-					th:href="|@{/shipcust/ship/order/manage/}${sh.id}|"
-					class="btn btn-primary btn-sm"> <span
-					class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;<span
-					th:text="#{shipcust.managepending}"></span>
-				</a>
+				<h3 th:text="|#{shipcust.list.pending}|"
+					class="text-primary underline"></h3>
 			</div>
 		</div>
-		<div th:if="!${sh.notifiedByMail}" class="row margin-top-20 text-center">
+
+		<div th:if="!${sh.notifiedByMail}"
+			class="row margin-top-20 text-center">
 			<div class="col-xs-12">
 				<div id="warningMessage" class="alert alert-danger"
 					style="margin-bottom: 10px;">
@@ -235,6 +203,22 @@
 				</div>
 			</div>
 		</div>
+		
+				<div class="row margin-top-10">
+			<div class="col-xs-12">
+				<a	th:href="|@{/shipcust/ship/order/confirm/}${sh.id}|"
+					class="btn btn-primary btn-sm"> <span
+					class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;<span
+					th:text="#{shipcust.mass.confirm}"></span>
+				</a> 
+				<a	th:href="|@{/shipcust/ship/order/cancel/}${sh.id}|"
+					class="btn btn-danger btn-sm"> <span
+					class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;<span
+					th:text="#{shipcust.mass.cancel}"></span>
+				</a>				
+			</div>
+		</div>
+		
 		<div class="row margin-top-20">
 			<div class="col-xs-12 col-xs-offset-0">
 				<div class="table-responsive">
@@ -263,10 +247,7 @@
 									th:if="${line.state.order} &gt; 30 "
 									class="glyphicon glyphicon-ok"></span> &nbsp; <span
 									th:text="#{${line.state.code}}"></span></td>
-								<td><a th:href="|@{/shipcust/show/line/}${line.id}|"
-									data-toggle="tooltip" data-placement="top"
-									th:title="#{action.show}"> <span
-										th:text="${line.productCode}"></span></a></td>
+								<td><span th:text="${line.productCode}"></span></td>
 								<td><span th:text="${line.salesOrder}"></span></td>
 								<td class="text-center"><span
 									th:text="${line.quantityDemanded}"></span></td>

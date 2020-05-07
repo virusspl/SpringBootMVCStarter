@@ -598,6 +598,65 @@ public class CustomShipmentsController {
 
 		return "shipcust/linemanage";
 	}
+	
+	@RequestMapping(value = "/ship/order/manage/{id}")
+	@Transactional
+	public String showOrdereManageForShipments(@PathVariable("id") int id, Model model, RedirectAttributes redirectAttrs,
+			Locale locale) throws NotFoundException {
+		
+		// get shipment
+		CustomShipment shipment = shipmentsService.findById(id);
+		if (shipment == null) {
+			throw new NotFoundException("Unknown shipment order: #" + id);
+		}
+
+		// get pending lines
+		Map<Integer, CustomShipmentLine> linesMap = getPendingLines(shipment);
+		
+		// if empty list return to main with warning
+		if(linesMap.isEmpty()) {
+			redirectAttrs.addFlashAttribute("error",
+					messageSource.getMessage("shipcust.warning.nothingtomanage", null, locale)) ;
+			return "redirect:/shipcust/show/order/" + shipment.getId();
+		}
+
+		// add model variables
+		model.addAttribute("sh", shipment);
+		model.addAttribute("lines", linesMap.values());
+		
+		return "shipcust/ordermanage";
+	}
+	
+	
+	@RequestMapping(value = "/ship/order/confirm/{id}")
+	@Transactional
+	public String showOrderMassConfirm(@PathVariable("id") int id, Model model) throws NotFoundException {
+
+		CustomShipment shipment = shipmentsService.findById(id);
+		if (shipment == null) {
+			throw new NotFoundException("Unknown shipment order: #" + id);
+		}
+
+		model.addAttribute("formShipmentMassConfirm", new FormShipmentMassConfirm(id));
+
+		return "shipcust/ordermassconfirm";
+	}
+	
+	@RequestMapping(value = "/ship/order/cancel/{id}")
+	@Transactional
+	public String showOrderMassCancel(@PathVariable("id") int id, Model model) throws NotFoundException {
+		
+		CustomShipment shipment = shipmentsService.findById(id);
+		if (shipment == null) {
+			throw new NotFoundException("Unknown shipment order: #" + id);
+		}
+		
+		model.addAttribute("formShipmentMassCancel", new FormShipmentMassCancel(id));
+		
+		return "shipcust/ordermasscancel";
+	}
+	
+	
 
 	@RequestMapping(value = "/ship/line/manage", params = { "save" }, method = RequestMethod.POST)
 	@Transactional
@@ -637,6 +696,62 @@ public class CustomShipmentsController {
 		return updateMainShipmentOrderState(line.getShipment(), redirectAttrs, locale);
 
 	}
+	
+	@RequestMapping(value = "/ship/order/manage", params = { "save" }, method = RequestMethod.POST)
+	@Transactional
+	public String saveShipOrderMassAction(@Valid FormShipmentMassConfirm formShipmentMassConfirm, BindingResult bindingResult,
+			RedirectAttributes redirectAttrs, Locale locale, Model model)
+					throws NotFoundException, UnknownHostException, MessagingException {
+		
+		// validate
+		if (bindingResult.hasErrors()) {
+			return "shipcust/ordermassconfirm";
+		}
+		
+		// get shipment order
+		CustomShipment shipment = shipmentsService.findById(formShipmentMassConfirm.getOrderId());
+		if (shipment == null) {
+			throw new NotFoundException("Unknown shipment order: #" + formShipmentMassConfirm.getOrderId());
+		}
+		
+		// get pending lines
+		Map<Integer, CustomShipmentLine> linesMap = getPendingLines(shipment);
+
+	
+		// get shipped line state
+		ShipCustLineState state = shipmentLineStatesService.findByOrder(40);
+		if (state == null) {
+			throw new NotFoundException("Unknown shipment line state:" + 40);
+		}
+		Timestamp updTime = new Timestamp((new java.util.Date()).getTime());
+		String updUser = userService.getAuthenticatedUser().getName();
+		
+		for(CustomShipmentLine line: linesMap.values()) {
+			line.setState(state);
+			line.setShipmentActionDate(updTime);
+			line.setShipmentActionUserName(updUser);
+			line.setQuantityShipped(line.getQuantityDemanded());
+			line.setShipmentComment(formShipmentMassConfirm.getComment().trim());
+			line.setWaybill(formShipmentMassConfirm.getWaybill().trim().toUpperCase());
+			shipmentLinesService.update(line);
+		}
+		
+		
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		// calculate shipment main state and give redirect + message
+		return updateMainShipmentOrderState(shipment, redirectAttrs, locale);
+		
+	}
+
+	private Map<Integer, CustomShipmentLine> getPendingLines(CustomShipment shipment) {
+		Map<Integer, CustomShipmentLine> linesMap = new TreeMap<>();
+		for (CustomShipmentLine line : shipment.getLines()) {
+			if(line.getState().getOrder() == 10 || line.getState().getOrder( )== 20 || line.getState().getOrder( )== 30 ) {
+				linesMap.put(line.getId(), line);
+			}
+		}
+		return linesMap;
+	}
 
 	@RequestMapping(value = "/ship/line/manage", params = { "cancel" }, method = RequestMethod.POST)
 	@Transactional
@@ -668,6 +783,52 @@ public class CustomShipmentsController {
 
 		// calculate shipment main state and give redirect + message
 		return updateMainShipmentOrderState(line.getShipment(), redirectAttrs, locale);
+
+	}
+	
+	@RequestMapping(value = "/ship/order/manage", params = { "cancel" }, method = RequestMethod.POST)
+	@Transactional
+	public String cancelShipOrderMassAction(@Valid FormShipmentMassCancel formShipmentMassCancel,
+			BindingResult bindingResult, RedirectAttributes redirectAttrs, Locale locale, Model model)
+			throws NotFoundException, UnknownHostException, MessagingException {
+
+		// validate
+		if (bindingResult.hasErrors()) {
+			return "shipcust/ordermasscancel";
+		}
+		
+		// get shipment order
+		CustomShipment shipment = shipmentsService.findById(formShipmentMassCancel.getOrderId());
+		if (shipment == null) {
+			throw new NotFoundException("Unknown shipment order: #" + formShipmentMassCancel.getOrderId());
+		}
+		
+		// get pending lines
+		Map<Integer, CustomShipmentLine> linesMap = getPendingLines(shipment);
+
+	
+		// get shipped line state
+		ShipCustLineState state = shipmentLineStatesService.findByOrder(50);
+		if (state == null) {
+			throw new NotFoundException("Unknown shipment line state:" + 50);
+		}
+		Timestamp updTime = new Timestamp((new java.util.Date()).getTime());
+		String updUser = userService.getAuthenticatedUser().getName();
+		
+		for(CustomShipmentLine line: linesMap.values()) {
+			line.setState(state);
+			line.setShipmentActionDate(updTime);
+			line.setShipmentActionUserName(updUser);
+			line.setShipmentComment(formShipmentMassCancel.getComment().trim());
+			line.setQuantityShipped(0);
+			line.setWaybill("");
+			shipmentLinesService.update(line);
+		}
+		
+		
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		// calculate shipment main state and give redirect + message
+		return updateMainShipmentOrderState(shipment, redirectAttrs, locale);
 
 	}
 
