@@ -635,6 +635,7 @@ public class ProductionComponentsController {
 				if (currentStock >= qtyReq) {
 					// if there is stock for all current component req,
 					// decrease stock and ignore subcomponents
+					// IF IN PRODUCATION ORDERS ALSO SKIP... TODO?
 					currentStock -= qtyReq;
 					continue;
 				} else {
