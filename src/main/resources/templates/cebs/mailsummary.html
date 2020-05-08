@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"></meta>
+<style>
+body {
+	font-family: Calibri, "Trebuchet MS", Helvetica, sans-serif;
+}
+
+table {
+	
+}
+
+.color {
+	background: #5AC4F2;
+	color: #F3FBFE;
+	font-weight: bold;
+}
+
+a {
+	color: #3AA4D2;
+}
+
+td {
+	padding: 5px 10px 5px 10px;
+	border: 1px solid gray;
+}
+
+.idcell {
+	width: 30%;
+}
+
+.titlecell {
+	width: 70%;
+}
+
+#footer {
+	font-size: 80%;
+}
+</style>
+</head>
+<body>
+	<table style="width: 100%;">
+		<!-- PAGE TITLE -->
+		<tr class="color">
+			<td>
+				<h1>
+					<span th:text="|Zamówienie ADR Polska|"></span>
+				</h1>
+			</td>
+		</tr>
+		<tr>
+			<td style="padding-bottom: 10px;"><span
+				th:utext="|Dzień dobry, przesyłamy zamówienie z ADR Polska S.A. w Zagórzu. 
+				Pierwsza tabela zawiera szczegóły dotyczące każdego pojedynczego produktu 
+				(w tym komentarze, np. rodzaj sosu). 
+				Druga tabela zawiera zbiorczą ilość zamówionych produktów, aby ułatwić sprawdzenie kompletacji zamówienia 
+				(proszę zwrócić uwagę na komentarze z tabeli wyżej, ponieważ w podsumowaniu są pomijane)|"></span><br />
+
+			</td>
+		</tr>
+	</table>
+	<br/>
+	<table>
+		<thead>
+			<tr class="color">
+				<td th:text="|Co|">head</td>
+				<td th:text="|Ile|">head</td>
+				<td th:text="|Suma [PLN]|">head</td>
+				<td th:text="|Uwagi|">head</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="item : ${items}"
+				th:classappend="${item.paid} ? neutral : red">
+				<td><span th:text="${item.item}"></span></td>
+				<td><span th:text="${item.quantity}"></span></td>
+				<td><span th:text="${item.amount}"></span></td>
+				<td><span th:text="${item.comment}"></span></td>
+			</tr>
+		</tbody>
+	</table>
+	<br/>
+	<table>
+		<thead>
+			<tr class="color">
+				<td colspan="2" th:text="|Podsumowanie|"></td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="entry : ${summary}">
+				<td><span th:text="${entry.key}">txt</span></td>
+				<td><span th:text="${entry.value}">txt</span></td>
+			</tr>
+			<tr class="color">
+				<td th:text="|Suma|"></td>
+				<td th:text="|${amount} [PLN]|"></td>
+			</tr>
+		</tbody>
+	</table>
+	<br/>
+	<!-- FOOTER -->
+	<table style="width: 100%;">
+		<tr id="footer">
+			<td class="color"><span>Mail został wygenerowany
+					automatycznie w webowej ADR Polska S.A.
+					Proszę nie odpowiadać na tę wiadomość.</span></td>
+		</tr>
+	</table>
+</body>
+</html>

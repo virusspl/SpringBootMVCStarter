@@ -324,6 +324,36 @@ public class CebsController {
 
 		return "cebs/manage";
 	}
+	
+	@RequestMapping("/manage/createsummarymail")
+	public String summaryMail(Model model) throws MessagingException, UnknownHostException {
+		Double amount = 0.0;
+		List<CebsItem> currentItems = new ArrayList<>();
+		Map<String, Integer> summary = new TreeMap<>();
+		
+		for (CebsItem item : items.values()) {
+			currentItems.add(item);
+			amount += item.getAmount();
+			summary.put(item.getItem(), item.getQuantity() + summary.getOrDefault(item.getItem(), 0));
+		}
+		
+		ArrayList<String> mailTo = new ArrayList<>();
+			mailTo.add(userService.getAuthenticatedUser().getEmail());
+
+		Context context = new Context();
+		//context.setVariable("host", InetAddress.getLocalHost().getHostAddress());
+		context.setVariable("host", InetAddress.getLocalHost().getHostName());
+		context.setVariable("items", currentItems);
+		context.setVariable("amount", amount);
+		context.setVariable("summary", summary);
+		String body = templateEngine.process("cebs/mailsummary", context);
+		if(mailTo.size()>0){
+			mailService.sendEmail("webapp@atwsystem.pl", mailTo.toArray(new String[0]), new String[0], "Zamówienie ADR Polska", body);
+		}
+		
+		
+		return "redirect:/cebs/order";
+	}
 
 	private void sendMail(String title, String message, boolean orderedOnly) throws UnknownHostException, MessagingException {
 
