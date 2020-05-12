@@ -88,6 +88,7 @@ public interface JdbcOracleX3Repository  {
 	public Map<String, String> getAcvProductsEnglishDescriptions(String company);
 	public Map<String, Integer> findGeneralStockForAllProducts(String company);
 	public Map<String, Integer> findStockByLocation(String company, String location);
+	public Map<String, Integer> findStockByState(String state, String company);
 	public List<X3SalesOrderLine> findOpenedSalesOrderLinesInPeriod(Date startDate, Date endDate, String company);
 	public X3Workstation findWorkstationByCode(String company, String code);
 	public boolean checkIfLocationExist(String company, String location);

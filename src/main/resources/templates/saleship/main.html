@@ -220,6 +220,7 @@
 									<th th:text="|Gr.1|">head</th>
 									<th th:text="#{general.machine}">head</th>
 									<th th:text="#{general.department}">head</th>
+									<th th:text="|#{general.stock} Q|">head</th>
 									<th th:text="#{department.production}">head</th>
 									<th th:text="#{department.shipments}">head</th>
 									<th th:text="#{saleship.lefttosend}">head</th>
@@ -243,6 +244,7 @@
 									<th th:text="|Gr.1|">head</th>
 									<th th:text="#{general.machine}">head</th>
 									<th th:text="#{general.department}">head</th>
+									<th th:text="|#{general.stock} Q|">head</th>
 									<th th:text="#{department.production}">head</th>
 									<th th:text="#{department.shipments}">head</th>
 									<th th:text="#{saleship.lefttosend}">head</th>
@@ -268,6 +270,7 @@
 									<td><span th:text="${line.productGr1}"></span></td>
 									<td><span th:text="${line.machineCode}"></span></td>
 									<td><span th:text="#{${line.departmentCode}}"></span></td>
+									<td><span th:text="${line.stockQ}"></span></td>
 									<td><span th:text="${line.stockProduction}"></span></td>
 									<td><span th:text="${line.stockShipments}"></span></td>
 									<td><span th:text="${line.quantityRemainingToShip}"></span></td>

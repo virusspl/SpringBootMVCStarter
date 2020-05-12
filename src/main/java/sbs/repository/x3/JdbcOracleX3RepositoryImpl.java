@@ -3135,7 +3135,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "GROUP BY "
 				+ "STK.ITMREF_0"
 				,
-                new Object[]{"GEODE"});
+                new Object[]{location.toUpperCase()});
 		
         Map <String, Integer> map = new HashMap<>();
         for(Map<String,Object> row: resultSet ){
@@ -3143,6 +3143,40 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         }
         
         return map;
+	}
+	
+	@Override
+	public Map<String, Integer> findStockByState(String state, String company) {
+		// ===========================================================
+		// ==== TMP JDBC DUALITY =====================================
+		if(company.equalsIgnoreCase("ATW")) {
+			jdbc = jdbc6;
+		}
+		else {
+			jdbc = jdbc11;
+		}
+		// ==== TMP JDBC DUALITY =====================================
+		// ===========================================================
+		
+		List<Map<String,Object>> resultSet = jdbc.queryForList( ""
+				+ "SELECT "
+				+ "STK.ITMREF_0, "
+				+ "Sum(STK.QTYSTU_0) AS QTY "
+				+ "FROM "
+				+ company + ".STOCK STK "
+				+ "WHERE"
+				+ " STK.STA_0 = ? "
+				+ "GROUP BY "
+				+ "STK.ITMREF_0"
+				,
+				new Object[]{state.toUpperCase()});
+		
+		Map <String, Integer> map = new HashMap<>();
+		for(Map<String,Object> row: resultSet ){
+			map.put((String)row.get("ITMREF_0"), ((BigDecimal)row.get("QTY")).intValue());
+		}
+		
+		return map;
 	}
 
 	@Override

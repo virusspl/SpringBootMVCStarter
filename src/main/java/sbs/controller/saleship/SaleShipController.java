@@ -112,6 +112,7 @@ public class SaleShipController {
 		Map<String, String> workcenters = x3Service.getWorkcenterNumbersMapByMachines("ATW");
 		Map<String, Integer> magStock = x3Service.findGeneralMagStock("ATW");
 		Map<String, Integer> shipStock = x3Service.findGeneralShipStock("ATW");
+		Map<String, Integer> stockQ = x3Service.findStockByState("Q", "ATW");
 		Map<String, String> productionOrdersBySaleOrders = x3Service.getPendingProductionOrdersBySaleOrders("ATW");
 		
 		List<SaleShipLine> lines = new ArrayList<>();
@@ -152,6 +153,7 @@ public class SaleShipController {
 			line.setDepartmentCode(departmentCodeInt);
 			line.setStockProduction(magStock.containsKey(line.getProductCode()) ? magStock.get(line.getProductCode()) : 0);
 			line.setStockShipments(shipStock.containsKey(line.getProductCode()) ? shipStock.get(line.getProductCode()) : 0);
+			line.setStockQ(stockQ.containsKey(line.getProductCode()) ? stockQ.get(line.getProductCode()) : 0);
 			line.setQuantityRemainingToShip(ord.getQuantityLeftToSend());
 			line.setQuantityShipped(ord.getQuantityOrdered()-ord.getQuantityLeftToSend());
 			line.setQuantityToGive(line.getQuantityRemainingToShip()-line.getStockShipments() < 0 ? 0 : line.getQuantityRemainingToShip()-line.getStockShipments() );

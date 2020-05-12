@@ -19,6 +19,7 @@ public class SaleShipLine {
 	private String departmentCode;
 	private int stockProduction;
 	private int stockShipments;
+	private int stockQ;
 	private int quantityRemainingToShip;
 	private int quantityShipped;
 	private int quantityToGive;
@@ -118,7 +119,6 @@ public class SaleShipLine {
 		this.machineCode = machineCode;
 	}
 
-
 	public String getDepartmentCode() {
 		return departmentCode;
 	}
@@ -182,6 +182,15 @@ public class SaleShipLine {
 	public void setCountry(String country) {
 		this.country = country;
 	}
+
+	public int getStockQ() {
+		return stockQ;
+	}
+
+	public void setStockQ(int stockQ) {
+		this.stockQ = stockQ;
+	}
+	
 
 
 	

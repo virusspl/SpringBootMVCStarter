@@ -84,6 +84,7 @@ public interface JdbcOracleX3Service {
 	public Map<String, X3StoreInfo> getX3StoreInfoByCode(String company);
 	public Map<String, String> getVariousTableData(String company, String table, String x3language);
 	public Map<String, Integer> findStockByLocation(String company, String location);
+	public Map<String, Integer> findStockByState(String state, String company); 
 	public Map<String, List<X3BomItem>> getAllBomPartsTopLevel(String company);
 	public List<X3BomPart> getAllBomEntries(String company);
 	public Map<String, Double> getAllProductsQuantities(String company);
