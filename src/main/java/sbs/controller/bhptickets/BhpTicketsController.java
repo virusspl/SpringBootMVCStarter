@@ -366,7 +366,10 @@ public class BhpTicketsController {
 			}
 		}
 		// set modification for utr user response part
-		if (authUser == null || (!authUser.hasRole("ROLE_BHPTICKETSUTRUSER")) || (ticket.getState().getOrder() != 32)) {
+		if (authUser == null || (!authUser.hasRole("ROLE_BHPTICKETSUTRUSER")) || 
+			(
+						(ticket.getState().getOrder() != 32) && (ticket.getState().getOrder() != 35) 
+			)) {
 			responseForm.setUtrUserModificationAllowed(false);
 		} else {
 			responseForm.setUtrUserModificationAllowed(true);
