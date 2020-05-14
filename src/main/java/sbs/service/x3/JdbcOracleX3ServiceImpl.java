@@ -509,5 +509,10 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 		return jdbcOracleX3Repository.findStockByState(state, company);
 	}
 
+	@Override
+	public Map<String, Integer> findProductsInReplenish(String company) {
+		return jdbcOracleX3Repository.findProductsInReplenish(company);
+	}
+
 
 }

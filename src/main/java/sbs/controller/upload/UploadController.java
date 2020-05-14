@@ -151,7 +151,8 @@ public class UploadController {
 	}
 	
 	@RequestMapping(value = "/upload/prodcomp/plan",  method = RequestMethod.POST)
-	public String onUploadProdComp(MultipartFile filePlan, @RequestParam String days, RedirectAttributes redirectAttrs,
+	public String onUploadProdComp(MultipartFile filePlan, @RequestParam String days, 
+			@RequestParam(required= false, defaultValue = "false") Boolean replenish, RedirectAttributes redirectAttrs,
 			Locale locale) {
 		
 		int timeDays = 0;
@@ -180,6 +181,7 @@ public class UploadController {
 			fos.close(); 
 			redirectAttrs.addFlashAttribute("file", convFile);
 			redirectAttrs.addFlashAttribute("days", timeDays);
+			redirectAttrs.addFlashAttribute("replenish", replenish);
 			return "redirect:/prodcomp/makeplan";
 		} catch (IOException ioex) {
 			redirectAttrs.addFlashAttribute("error", messageSource.getMessage("upload.io.exception", null, locale) + ": " + ioex.getMessage());

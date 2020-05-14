@@ -127,6 +127,7 @@ public interface JdbcOracleX3Repository  {
 	public Map<String, Date> getLatestExpectedDeliveryDateForCodeByDate(Date date, String company);
 	public Map<String, X3DeliverySimpleInfo> getFirstUpcomingDeliveriesMapByCodeAfterDate(Date date, String company);
 	public Map<String, X3DeliverySimpleInfo> getMostRecentDeliveriesMapByCodeBeforeDate(Date date, String company);
+	public Map<String, Integer> findProductsInReplenish(String company);
 
 	
 	

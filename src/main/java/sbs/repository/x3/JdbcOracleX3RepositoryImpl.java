@@ -4251,5 +4251,37 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				return map;
 	}
 
+	@Override
+	public Map<String, Integer> findProductsInReplenish(String company) {
+		// ===========================================================
+				// ==== TMP JDBC DUALITY =====================================
+				if(company.equalsIgnoreCase("ATW")) {
+					jdbc = jdbc6;
+				}
+				else {
+					jdbc = jdbc11;
+				}
+				// ==== TMP JDBC DUALITY =====================================
+				// ===========================================================
+				
+				List<Map<String,Object>> resultSet = jdbc.queryForList( ""
+						+ "SELECT "
+						+ "ITV.ITMREF_0, "
+						+ "ITV.ORDSTO_0 "
+						+ "FROM "
+						+ company + ".ITMMVT ITV "
+						+ "WHERE"
+						+ " ITV.ORDSTO_0 > ? "
+						,
+		                new Object[]{0});
+				
+		        Map <String, Integer> map = new HashMap<>();
+		        for(Map<String,Object> row: resultSet ){
+		        	map.put((String)row.get("ITMREF_0"), ((BigDecimal)row.get("ORDSTO_0")).intValue());
+		        }
+		        
+		        return map;
+	}
+
 	
 }

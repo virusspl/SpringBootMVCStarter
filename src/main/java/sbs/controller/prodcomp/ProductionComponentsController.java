@@ -249,6 +249,7 @@ public class ProductionComponentsController {
 				return "redirect:/prodcomp/main";
 			}
 
+			boolean doReplenish = (boolean) model.asMap().get("replenish");
 			int days = (int) model.asMap().get("days");
 			File file = (File) model.asMap().get("file");
 
@@ -326,6 +327,14 @@ public class ProductionComponentsController {
 				Map<String, X3Product> products = x3Service.findAllActiveProductsMap("ATW");
 				// get general stock of all products
 				Map<String, Integer> stock = x3Service.findGeneralStockForAllProducts("ATW");
+				if(doReplenish) {
+					// get in replenish (prod orders, buy orders) quantity
+					Map<String, Integer> replenish = x3Service.findProductsInReplenish("ATW");
+					// add stock + replenish
+					for (Map.Entry<String, Integer> entry : replenish.entrySet()) {
+						stock.put(entry.getKey(), stock.get(entry.getKey()) + entry.getValue());
+					}
+				}
 				Map<String, Integer> initStock = new HashMap<>();
 				// for working list of stock and expected delivery
 				// copy when making initStock list and avcStock list, used to calculate current

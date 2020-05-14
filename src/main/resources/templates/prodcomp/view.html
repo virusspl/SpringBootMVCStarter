@@ -331,13 +331,17 @@
 								<th th:text="#{prodcomp.shortage.quantity.short}">head</th>
 								<th th:text="#{general.state}">head</th>
 								<th th:text="#{prodcomp.inOrder.short}">head</th>
-								<th th:text="#{prodcomp.delivery.latest}">head</th>								
+								<th th:text="#{prodcomp.delivery.latest}">head</th>
 								<th th:text="#{prodcomp.shortage.list}">head</th>
 							</tr>
 						</tfoot>
 					</table>
 				</div>
-
+<a th:href="@{'/prodcomp/main'}"
+				class="btn btn-link btn-sm margin-top-10"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
 			</div>
 		</div>
 
@@ -357,7 +361,7 @@
 								<th th:text="#{prodcomp.initialQuantity.short}">head</th>
 								<th th:text="|#{prodcomp.inOrder.short} [${days}]|">head</th>
 								<th th:text="#{prodcomp.shortage}">head</th>
-								<th th:text="#{prodcomp.shortage.cost}">head</th>								
+								<th th:text="#{prodcomp.shortage.cost}">head</th>
 								<th th:text="|#{prodcomp.recent} - #{general.date}|">head</th>
 								<th th:text="|#{prodcomp.recent} - #{general.quantity}|">head</th>
 								<th th:text="|#{prodcomp.recent} - #{general.supplier.code}|">head</th>
@@ -367,7 +371,7 @@
 								<th th:text="|#{prodcomp.upcoming} - #{general.quantity}|">head</th>
 								<th th:text="|#{prodcomp.upcoming} - #{general.supplier.code}|">head</th>
 								<th th:text="|#{prodcomp.upcoming} - #{general.supplier.name}|">head</th>
-								<th th:text="|#{prodcomp.upcoming} - #{general.country}|">head</th>		
+								<th th:text="|#{prodcomp.upcoming} - #{general.country}|">head</th>
 							</tr>
 						</thead>
 						<tfoot>
@@ -378,7 +382,7 @@
 								<th th:text="#{prodcomp.initialQuantity.short}">head</th>
 								<th th:text="|#{prodcomp.inOrder.short} [${days}]|">head</th>
 								<th th:text="#{prodcomp.shortage}">head</th>
-								<th th:text="#{prodcomp.shortage.cost}">head</th>								
+								<th th:text="#{prodcomp.shortage.cost}">head</th>
 								<th th:text="|#{prodcomp.recent} - #{general.date}|">head</th>
 								<th th:text="|#{prodcomp.recent} - #{general.quantity}|">head</th>
 								<th th:text="|#{prodcomp.recent} - #{general.supplier.code}|">head</th>
@@ -388,9 +392,9 @@
 								<th th:text="|#{prodcomp.upcoming} - #{general.quantity}|">head</th>
 								<th th:text="|#{prodcomp.upcoming} - #{general.supplier.code}|">head</th>
 								<th th:text="|#{prodcomp.upcoming} - #{general.supplier.name}|">head</th>
-								<th th:text="|#{prodcomp.upcoming} - #{general.country}|">head</th>						
+								<th th:text="|#{prodcomp.upcoming} - #{general.country}|">head</th>
 							</tr>
-						</tfoot>						
+						</tfoot>
 						<tbody>
 							<tr th:each="line : ${shortage}">
 								<td><span th:text="${line[0]}"></span></td>
@@ -399,7 +403,8 @@
 								<td><span th:text="${line[3]}"></span></td>
 								<td><span th:text="${line[4]}"></span></td>
 								<td><span th:text="${line[5]}"></span></td>
-								<td><span th:text="${#numbers.formatDecimal(line[6], 0, 'NONE', 2, 'POINT')}"></span></td>
+								<td><span
+									th:text="${#numbers.formatDecimal(line[6], 0, 'NONE', 2, 'POINT')}"></span></td>
 								<td><span th:text="${line[7]}"></span></td>
 								<td><span th:text="${line[8]}"></span></td>
 								<td><span th:text="${line[9]}"></span></td>
@@ -414,7 +419,11 @@
 						</tbody>
 					</table>
 				</div>
-
+								<a th:href="@{'/prodcomp/main'}"
+				class="btn btn-link btn-sm margin-top-10"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
 			</div>
 		</div>
 
