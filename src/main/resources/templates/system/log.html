@@ -16,15 +16,15 @@
 				language : {
 					url : getUrl() + "polish.json",
 				},
-				order: [[ 1, 'asc' ]]
-			});		    
+				order : [ [ 1, 'asc' ] ]
+			});
 		</script>
 		<script th:if="__${#locale}__ == 'en'">
 			$('#srv').DataTable({
 				language : {
 					url : getUrl() + "english.json"
 				},
-				order: [[ 1, 'asc' ]]
+				order : [ [ 1, 'asc' ] ]
 			});
 		</script>
 		<script th:if="__${#locale}__ == 'it'">
@@ -32,34 +32,35 @@
 				language : {
 					url : getUrl() + "italian.json"
 				},
-				order: [[ 1, 'asc' ]]
+				order : [ [ 1, 'asc' ] ]
 			});
 		</script>
 
 		<script>
-		setToEnd();
-		
-		function setToEnd(){
-			element = document.getElementById("logarea");
-			element.focus();
-			element.setSelectionRange(element.value.length,element.value.length);
-		}
+			setToEnd();
+
+			function setToEnd() {
+				element = document.getElementById("logarea");
+				element.focus();
+				element.setSelectionRange(element.value.length,
+						element.value.length);
+			}
 		</script>
 
 		<script>
-		/*document.addEventListener('copy', function(e){
-			  e.clipboardData.setData('text/plain', '\\\\atwsrv-java\\c$\\_APACHE_TOMCAT\\adr-app.log');
-			  e.preventDefault(); // default behaviour is to copy any selected text
-			});
-		*/
-		
-		function copypath() {
-			$(addr).show();
-			$(addr).focus();
-		    $(addr).select();
-			document.execCommand('copy');
-			$(addr).hide();
-		}
+			/*document.addEventListener('copy', function(e){
+				  e.clipboardData.setData('text/plain', '\\\\atwsrv-java\\c$\\_APACHE_TOMCAT\\adr-app.log');
+				  e.preventDefault(); // default behaviour is to copy any selected text
+				});
+			 */
+
+			function copypath() {
+				$(addr).show();
+				$(addr).focus();
+				$(addr).select();
+				document.execCommand('copy');
+				$(addr).hide();
+			}
 		</script>
 	</div>
 	<div layout:fragment="content">
@@ -77,6 +78,47 @@
 				th:text="#{action.back}">back</span>
 			</a>
 		</div>
+
+		<!-- MEMORY -->
+		<div class="row">
+			<div class="col-xs-12">
+				<h3 th:text="#{general.memory}" class="text-primary underline"></h3>
+			</div>
+		</div>
+		<!-- 
+		"name"
+		"init"
+		"max",
+		"used"
+		"usedProc"
+		"committed"
+		"usedProc"
+			-->
+		<div class="row">
+			<div class="col-xs-12 col-md-4 container"
+				th:each="snap: ${sectionsSnaps}">
+				<h5 th:text="${snap.get('name')}" class="underlin bold text-rimary"></h5>
+				<ul style="list-style-type: square;">
+					<li><span th:text="|init:|"></span>&nbsp;<span
+						th:text="${#numbers.formatDecimal(snap.get('init'), 0, 'POINT', 1, 'COMMA')}" class="bold"></span> [MB]</li>
+					<li><span th:text="|used:|"></span> <span
+						th:text="${#numbers.formatDecimal(snap.get('used'), 0, 'POINT', 1, 'COMMA')}"
+						class="bold"></span> [MB] <span
+						th:text="${#numbers.formatDecimal(snap.get('usedProc'), 0, 'POINT', 1, 'COMMA')}" class="bold"></span> [%]
+					</li>
+					<li><span th:text="|committed:|"></span> <span
+						th:text="${#numbers.formatDecimal(snap.get('committed'), 0, 'POINT', 1, 'COMMA')}" class="bold"></span> [MB] <span
+						th:text="|${#numbers.formatDecimal(snap.get('committedProc'), 0, 'POINT', 1, 'COMMA')}|" class="bold"></span> [%]
+					</li>
+					<li>
+						<span th:text="|max:|"></span>&nbsp;<span
+						th:text="${#numbers.formatDecimal(snap.get('max'), 0, 'POINT', 1, 'COMMA')}" class="bold"></span> [MB]
+					</li>
+				</ul>
+
+			</div>
+		</div>
+		<!-- /MEMORY -->
 
 		<!-- PARAMETAERS -->
 		<div class="row">
@@ -123,7 +165,8 @@
 				<a onclick="copypath()" data-toggle="tooltip" data-placement="top"
 					th:title="#{action.copy}" href="#"> <span
 					class="glyphicon glyphicon-copy"></span> <span>\\atwsrv-java\c$\_APACHE_TOMCAT\adr-app.log</span>
-					<input style="display: none;" type="text" value="\\atwsrv-java\c$\_APACHE_TOMCAT\adr-app.log" id="addr"/>
+					<input style="display: none;" type="text"
+					value="\\atwsrv-java\c$\_APACHE_TOMCAT\adr-app.log" id="addr" />
 				</a>
 			</div>
 		</div>

@@ -211,18 +211,18 @@ public class ProductionComponentsController {
 					line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getCategory() : "-");
 					line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getGr2() : "-");
 					line.add(safetyStockMap.containsKey(entry.getKey())
-							? textHelper.numberFormatIntegerRoundSpace(safetyStockMap.get(entry.getKey()))
+							? textHelper.numberFormatIntegerRoundNoSpace(safetyStockMap.get(entry.getKey()))
 							: "-");
 					line.add(replanishMap.containsKey(entry.getKey())
-							? textHelper.numberFormatIntegerRoundSpace(replanishMap.get(entry.getKey()))
+							? textHelper.numberFormatIntegerRoundNoSpace(replanishMap.get(entry.getKey()))
 							: "-");
-					line.add(textHelper.numberFormatIntegerRoundSpace(x3));
-					line.add(textHelper.numberFormatIntegerRoundSpace(geode));
-					line.add(textHelper.numberFormatIntegerRoundSpace(qty));
+					line.add(textHelper.numberFormatIntegerRoundNoSpace(x3));
+					line.add(textHelper.numberFormatIntegerRoundNoSpace(geode));
+					line.add(textHelper.numberFormatIntegerRoundNoSpace(qty));
 					if (x3 - qty >= 0) {
-						line.add(textHelper.numberFormatIntegerRoundSpace(0.0));
+						line.add(textHelper.numberFormatIntegerRoundNoSpace(0.0));
 					} else {
-						line.add(textHelper.numberFormatIntegerRoundSpace(Math.abs(x3 - qty)));
+						line.add(textHelper.numberFormatIntegerRoundNoSpace(Math.abs(x3 - qty)));
 					}
 					table.add(line);
 				}

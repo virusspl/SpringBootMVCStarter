@@ -2,6 +2,8 @@ package sbs.helpers;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Formatter;
+import java.util.Locale;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -14,6 +16,7 @@ public class TextHelper {
 	NumberFormat formatterDotTwoDigits = new DecimalFormat("#0.00");     
 	NumberFormat formatterIntegerRoundNoSpace = new DecimalFormat("#0");     
 	
+
 	public TextHelper() {
 	}
 	
@@ -21,8 +24,16 @@ public class TextHelper {
 		return formatterDotTwoDigits.format(number).replace(',', '.');
 	}
 	
-	public String numberFormatIntegerRoundSpace(double number){
+	public String numberFormatIntegerRoundNoSpace(double number){
 		return formatterIntegerRoundNoSpace.format(number);
+	}
+	
+	public String numberFormatIntegerRoundWithSpace(double number){
+		StringBuilder sb = new StringBuilder();
+		Formatter formatter = new Formatter(sb, Locale.getDefault());
+		formatter.format("%(,.0f", number);
+		formatter.close();
+		return(sb.toString());
 	}
 	
 	

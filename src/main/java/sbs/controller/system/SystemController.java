@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import sbs.helpers.TextHelper;
+import sbs.service.system.MemoryService;
 import sbs.service.system.SystemInfoParametersService;
 
 @Controller
@@ -20,7 +22,11 @@ import sbs.service.system.SystemInfoParametersService;
 public class SystemController {
 	
 	@Autowired
+	MemoryService memoryService;
+	@Autowired
 	SystemInfoParametersService parametersService;
+	@Autowired
+	TextHelper textHelper;
 	
 	@SuppressWarnings("unused")
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -33,9 +39,12 @@ public class SystemController {
 	
 	@RequestMapping("/log")
 	public String home(Model model) {
+		
+		model.addAttribute("sectionsSnaps", memoryService.getHeapInfo().getSectionsSnaps());
 		model.addAttribute("parameters", parametersService.findAll());
 		model.addAttribute("logfile", logFilePath);
 		//model.addAttribute("logContent", getLogContent());
+		
 		return "system/log";
 	}
 
