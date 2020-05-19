@@ -4,6 +4,7 @@ import sbs.model.users.User;
 
 public class CebsItem {
 
+	int dbId;
 	Long id;
 	User user;
 	String item;
@@ -72,6 +73,15 @@ public class CebsItem {
 
 	public void setPaid(boolean payed) {
 		this.paid = payed;
+	}
+	
+
+	public int getDbId() {
+		return dbId;
+	}
+
+	public void setDbId(int dbId) {
+		this.dbId = dbId;
 	}
 
 	@Override

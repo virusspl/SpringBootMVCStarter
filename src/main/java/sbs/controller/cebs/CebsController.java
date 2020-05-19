@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.TimerTask;
 import java.util.TreeMap;
 
 import javax.mail.MessagingException;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -32,12 +34,17 @@ import org.thymeleaf.context.Context;
 
 import javassist.NotFoundException;
 import sbs.helpers.DateHelper;
+import sbs.model.cebs.CebsEvent;
+import sbs.model.cebs.CebsLine;
 import sbs.model.users.User;
+import sbs.service.cebs.CebsEventsService;
+import sbs.service.cebs.CebsLinesService;
 import sbs.service.mail.MailService;
 import sbs.service.users.UserService;
 
 @Controller
 @RequestMapping("cebs")
+@Transactional
 public class CebsController {
 
 	//kebabmania - maria_koszyk@yahoo.it
@@ -50,7 +57,11 @@ public class CebsController {
 	MailService mailService;
 	@Autowired
 	TemplateEngine templateEngine;
-
+	@Autowired
+	CebsEventsService eventsService;
+	@Autowired
+	CebsLinesService linesService;
+	
 	private boolean active;
 	private boolean confirmed;
 	private boolean sent;
@@ -60,6 +71,8 @@ public class CebsController {
 	private String dayCode;
 	private String location;
 	private String locationCode;
+	private CebsEvent event;
+	
 
 	@ModelAttribute
 	public void addAttributes(Model model) {
@@ -90,10 +103,49 @@ public class CebsController {
 	}
 
 	private void prepareOrderView(Model model) {
-		if (active) {
+		// db_start
+		// refresh event info
+		this.event = eventsService.findActiveEvent();
+		if(event!=null) {
+			this.active = true;
+			this.confirmed = event.isConfirmed();
+			this.sent = event.isSent();
+			this.organizer = event.getOrganizer();
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(event.getActionDate());
+			this.actionDate = cal;
+			this.dayCode = event.getDayCode();
+			this.location = event.getLocation();
+			this.locationCode = event.getLocationCode();
+			addAttributes(model);
+		}
+		else {
+			this.active = false;
+		}
+		// db_end
+		
+		if (this.active) {
 			User currentUser = userService.getAuthenticatedUser();
 			List<CebsItem> myItems = new ArrayList<>();
 			Double amount = 0.0;
+			// db_start
+			// refresh items list
+			List<CebsLine> lines = linesService.findByEventId(this.event.getEventId());
+			this.items.clear();
+			CebsItem tmpItem;
+			for(CebsLine line: lines) {
+				tmpItem = new CebsItem(userService.findById(line.getUserId()));
+				tmpItem.setComment(line.getComment().trim());
+				tmpItem.setItem(line.getItem());
+				tmpItem.setQuantity(line.getQuantity());
+				tmpItem.setAmount(line.getAmount());
+				tmpItem.setDbId(line.getLineId());
+				tmpItem.setId(line.getLongId());
+				tmpItem.setPaid(line.isPaid());
+				this.items.put(line.getLongId(), tmpItem);
+			}
+			// db_end
+			
 			for (CebsItem item : this.items.values()) {
 				if (item.getUser().getId().equals(currentUser.getId())) {
 					myItems.add(item);
@@ -147,18 +199,40 @@ public class CebsController {
 
 	@RequestMapping("/order/delete/{itemId}")
 	public String deleteQuestion(@PathVariable("itemId") long itemId, RedirectAttributes redirectAttrs) {
-		this.items.remove(itemId);
+		if(!sent) {
+			// db_start
+				CebsLine line = linesService.findByLongId(itemId);
+				System.out.println("remove: " + line);
+				if(line!=null) {
+					linesService.remove(line);
+				}
+			// db_end		
+			this.items.remove(itemId);
+		}
 		return "redirect:/cebs/order";
 	}
 
 	@RequestMapping("/manage/paid/{itemId}")
 	public String itempaidSwitch(@PathVariable("itemId") long itemId, RedirectAttributes redirectAttrs) {
+		// db_start
+		CebsLine line = linesService.findByLongId(itemId);
+		if(line!=null) {
+			line.setPaid(!line.isPaid());
+			linesService.update(line);
+		}
+		// db_end
 		items.get(itemId).setPaid(!items.get(itemId).isPaid());
 		return "redirect:/cebs/manage";
 	}
 
 	@RequestMapping("/manage/confirmed")
 	public String confirmedSwitch(RedirectAttributes redirectAttrs) throws UnknownHostException, MessagingException {
+		// db_start
+		if(this.event!=null) {
+			event.setConfirmed(!event.isConfirmed());
+			eventsService.update(event);
+		}
+		// db_end
 		this.confirmed = !this.confirmed;
 		if (confirmed) {
 			String title = "Zamówienie potwierdzone";
@@ -174,6 +248,12 @@ public class CebsController {
 
 	@RequestMapping("/manage/sent")
 	public String sentSwitch(RedirectAttributes redirectAttrs) throws UnknownHostException, MessagingException {
+		// db_start
+		if(this.event!=null) {
+			event.setSent(!event.isSent());
+			eventsService.update(event);
+		}
+		// db_end
 		this.sent = !this.sent;
 		return "redirect:/cebs/order";
 	}
@@ -217,6 +297,21 @@ public class CebsController {
 					ci.setItem(item.getText());
 					ci.setQuantity(cebsOrderFom.getQuantity());
 					ci.setAmount(item.getPrice() * cebsOrderFom.getQuantity());
+					
+					// db_start
+					CebsLine line = new CebsLine();
+					line.setAmount(ci.getAmount());
+					line.setCebsEvent(this.event);
+					line.setComment(ci.getComment());
+					line.setItem(ci.getItem());
+					line.setLongId(ci.getId());
+					line.setPaid(ci.isPaid());
+					line.setQuantity(ci.getQuantity());
+					line.setUserId(ci.getUser().getId());
+					
+					linesService.save(line);
+					ci.setDbId(line.getLineId());
+					// db_end
 					this.items.put(ci.getId(), ci);
 				}
 			}
@@ -248,6 +343,20 @@ public class CebsController {
 				+ dateHelper.formatDdMmYyyy(actionDate.getTime()) + " w " + this.location
 				+ ". <br/>Proszę wejść na stronę z linku poniżej i dopisać się do listy ;)";
 		this.sendMail(title, message, false);
+		
+		// db_start
+		CebsEvent ev = new CebsEvent();
+		ev.setActionDate(new Timestamp(this.actionDate.getTime().getTime()));
+		ev.setActive(this.active);
+		ev.setConfirmed(this.confirmed);
+		ev.setDayCode(this.dayCode);
+		ev.setLocation(this.location);
+		ev.setLocationCode(this.locationCode);
+		ev.setOrganizer(this.organizer);
+		ev.setSent(this.sent);
+		eventsService.save(ev);
+		// db_end
+
 		return "redirect:/cebs/order";
 	}
 
@@ -276,11 +385,31 @@ public class CebsController {
 				+ dateHelper.formatDdMmYyyy(actionDate.getTime()) + " w " + this.location
 				+ ". <br/>Proszę wejść na stronę z linku poniżej i dopisać się do listy ;)";
 		this.sendMail(title, message, false);
+		
+		// db_start
+		CebsEvent ev = new CebsEvent();
+		ev.setActionDate(new Timestamp(this.actionDate.getTime().getTime()));
+		ev.setActive(this.active);
+		ev.setConfirmed(this.confirmed);
+		ev.setDayCode(this.dayCode);
+		ev.setLocation(this.location);
+		ev.setLocationCode(this.locationCode);
+		ev.setOrganizer(this.organizer);
+		ev.setSent(this.sent);
+		eventsService.save(ev);
+		// db_end
+		
 		return "redirect:/cebs/order";
 	}
 
 	@RequestMapping("/manage/cancel")
 	public String cancel(Model model) throws UnknownHostException, MessagingException {
+		// db_start
+		if(this.event!=null) {
+			event.setActive(false);
+			eventsService.update(event);
+		}
+		// db_end
 		this.active = false;
 		this.confirmed = false;
 		this.sent = false;
@@ -288,15 +417,23 @@ public class CebsController {
 		String message = "Anulujemy akcję zamawiania, bar nieczynny lub inny powód - może innym razem";
 		this.sendMail(title, message, true);
 		this.items.clear();
+		// TODO switch to inactive in cebs event
 		return "redirect:/cebs/order";
 	}
 
 	@RequestMapping("/manage/finish")
 	public String finish(Model model) throws UnknownHostException, MessagingException {
+		// db_start
+		if(this.event!=null) {
+			event.setActive(false);
+			eventsService.update(event);
+		}
+		// db_end
 		this.active = false;
 		this.confirmed = false;
 		this.sent = false;
 		this.items.clear();
+		// TODO switch to inactive in cebs event
 		return "redirect:/cebs/order";
 	}
 
