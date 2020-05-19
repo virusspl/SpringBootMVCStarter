@@ -48,6 +48,7 @@ import sbs.service.redmine.RedmineService;
 import sbs.service.shipcust.CustomShipmentLineStatesService;
 import sbs.service.shipcust.CustomShipmentStatesService;
 import sbs.service.shipments.ShipmentStatesService;
+import sbs.service.system.MemoryService;
 import sbs.service.tools.ToolsProjectStateService;
 import sbs.service.users.RoleService;
 import sbs.service.users.UserService;
@@ -99,10 +100,15 @@ public class VariousPagesController {
 	CustomShipmentStatesService customShipmentStatesService;
 	@Autowired
 	CustomShipmentLineStatesService customShipmentLineStatesService;
+	@Autowired
+	MemoryService memoryService;
 	
 	@RequestMapping("/test")
 	public String test(Model model, Locale locale) throws InterruptedException {
 
+		
+		//memoryService.debugListMemoryPoolBeans();
+		
 		/*ArrayList<String> list = new ArrayList<>();
 		try {
 			int stop = 0;

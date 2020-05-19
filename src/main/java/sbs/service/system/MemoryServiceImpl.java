@@ -30,10 +30,19 @@ public class MemoryServiceImpl implements MemoryService {
 				case "PS Eden Space":
 					heapInfo.setSectionInfoEden(mpBean.getName(), mpBean.getUsage());
 					break;
+				case "Eden Space":
+					heapInfo.setSectionInfoEden(mpBean.getName(), mpBean.getUsage());
+					break;
 				case "PS Survivor Space":
 					heapInfo.setSectionInfoSurvivor(mpBean.getName(), mpBean.getUsage());
 					break;
+				case "Survivor Space":
+					heapInfo.setSectionInfoSurvivor(mpBean.getName(), mpBean.getUsage());
+					break;
 				case "PS Old Gen":
+					heapInfo.setSectionInfoOld(mpBean.getName(), mpBean.getUsage());
+					break;
+				case "Tenured Gen":
 					heapInfo.setSectionInfoOld(mpBean.getName(), mpBean.getUsage());
 					break;
 				default:
@@ -43,6 +52,22 @@ public class MemoryServiceImpl implements MemoryService {
 		}
 		
 		return heapInfo;
+	}
+	
+	@Override
+	public void debugListMemoryPoolBeans() {
+		MemoryMXBean mBean = ManagementFactory.getMemoryMXBean();
+		System.out.println("--> heap");
+		System.out.println(mBean.getHeapMemoryUsage());
+		System.out.println("--> non-heap");
+		System.out.println(mBean.getNonHeapMemoryUsage());
+		
+		System.out.println("--> sections");
+		
+		for (MemoryPoolMXBean mpBean : ManagementFactory.getMemoryPoolMXBeans()) {
+			System.out.println("- " + mpBean.getName() + " - " + mpBean.getType());
+			System.out.println(mpBean.getUsage());
+		}
 	}
 
 }
