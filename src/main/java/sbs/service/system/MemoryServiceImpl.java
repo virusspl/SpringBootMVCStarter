@@ -70,4 +70,10 @@ public class MemoryServiceImpl implements MemoryService {
 		}
 	}
 
+	@Override
+	public double getCurrentHeapUsageProc() {
+		MemoryMXBean mBean = ManagementFactory.getMemoryMXBean();
+		return mBean.getHeapMemoryUsage().getUsed()*100.0/mBean.getHeapMemoryUsage().getMax();
+	}
+
 }

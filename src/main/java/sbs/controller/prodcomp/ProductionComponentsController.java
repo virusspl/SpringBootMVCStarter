@@ -20,6 +20,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import sbs.config.error.OutOfHeapMemoryException;
 import sbs.helpers.DateHelper;
 import sbs.helpers.TextHelper;
 import sbs.model.x3.X3BomItem;
@@ -36,6 +38,7 @@ import sbs.model.x3.X3DeliverySimpleInfo;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.service.geode.JdbcOracleGeodeService;
+import sbs.service.system.MemoryService;
 import sbs.service.x3.JdbcOracleX3Service;
 
 @Controller
@@ -52,9 +55,20 @@ public class ProductionComponentsController {
 	TextHelper textHelper;
 	@Autowired
 	DateHelper dateHelper;
-
+	@Autowired
+	MemoryService memoryService;
+	@Autowired
+	Environment environment;
+	
+	private double outOfMemoryThreshold;
+	private String outOfMemoryMessage;
+	
+	public ProductionComponentsController() {
+		
+	}
+	
 	@RequestMapping("/main")
-	public String view(Model model) {
+	public String view(Model model, Locale locale) {
 		/*
 		 * Calendar cal = Calendar.getInstance(); cal.add(Calendar.MONTH, -1);
 		 * cal.set(Calendar.DAY_OF_MONTH, 1); formComponent.setStartDate(new
@@ -64,6 +78,9 @@ public class ProductionComponentsController {
 		 * cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 		 * formComponent.setEndDate(new Timestamp(cal.getTimeInMillis()));
 		 */
+		
+		this.outOfMemoryThreshold = Double.parseDouble(environment.getRequiredProperty("prodcomp.memory.threshold"));
+		this.outOfMemoryMessage = messageSource.getMessage("prodcomp.error.memory", null, "OUT OF MEMORY!", locale);
 		model.addAttribute("formComponent", new FormComponent());
 		model.addAttribute("formFindComponents", new FormFindComponents());
 		return "prodcomp/main";
@@ -235,8 +252,8 @@ public class ProductionComponentsController {
 			}
 
 			return "prodcomp/view";
-		} catch (OutOfMemoryError er) {
-			model.addAttribute("error", "OUT OF MEMORY");
+		} catch (OutOfHeapMemoryException er) {
+			model.addAttribute("error", this.outOfMemoryMessage);
 			return "prodcomp/view";
 		}
 	}
@@ -592,8 +609,8 @@ public class ProductionComponentsController {
 			}
 
 			return "prodcomp/view";
-		} catch (OutOfMemoryError er) {
-			model.addAttribute("error", "OUT OF MEMORY");
+		} catch (OutOfHeapMemoryException er) {
+			model.addAttribute("error", this.outOfMemoryMessage);
 			return "prodcomp/view";
 		}
 	}
@@ -608,7 +625,8 @@ public class ProductionComponentsController {
 	 * @return
 	 */
 	private Map<String, Double> getCurrentAcvRequirementQuantitiesByStock(Map<String, List<X3BomItem>> allBoms,
-			String itemCode, Map<String, X3Product> products, Map<String, Integer> stock, double quantityToProduce) {
+			String itemCode, Map<String, X3Product> products, Map<String, Integer> stock, double quantityToProduce) 
+			throws OutOfHeapMemoryException {
 
 		Map<String, Double> resultMap = new TreeMap<>();
 
@@ -653,7 +671,9 @@ public class ProductionComponentsController {
 				}
 				// SAVE NEW STOCK INFO
 				stock.put(code, currentStock);
-
+				if(memoryService.getCurrentHeapUsageProc() > this.outOfMemoryThreshold) {
+					throw new OutOfHeapMemoryException("Out of memory!");
+				}
 				subMap = getCurrentAcvRequirementQuantitiesByStock(allBoms, code, products, stock, qtyReq);
 				for (Map.Entry<String, Double> entry : subMap.entrySet()) {
 					if (resultMap.containsKey(entry.getKey())) {
@@ -669,7 +689,7 @@ public class ProductionComponentsController {
 	}
 
 	private Map<String, Double> getComponentsQuantitiesMultilevel(Map<String, List<X3BomItem>> allBoms, String itemCode,
-			Map<String, X3Product> products, boolean acvOnly) {
+			Map<String, X3Product> products, boolean acvOnly) throws OutOfHeapMemoryException {
 		Map<String, Double> resultMap = new TreeMap<>();
 
 		List<X3BomItem> list = findBomPartsByParentCode(allBoms, itemCode);
@@ -710,7 +730,9 @@ public class ProductionComponentsController {
 					resultMap.put(code, qty);
 				}
 			}
-
+			if(memoryService.getCurrentHeapUsageProc() > this.outOfMemoryThreshold) {
+				throw new OutOfHeapMemoryException("Out of memory!");
+			}
 			subMap = getComponentsQuantitiesMultilevel(allBoms, code, products, acvOnly);
 			for (Map.Entry<String, Double> entry : subMap.entrySet()) {
 				if (resultMap.containsKey(entry.getKey())) {
@@ -834,8 +856,8 @@ public class ProductionComponentsController {
 			model.addAttribute("componentDescription", componentDescription);
 			model.addAttribute("title", component);
 			return "prodcomp/view";
-		} catch (OutOfMemoryError er) {
-			model.addAttribute("error", "OUT OF MEMORY");
+		} catch (OutOfHeapMemoryException er) {
+			model.addAttribute("error", this.outOfMemoryMessage);
 			return "prodcomp/view";
 		}
 	}
@@ -884,7 +906,7 @@ public class ProductionComponentsController {
 	 * @param allBoms   list of all BOM entries to check dependencies
 	 */
 	private boolean calculateBomChains(X3BomPart component, List<X3BomPart> chain, List<List<X3BomPart>> allChains,
-			List<X3BomPart> allBoms) {
+			List<X3BomPart> allBoms) throws OutOfHeapMemoryException {
 
 		boolean found = false;
 		List<X3BomPart> localChain;
@@ -894,7 +916,9 @@ public class ProductionComponentsController {
 				found = true;
 				localChain = cloneBomPartList(chain);
 				localChain.add(part);
-
+				if(memoryService.getCurrentHeapUsageProc() > this.outOfMemoryThreshold) {
+					throw new OutOfHeapMemoryException("Out of memory!");
+				}
 				if (!calculateBomChains(part, localChain, allChains, allBoms)) {
 					allChains.add(localChain);
 				}
