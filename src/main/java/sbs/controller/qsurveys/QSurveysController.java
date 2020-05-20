@@ -183,8 +183,10 @@ public class QSurveysController {
 				stringAnswer = bsi.getAnswerQuantity().trim().replace(',', '.');
 				answer = Double.valueOf(stringAnswer);
 				
-				// for UN only
-				if(bsi.getModelUnit().equals("UN")){
+				// for INT only				
+				// if(bsi.getModelUnit().equals("UN")){
+				// if ((bsi.getModelQuantity() == Math.floor(bsi.getModelQuantity())) && !Double.isInfinite(bsi.getModelQuantity())) {
+				if(bsi.getModelQuantity() % 1 == 0) {
 					// check quantity 
 					if(Double.compare(answer, bsi.getModelQuantity())!=0){
 						bindingResult.rejectValue("items[" + i + "].answerQuantity", "qsurveys.error.value.not.match.model",
