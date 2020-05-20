@@ -628,6 +628,19 @@ public class ProductionComponentsController {
 			String itemCode, Map<String, X3Product> products, Map<String, Integer> stock, double quantityToProduce) 
 			throws OutOfHeapMemoryException {
 
+		// check if we have main item on stock
+		int mainStock = stock.getOrDefault(itemCode, 0);
+		if(mainStock >= quantityToProduce) {
+			mainStock -= quantityToProduce;
+			quantityToProduce = 0;
+		}
+		else {
+			quantityToProduce -= mainStock;
+			mainStock = 0;
+		}
+		stock.put(itemCode, mainStock);
+		// calculate requirements after stock check for main
+		
 		Map<String, Double> resultMap = new TreeMap<>();
 
 		List<X3BomItem> list = findBomPartsByParentCode(allBoms, itemCode);
