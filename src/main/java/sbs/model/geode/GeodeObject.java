@@ -6,6 +6,7 @@ public class GeodeObject {
 
 	private String number;
 	private String store;
+	private String storeType;
 	private String address;
 	private String itemCode;
 	private double quantity;
@@ -50,6 +51,12 @@ public class GeodeObject {
 	}
 	public void setInputDate(Timestamp inputDate) {
 		this.inputDate = inputDate;
+	}
+	public String getStoreType() {
+		return storeType;
+	}
+	public void setStoreType(String storeType) {
+		this.storeType = storeType;
 	}
 
 	@Override

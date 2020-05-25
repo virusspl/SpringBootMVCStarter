@@ -253,6 +253,7 @@ public class JdbcOracleGeodeRepositoryImpl implements JdbcOracleGeodeRepository 
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
 				+ "GEOATW.STORE.STO_0, "
+				+ "GEOATW.STORE.YTYPE_0, "
 				+ "GEOATW.STOCKOBJ.ADD_0, "
 				+ "GEOATW.STOCKOBJ.SKONUM_0, "
 				+ "GEOATW.STOCKOBJ.INPDAT_0,"
@@ -271,6 +272,7 @@ public class JdbcOracleGeodeRepositoryImpl implements JdbcOracleGeodeRepository 
         for(Map<String,Object> row: resultSet ){
         	obj = new GeodeObject();
         	obj.setStore((String)row.get("STO_0"));
+        	obj.setStoreType((String)row.get("YTYPE_0"));
         	obj.setAddress((String)row.get("ADD_0"));
         	obj.setNumber((String)row.get("SKONUM_0"));
         	obj.setInputDate((Timestamp)row.get("INPDAT_0"));

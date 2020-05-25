@@ -88,7 +88,7 @@ public class ReceptionToSaleController {
 			if(obc.containsKey(obj.getItemCode())) {
 				obc.get(obj.getItemCode()).add(obj);
 			}
-			else{
+			else {
 				list = new ArrayList<>();
 				list.add(obj);
 				obc.put(obj.getItemCode(), list);
@@ -149,7 +149,7 @@ public class ReceptionToSaleController {
 				rl.setClientName("");
 				rl.setGr1OrObjectNumber(obj.getNumber());
 				rl.setGr2OrAddress(obj.getStore()+  obj.getAddress());
-				rl.setDate("");
+				rl.setDate(obj.getStoreType());
 				rl.setDateInput(dateHelper.formatYyyyMmDd(obj.getInputDate()));
 				rl.setToSendOrQuantity(obj.getQuantity());
 				rl.setOrdered(0);
