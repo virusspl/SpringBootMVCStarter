@@ -333,7 +333,7 @@ public class UploadController {
 			if (fileList.get(i).startsWith("tool_" + id + "_")) {
 				
 				File hddFile = new File(tmpPath +"\\" + fileList.get(i));
-				System.out.println(tmpPath +"\\" + fileList.get(i));
+				//System.out.println(tmpPath +"\\" + fileList.get(i));
 				hddFile.delete();
 			}
 		}
@@ -384,14 +384,14 @@ public class UploadController {
 		try {
 			File dir = null;
 			try{
-				System.out.println(qSurveysPhotoPath+"/"+id);
+				//System.out.println(qSurveysPhotoPath+"/"+id);
 				dir = (new DefaultResourceLoader()).getResource(qSurveysPhotoPath+"/"+id).getFile();
 				if(!dir.exists()){
 					dir.mkdir();
 				}
 			}
 			catch (IOException io){
-				System.out.println("IOERROR");
+				System.out.println("IOERROR" + "upload controller " + "/upload/qsurveys/{id}");
 				
 			}
 			img = ImageIO.read(file.getInputStream());
