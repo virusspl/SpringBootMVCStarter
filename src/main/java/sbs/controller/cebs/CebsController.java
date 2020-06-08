@@ -61,6 +61,7 @@ public class CebsController {
 	CebsEventsService eventsService;
 	@Autowired
 	CebsLinesService linesService;
+
 	
 	private boolean active;
 	private boolean confirmed;
@@ -80,7 +81,9 @@ public class CebsController {
 		model.addAttribute("active", active);
 		model.addAttribute("confirmed", confirmed);
 		model.addAttribute("sent", sent);
-		model.addAttribute("actionDate", dateHelper.formatDdMmYyyy(actionDate.getTime()));
+		if(actionDate!=null) {
+			model.addAttribute("actionDate", dateHelper.formatDdMmYyyy(actionDate.getTime()));
+		}
 		model.addAttribute("dayCode", dayCode);
 		model.addAttribute("location", this.location);
 	}
@@ -90,7 +93,6 @@ public class CebsController {
 		confirmed = false;
 		sent = false;
 		items = new TreeMap<>();
-		actionDate = Calendar.getInstance();
 	}
 
 	@RequestMapping("/order")
@@ -483,9 +485,10 @@ public class CebsController {
 		context.setVariable("items", currentItems);
 		context.setVariable("amount", amount);
 		context.setVariable("summary", summary);
+		context.setVariable("date", dateHelper.formatDdMmYyyy(actionDate.getTime()));
 		String body = templateEngine.process("cebs/mailsummary", context);
 		if(mailTo.size()>0){
-			mailService.sendEmail("webapp@atwsystem.pl", mailTo.toArray(new String[0]), new String[0], "Zamówienie ADR Polska", body);
+			mailService.sendEmail("webapp@atwsystem.pl", mailTo.toArray(new String[0]), new String[0], "Zamówienie ADR Polska - " + dateHelper.formatDdMmYyyy(actionDate.getTime()), body);
 		}
 		
 		
