@@ -38,6 +38,8 @@ import sbs.model.x3.X3DeliverySimpleInfo;
 import sbs.model.x3.X3EnvironmentInfo;
 import sbs.model.x3.X3KeyValString;
 import sbs.model.x3.X3Product;
+import sbs.model.x3.X3ProductEvent;
+import sbs.model.x3.X3ProductEventsHistory;
 import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ProductSellDemand;
 import sbs.model.x3.X3ProductionOrderDetails;
@@ -4253,7 +4255,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public Map<String, Integer> findProductsInReplenish(String company) {
-		// ===========================================================
+				// ===========================================================
 				// ==== TMP JDBC DUALITY =====================================
 				if(company.equalsIgnoreCase("ATW")) {
 					jdbc = jdbc6;
@@ -4281,6 +4283,130 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		        }
 		        
 		        return map;
+	}
+
+	@Override
+	public Map<String, X3ProductEventsHistory> getAcvProductsEventsHistory(Date startDate, Date endDate,
+			List<X3ConsumptionProductInfo> acvInfo, String company) {
+		// ===========================================================
+		// ==== TMP JDBC DUALITY =====================================
+		if(company.equalsIgnoreCase("ATW")) {
+			jdbc = jdbc6;
+		}
+		else {
+			jdbc = jdbc11;
+		}
+		// ==== TMP JDBC DUALITY =====================================
+		// ===========================================================
+		
+		
+		Map<String, X3ProductEventsHistory> historyMap = new HashMap<>();
+		X3ProductEventsHistory history;
+		X3ProductEvent event;
+		X3ProductEvent tmpEvent;
+		
+		
+		
+		// create history objects list for all ACV codes with INIT event today (adjustment = 0, before = after)
+		for(X3ConsumptionProductInfo info: acvInfo) {
+			history = new X3ProductEventsHistory(info.getProductCode());
+			event = new X3ProductEvent();
+			event.setProductCode(info.getProductCode());
+			event.setDate(new java.util.Date());
+			event.setAdjustment(0);
+			event.setBefore(info.getStock());
+			event.setAfter(info.getStock());
+			event.setTransactionType(0);
+			history.addEvent(event);
+			historyMap.put(history.getProductCode(), history);
+		}
+		
+		// query
+		String query = ""
+				+ "SELECT "
+				+ "STJ.ITMREF_0, "
+				+ "STJ.IPTDAT_0, "
+				+ "STJ.CREDAT_0, "
+				+ "STJ.QTYSTU_0, "
+				+ "STJ.TRSTYP_0 "
+				+ "FROM " + company + ".STOJOU STJ INNER JOIN " + company + ".ITMMASTER ITM "
+				+ "ON STJ.ITMREF_0 = ITM.ITMREF_0 "
+				+ "WHERE "
+				+ "STJ.IPTDAT_0 >= ? "
+				+ "AND STJ.TRSTYP_0  IN (1, 2, 3, 4, 5, 6, 12) "
+				+ "AND ITM.TCLCOD_0 = ? "
+				+ "AND STJ.REGFLG_0 != 2 "
+				+ "ORDER BY STJ.CREDAT_0 DESC, STJ.CRETIM_0 DESC";
+		
+		
+		List<Map<String,Object>> resultSet = jdbc.queryForList( 
+				query,
+                new Object[]{dateHelper.getTime(startDate), "ACV"});
+		
+		// read all events from database (descending) and put into map
+		// since present day back to startDate
+        for(Map<String,Object> row: resultSet ){
+        	if(!historyMap.containsKey((String)row.get("ITMREF_0"))) {
+        		continue;
+        	}
+        	history = historyMap.get((String)row.get("ITMREF_0"));
+        	// tmp = previous event in list (more recent)
+        	tmpEvent = history.getEvents().get(history.getEvents().size()-1);
+        	event = new X3ProductEvent();
+			event.setProductCode(tmpEvent.getProductCode());
+			event.setDate((Timestamp)row.get("CREDAT_0"));
+			event.setAdjustment(((BigDecimal)row.get("QTYSTU_0")).doubleValue());
+			event.setBefore(tmpEvent.getBefore() + (-1)*event.getAdjustment());
+			event.setAfter(tmpEvent.getBefore());
+			event.setTransactionType(((BigDecimal)row.get("TRSTYP_0")).intValue());
+			history.addEvent(event);
+        }
+        
+        
+        // for all history objects add init event at startDate
+        for(X3ProductEventsHistory hist: historyMap.values()) {
+        	// tmp = first event found for code after startDate (last object in descending list from DB)
+        	// event = created init event to act as startDate state
+        	tmpEvent = hist.getEvents().get(hist.getEvents().size()-1);
+        	event = new X3ProductEvent();
+			event.setProductCode(tmpEvent.getProductCode());
+			event.setDate(startDate);
+			event.setAdjustment(0);
+			event.setBefore(tmpEvent.getBefore());
+			event.setAfter(tmpEvent.getBefore());
+			event.setTransactionType(0);
+			hist.addEvent(event);
+        }
+        
+        
+        // reverse events in each history object and cut those after 
+        List<X3ProductEvent> rev;
+        for(X3ProductEventsHistory hist: historyMap.values()) {
+        	// never empty getEvents() - always at least init event
+        	tmpEvent = hist.getEvents().get(0);
+        	rev = new ArrayList<>();
+        	for(int i = hist.getEvents().size()-1 ; i >= 0; i-- ) {
+        		if(hist.getEvents().get(i).getDate().before(endDate)) {
+        			rev.add(hist.getEvents().get(i));
+        			tmpEvent = hist.getEvents().get(i);
+        		}
+        	}
+        	// swap history list to rev
+        	hist.setEvents(rev);
+        	// set last event
+        	// tmp = last event before endDate
+        	// event = created last event to act as endDate state
+        	event = new X3ProductEvent();
+			event.setProductCode(tmpEvent.getProductCode());
+			event.setDate(endDate);
+			event.setAdjustment(0);
+			event.setBefore(tmpEvent.getBefore());
+			event.setAfter(tmpEvent.getBefore());
+			event.setTransactionType(99);
+			hist.addEvent(event);
+        }
+		
+		return historyMap;
 	}
 
 	

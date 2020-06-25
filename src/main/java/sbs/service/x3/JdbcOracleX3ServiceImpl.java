@@ -25,6 +25,7 @@ import sbs.model.x3.X3DeliverySimpleInfo;
 import sbs.model.x3.X3EnvironmentInfo;
 import sbs.model.x3.X3KeyValString;
 import sbs.model.x3.X3Product;
+import sbs.model.x3.X3ProductEventsHistory;
 import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ProductSellDemand;
 import sbs.model.x3.X3ProductionOrderDetails;
@@ -279,6 +280,7 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	}
 
 	@Override
+	@Cacheable(value="acvInfo")
 	public List<X3ConsumptionProductInfo> getAcvListForConsumptionReport(String company) {
 		return jdbcOracleX3Repository.getAcvListForConsumptionReport(company);
 	}
@@ -512,6 +514,14 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	@Override
 	public Map<String, Integer> findProductsInReplenish(String company) {
 		return jdbcOracleX3Repository.findProductsInReplenish(company);
+	}
+
+	@Override
+	@Cacheable(value="acvProductsEventsHistory")
+	public Map<String, X3ProductEventsHistory> getAcvProductsEventsHistory(Date startDate, Date endDate,
+			List<X3ConsumptionProductInfo> acvInfo, String company) {
+		Map<String, X3ProductEventsHistory> history = jdbcOracleX3Repository.getAcvProductsEventsHistory(startDate, endDate, acvInfo, company); 
+		return history;
 	}
 
 

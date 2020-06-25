@@ -1,8 +1,11 @@
 package sbs.model.x3;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class X3ConsumptionProductInfo {
+public class X3ConsumptionProductInfo implements Serializable{
+
+	private static final long serialVersionUID = 2685181105447509510L;
 	private String productCode;
 	private String productDescriptionPl;
 	private int stock;

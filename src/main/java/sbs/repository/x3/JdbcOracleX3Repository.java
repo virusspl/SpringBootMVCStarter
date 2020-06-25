@@ -18,6 +18,7 @@ import sbs.model.x3.X3DeliverySimpleInfo;
 import sbs.model.x3.X3EnvironmentInfo;
 import sbs.model.x3.X3KeyValString;
 import sbs.model.x3.X3Product;
+import sbs.model.x3.X3ProductEventsHistory;
 import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3ProductSellDemand;
 import sbs.model.x3.X3ProductionOrderDetails;
@@ -128,6 +129,7 @@ public interface JdbcOracleX3Repository  {
 	public Map<String, X3DeliverySimpleInfo> getFirstUpcomingDeliveriesMapByCodeAfterDate(Date date, String company);
 	public Map<String, X3DeliverySimpleInfo> getMostRecentDeliveriesMapByCodeBeforeDate(Date date, String company);
 	public Map<String, Integer> findProductsInReplenish(String company);
+	public Map<String, X3ProductEventsHistory> getAcvProductsEventsHistory(Date startDate, Date endDate, List<X3ConsumptionProductInfo> acvInfo, String company);
 
 	
 	

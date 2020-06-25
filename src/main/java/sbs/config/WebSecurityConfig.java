@@ -326,6 +326,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"SHIPCUST_ACQ",
 				"SHIPCUST_SHIP"
 				)		
+		.antMatchers(
+				"/histock/**"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"HISTOCKUSER"
+				)		
 		 // ** old modules to delete **
 		.antMatchers(
 				"/qualitysurveys/**")

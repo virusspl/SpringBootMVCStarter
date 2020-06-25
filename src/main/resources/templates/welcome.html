@@ -267,7 +267,8 @@
 			'ROLE_SHIPCUST_SPARE',
 			'ROLE_SHIPCUST_ACQ',
 			'ROLE_SHIPCUST_SHIP',
-			'ROLE_AVGPRICESUSER'
+			'ROLE_AVGPRICESUSER',
+			'ROLE_HISTOCKUSER'
 			)">
 				<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
 					<h3 class="text-info" th:text="#{department.offices}">Panel
@@ -310,17 +311,22 @@
 						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_ENVIRONMENTUSER')"
 						class="btn btn-info btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-tree-deciduous"></span> <span
-						th:text="#{environment.environment}">consumption</span>
+						th:text="#{environment.environment}"></span>
 					</a> <a th:href="@{/avgprices/main}"
 						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_AVGPRICESUSER')"
 						class="btn btn-info btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-euro"></span> <span
-						th:text="#{avgprices.title}">consumption</span>
+						th:text="#{avgprices.title}"></span>
 					</a> <a th:href="@{/consumption/dispatch}"
 						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_CONSUMPTIONUSER')"
 						class="btn btn-info btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-export"></span> <span
-						th:text="#{consumption.consumptionacv}">consumption</span>
+						th:text="#{consumption.consumptionacv}"></span>
+					</a> <a th:href="@{/histock/main}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_HISTOCKUSER')"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-time"></span> <span
+						th:text="#{histock.histockacv}"></span>
 					</a>
 					<!-- cancel -->
 					<a th:if="${CANCEL_THIS}" th:href="@{/proprog/list}"

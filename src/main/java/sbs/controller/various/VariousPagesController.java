@@ -601,6 +601,14 @@ public class VariousPagesController {
 			msg += "[role: " + shipCustShip.getName() + "], ";
 		}
 		
+		Role histock = roleService.findByName("ROLE_HISTOCKUSER");
+		if (histock == null) {
+			histock = new Role();
+			histock.setName("ROLE_HISTOCKUSER");
+			roleService.save(histock);
+			msg += "[role: " + histock.getName() + "], ";
+		}
+		
 		// ROLE END
 
 		User admin = userService.findByUsername("Admin");

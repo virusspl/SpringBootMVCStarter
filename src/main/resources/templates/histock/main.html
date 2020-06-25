@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script">
+		<!-- DATEPICKER -->
+		<script th:src="@{/datepicker/js/bootstrap-datepicker.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:src="@{/datepicker/locales/bootstrap-datepicker.pl.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script
+			th:src="@{/datepicker/locales/bootstrap-datepicker.en-GB.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:src="@{/datepicker/locales/bootstrap-datepicker.it.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:if="__${#locale}__ == 'pl'">
+			$('#startDate').datepicker({
+				autoclose : true,
+				language : 'pl'
+			});
+			$('#endDate').datepicker({
+				autoclose : true,
+				language : 'pl'
+			});
+		</script>
+		<script th:if="__${#locale}__ == 'en'">
+			$('#startDate').datepicker({
+				autoclose : true,
+				language : 'en-GB'
+			});
+			$('#endDate').datepicker({
+				autoclose : true,
+				language : 'en-GB'
+			});
+		</script>
+		<script th:if="__${#locale}__ == 'it'">
+			$('#startDate').datepicker({
+				autoclose : true,
+				language : 'it'
+			});
+			$('#endDate').datepicker({
+				autoclose : true,
+				language : 'it'
+			});
+		</script>
+
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h1 th:text="#{histock.histockacv}" class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{histock.message}"> Welcome message </span>
+			</div>
+			<a th:href="@{'/'}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+		<!-- CHAINS FORM -->
+		<form th:action="@{'/histock/showhistory'}" method="post"
+			th:object="${formHistoryStock}">
+			<div class="row">
+				<div class="col-xs-12">
+					<h3 th:text="#{general.parameters}"
+						class="text-primary margin-top-20"></h3>
+					<div class="underline margin-bottom-10"></div>
+					<!-- <span th:text="#{histock.parameters.info}"></span> -->
+				</div>
+			</div>
+			<div class="row" style="display: none;">
+				<div class="col-md-6 col-xs-12 margin-top-10">
+					<div class="form-group">
+						<label for="item" th:text="|#{general.productCode} (#{general.optional})|">txt</label>
+						<input type="text" class="form-control" id="item"
+							name="item" th:placeholder="#{general.productCode}"
+							th:field="*{item}" />
+						<div th:errors="*{item}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 margin-top-10">
+					<span th:text="#{general.date.setrange}">set date range</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-3 col-xs-6 margin-top-10">
+					<div class="form-group">
+						<!-- start date -->
+						<label for="startDate" th:text="#{general.date.start}">startDate</label>
+						<input type="text" class="form-control" id="startDate"
+							name="startDate" th:placeholder="#{general.date.start}"
+							th:field="*{startDate}" autocomplete="off" />
+						<div th:errors="*{startDate}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-md-3 col-xs-6 margin-top-10">
+					<div class="form-group">
+						<!-- end date -->
+						<label for="endDate" th:text="#{general.date.end}">endDate</label>
+						<input type="text" class="form-control" id="endDate"
+							name="endDate" th:placeholder="#{general.date.end}"
+							th:field="*{endDate}" autocomplete="off" />
+						<div th:errors="*{endDate}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<button class="btn btn-primary" type="submit" name="execute"
+						onclick="disableLong(this)"
+						th:title="|#{general.warning.longtask} ~40-180s|"
+						data-toggle="tooltip" data-placement="bottom">
+						<span th:text="#{action.search}">upload</span>
+					</button>
+				</div>
+			</div>
+		</form>
+		<!-- /CHAINS FORM -->
+		
+	</div>
+</body>
+</html>
