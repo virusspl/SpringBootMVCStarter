@@ -63,6 +63,7 @@ public class X3ProductEvent implements Serializable{
 	public void setTransactionType(int transactionType) {
 		this.transactionType = transactionType;
 	}
+
 	@Override
 	public String toString() {
 		return "\n X3ProductEvent \n [productCode=" + productCode + ", adjustment=" + adjustment + ", before=" + before

@@ -24,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sbs.helpers.DateHelper;
 import sbs.helpers.TextHelper;
 import sbs.model.x3.X3ConsumptionProductInfo;
+import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductEventsHistory;
 import sbs.service.x3.JdbcOracleX3Service;
 
@@ -39,6 +40,7 @@ public class HistoryStockController {
 	TextHelper textHelper;
 	@Autowired
 	DateHelper dateHelper;
+	
 
 	public HistoryStockController() {
 
@@ -102,6 +104,7 @@ public class HistoryStockController {
 		
 		List<X3ConsumptionProductInfo> acvInfo = x3Service.getAcvListForConsumptionReport("ATW");
 		Map<String, X3ProductEventsHistory> history = x3Service.getAcvProductsEventsHistory(startDate, endDate, acvInfo, "ATW");
+		Map<String, X3Product> products = x3Service.findAllActiveProductsMap("ATW");
 		List<List<String>> lines = new ArrayList<>();
 		List<String> line;
 		
@@ -123,12 +126,15 @@ public class HistoryStockController {
 				line.add(textHelper.numberFormatIntegerRoundNoSpace(hist.getZeroCounter()));
 				line.add(textHelper.numberFormatIntegerRoundNoSpace(hist.getZeroDays()));
 				line.add(textHelper.numberFormatIntegerRoundNoSpace(hist.getMinimumCounter()));	
+				line.add(hist.getZeroDates());	
 			}
 			else {
 				line.add("N/D");
 				line.add("N/D");
 				line.add("N/D");
+				line.add("N/D");
 			}
+			line.add(products.containsKey(info.getProductCode()) ? products.get(info.getProductCode()).isVerifyStock()+"" : "B/D");
 			lines.add(line);
 		}
 		model.addAttribute("startDate", dateHelper.formatDdMmYyyy(startDate));

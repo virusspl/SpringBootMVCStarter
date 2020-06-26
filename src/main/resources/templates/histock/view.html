@@ -80,11 +80,12 @@
 								<th th:text="|EWZ|">head</th>
 								<th th:text="|#{general.technicallot}|">head</th>
 								<th th:text="|#{general.stock} max|">head</th>
-								<th th:text="#{general.replanishpoint}">head</th>
-								<th th:text="#{general.stock.safe}">head</th>
+								<th th:text="#{general.replanishpoint.short}">head</th>
+								<th th:text="#{general.stock.safe.short}">head</th>
 								<th th:text="#{histock.counter.zero}">head</th>
 								<th th:text="#{histock.counter.zero.days}">head</th>
 								<th th:text="#{histock.counter.minstock}">head</th>
+								<th th:text="#{general.verifystock}">head</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -98,9 +99,15 @@
 								<td><span th:text="${line[6]}"></span></td>
 								<td><span th:text="${line[7]}"></span></td>
 								<td><span th:text="${line[8]}"></span></td>
-								<td><span th:text="${line[9]}"></span></td>
+								<td>
+								<span th:text="${line[9]}"
+									th:title="|${line[12]}|"
+									data-toggle="tooltip" data-placement="top"
+									style="display: block;"
+								></span></td>
 								<td><span th:text="${line[10]}"></span></td>
 								<td><span th:text="${line[11]}"></span></td>
+								<td><span th:text="${line[13]}"></span></td>
 							</tr>
 						</tbody>
 					</table>

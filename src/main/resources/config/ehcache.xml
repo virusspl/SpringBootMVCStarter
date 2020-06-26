@@ -101,8 +101,8 @@
 	<cache name="pdfListFromDirectory" maxBytesLocalDisk="50m"
 		timeToLiveSeconds="43200">
 	</cache>
-	<cache name="acvProductsEventsHistory" maxBytesLocalDisk="55m"
-		timeToLiveSeconds="86400">
+	<cache name="acvProductsEventsHistory" maxBytesLocalDisk="100m"
+		timeToLiveSeconds="3600">
 	</cache>	
 	<cache name="acvInfo" maxBytesLocalDisk="35m"
 		timeToLiveSeconds="3600">

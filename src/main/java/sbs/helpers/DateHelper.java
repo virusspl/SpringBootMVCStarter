@@ -1,5 +1,6 @@
 package sbs.helpers;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -7,7 +8,10 @@ import java.util.Date;
 
 import org.springframework.stereotype.Component;
 @Component
-public class DateHelper {
+public class DateHelper implements Serializable{
+	
+
+	private static final long serialVersionUID = 3797390353639381515L;
 	
 	private SimpleDateFormat YyyyMmDdFormat;
 	private SimpleDateFormat YyyyMmDdFormatDot;

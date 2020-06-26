@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import sbs.helpers.DateHelper;
+
 public class X3ProductEventsHistory implements Serializable{
 
 	private static final long serialVersionUID = -6928601982151291537L;
@@ -15,16 +17,20 @@ public class X3ProductEventsHistory implements Serializable{
 	private int zeroCounter;
 	private int minimumCounter;
 	private int zeroDays;
+	private String zeroDates;
+	private DateHelper dateHelper;
 	
 	public X3ProductEventsHistory(String productCode) {
 		this.productCode = productCode;
 		this.events = new ArrayList<>(); 
+		this.dateHelper = new DateHelper();
 	}
 	
 	private void resetStats() {
 		this.zeroCounter = 0;
 		this.minimumCounter = 0;
 		this.zeroDays = 0;
+		this.zeroDates = "";
 	}
 	
 	
@@ -60,6 +66,7 @@ public class X3ProductEventsHistory implements Serializable{
 		boolean duringMinimum = false;
 		for(int i = 0; i<events.size(); i++) {
 			if(events.get(i).getAfter() <= 0 && !duringZero && i > 0 && i < (events.size()-1)) {
+				this.addZeroDate(dateHelper.formatDdMmYyyy(events.get(i).getDate()));
 				this.zeroCounter++;
 				zeroStart = events.get(i).getDate();
 				duringZero = true;
@@ -85,6 +92,15 @@ public class X3ProductEventsHistory implements Serializable{
 		}
 	}
 
+	private void addZeroDate(String dateString) {
+		this.zeroDates += dateString + "; ";
+	}
+	
+
+	public String getZeroDates() {
+		return zeroDates;
+	}
+
 	public int getZeroCounter() {
 		return zeroCounter;
 	}
@@ -97,5 +113,4 @@ public class X3ProductEventsHistory implements Serializable{
 		return zeroDays;
 	}
 
-	
 }

@@ -4326,7 +4326,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "SELECT "
 				+ "STJ.ITMREF_0, "
 				+ "STJ.IPTDAT_0, "
-				+ "STJ.CREDAT_0, "
+				+ "STJ.IPTDAT_0, "
 				+ "STJ.QTYSTU_0, "
 				+ "STJ.TRSTYP_0 "
 				+ "FROM " + company + ".STOJOU STJ INNER JOIN " + company + ".ITMMASTER ITM "
@@ -4336,7 +4336,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "AND STJ.TRSTYP_0  IN (1, 2, 3, 4, 5, 6, 12) "
 				+ "AND ITM.TCLCOD_0 = ? "
 				+ "AND STJ.REGFLG_0 != 2 "
-				+ "ORDER BY STJ.CREDAT_0 DESC, STJ.CRETIM_0 DESC";
+				+ "ORDER BY STJ.IPTDAT_0 DESC, STJ.CRETIM_0 DESC";
 		
 		
 		List<Map<String,Object>> resultSet = jdbc.queryForList( 
@@ -4354,7 +4354,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         	tmpEvent = history.getEvents().get(history.getEvents().size()-1);
         	event = new X3ProductEvent();
 			event.setProductCode(tmpEvent.getProductCode());
-			event.setDate((Timestamp)row.get("CREDAT_0"));
+			event.setDate((Timestamp)row.get("IPTDAT_0"));
 			event.setAdjustment(((BigDecimal)row.get("QTYSTU_0")).doubleValue());
 			event.setBefore(tmpEvent.getBefore() + (-1)*event.getAdjustment());
 			event.setAfter(tmpEvent.getBefore());
