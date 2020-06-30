@@ -545,6 +545,14 @@ public class VariousPagesController {
 			msg += "[role: " + downtimeNotifier.getName() + "], ";
 		}
 		
+		Role downtimeSupervisor = roleService.findByName("ROLE_DTSUPERVISOR");
+		if (downtimeSupervisor == null) {
+			downtimeSupervisor = new Role();
+			downtimeSupervisor.setName("ROLE_DTSUPERVISOR");
+			roleService.save(downtimeSupervisor);
+			msg += "[role: " + downtimeSupervisor.getName() + "], ";
+		}
+		
 		Role avgPricesUser = roleService.findByName("ROLE_AVGPRICESUSER");
 		if (avgPricesUser == null) {
 			avgPricesUser = new Role();

@@ -241,18 +241,25 @@ public class DowntimesController {
 		// send e-mail notification
 		List<String> recipients = new ArrayList<>();
 		recipients.add(downtime.getCause().getResponsibleUser().getEmail());
+		List<String> mailcc = new ArrayList<>();
+		for(User user: userService.findByRole("ROLE_DTSUPERVISOR")) {
+			mailcc.add(user.getEmail());
+		}
 		String title = messageSource.getMessage(downtime.getType().getCode(), null, locale) + " - " + downtime.getMachineCode() + " - [Downtimes]";
-		this.sendMail(title, downtime, recipients);
+		this.sendMail(title, downtime, recipients, mailcc);
 
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/downtimes/dispatch";
 	}
 	
-	private void sendMail(String title, Downtime downtime, List<String> recipients) throws UnknownHostException, MessagingException {
+	private void sendMail(String title, Downtime downtime, List<String> recipients, List<String> mailcc) throws UnknownHostException, MessagingException {
 
 		ArrayList<String> mailTo = new ArrayList<>();
 		for (String addr : recipients) {
 			mailTo.add(addr);
+		}
+		if(downtime.getType().getCode().equalsIgnoreCase("downtimes.type.quality")) {
+			mailTo.add("kontr_jak@atwsystem.pl");
 		}
 
 		Context context = new Context();
@@ -261,7 +268,7 @@ public class DowntimesController {
 		context.setVariable("dt", downtime);
 		String body = templateEngine.process("downtimes/mailtemplate", context);
 		if(mailTo.size()>0){
-			mailService.sendEmail("webapp@atwsystem.pl", mailTo.toArray(new String[0]), new String[0], title, body);
+			mailService.sendEmail("webapp@atwsystem.pl", mailTo.toArray(new String[0]), mailcc.toArray(new String[0]), title, body);
 		}
 	}
 
