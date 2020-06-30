@@ -10,6 +10,7 @@ public class SaleShipLine {
 	private String clientCode;
 	private String clientName;
 	private Timestamp demandedDate;
+	private Timestamp originalDate;
 	private Timestamp creationDate;
 	private Timestamp updateDate;
 	private String productCode;
@@ -190,6 +191,15 @@ public class SaleShipLine {
 	public void setStockQ(int stockQ) {
 		this.stockQ = stockQ;
 	}
+
+	public Timestamp getOriginalDate() {
+		return originalDate;
+	}
+
+	public void setOriginalDate(Timestamp originalDate) {
+		this.originalDate = originalDate;
+	}
+	
 	
 
 

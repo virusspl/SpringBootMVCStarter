@@ -16,6 +16,7 @@ public class X3SalesOrderLine {
 	private Timestamp demandedDate;
 	private Timestamp creationDate;
 	private Timestamp updateDate;
+	private Timestamp originalDate;
 	private int quantityLeftToSend;
 	private int quantityOrdered;
 	private double unitPrice;
@@ -172,15 +173,26 @@ public class X3SalesOrderLine {
 		this.currency = currency;
 	}
 
+	public Timestamp getOriginalDate() {
+		return originalDate;
+	}
+
+	public void setOriginalDate(Timestamp originalDate) {
+		this.originalDate = originalDate;
+	}
+
 	@Override
 	public String toString() {
 		return "X3SalesOrderLine [orderNumber=" + orderNumber + ", orderLineNumber=" + orderLineNumber
 				+ ", productCode=" + productCode + ", productDescription=" + productDescription + ", productGr1="
 				+ productGr1 + ", productGr2=" + productGr2 + ", productGr3=" + productGr3 + ", clientCode="
 				+ clientCode + ", clientName=" + clientName + ", country=" + country + ", demandedDate=" + demandedDate
+				+ ", creationDate=" + creationDate + ", updateDate=" + updateDate + ", originalDate=" + originalDate
 				+ ", quantityLeftToSend=" + quantityLeftToSend + ", quantityOrdered=" + quantityOrdered + ", unitPrice="
 				+ unitPrice + ", exchangeRate=" + exchangeRate + ", currency=" + currency + "]";
 	}
+
+
 
 	
 }

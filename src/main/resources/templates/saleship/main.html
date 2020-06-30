@@ -215,6 +215,7 @@
 									<th th:text="#{general.date.creation.short}">head</th>
 									<th th:text="#{general.date.update.short}">head</th>
 									<th th:text="#{general.demandedDate.short}">head</th>
+									<th th:text="#{saleship.date.original}">head</th>
 									<th th:text="#{general.productCode}">head</th>
 									<th th:text="#{general.productDescription}">head</th>
 									<th th:text="|Gr.1|">head</th>
@@ -238,7 +239,8 @@
 									<th th:text="#{general.country}">head</th>
 									<th th:text="#{general.date.creation.short}">head</th>								
 									<th th:text="#{general.date.update.short}">head</th>									
-									<th th:text="#{general.demandedDate.short}">head</th>									
+									<th th:text="#{general.demandedDate.short}">head</th>
+									<th th:text="#{saleship.date.original}">head</th>																		
 									<th th:text="#{general.productCode}">head</th>
 									<th th:text="#{general.productDescription}">head</th>
 									<th th:text="|Gr.1|">head</th>
@@ -265,6 +267,9 @@
 									th:text="${#dates.format(line.updateDate, 'yyyy.MM.dd')}">
 									</span></td>
 									<td><span th:text="${#dates.format(line.demandedDate, 'yyyy.MM.dd')}"></span></td>
+									<td><span th:if="${line.originalDate.after(#dates.create(1600,1,1))}"
+									th:text="${#dates.format(line.originalDate, 'yyyy.MM.dd')}">
+									</span></td>									
 									<td><span th:text="${line.productCode}"></span></td>
 									<td><span th:text="${line.productDescription}"></span></td>
 									<td><span th:text="${line.productGr1}"></span></td>

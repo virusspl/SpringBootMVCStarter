@@ -2474,6 +2474,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "SOQ.QTYSTU_0, "
 				+ "(SOQ.QTYSTU_0 - SOQ.ODLQTYSTU_0 - SOQ.DLVQTY_0) AS LEFT_TO_SEND,  "
 				+ "SOQ.DEMDLVDAT_0, "
+				+ "SOP.X_DATAORI_0, "
 				+ "SOQ.CREDAT_0, "
 				+ "SOQ.UPDDAT_0, "
 				+ "SOP.NETPRI_0, "
@@ -2529,6 +2530,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			line.setClientName(((String)row.get("BPRNAM_0")));
 			line.setCountry(((String)row.get("CRY_0")));
 			line.setDemandedDate(((Timestamp)row.get("DEMDLVDAT_0")));
+			line.setOriginalDate(((Timestamp)row.get("X_DATAORI_0")));
 			line.setCreationDate(((Timestamp)row.get("CREDAT_0")));
 			line.setUpdateDate(((Timestamp)row.get("UPDDAT_0")));
 			line.setQuantityLeftToSend(((BigDecimal)row.get("LEFT_TO_SEND")).intValue());
