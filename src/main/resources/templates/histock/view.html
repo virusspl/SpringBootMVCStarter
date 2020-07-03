@@ -78,13 +78,14 @@
 								<th th:text="|#{general.stock} X3|">head</th>
 								<th th:text="|#{general.cost}|">head</th>
 								<th th:text="|EWZ|">head</th>
-								<th th:text="|#{general.technicallot}|">head</th>
+								<th th:text="|#{general.technicallot.short}|">head</th>
 								<th th:text="|#{general.stock} max|">head</th>
 								<th th:text="#{general.replanishpoint.short}">head</th>
 								<th th:text="#{general.stock.safe.short}">head</th>
 								<th th:text="#{histock.counter.zero}">head</th>
 								<th th:text="#{histock.counter.zero.days}">head</th>
 								<th th:text="#{histock.counter.minstock}">head</th>
+								<th th:text="#{histock.counter.minstock.days}">head</th>
 								<th th:text="#{general.verifystock}">head</th>
 							</tr>
 						</thead>
@@ -101,13 +102,19 @@
 								<td><span th:text="${line[8]}"></span></td>
 								<td>
 								<span th:text="${line[9]}"
-									th:title="|${line[12]}|"
+									th:title="|${line[13]}|"
 									data-toggle="tooltip" data-placement="top"
 									style="display: block;"
 								></span></td>
 								<td><span th:text="${line[10]}"></span></td>
-								<td><span th:text="${line[11]}"></span></td>
-								<td><span th:text="${line[13]}"></span></td>
+								<td>
+								<span th:text="${line[11]}"
+									th:title="|${line[14]}|"
+									data-toggle="tooltip" data-placement="top"
+									style="display: block;"
+								></span></td>
+								<td><span th:text="${line[12]}"></span></td>
+								<td><span th:text="${line[15]}"></span></td>
 							</tr>
 						</tbody>
 					</table>

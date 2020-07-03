@@ -17,7 +17,9 @@ public class X3ProductEventsHistory implements Serializable{
 	private int zeroCounter;
 	private int minimumCounter;
 	private int zeroDays;
+	private int minimumDays;
 	private String zeroDates;
+	private String minimumDates;
 	private DateHelper dateHelper;
 	
 	public X3ProductEventsHistory(String productCode) {
@@ -30,7 +32,9 @@ public class X3ProductEventsHistory implements Serializable{
 		this.zeroCounter = 0;
 		this.minimumCounter = 0;
 		this.zeroDays = 0;
+		this.minimumDays = 0;
 		this.zeroDates = "";
+		this.minimumDates = "";
 	}
 	
 	
@@ -62,8 +66,12 @@ public class X3ProductEventsHistory implements Serializable{
 		Date zeroStart = new java.util.Date();
 		Date zeroEnd = new java.util.Date();
 		
+		Date minimumStart = new java.util.Date();
+		Date minimumEnd = new java.util.Date();
+		
 		boolean duringZero = false;
 		boolean duringMinimum = false;
+		
 		for(int i = 0; i<events.size(); i++) {
 			if(events.get(i).getAfter() <= 0 && !duringZero && i > 0 && i < (events.size()-1)) {
 				this.addZeroDate(dateHelper.formatDdMmYyyy(events.get(i).getDate()));
@@ -81,11 +89,15 @@ public class X3ProductEventsHistory implements Serializable{
 
 			// count below minimum days
 			if(events.get(i).getAfter() < minStock && !duringMinimum && i > 0 && i < (events.size()-1)) {
+				this.addMinimumDate(dateHelper.formatDdMmYyyy(events.get(i).getDate()));
 				this.minimumCounter++;
+				minimumStart = events.get(i).getDate();
 				duringMinimum = true;
 			}
 			else if(events.get(i).getAfter() > minStock) {
 				if(duringMinimum) {
+					minimumEnd = events.get(i).getDate();
+					this.minimumDays+= getDifferenceDays(minimumStart, minimumEnd);
 					duringMinimum = false;
 				}
 			}
@@ -96,9 +108,16 @@ public class X3ProductEventsHistory implements Serializable{
 		this.zeroDates += dateString + "; ";
 	}
 	
-
+	private void addMinimumDate(String dateString) {
+		this.minimumDates += dateString + "; ";
+	}
+	
 	public String getZeroDates() {
 		return zeroDates;
+	}
+	
+	public String getMinimumDates() {
+		return minimumDates;
 	}
 
 	public int getZeroCounter() {
@@ -112,5 +131,10 @@ public class X3ProductEventsHistory implements Serializable{
 	public int getZeroDays() {
 		return zeroDays;
 	}
+
+	public int getMinimumDays() {
+		return minimumDays;
+	}
+
 
 }
