@@ -715,7 +715,8 @@
 									<th th:text="#{movements.quantity}">head</th>
 									<th th:text="#{movements.store}">head</th>
 									<th th:text="#{movements.slot}">head</th>
-									<th th:text="#{movements.creationTime}">head</th>
+									<th th:text="#{movements.creationTime.short}">head</th>
+									<th th:text="#{movements.creationTime.short}">head</th>
 									<th th:text="#{movements.creationUserCode}">head</th>
 									<th th:text="#{movements.creationUserName}">head</th>
 
@@ -729,7 +730,8 @@
 									<th th:text="#{movements.quantity}">head</th>
 									<th th:text="#{movements.store}">head</th>
 									<th th:text="#{movements.slot}">head</th>
-									<th th:text="#{movements.creationTime}">head</th>
+									<th th:text="#{movements.creationTime.short}">head</th>
+									<th th:text="#{movements.creationTime.short}">head</th>
 									<th th:text="#{movements.creationUserCode}">head</th>
 									<th th:text="#{movements.creationUserName}">head</th>
 
@@ -744,7 +746,9 @@
 									<td><span th:text="${dtl.store}"></span></td>
 									<td><span th:text="${dtl.slot}"></span></td>
 									<td><span
-										th:text="${#dates.format(dtl.creationDateTime, 'dd.MM.yyyy HH:mm')}"></span></td>
+										th:text="${#dates.format(dtl.creationDateTime, 'dd.MM.yyyy')}"></span></td>
+									<td><span
+										th:text="${#dates.format(dtl.creationDateTime, 'HH:mm')}"></span></td>
 									<td><span th:text="${dtl.creationUserCode}"></span></td>
 									<td><span th:text="${dtl.creationUserName}"></span></td>
 								</tr>
