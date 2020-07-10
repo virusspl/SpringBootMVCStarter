@@ -152,6 +152,7 @@ public class SaleShipController {
 			line.setProductGr1(ord.getProductGr1());
 			line.setMachineCode(machineInt);
 			line.setDepartmentCode(departmentCodeInt);
+			line.setDemandStateCode("saleship.demandState."+ord.getDemandState());
 			line.setStockProduction(magStock.containsKey(line.getProductCode()) ? magStock.get(line.getProductCode()) : 0);
 			line.setStockShipments(shipStock.containsKey(line.getProductCode()) ? shipStock.get(line.getProductCode()) : 0);
 			line.setStockQ(stockQ.containsKey(line.getProductCode()) ? stockQ.get(line.getProductCode()) : 0);

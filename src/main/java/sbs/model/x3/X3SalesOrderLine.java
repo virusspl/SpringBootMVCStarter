@@ -22,10 +22,19 @@ public class X3SalesOrderLine {
 	private double unitPrice;
 	private double exchangeRate;
 	private String currency;
+	private int demandState;
 	
-	
+
 	public X3SalesOrderLine() {
 		
+	}
+	
+	public int getDemandState() {
+		return demandState;
+	}
+
+	public void setDemandState(int demandState) {
+		this.demandState = demandState;
 	}
 
 	public String getOrderNumber() {

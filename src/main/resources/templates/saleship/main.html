@@ -208,6 +208,7 @@
 								<tr>
 									<th th:text="#{general.order.sales}">head</th>
 									<th th:text="#{general.line}">head</th>
+									<th th:text="#{saleship.demandState}">head</th>
 									<th th:text="|#{general.order.production} / #{general.line}|">head</th>									
 									<th th:text="#{general.client.code}">head</th>
 									<th th:text="#{general.client.name}">head</th>
@@ -233,6 +234,7 @@
 								<tr>
 									<th th:text="#{general.order.sales}">head</th>
 									<th th:text="#{general.line}">head</th>
+									<th th:text="#{saleship.demandState}">head</th>
 									<th th:text="|#{general.order.production} / #{general.line}|">head</th>									
 									<th th:text="#{general.client.code}">head</th>
 									<th th:text="#{general.client.name}">head</th>
@@ -258,6 +260,7 @@
 								<tr th:each="line : ${list}">
 									<td><span th:text="${line.salesOrder}"></span></td>
 									<td><span th:text="${line.salesOrderLine}"></span></td>
+									<td><span th:text="#{${line.demandStateCode}}"></span></td>
 									<td><span th:text="${line.productionOrderAndLine}"></span></td>
 									<td><span th:text="${line.clientCode}"></span></td>
 									<td><span th:text="${line.clientName}"></span></td>

@@ -25,6 +25,7 @@ public class SaleShipLine {
 	private int quantityShipped;
 	private int quantityToGive;
 	private String country;
+	private String demandStateCode;
 	
 	public SaleShipLine() {
 	
@@ -199,10 +200,15 @@ public class SaleShipLine {
 	public void setOriginalDate(Timestamp originalDate) {
 		this.originalDate = originalDate;
 	}
-	
-	
+
+	public String getDemandStateCode() {
+		return demandStateCode;
+	}
+
+	public void setDemandStateCode(String demandStateCode) {
+		this.demandStateCode = demandStateCode;
+	}
 
 
-	
 	
 }
