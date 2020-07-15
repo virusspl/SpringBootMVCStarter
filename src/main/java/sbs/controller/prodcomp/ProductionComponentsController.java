@@ -16,6 +16,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -68,7 +71,10 @@ public class ProductionComponentsController {
 	}
 	
 	@RequestMapping("/main")
-	public String view(Model model, Locale locale) {
+	public String view(Model model, Locale locale, 
+			@CookieValue(value = "startDateChain", defaultValue = "0") String startDateLong,
+			@CookieValue(value = "endDateChain", defaultValue = "0") String endDateLong
+			) {
 		/*
 		 * Calendar cal = Calendar.getInstance(); cal.add(Calendar.MONTH, -1);
 		 * cal.set(Calendar.DAY_OF_MONTH, 1); formComponent.setStartDate(new
@@ -81,7 +87,13 @@ public class ProductionComponentsController {
 		
 		this.outOfMemoryThreshold = Double.parseDouble(environment.getRequiredProperty("prodcomp.memory.threshold"));
 		this.outOfMemoryMessage = messageSource.getMessage("prodcomp.error.memory", null, "OUT OF MEMORY!", locale);
-		model.addAttribute("formComponent", new FormComponent());
+		
+		FormComponent formComponent = new FormComponent();
+		if(startDateLong.length()>1 && endDateLong.length()>1) {
+			formComponent.setStartDate(new java.util.Date(Long.parseLong(startDateLong)));
+			formComponent.setEndDate(new java.util.Date(Long.parseLong(endDateLong)));
+		}
+		model.addAttribute("formComponent", formComponent);
 		model.addAttribute("formFindComponents", new FormFindComponents());
 		return "prodcomp/main";
 	}
@@ -772,13 +784,24 @@ public class ProductionComponentsController {
 
 	@RequestMapping(value = "/findchains", params = { "find" }, method = RequestMethod.POST)
 	public String findChains(@Valid FormComponent formComponent, BindingResult bindingResult, Model model,
-			Locale locale, RedirectAttributes redirectAttrs) {
+			Locale locale, RedirectAttributes redirectAttrs, HttpServletResponse response) {
 		try {
 			// standard validation
 			if (bindingResult.hasErrors()) {
 				model.addAttribute("formFindComponents", new FormFindComponents());
 				return "prodcomp/main";
 			}
+			
+		    // create a cookie
+		    Cookie startDateCookie = new Cookie("startDateChain", ""+formComponent.getStartDate().getTime());
+		    Cookie endDateCookie = new Cookie("endDateChain", ""+formComponent.getEndDate().getTime());
+		    // set time to live (seconds)
+		    startDateCookie.setMaxAge(60 * 60* 24 * 31);
+		    endDateCookie.setMaxAge(60 * 60* 24 * 31);
+		    //add cookie to response
+		    response.addCookie(startDateCookie);
+		    response.addCookie(endDateCookie);
+
 
 			// check if component exist
 			String component;
