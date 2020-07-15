@@ -125,12 +125,14 @@ public class ProductionComponentsController {
 	@RequestMapping("/make")
 	public String doMake(Model model, Locale locale, RedirectAttributes redirectAttrs)
 			throws FileNotFoundException, IOException {
+		String singleCode = null;
 		try {
 			// get file
 			File file;
 
 			if (model.asMap().containsKey("single")) {
 				String code = (String) model.asMap().get("code");
+				singleCode = code;
 				int quantity = (int) model.asMap().get("quantity");
 
 				File tmpFile = File.createTempFile("prodcom", ".tmp");
@@ -256,7 +258,13 @@ public class ProductionComponentsController {
 					table.add(line);
 				}
 				model.addAttribute("components", table);
-				model.addAttribute("title", messageSource.getMessage("general.list", null, locale));
+				if(singleCode != null) {
+					model.addAttribute("title", singleCode);
+				}
+				else{
+					model.addAttribute("title", messageSource.getMessage("general.list", null, locale));
+				}
+				
 			} else {
 				// no file
 				redirectAttrs.addFlashAttribute("main", messageSource.getMessage("action.choose.file", null, locale));
