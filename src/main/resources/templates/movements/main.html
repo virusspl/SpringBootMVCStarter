@@ -517,11 +517,11 @@
 								</tfoot>
 								<tbody>
 									<tr th:each="mvt : ${movements}">
-										<td><span th:text="${#dates.format(mvt.date, 'dd.MM.yyyy HH:mm:ss')}"></span></td>
-										<td th:if="${mvt.orderDate} == null"><span th:text="|-|"></span></td>
-										<td th:if="${mvt.orderDate} != null"><span th:text="${#dates.format(mvt.orderDate, 'dd.MM.yyyy')}"></span></td>
-										<td th:if="${mvt.demandedDate} == null"><span th:text="|-|"></span></td>
-										<td th:if="${mvt.demandedDate} != null"><span th:text="${#dates.format(mvt.demandedDate, 'dd.MM.yyyy')}"></span></td>
+										<td><span th:text="${#dates.format(mvt.date, 'dd/MM/yyyy HH:mm:ss')}"></span></td>
+										<td th:if="${mvt.orderDate} == null"><span th:text="||"></span></td>
+										<td th:if="${mvt.orderDate} != null"><span th:text="${#dates.format(mvt.orderDate, 'dd/MM/yyyy')}"></span></td>
+										<td th:if="${mvt.demandedDate} == null"><span th:text="||"></span></td>
+										<td th:if="${mvt.demandedDate} != null"><span th:text="${#dates.format(mvt.demandedDate, 'dd/MM/yyyy')}"></span></td>
 										<td><span th:text="${mvt.itemCode}"></span></td>
 										<td><span th:text="${mvt.itemDescription}"></span></td>
 										<td><span th:text="${mvt.itemCategory}"></span></td>
