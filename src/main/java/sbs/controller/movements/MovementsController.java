@@ -24,8 +24,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import sbs.helpers.DateHelper;
 import sbs.model.geode.GeodeMovement;
 import sbs.model.x3.X3ProductFinalMachine;
+import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
 import sbs.model.x3.X3ShipmentStockLineWithPrice;
 import sbs.model.x3.X3WarehouseWeightDetailLine;
@@ -43,6 +45,8 @@ public class MovementsController {
 	JdbcOracleGeodeService geodeService;
 	@Autowired
 	JdbcOracleX3Service x3Service;
+	@Autowired
+	DateHelper dateHelper;
 
 	List<String> productionStores;
 	List<String> receptionStores;
@@ -84,6 +88,14 @@ public class MovementsController {
 		Map<String, Double> prices = x3Service.getCurrentStandardCostsMap("ATW");
 		List<X3ShipmentMovement> movements = x3Service.findAdrShipmentMovementsInPeriod(movementsForm.getStartDate(),
 				movementsForm.getEndDate());
+		List<X3SalesOrderLine> orderLines = x3Service.findAdrSalesOrderLinesBasedOnShipmentMovementsInPeriod(movementsForm.getStartDate(),
+				movementsForm.getEndDate());
+		Map<String, X3SalesOrderLine> orderLinesMap = new HashMap<>();
+		
+		for(X3SalesOrderLine lin: orderLines) {
+			orderLinesMap.put(lin.getOrderNumber()+";"+lin.getProductCode(), lin);
+		}
+		
 		int counter = 0;
 		double totalValue = 0;
 		double mechanicalValue = 0;
@@ -97,7 +109,8 @@ public class MovementsController {
 		String unassignedMachines = "";
 
 		Map<String, X3ProductFinalMachine> machinesIndex = x3Service.findX3ProductFinalMachines("ATW");
-
+		
+		String tmpKey;
 		for (X3ShipmentMovement mvt : movements) {
 			if (prices.containsKey(mvt.getItemCode()) && !mvt.getItemCategory().equalsIgnoreCase("ACV")) {
 				mvt.setPrice(prices.get(mvt.getItemCode()));
@@ -134,6 +147,9 @@ public class MovementsController {
 			} else {
 				otherValue += mvt.getValue();
 			}
+			tmpKey = mvt.getDocument()+";"+mvt.getItemCode();
+			mvt.setOrderDate(orderLinesMap.containsKey(tmpKey) ? orderLinesMap.get(tmpKey).getCreationDate():null);
+			mvt.setDemandedDate(orderLinesMap.containsKey(tmpKey) ? orderLinesMap.get(tmpKey).getDemandedDate():null);
 
 			totalValue += mvt.getValue();
 			counter++;

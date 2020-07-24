@@ -524,5 +524,10 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 		return history;
 	}
 
+	@Override
+	public List<X3SalesOrderLine> findAdrSalesOrderLinesBasedOnShipmentMovementsInPeriod(Date startDate, Date endDate) {
+		return jdbcOracleX3Repository.findAdrSalesOrderLinesBasedOnShipmentMovementsInPeriod(startDate, endDate);
+	}
+
 
 }

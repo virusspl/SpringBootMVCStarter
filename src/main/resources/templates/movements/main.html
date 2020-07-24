@@ -484,6 +484,8 @@
 								<thead>
 									<tr>
 										<th th:text="#{movements.date}">head</th>
+										<th th:text="#{movements.date.order.short}">head</th>
+										<th th:text="#{general.date.demanded.short}">head</th>										
 										<th th:text="#{movements.code}">head</th>
 										<th th:text="#{movements.description}">head</th>
 										<th th:text="#{movements.category}">head</th>
@@ -499,6 +501,8 @@
 								<tfoot>
 									<tr>
 										<th th:text="#{movements.date}">head</th>
+										<th th:text="#{movements.date.order.short}">head</th>
+										<th th:text="#{general.date.demanded.short}">head</th>
 										<th th:text="#{movements.code}">head</th>
 										<th th:text="#{movements.description}">head</th>
 										<th th:text="#{movements.category}">head</th>
@@ -514,6 +518,10 @@
 								<tbody>
 									<tr th:each="mvt : ${movements}">
 										<td><span th:text="${#dates.format(mvt.date, 'dd.MM.yyyy HH:mm:ss')}"></span></td>
+										<td th:if="${mvt.orderDate} == null"><span th:text="|-|"></span></td>
+										<td th:if="${mvt.orderDate} != null"><span th:text="${#dates.format(mvt.orderDate, 'dd.MM.yyyy')}"></span></td>
+										<td th:if="${mvt.demandedDate} == null"><span th:text="|-|"></span></td>
+										<td th:if="${mvt.demandedDate} != null"><span th:text="${#dates.format(mvt.demandedDate, 'dd.MM.yyyy')}"></span></td>
 										<td><span th:text="${mvt.itemCode}"></span></td>
 										<td><span th:text="${mvt.itemDescription}"></span></td>
 										<td><span th:text="${mvt.itemCategory}"></span></td>

@@ -22,7 +22,8 @@ public class X3ShipmentMovement {
 	private double emergencyAveragePrice;
 	private double price;
 	private double value;
-	
+	private Timestamp orderDate;
+	private Timestamp demandedDate;
 	private String quantityFormat;
 	private String priceFormat;
 	private String valueFormat;
@@ -64,6 +65,22 @@ public class X3ShipmentMovement {
 
 	public void setDate(Timestamp date) {
 		this.date = date;
+	}
+	
+	public Timestamp getOrderDate() {
+		return orderDate;
+	}
+
+	public void setOrderDate(Timestamp orderDate) {
+		this.orderDate = orderDate;
+	}
+
+	public Timestamp getDemandedDate() {
+		return demandedDate;
+	}
+
+	public void setDemandedDate(Timestamp demandedDate) {
+		this.demandedDate = demandedDate;
 	}
 
 	public double getQuantity() {

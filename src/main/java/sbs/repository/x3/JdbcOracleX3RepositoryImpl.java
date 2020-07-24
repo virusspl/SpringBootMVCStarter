@@ -1087,6 +1087,115 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		
 		return result;
 	}
+	
+	@Override
+	public List<X3SalesOrderLine> findAdrSalesOrderLinesBasedOnShipmentMovementsInPeriod(Date startDate, Date endDate) {
+		String company = "ATW";
+		// ===========================================================
+		// ==== TMP JDBC DUALITY =====================================
+		if(company.equalsIgnoreCase("ATW")) {
+			jdbc = jdbc6;
+		}
+		else {
+			jdbc = jdbc11;
+		}
+		// ==== TMP JDBC DUALITY =====================================
+		// ===========================================================
+		
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "SOQ.SOHNUM_0, "
+				+ "SOQ.SOPLIN_0, "
+				+ "SOQ.QTYSTU_0, "
+				+ "(SOQ.QTYSTU_0 - SOQ.ODLQTYSTU_0 - SOQ.DLVQTY_0) AS LEFT_TO_SEND,  "
+				+ "SOQ.DEMDLVDAT_0, "
+				+ "SOP.X_DATAORI_0, "
+				+ "SOQ.CREDAT_0, "
+				+ "SOQ.UPDDAT_0, "
+				+ "SOQ.DEMSTA_0, "
+				+ "SOP.NETPRI_0, "
+				+ "SOR.CUR_0, "
+				+ "SOR.CHGRAT_0, "
+				+ "ITM.ITMREF_0, "
+				+ "ITM.ITMDES1_0, "
+				+ "ITM.TSICOD_0, "
+				+ "ITM.TSICOD_1, "
+				+ "ITM.TSICOD_2, "
+				+ "BPR.BPRNUM_0, "
+				+ "BPR.BPRNAM_0, "
+				+ "BPR.CRY_0 "
+				
+				+ "FROM ("
+				+ "("
+				+ "("
+				+ "(" + company + ".SORDERQ SOQ INNER JOIN " + company + ".SORDERP SOP "
+				+ "ON SOQ.SOHNUM_0 = SOP.SOHNUM_0 AND "
+				+ "SOQ.SOPLIN_0 = SOP.SOPLIN_0 AND "
+				+ "SOQ.SOQSEQ_0 = SOP.SOPSEQ_0 "
+				+ ") "
+				+ "INNER JOIN " + company + ".ITMMASTER ITM "
+				+ "ON SOQ.ITMREF_0 = ITM.ITMREF_0) "
+				+ "INNER JOIN " + company + ".SORDER SOR ON SOQ.SOHNUM_0 = SOR.SOHNUM_0) "
+				+ "INNER JOIN " + company + ".BPARTNER BPR ON SOR.X_CODCLI_0 = BPR.BPRNUM_0) "
+				+ "INNER JOIN " + company + ".YCHGSTKGX YCHGX "
+				+ "ON SOR.SOHNUM_0 = YCHGX.YWO_0 "
+				+ "AND ITM.ITMREF_0 = YCHGX.ITMREF_0 "
+				+ "WHERE "
+				+ "YCHGX.CREDAT_0 >= ? "
+				+ "AND "
+				+ "YCHGX.CREDAT_0 <= ? "
+				+ "AND "
+				+ "YCHGX.LOCDES_0 = ? "
+				+ "AND ("
+				+ "ITM.TCLCOD_0 = ? "
+				+ "OR "
+				+ "ITM.TCLCOD_0 = ? "
+				+ ") "
+				+ "AND "
+				+ "YCHGX.YFLGTRS_0 = 1 "
+				+ "AND "
+				+ "YCHGX.YVCRTYP_0 = 2 "
+				+ "ORDER BY SOQ.CREDAT_0 DESC"
+
+				,
+                new Object[]{
+                		dateHelper.getTime(startDate), 
+						dateHelper.getTime(endDate), 
+						"WGX01", 
+						"AFV", "ACV"}
+				);
+		
+		
+		List<X3SalesOrderLine> list = new ArrayList<>();
+		X3SalesOrderLine line;
+		for(Map<String,Object> row: resultSet ){
+			line = new X3SalesOrderLine();
+			line.setOrderNumber((String)row.get("SOHNUM_0"));
+			line.setOrderLineNumber(((BigDecimal)row.get("SOPLIN_0")).intValue());
+			line.setProductCode((String)row.get("ITMREF_0"));
+			line.setProductDescription((String)row.get("ITMDES1_0"));
+			line.setProductGr1((String)row.get("TSICOD_0"));
+			line.setProductGr2((String)row.get("TSICOD_1"));
+			line.setProductGr3((String)row.get("TSICOD_2"));
+			line.setClientCode((String)row.get("BPRNUM_0"));
+			line.setClientName(((String)row.get("BPRNAM_0")));
+			line.setCountry(((String)row.get("CRY_0")));
+			line.setDemandedDate(((Timestamp)row.get("DEMDLVDAT_0")));
+			line.setOriginalDate(((Timestamp)row.get("X_DATAORI_0")));
+			line.setCreationDate(((Timestamp)row.get("CREDAT_0")));
+			line.setUpdateDate(((Timestamp)row.get("UPDDAT_0")));
+			line.setQuantityLeftToSend(((BigDecimal)row.get("LEFT_TO_SEND")).intValue());
+			line.setQuantityOrdered(((BigDecimal)row.get("QTYSTU_0")).intValue());
+			line.setUnitPrice(((BigDecimal)row.get("NETPRI_0")).doubleValue());
+			line.setExchangeRate(((BigDecimal)row.get("CHGRAT_0")).doubleValue());
+			line.setCurrency((String)row.get("CUR_0"));
+			line.setDemandState(((BigDecimal)row.get("DEMSTA_0")).intValue());
+			list.add(line);
+		}
+
+		
+		return list;
+	}
 
 	@Override
 	public Map<String, X3UtrFault> findUtrFaultsInPeriod(Date startDate, Date endDate) {
