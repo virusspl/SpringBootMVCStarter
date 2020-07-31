@@ -16,6 +16,7 @@ public class SaleShipLine {
 	private String productCode;
 	private String productDescription;
 	private String productGr1;
+	private String productGr2;
 	private String machineCode;
 	private String departmentCode;
 	private int stockProduction;
@@ -175,6 +176,14 @@ public class SaleShipLine {
 
 	public void setProductGr1(String productGr1) {
 		this.productGr1 = productGr1;
+	}
+
+	public String getProductGr2() {
+		return productGr2;
+	}
+
+	public void setProductGr2(String productGr2) {
+		this.productGr2 = productGr2;
 	}
 
 	public String getCountry() {

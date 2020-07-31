@@ -219,10 +219,10 @@
 									<th th:text="#{saleship.date.original}">head</th>
 									<th th:text="#{general.productCode}">head</th>
 									<th th:text="#{general.productDescription}">head</th>
-									<th th:text="|Gr.1|">head</th>
+									<th th:text="|Gr.2|">head</th>
 									<th th:text="#{general.machine}">head</th>
 									<th th:text="#{general.department}">head</th>
-									<th th:text="|#{general.stock} Q|">head</th>
+									<th th:text="|#{general.stock} Q + R|">head</th>
 									<th th:text="#{department.production}">head</th>
 									<th th:text="#{department.shipments}">head</th>
 									<th th:text="#{saleship.lefttosend}">head</th>
@@ -245,7 +245,7 @@
 									<th th:text="#{saleship.date.original}">head</th>																		
 									<th th:text="#{general.productCode}">head</th>
 									<th th:text="#{general.productDescription}">head</th>
-									<th th:text="|Gr.1|">head</th>
+									<th th:text="|Gr.2|">head</th>
 									<th th:text="#{general.machine}">head</th>
 									<th th:text="#{general.department}">head</th>
 									<th th:text="|#{general.stock} Q|">head</th>
@@ -275,7 +275,7 @@
 									</span></td>									
 									<td><span th:text="${line.productCode}"></span></td>
 									<td><span th:text="${line.productDescription}"></span></td>
-									<td><span th:text="${line.productGr1}"></span></td>
+									<td><span th:text="${line.productGr2}"></span></td>
 									<td><span th:text="${line.machineCode}"></span></td>
 									<td><span th:text="#{${line.departmentCode}}"></span></td>
 									<td><span th:text="${line.stockQ}"></span></td>

@@ -113,6 +113,7 @@ public class SaleShipController {
 		Map<String, Integer> magStock = x3Service.findGeneralMagStock("ATW");
 		Map<String, Integer> shipStock = x3Service.findGeneralShipStock("ATW");
 		Map<String, Integer> stockQ = x3Service.findStockByState("Q", "ATW");
+		Map<String, Integer> stockR = x3Service.findStockByState("R", "ATW");
 		Map<String, String> productionOrdersBySaleOrders = x3Service.getPendingProductionOrdersBySaleOrders("ATW");
 		
 		List<SaleShipLine> lines = new ArrayList<>();
@@ -122,7 +123,7 @@ public class SaleShipController {
 		String machineInt;
 		String departmentCodeInt;
 		String productionOrderAndLineInt;
-		
+		int tmpQ, tmpR;
 		for(X3SalesOrderLine ord: orderLines){
 			if(routes.containsKey(ord.getProductCode())){
 				routeInt = getLastRouteLineExcludingKAL(routes.get(ord.getProductCode()));
@@ -150,12 +151,15 @@ public class SaleShipController {
 			line.setProductCode(ord.getProductCode());
 			line.setProductDescription(ord.getProductDescription());
 			line.setProductGr1(ord.getProductGr1());
+			line.setProductGr2(ord.getProductGr2());
 			line.setMachineCode(machineInt);
 			line.setDepartmentCode(departmentCodeInt);
 			line.setDemandStateCode("saleship.demandState."+ord.getDemandState());
 			line.setStockProduction(magStock.containsKey(line.getProductCode()) ? magStock.get(line.getProductCode()) : 0);
 			line.setStockShipments(shipStock.containsKey(line.getProductCode()) ? shipStock.get(line.getProductCode()) : 0);
-			line.setStockQ(stockQ.containsKey(line.getProductCode()) ? stockQ.get(line.getProductCode()) : 0);
+			tmpQ = stockQ.containsKey(line.getProductCode()) ? stockQ.get(line.getProductCode()) : 0;
+			tmpR = stockR.containsKey(line.getProductCode()) ? stockR.get(line.getProductCode()) : 0;
+			line.setStockQ(tmpQ + tmpR);
 			line.setQuantityRemainingToShip(ord.getQuantityLeftToSend());
 			line.setQuantityShipped(ord.getQuantityOrdered()-ord.getQuantityLeftToSend());
 			line.setQuantityToGive(line.getQuantityRemainingToShip()-line.getStockShipments() < 0 ? 0 : line.getQuantityRemainingToShip()-line.getStockShipments() );
