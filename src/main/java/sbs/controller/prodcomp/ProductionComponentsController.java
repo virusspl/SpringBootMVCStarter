@@ -569,10 +569,14 @@ public class ProductionComponentsController {
 						.getFirstUpcomingDeliveriesMapByCodeAfterDate(new java.util.Date(), "ATW");
 				Map<String, X3DeliverySimpleInfo> recentDeliveries = x3Service
 						.getMostRecentDeliveriesMapByCodeBeforeDate(new java.util.Date(), "ATW");
-
+				Map<String, Integer> stockQ = x3Service.findStockByState("Q", "ATW");
+				Map<String, Integer> stockR = x3Service.findStockByState("R", "ATW");
+				
 				List<List<String>> shortageSummary = new ArrayList<>();
 				List<String> shortageLine;
 				String shCode;
+				
+				
 				for (Map.Entry<String, Integer> entry : shortageList.entrySet()) {
 					shortageLine = new ArrayList<>();
 					shCode = entry.getKey();
@@ -583,6 +587,8 @@ public class ProductionComponentsController {
 					shortageLine
 							.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getGr2() : "XXX");
 					shortageLine.add(initStock.getOrDefault(entry.getKey(), 0) + "");
+					shortageLine.add(stockQ.containsKey(shCode) ? stockQ.get(shCode)+"" : 0+"");							
+					shortageLine.add(stockR.containsKey(shCode) ? stockR.get(shCode)+"" : 0+"");					
 					shortageLine.add((expectedDelivery.getOrDefault(entry.getKey(), 0.0)).intValue() + "");
 					shortageLine.add(entry.getValue() + "");
 					shortageLine.add(shortageCost.containsKey(shCode) ? shortageCost.get(shCode) + "" : "-");
@@ -614,7 +620,7 @@ public class ProductionComponentsController {
 									: "-");
 					shortageLine.add(
 							upcomingDeliveries.containsKey(shCode) ? upcomingDeliveries.get(shCode).getCountry() : "-");
-
+					
 					shortageSummary.add(shortageLine);
 				}
 
