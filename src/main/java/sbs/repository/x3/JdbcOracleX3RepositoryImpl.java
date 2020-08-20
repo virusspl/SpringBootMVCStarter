@@ -2592,6 +2592,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "SOR.CHGRAT_0, "
 				+ "ITM.ITMREF_0, "
 				+ "ITM.ITMDES1_0, "
+				+ "ITM.TCLCOD_0, "
 				+ "ITM.TSICOD_0, "
 				+ "ITM.TSICOD_1, "
 				+ "ITM.TSICOD_2, "
@@ -2633,6 +2634,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			line.setOrderLineNumber(((BigDecimal)row.get("SOPLIN_0")).intValue());
 			line.setProductCode((String)row.get("ITMREF_0"));
 			line.setProductDescription((String)row.get("ITMDES1_0"));
+			line.setProductCategory((String)row.get("TCLCOD_0"));
 			line.setProductGr1((String)row.get("TSICOD_0"));
 			line.setProductGr2((String)row.get("TSICOD_1"));
 			line.setProductGr3((String)row.get("TSICOD_2"));

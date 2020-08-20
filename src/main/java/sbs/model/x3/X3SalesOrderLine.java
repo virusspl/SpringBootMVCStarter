@@ -7,6 +7,7 @@ public class X3SalesOrderLine {
 	private int orderLineNumber;
 	private String productCode;
 	private String productDescription;
+	private String productCategory;
 	private String productGr1;
 	private String productGr2;
 	private String productGr3;
@@ -188,6 +189,14 @@ public class X3SalesOrderLine {
 
 	public void setOriginalDate(Timestamp originalDate) {
 		this.originalDate = originalDate;
+	}
+
+	public String getProductCategory() {
+		return productCategory;
+	}
+
+	public void setProductCategory(String productCategory) {
+		this.productCategory = productCategory;
 	}
 
 	@Override

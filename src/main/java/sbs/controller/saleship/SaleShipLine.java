@@ -17,6 +17,7 @@ public class SaleShipLine {
 	private String productDescription;
 	private String productGr1;
 	private String productGr2;
+	private String productCategory;
 	private String machineCode;
 	private String departmentCode;
 	private int stockProduction;
@@ -217,6 +218,15 @@ public class SaleShipLine {
 	public void setDemandStateCode(String demandStateCode) {
 		this.demandStateCode = demandStateCode;
 	}
+
+	public String getProductCategory() {
+		return productCategory;
+	}
+
+	public void setProductCategory(String productCategory) {
+		this.productCategory = productCategory;
+	}
+	
 
 
 	

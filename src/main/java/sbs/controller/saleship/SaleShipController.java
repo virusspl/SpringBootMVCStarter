@@ -150,6 +150,7 @@ public class SaleShipController {
 			line.setUpdateDate(ord.getUpdateDate());
 			line.setProductCode(ord.getProductCode());
 			line.setProductDescription(ord.getProductDescription());
+			line.setProductCategory(ord.getProductCategory());
 			line.setProductGr1(ord.getProductGr1());
 			line.setProductGr2(ord.getProductGr2());
 			line.setMachineCode(machineInt);
