@@ -39,6 +39,7 @@ import sbs.model.x3.X3BomPart;
 import sbs.model.x3.X3ConsumptionProductInfo;
 import sbs.model.x3.X3DeliverySimpleInfo;
 import sbs.model.x3.X3Product;
+import sbs.model.x3.X3SaleInfo;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.system.MemoryService;
@@ -99,7 +100,7 @@ public class ProductionComponentsController {
 	}
 
 	@RequestMapping(value = "/findcomponents", params = { "find" }, method = RequestMethod.POST)
-	public String findChains(@Valid FormFindComponents formFindComponents, BindingResult bindingResult,
+	public String findComponents(@Valid FormFindComponents formFindComponents, BindingResult bindingResult,
 			RedirectAttributes redirectAttrs, Model model) {
 
 		if (bindingResult.hasErrors()) {
@@ -983,6 +984,57 @@ public class ProductionComponentsController {
 			clone.add(new X3BomPart(part));
 		}
 		return clone;
+	}
+	
+	@RequestMapping(value = "/nobomcodes")
+	public String noBomCodes(Model model) {
+
+		Calendar today = Calendar.getInstance();
+
+		// get sale for current period (year)
+		Calendar startDate = Calendar.getInstance();
+		startDate.set(Calendar.MONTH, 0);
+		startDate.set(Calendar.DAY_OF_MONTH, 1);
+		Calendar endDate = Calendar.getInstance();
+		endDate.set(Calendar.MONTH, 11);
+		endDate.set(Calendar.DAY_OF_MONTH, 31);
+		Map<String, X3SaleInfo> saleCurrent = x3Service.getSaleInfoInPeriod(startDate.getTime(), endDate.getTime(), "ATW");
+		
+		// get sale for previous period (year - 1)
+		startDate.add(Calendar.YEAR, -1);
+		endDate.add(Calendar.YEAR, -1);
+		Map<String, X3SaleInfo> salePrevious = x3Service.getSaleInfoInPeriod(startDate.getTime(), endDate.getTime(), "ATW");
+		
+		// get sale for previous period (year - 2)
+		startDate.add(Calendar.YEAR, -1);
+		endDate.add(Calendar.YEAR, -1);
+		Map<String, X3SaleInfo> sale2YearsBack = x3Service.getSaleInfoInPeriod(startDate.getTime(), endDate.getTime(), "ATW");
+		
+		// get GEODE stock
+		Map<String, Integer> geoProduction = geodeService.findStockListForStoreType(JdbcOracleGeodeService.STORE_TYPE_PRODUCTION);
+		Map<String, Integer> geoReceptions = geodeService.findStockListForStoreType(JdbcOracleGeodeService.STORE_TYPE_RECEPTIONS);
+		Map<String, Integer> geoShipments = geodeService.findStockListForStoreType(JdbcOracleGeodeService.STORE_TYPE_SHIPMENTS);
+		
+		// get no bom codes list
+		List<NoBomCodeInfo> noBomCodes = x3Service.getNoBomCodesListIncompleteObjects("ATW");
+		int gsProd, gsRcp, gsShi;
+		for(NoBomCodeInfo inf: noBomCodes) {
+			inf.setSaleCurrentYear((int)(saleCurrent.containsKey(inf.getCode()) ? saleCurrent.get(inf.getCode()).getValuePln() : 0));
+			inf.setSalePreviousYear((int)(salePrevious.containsKey(inf.getCode()) ? salePrevious.get(inf.getCode()).getValuePln() : 0));
+			inf.setSale2YearsBack((int)(sale2YearsBack.containsKey(inf.getCode()) ? sale2YearsBack.get(inf.getCode()).getValuePln() : 0));
+			gsProd = geoProduction.containsKey(inf.getCode()) ? geoProduction.get(inf.getCode()) : 0;
+			gsRcp = geoReceptions.containsKey(inf.getCode()) ? geoReceptions.get(inf.getCode()) : 0;
+			gsShi = geoShipments.containsKey(inf.getCode()) ? geoShipments.get(inf.getCode()) : 0;
+			inf.setStockGeode(gsProd + gsRcp + gsShi);
+		}
+		
+		
+		model.addAttribute("noBomCodes", noBomCodes);
+		model.addAttribute("y0", today.get(Calendar.YEAR));
+		model.addAttribute("y1", today.get(Calendar.YEAR)-1);
+		model.addAttribute("y2", today.get(Calendar.YEAR)-2);
+		
+		return "/prodcomp/nobomcodesview";
 	}
 
 }

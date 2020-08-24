@@ -24,6 +24,7 @@ import org.springframework.stereotype.Repository;
 
 import sbs.config.error.NotFoundException;
 import sbs.controller.dirrcpship.DirectReceptionsShipmentLine;
+import sbs.controller.prodcomp.NoBomCodeInfo;
 import sbs.helpers.DateHelper;
 import sbs.model.proprog.Project;
 import sbs.model.wpslook.WpslookRow;
@@ -45,6 +46,7 @@ import sbs.model.x3.X3ProductSellDemand;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3PurchaseOrder;
 import sbs.model.x3.X3RouteLine;
+import sbs.model.x3.X3SaleInfo;
 import sbs.model.x3.X3SalesOrder;
 import sbs.model.x3.X3SalesOrderItem;
 import sbs.model.x3.X3SalesOrderLine;
@@ -4522,6 +4524,105 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         }
 		
 		return historyMap;
+	}
+
+	@Override
+	public List<NoBomCodeInfo> getNoBomCodesListIncompleteObjects(String company) {
+		// ===========================================================
+		// ==== TMP JDBC DUALITY =====================================
+		if(company.equalsIgnoreCase("ATW")) {
+			jdbc = jdbc6;
+		}
+		else {
+			jdbc = jdbc11;
+		}
+		// ==== TMP JDBC DUALITY =====================================
+		// ===========================================================
+		
+		List<Map<String,Object>> resultSet = jdbc.queryForList( ""
+				+ "SELECT "
+				+ "ITM.ITMREF_0, "
+				+ "ITM.ITMDES1_0, "
+				+ "ITM.TSICOD_0, "
+				+ "ITM.TSICOD_1, "
+				+ "ITM.TCLCOD_0, "
+				+ "ITV.PHYSTO_0, "
+				+ "ITM.CREDAT_0, "
+				+ "ITV.LASRCPDAT_0, "
+				+ "ITV.LASISSDAT_0, "
+				+ "BOD.CPNITMREF_0 "
+				+ "FROM "
+				+ "(" + company + ".ITMMASTER ITM "
+				+ "INNER JOIN " + company + ".ITMMVT ITV "
+				+ "ON ITM.ITMREF_0 = ITV.ITMREF_0) "
+				+ "LEFT JOIN " + company + ".BOMD BOD "
+				+ "ON ITV.ITMREF_0 = BOD.CPNITMREF_0 "
+				+ "WHERE ITM.ITMSTA_0 = 1  AND BOD.CPNITMREF_0 IS NULL"
+				,
+                new Object[]{});
+		
+		List<NoBomCodeInfo> list = new ArrayList<>();
+        NoBomCodeInfo inf;
+        for(Map<String,Object> row: resultSet ){
+        	inf = new NoBomCodeInfo();
+        	inf.setCode((String)row.get("ITMREF_0"));
+        	inf.setCategory((String)row.get("TCLCOD_0"));
+        	inf.setCreationDate((Timestamp)row.get("CREDAT_0"));
+        	inf.setDescription((String)row.get("ITMDES1_0"));
+        	inf.setGr1((String)row.get("TSICOD_0"));
+        	inf.setGr2((String)row.get("TSICOD_1"));
+        	inf.setLastIssueDate((Timestamp)row.get("LASISSDAT_0"));
+        	inf.setLastReceptionDate((Timestamp)row.get("LASRCPDAT_0"));
+        	inf.setStockX3(((BigDecimal)row.get("PHYSTO_0")).intValue());
+
+        	list.add(inf);
+        }
+        
+        return list;
+	}
+
+	@Override
+	public Map<String, X3SaleInfo> getSaleInfoInPeriod(Date startDate, Date endDate, String company) {
+		// ===========================================================
+		// ==== TMP JDBC DUALITY =====================================
+		if(company.equalsIgnoreCase("ATW")) {
+			jdbc = jdbc6;
+		}
+		else {
+			jdbc = jdbc11;
+		}
+		// ==== TMP JDBC DUALITY =====================================
+		// ===========================================================
+		
+		List<Map<String,Object>> resultSet = jdbc.queryForList( ""
+				+ "SELECT "
+				+ "SID.ITMREF_0, "
+				+ "Sum(SID.NETPRI_0 * SIH.RATMLT_0 * SID.QTY_0) AS VALUE_PLN, "
+				+ "Sum(SID.QTY_0) AS QUANTITY "
+				+ "FROM "
+				+ company + ".SINVOICED SID INNER JOIN " + company + ".SINVOICE SIH "
+				+ "ON SID.NUM_0 = SIH.NUM_0 "
+				+ "WHERE "
+				+ "SID.INVDAT_0 >= ? "
+				+ "AND "
+				+ "SID.INVDAT_0 <= ? "
+				+ "GROUP BY SID.ITMREF_0"
+				,
+                new Object[]{startDate, endDate});
+		
+		Map<String, X3SaleInfo> map = new HashMap<>();
+        X3SaleInfo inf;
+        
+        for(Map<String,Object> row: resultSet ){
+        	inf = new X3SaleInfo();
+        	inf.setCode((String)row.get("ITMREF_0"));
+        	inf.setValuePln(((BigDecimal)row.get("VALUE_PLN")).doubleValue());
+        	inf.setQuantity(((BigDecimal)row.get("QUANTITY")).intValue());
+        	
+        	map.put(inf.getCode(), inf);
+        }
+        
+        return map;
 	}
 
 	

@@ -6,8 +6,44 @@ import java.util.Locale;
 import java.util.Map;
 
 import sbs.controller.dirrcpship.DirectReceptionsShipmentLine;
+import sbs.controller.prodcomp.NoBomCodeInfo;
 import sbs.model.proprog.Project;
-import sbs.model.x3.*;
+import sbs.model.x3.X3AvgPriceLine;
+import sbs.model.x3.X3BomItem;
+import sbs.model.x3.X3BomPart;
+import sbs.model.x3.X3Client;
+import sbs.model.x3.X3ConsumptionProductInfo;
+import sbs.model.x3.X3ConsumptionSupplyInfo;
+import sbs.model.x3.X3CoverageData;
+import sbs.model.x3.X3DeliverySimpleInfo;
+import sbs.model.x3.X3EnvironmentInfo;
+import sbs.model.x3.X3KeyValString;
+import sbs.model.x3.X3Product;
+import sbs.model.x3.X3ProductEventsHistory;
+import sbs.model.x3.X3ProductFinalMachine;
+import sbs.model.x3.X3ProductSellDemand;
+import sbs.model.x3.X3ProductionOrderDetails;
+import sbs.model.x3.X3PurchaseOrder;
+import sbs.model.x3.X3RouteLine;
+import sbs.model.x3.X3SaleInfo;
+import sbs.model.x3.X3SalesOrder;
+import sbs.model.x3.X3SalesOrderItem;
+import sbs.model.x3.X3SalesOrderLine;
+import sbs.model.x3.X3ShipmentMovement;
+import sbs.model.x3.X3ShipmentStockLineWithPrice;
+import sbs.model.x3.X3StandardCostEntry;
+import sbs.model.x3.X3StoreInfo;
+import sbs.model.x3.X3Supplier;
+import sbs.model.x3.X3SupplyStatInfo;
+import sbs.model.x3.X3ToolEntry;
+import sbs.model.x3.X3UsageDetail;
+import sbs.model.x3.X3UtrFault;
+import sbs.model.x3.X3UtrFaultLine;
+import sbs.model.x3.X3UtrMachine;
+import sbs.model.x3.X3UtrWorker;
+import sbs.model.x3.X3WarehouseWeightDetailLine;
+import sbs.model.x3.X3WarehouseWeightLine;
+import sbs.model.x3.X3Workstation;
 
 public interface JdbcOracleX3Service {
 	
@@ -110,6 +146,8 @@ public interface JdbcOracleX3Service {
 	public Map<String, Integer> findProductsInReplenish(String string);
 	public Map<String, X3ProductEventsHistory> getAcvProductsEventsHistory(Date startDate, Date endDate, List<X3ConsumptionProductInfo> acvInfo, String company);
 	public List<X3SalesOrderLine> findAdrSalesOrderLinesBasedOnShipmentMovementsInPeriod(Date startDate, Date endDate);
+	public List<NoBomCodeInfo> getNoBomCodesListIncompleteObjects(String company);
+	public Map<String, X3SaleInfo> getSaleInfoInPeriod(Date startDate, Date endDate, String company);
 	
 	
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import sbs.controller.dirrcpship.DirectReceptionsShipmentLine;
+import sbs.controller.prodcomp.NoBomCodeInfo;
 import sbs.model.proprog.Project;
 import sbs.model.wpslook.WpslookRow;
 import sbs.model.x3.X3AvgPriceLine;
@@ -24,6 +25,7 @@ import sbs.model.x3.X3ProductSellDemand;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3PurchaseOrder;
 import sbs.model.x3.X3RouteLine;
+import sbs.model.x3.X3SaleInfo;
 import sbs.model.x3.X3SalesOrder;
 import sbs.model.x3.X3SalesOrderItem;
 import sbs.model.x3.X3SalesOrderLine;
@@ -131,6 +133,8 @@ public interface JdbcOracleX3Repository  {
 	public Map<String, Integer> findProductsInReplenish(String company);
 	public Map<String, X3ProductEventsHistory> getAcvProductsEventsHistory(Date startDate, Date endDate, List<X3ConsumptionProductInfo> acvInfo, String company);
 	public List<X3SalesOrderLine> findAdrSalesOrderLinesBasedOnShipmentMovementsInPeriod(Date startDate, Date endDate);
+	public List<NoBomCodeInfo> getNoBomCodesListIncompleteObjects(String company);
+	public Map<String, X3SaleInfo> getSaleInfoInPeriod(Date startDate, Date endDate, String company);
 
 	
 	

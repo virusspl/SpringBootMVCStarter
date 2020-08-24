@@ -264,7 +264,8 @@
 					<div class="form-group">
 						<label for="replenish" th:text="#{prodcomp.replenish}"></label>
 						<div id="replenish" class="checkbox">
-							<label><input type="checkbox" name="replenish" id="replenish" checked="checked"/><span
+							<label><input type="checkbox" name="replenish"
+								id="replenish" checked="checked" /><span
 								th:text="#{prodcomp.replenish}"></span></label>
 						</div>
 					</div>
@@ -290,6 +291,25 @@
 				</div>
 			</div>
 		</form>
+		<!-- /PLAN FORM -->
+		<!-- NO BOM CODES -->
+		<div class="row">
+			<!-- left -->
+			<div class="col-xs-12">
+				<h3 th:text="#{prodcomp.nobomcodes.title}"
+					class="text-primary margin-top-20"></h3>
+				<div class="underline margin-bottom-10"></div>
+				<span th:utext="#{prodcomp.nobomcodes.message}"></span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<a class="btn btn-primary btn-sm margin-top-10" th:href="@{/prodcomp/nobomcodes/}">
+					<span class="glyphicon glyphicon-adjust"></span>&nbsp;&nbsp;<span
+						th:text="#{prodcomp.nobomcodes.title}"></span>
+				</a>
+			</div>
+		</div>
 		<!-- /PLAN FORM -->
 	</div>
 </body>

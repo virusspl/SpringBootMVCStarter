@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+<title th:if="${title}" th:text="${title}"></title>
+</head>
+<body>
+	<div layout:fragment="script">
+
+		<script th:src="@{/datatables/jquery.dataTables.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/dataTables.helper.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/buttons.flash.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/buttons.html5.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/buttons.print.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/dataTables.buttons.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/jszip.min.js}" type="text/javascript"></script>
+		<script th:src="@{/datatables/pdfmake.min.js}" type="text/javascript"></script>
+		<script th:src="@{/datatables/vfs_fonts.js}" type="text/javascript"></script>
+		<script th:if="__${#locale}__ == 'pl'">
+			var file = "polish.json";
+		</script>
+		<script th:if="__${#locale}__ == 'en'">
+			var file = "english.json";
+		</script>
+		<script th:if="__${#locale}__ == 'it'">
+			var file = "italian.json";
+		</script>
+		<script>
+			$('#srv').DataTable({
+				language : {
+					url : getUrl() + file,
+				},
+				order : [ [ 0, 'asc' ] ],
+				paging : true,
+				dom : 'Bfrtip',
+				buttons : [ {
+					extend : 'excel',
+					text : 'Excel'
+				}, {
+					extend : 'pdfHtml5',
+					orientation : 'portrait'
+				} ]
+			});
+			$('#srv1').DataTable({
+				language : {
+					url : getUrl() + file,
+				},
+				order : [ [ 0, 'asc' ] ],
+				paging : true,
+				dom : 'Bfrtip',
+				buttons : [ {
+					extend : 'excel',
+					text : 'Excel'
+				}, {
+					extend : 'pdfHtml5',
+					orientation : 'portrait'
+				} ]
+			});
+			$('#srv2').DataTable({
+				language : {
+					url : getUrl() + file,
+				},
+				ordering : false,
+				paging : true,
+				dom : 'Bfrtip',
+				buttons : [ {
+					extend : 'excel',
+					text : 'Excel'
+				}, {
+					extend : 'pdfHtml5',
+					orientation : 'portrait'
+				} ]
+			});
+		</script>
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h1 th:text="#{prodcomp.nobomcodes.title}" class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{prodcomp.nobomcodes.message}"> Welcome message </span>
+			</div>
+			<a th:href="@{'/prodcomp/main'}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+		<div class="row" th:if="${noBomCodes}">
+			<div class="col-xs-12">
+				<h1 th:text="#{general.list}" class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12">
+				<div class="table-responsive">
+					<table id="srv" class="display" style="font-size: 90%;">
+						<thead>
+							<tr>
+								<th th:text="#{general.productCode}">head</th>
+								<th th:text="#{general.productDescription}">head</th>
+								<th th:text="#{general.category}">head</th>
+								<th th:text="|Gr. 1|">head</th>
+								<th th:text="|Gr. 2|">head</th>
+								<th th:text="#{general.date.creation}">head</th>
+								<th th:text="#{general.date.lastreception}">head</th>
+								<th th:text="#{general.date.lastissue}">head</th>
+								<th th:text="|#{general.stock} X3|">head</th>
+								<th th:text="|#{general.stock} GEODE|">head</th>
+								<th th:text="|#{general.sales} ${y0}|">head</th>
+								<th th:text="|#{general.sales} ${y1}|">head</th>
+								<th th:text="|#{general.sales} ${y2}|">head</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="line : ${noBomCodes}">
+								<td><span th:text="|${line.code}|"></span></td>
+								<td><span th:text="|${line.description}|"></span></td>
+								<td><span th:text="|${line.category}|"></span></td>
+								<td><span th:text="|${line.gr1}|"></span></td>
+								<td><span th:text="|${line.gr2}|"></span></td>
+								<td><span th:text="${#dates.format(line.creationDate, 'yyyy.MM.dd')}"></span></td>
+								<td><span th:text="${#dates.format(line.lastReceptionDate, 'yyyy.MM.dd')}"></span></td>
+								<td><span th:text="${#dates.format(line.lastIssueDate, 'yyyy.MM.dd')}"></span></td>
+								<td><span th:text="|${line.stockX3}|"></span></td>
+								<td><span th:text="|${line.stockGeode}|"></span></td>
+								<td><span th:text="|${line.saleCurrentYear}|"></span></td>
+								<td><span th:text="|${line.salePreviousYear}|"></span></td>
+								<td><span th:text="|${line.sale2YearsBack}|"></span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div class="row" th:if="${salesObjects}">
+			<div class="col-xs-12">
+				<h3 th:text="|${component} - ${componentDescription} ${coverage}|"
+					class="text-primary"></h3>
+			</div>
+			<div class="col-xs-12">
+				<div class="table-responsive">
+					<table id="srv1" class="display" style="font-size: 90%;">
+						<thead>
+							<tr>
+								<th th:text="#{general.productCode}">head</th>
+								<th th:text="#{general.productDescription}">head</th>
+								<th th:text="#{general.client.code}">head</th>
+								<th th:text="#{general.client.name}">head</th>
+								<th th:text="#{general.order.sales}">head</th>
+								<th th:text="#{general.line}">head</th>
+								<th th:text="#{general.date.demanded.short}">head</th>
+								<th th:text="#{prodtosale.ordered}">head</th>
+								<th th:text="#{prodtosale.lefttosend}">head</th>
+								<th th:text="|#{general.value} [PLN]|">head</th>
+							</tr>
+						</thead>
+						<tbody>
+							<div th:each="obj : ${salesObjects}">
+								<tr>
+									<td><span th:text="${obj.line.productCode}"></span></td>
+									<td><span th:text="${obj.line.productDescription}"></span></td>
+									<td><span th:text="${obj.line.clientCode}"></span></td>
+									<td><span th:text="${obj.line.clientName}"></span></td>
+									<td><span th:text="${obj.line.orderNumber}"></span></td>
+									<td><span th:text="${obj.line.orderLineNumber}"></span></td>
+									<td><span
+										th:text="${#dates.format(obj.line.demandedDate, 'yyyy.MM.dd')}"></span></td>
+									<td><span th:text="${obj.line.quantityOrdered}"></span></td>
+									<td><span th:text="${obj.line.quantityLeftToSend}"></span></td>
+									<td><span
+										th:text="${#numbers.formatDecimal(obj.toSendValue, 1, 'WHITESPACE', 2, 'POINT')}"></span></td>
+
+								</tr>
+								<tr th:each="chain : ${obj.chains}">
+									<td colspan="10">
+										<ul style="margin: 0px; padding: 0px;">
+											<li style="display: inline;" th:each="part: ${chain}"><span
+												th:text="|
+												${part.parentCode} &nbsp; 
+												[${#numbers.formatDecimal(part.quantityDemand, 1, 'NONE', 0, 'POINT')} 
+												/ 
+												${#numbers.formatDecimal(part.currentStock, 1, 'NONE', 0, 'POINT')}] 
+												|"
+												th:class="${part.quantityDemand} > ${part.currentStock} ? 'btn btn-danger btn-xs margin-bottom-5 margin-right-5' : 'btn btn-success btn-xs margin-bottom-5'"></span>
+
+											</li>
+										</ul>
+									</td>
+								</tr>
+							</div>
+						</tbody>
+						<tfoot>
+							<tr>
+								<th th:text="#{general.productCode}">head</th>
+								<th th:text="#{general.productDescription}">head</th>
+								<th th:text="#{general.client.code}">head</th>
+								<th th:text="#{general.client.name}">head</th>
+								<th th:text="#{general.order.sales}">head</th>
+								<th th:text="#{general.line}">head</th>
+								<th th:text="#{general.date.demanded.short}">head</th>
+								<th th:text="#{prodtosale.ordered}">head</th>
+								<th th:text="#{prodtosale.lefttosend}">head</th>
+								<th th:text="|#{general.value} [PLN]]|">head</th>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div class="row" th:if="${salesObjects}">
+			<div class="col-xs-12">
+				<h3 th:text="|${component} - ${componentDescription} ${coverage}|"
+					class="text-primary"></h3>
+			</div>
+			<div class="col-xs-12">
+				<div class="table-responsive">
+					<table id="srv" class="display" style="font-size: 90%;">
+						<thead>
+							<tr>
+								<th th:text="#{general.productCode}">head</th>
+								<th th:text="#{general.productDescription}">head</th>
+								<th th:text="#{general.client.code}">head</th>
+								<th th:text="#{general.client.name}">head</th>
+								<th th:text="#{general.order.sales}">head</th>
+								<th th:text="#{general.line}">head</th>
+								<th th:text="#{general.date.demanded.short}">head</th>
+								<th th:text="#{prodtosale.ordered}">head</th>
+								<th th:text="#{prodtosale.lefttosend}">head</th>
+								<th th:text="|#{general.value} [PLN]|">head</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="obj : ${salesObjects}">
+								<td><span th:text="${obj.line.productCode}"></span></td>
+								<td><span th:text="${obj.line.productDescription}"></span></td>
+								<td><span th:text="${obj.line.clientCode}"></span></td>
+								<td><span th:text="${obj.line.clientName}"></span></td>
+								<td><span th:text="${obj.line.orderNumber}"></span></td>
+								<td><span th:text="${obj.line.orderLineNumber}"></span></td>
+								<td><span
+									th:text="${#dates.format(obj.line.demandedDate, 'yyyy.MM.dd')}"></span></td>
+								<td><span th:text="${obj.line.quantityOrdered}"></span></td>
+								<td><span th:text="${obj.line.quantityLeftToSend}"></span></td>
+								<td><span
+									th:text="${#numbers.formatDecimal(obj.toSendValue, 1, 'NONE', 2, 'POINT')}"></span></td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<th th:text="#{general.productCode}">head</th>
+								<th th:text="#{general.productDescription}">head</th>
+								<th th:text="#{general.client.code}">head</th>
+								<th th:text="#{general.client.name}">head</th>
+								<th th:text="#{general.order.sales}">head</th>
+								<th th:text="#{general.line}">head</th>
+								<th th:text="#{general.date.demanded.short}">head</th>
+								<th th:text="#{prodtosale.ordered}">head</th>
+								<th th:text="#{prodtosale.lefttosend}">head</th>
+								<th th:text="|#{general.value} [PLN]]|">head</th>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div class="row" th:if="${planlines}">
+			<div class="col-xs-12">
+				<h1 th:text="#{prodcomp.shortage.list}" class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12">
+				<div class="table-responsive">
+					<table id="srv2" class="display" style="font-size: 90%;">
+						<thead>
+							<tr>
+								<th th:text="#{general.order.sales}">head</th>
+								<th th:text="#{general.productCode}">head</th>
+								<th th:text="#{general.productDescription}">head</th>
+								<th th:text="|Gr. 2|">head</th>
+								<th th:text="#{general.date}">head</th>
+								<th th:text="#{general.client.name}">head</th>
+								<th th:text="#{general.country}">head</th>
+								<th th:text="#{general.line.value}">head</th>
+								<th th:text="#{prodcomp.shortage.value.short}">head</th>
+								<th th:text="#{general.quantity}">head</th>
+								<th th:text="#{prodcomp.maxproduction.short}">head</th>
+								<th th:text="#{prodcomp.shortage.quantity.short}">head</th>
+								<th th:text="#{general.state}">head</th>
+								<th th:text="#{prodcomp.inOrder.short}">head</th>
+								<th th:text="#{prodcomp.delivery.latest}">head</th>
+								<th th:text="#{prodcomp.shortage.list}">head</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="line : ${planlines}">
+								<td><span th:text="${line[0]}"></span></td>
+								<td><span th:text="${line[1]}"></span></td>
+								<td><span th:text="${line[2]}"></span></td>
+								<td><span th:text="${line[3]}"></span></td>
+								<td><span th:text="${line[4]}"></span></td>
+								<td><span th:text="${line[5]}"></span></td>
+								<td><span th:text="${line[6]}"></span></td>
+								<td><span th:text="${line[7]}"></span></td>
+								<td><span th:text="${line[8]}"></span></td>
+								<td><span th:text="${line[9]}"></span></td>
+								<td><span th:text="${line[10]}"></span></td>
+								<td><span th:text="${line[11]}"></span></td>
+								<td><span th:text="#{${line[12]}}"></span></td>
+								<td><span th:text="${line[13]}"></span></td>
+								<td><span th:text="${line[14]}"></span></td>
+								<td><span th:text="${line[15]}"></span></td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<th th:text="#{general.order.sales}">head</th>
+								<th th:text="#{general.productCode}">head</th>
+								<th th:text="#{general.productDescription}">head</th>
+								<th th:text="|Gr. 2|">head</th>
+								<th th:text="#{general.date}">head</th>
+								<th th:text="#{general.client.name}">head</th>
+								<th th:text="#{general.country}">head</th>
+								<th th:text="#{general.line.value}">head</th>
+								<th th:text="#{prodcomp.shortage.value.short}">head</th>
+								<th th:text="#{general.quantity}">head</th>
+								<th th:text="#{prodcomp.maxproduction.short}">head</th>
+								<th th:text="#{prodcomp.shortage.quantity.short}">head</th>
+								<th th:text="#{general.state}">head</th>
+								<th th:text="#{prodcomp.inOrder.short}">head</th>
+								<th th:text="#{prodcomp.delivery.latest}">head</th>
+								<th th:text="#{prodcomp.shortage.list}">head</th>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+<a th:href="@{'/prodcomp/main'}"
+				class="btn btn-link btn-sm margin-top-10"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+			</div>
+		</div>
+
+		<div class="row" th:if="${shortage}">
+			<div class="col-xs-12">
+				<h1 th:text="|#{prodcomp.shortage.list} - #{general.summary}|"
+					class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12">
+				<div class="table-responsive">
+					<table id="srv" class="display" style="font-size: 90%;">
+						<thead>
+							<tr>
+								<th th:text="#{general.productCode}">head</th>
+								<th th:text="#{general.productDescription}">head</th>
+								<th th:text="|Gr. 2|">head</th>
+								<th th:text="#{prodcomp.initialQuantity.short}">head</th>
+								<th th:text="|#{general.quantity} Q|">head</th>
+								<th th:text="|#{general.quantity} R|">head</th>
+								<th th:text="|#{prodcomp.inOrder.short} [${days}]|">head</th>
+								<th th:text="#{prodcomp.shortage}">head</th>
+								<th th:text="#{prodcomp.shortage.cost}">head</th>
+								<th th:text="|#{prodcomp.recent} - #{general.date}|">head</th>
+								<th th:text="|#{prodcomp.recent} - #{general.quantity}|">head</th>
+								<th th:text="|#{prodcomp.recent} - #{general.supplier.code}|">head</th>
+								<th th:text="|#{prodcomp.recent} - #{general.supplier.name}|">head</th>
+								<th th:text="|#{prodcomp.recent} - #{general.country}|">head</th>
+								<th th:text="|#{prodcomp.upcoming} - #{general.date}|">head</th>
+								<th th:text="|#{prodcomp.upcoming} - #{general.quantity}|">head</th>
+								<th th:text="|#{prodcomp.upcoming} - #{general.supplier.code}|">head</th>
+								<th th:text="|#{prodcomp.upcoming} - #{general.supplier.name}|">head</th>
+								<th th:text="|#{prodcomp.upcoming} - #{general.country}|">head</th>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<th th:text="#{general.productCode}">head</th>
+								<th th:text="#{general.productDescription}">head</th>
+								<th th:text="|Gr. 2|">head</th>
+								<th th:text="#{prodcomp.initialQuantity.short}">head</th>
+								<th th:text="|#{general.quantity} Q|">head</th>
+								<th th:text="|#{general.quantity} R|">head</th>
+								<th th:text="|#{prodcomp.inOrder.short} [${days}]|">head</th>
+								<th th:text="#{prodcomp.shortage}">head</th>
+								<th th:text="#{prodcomp.shortage.cost}">head</th>
+								<th th:text="|#{prodcomp.recent} - #{general.date}|">head</th>
+								<th th:text="|#{prodcomp.recent} - #{general.quantity}|">head</th>
+								<th th:text="|#{prodcomp.recent} - #{general.supplier.code}|">head</th>
+								<th th:text="|#{prodcomp.recent} - #{general.supplier.name}|">head</th>
+								<th th:text="|#{prodcomp.recent} - #{general.country}|">head</th>
+								<th th:text="|#{prodcomp.upcoming} - #{general.date}|">head</th>
+								<th th:text="|#{prodcomp.upcoming} - #{general.quantity}|">head</th>
+								<th th:text="|#{prodcomp.upcoming} - #{general.supplier.code}|">head</th>
+								<th th:text="|#{prodcomp.upcoming} - #{general.supplier.name}|">head</th>
+								<th th:text="|#{prodcomp.upcoming} - #{general.country}|">head</th>
+							</tr>
+						</tfoot>
+						<tbody>
+							<tr th:each="line : ${shortage}">
+								<td><span th:text="${line[0]}"></span></td>
+								<td><span th:text="${line[1]}"></span></td>
+								<td><span th:text="${line[2]}"></span></td>
+								<td><span th:text="${line[3]}"></span></td>
+								<td><span th:text="${line[4]}"></span></td>
+								<td><span th:text="${line[5]}"></span></td>
+								<td><span th:text="${line[6]}"></span></td>
+								<td><span th:text="${line[7]}"></span></td>
+								<td><span
+									th:text="${#numbers.formatDecimal(line[8], 0, 'NONE', 2, 'POINT')}"></span></td>
+								<td><span th:text="${line[9]}"></span></td>
+								<td><span th:text="${line[10]}"></span></td>
+								<td><span th:text="${line[11]}"></span></td>
+								<td><span th:text="${line[12]}"></span></td>
+								<td><span th:text="${line[13]}"></span></td>
+								<td><span th:text="${line[14]}"></span></td>
+								<td><span th:text="${line[15]}"></span></td>
+								<td><span th:text="${line[16]}"></span></td>
+								<td><span th:text="${line[17]}"></span></td>
+								<td><span th:text="${line[18]}"></span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+								<a th:href="@{'/prodcomp/main'}"
+				class="btn btn-link btn-sm margin-top-10"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+			</div>
+		</div>
+
+	</div>
+</body>
+</html>
