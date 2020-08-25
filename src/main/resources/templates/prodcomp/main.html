@@ -304,7 +304,9 @@
 		</div>
 		<div class="row">
 			<div class="col-xs-12">
-				<a class="btn btn-primary btn-sm margin-top-10" th:href="@{/prodcomp/nobomcodes/}">
+				<a class="btn btn-primary btn-sm margin-top-10" th:href="@{/prodcomp/nobomcodes/}"
+				th:title="|#{general.warning.longrender}|"
+				data-toggle="tooltip" data-placement="right">
 					<span class="glyphicon glyphicon-adjust"></span>&nbsp;&nbsp;<span
 						th:text="#{prodcomp.nobomcodes.title}"></span>
 				</a>
