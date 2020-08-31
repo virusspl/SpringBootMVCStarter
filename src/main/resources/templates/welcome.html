@@ -438,7 +438,14 @@
 						class="btn btn-info btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-object-align-left"></span> <span
 						th:text="|#{stocksum.title}|">title</span>
-					</a> <a th:href="@{/saleship/main}"
+					</a> 
+					<a th:href="@{/magpart/list}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STOCKSUMUSER')"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-object-align-left"></span> <span
+						th:text="|#{magpart.title}|">title</span>
+					</a> 
+					<a th:href="@{/saleship/main}"
 						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SALESHIPUSER')"
 						class="btn btn-info btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-share"></span> <span

@@ -274,7 +274,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"AVGPRICESUSER"
 				)
 		.antMatchers(
-				"/stocksum/**"
+				"/stocksum/**",
+				"/magpart/**"
 				)
 		.hasAnyRole(
 				"ADMIN", 

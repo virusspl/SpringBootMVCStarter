@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import sbs.model.geode.GeodeMovement;
 import sbs.model.geode.GeodeObject;
+import sbs.model.geode.GeodeQuantityObject;
 
 @Repository
 public class JdbcOracleGeodeRepositoryImpl implements JdbcOracleGeodeRepository {
@@ -283,6 +284,63 @@ public class JdbcOracleGeodeRepositoryImpl implements JdbcOracleGeodeRepository 
         }
         
         return result;
+	}
+
+
+	@Override
+	public Map<String, GeodeQuantityObject> findGeneralStockForAllCodes() {
+
+        List<Map<String,Object>> resultSet = jdbc.queryForList(
+        		"SELECT "
+        		+ "GEOATW.STOCKOBJ.ITM_0 AS ITM, "
+        		+ "COUNT(GEOATW.STOCKOBJ.SKONUM_0) AS CNT, "
+        		+ "SUM(GEOATW.STOCKOBJ.CSUQTY_0) AS QTY "
+        		+ "FROM "
+        		+ "GEOATW.STOCKOBJ "
+        		+ "GROUP BY GEOATW.STOCKOBJ.ITM_0 "
+                ,
+                new Object[]{});
+        
+        Map<String, GeodeQuantityObject> map = new HashMap<>();
+        GeodeQuantityObject gq;
+        for(Map<String,Object> row: resultSet ){
+        	gq = new GeodeQuantityObject();
+        	gq.setCode((String)row.get("ITM"));
+        	gq.setQuantity(((BigDecimal)row.get("QTY")).intValue());
+        	gq.setCount(((BigDecimal)row.get("CNT")).intValue());
+        	map.put(gq.getCode(), gq);
+        }
+        
+		return map;
+	}
+
+
+	@Override
+	public Map<String, GeodeQuantityObject> findStockForOneStore(String store) {
+
+        List<Map<String,Object>> resultSet = jdbc.queryForList(
+        		"SELECT "
+        		+ "GEOATW.STOCKOBJ.ITM_0 AS ITM, "
+        		+ "COUNT(GEOATW.STOCKOBJ.SKONUM_0) AS CNT, "
+        		+ "SUM(GEOATW.STOCKOBJ.CSUQTY_0) AS QTY "
+        		+ "FROM "
+        		+ "GEOATW.STOCKOBJ "
+        		+ "GROUP BY GEOATW.STOCKOBJ.ITM_0, GEOATW.STOCKOBJ.STO_0 "
+        		+ "HAVING GEOATW.STOCKOBJ.STO_0 = ? "
+                ,
+                new Object[]{store});
+        
+        Map<String, GeodeQuantityObject> map = new HashMap<>();
+        GeodeQuantityObject gq;
+        for(Map<String,Object> row: resultSet ){
+        	gq = new GeodeQuantityObject();
+        	gq.setCode((String)row.get("ITM"));
+        	gq.setQuantity(((BigDecimal)row.get("QTY")).intValue());
+        	gq.setCount(((BigDecimal)row.get("CNT")).intValue());
+        	map.put(gq.getCode(), gq);
+        }
+        
+		return map;
 	}
 
 }
