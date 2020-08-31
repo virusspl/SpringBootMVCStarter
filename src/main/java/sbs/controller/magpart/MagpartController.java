@@ -26,6 +26,12 @@ public class MagpartController {
 	JdbcOracleX3Service x3Service;
 	
 	
+	@RequestMapping(value = "/main")
+	@Transactional
+	public String main() {
+		return "magpart/list";
+	}
+	
 	@RequestMapping(value = "/list")
 	@Transactional
 	public String list(Model model) {

@@ -64,6 +64,13 @@
 				th:text="#{action.back}">back</span>
 			</a>
 		</div>
+		<div class="underline"></div>
+		<a th:if="!${list}" th:href="@{/magpart/list}"
+			class="btn btn-info btn-md margin-top-10"> <span
+			class="glyphicon glyphicon-object-align-left"></span> <span
+			th:text="|#{action.show}|">title</span>
+		</a>
+
 		<div class="row" th:if="${list}">
 			<div class="col-xs-12">
 				<h1 th:text="#{general.list}" class="text-primary"></h1>
@@ -101,12 +108,13 @@
 					</table>
 				</div>
 			</div>
+			<a th:href="@{'/'}" class="btn btn-link btn-sm margin-top-10"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
 		</div>
 
-		<a th:href="@{'/'}" class="btn btn-link btn-sm margin-top-10"> <span
-			class="glyphicon glyphicon-menu-left"></span> <span
-			th:text="#{action.back}">back</span>
-		</a>
+
 	</div>
 
 </body>
