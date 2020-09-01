@@ -67,11 +67,12 @@
 		<div class="underline"></div>
 		<div th:if="!${list}" class="row">
 			<div class="col-xs-12 margin-top-10">
-				<a th:href="@{/stocksum/main}"
-						class="btn btn-info btn-md margin-top-5"> <span
-						class="glyphicon glyphicon-object-align-left"></span> <span
-						th:text="|#{action.show}|">title</span>
-					</a>
+				<a th:title="|#{general.warning.longrender}|" data-toggle="tooltip"
+					data-placement="right" th:href="@{/stocksum/main}"
+					class="btn btn-info btn-md"> <span
+					class="glyphicon glyphicon-object-align-left"></span> <span
+					th:text="|#{action.show}|">title</span>
+				</a>
 			</div>
 		</div>
 		<div th:if="${list}">

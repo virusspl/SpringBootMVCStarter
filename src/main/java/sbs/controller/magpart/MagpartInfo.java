@@ -3,6 +3,8 @@ package sbs.controller.magpart;
 public class MagpartInfo {
 
 	private String productCode;
+	private String category;
+	private String gr2;
 	
 	private int totalStock;
 	private int totalCount;
@@ -23,6 +25,8 @@ public class MagpartInfo {
 	public MagpartInfo(String productCode) {
 		super();
 		this.productCode = productCode;
+		this.category = "N/D";
+		this.gr2 = "N/D";
 		this.totalStock = 0;
 		this.totalCount = 0;
 		this.stockA = 0;
@@ -36,6 +40,8 @@ public class MagpartInfo {
 	public MagpartInfo(String productCode, int totalStock, int totalCount) {
 		super();
 		this.productCode = productCode;
+		this.category = "N/D";
+		this.gr2 = "N/D";
 		this.totalStock = totalStock;
 		this.totalCount = totalCount;
 		this.stockA = 0;
@@ -118,12 +124,31 @@ public class MagpartInfo {
 	public void setCountOther(int countOther) {
 		this.countOther = countOther;
 	}
+	
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public String getGr2() {
+		return gr2;
+	}
+
+	public void setGr2(String gr2) {
+		this.gr2 = gr2;
+	}
 
 	@Override
 	public String toString() {
-		return "MagpartInfo [productCode=" + productCode + ", totalStock=" + totalStock + ", stockA=" + stockA
-				+ ", countA=" + countA + ", stockB=" + stockB + ", countB=" + countB + ", stockOther=" + stockOther
-				+ ", countOther=" + countOther + "]";
+		return "MagpartInfo [productCode=" + productCode + ", category=" + category + ", gr2=" + gr2 + ", totalStock="
+				+ totalStock + ", totalCount=" + totalCount + ", stockA=" + stockA + ", countA=" + countA + ", stockB="
+				+ stockB + ", countB=" + countB + ", stockOther=" + stockOther + ", countOther=" + countOther + "]";
 	}
+
+
 	
 }

@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import sbs.model.geode.GeodeQuantityObject;
+import sbs.model.x3.X3Product;
 import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.x3.JdbcOracleX3Service;
 
@@ -39,6 +40,7 @@ public class MagpartController {
 		Map<String, GeodeQuantityObject> generalStock = geodeService.findGeneralStockForAllCodes();
 		Map<String, GeodeQuantityObject> aStock = geodeService.findStockForOneStore("01");
 		Map<String, GeodeQuantityObject> bStock = geodeService.findStockForOneStore("G");
+		Map<String, X3Product> allProducts = x3Service.findAllActiveProductsMap("ATW");
 		
 		List<MagpartInfo> list = new ArrayList<>();
 		MagpartInfo mpi;
@@ -51,6 +53,12 @@ public class MagpartController {
 			if(aStock.containsKey(mi.getProductCode())){
 				mi.setStockA(aStock.get(mi.getProductCode()).getQuantity());
 				mi.setCountA(aStock.get(mi.getProductCode()).getCount());
+			}
+			
+			if(allProducts.containsKey(mi.getProductCode())){
+				mi.setCategory(allProducts.get(mi.getProductCode()).getCategory());
+				mi.setGr2(allProducts.get(mi.getProductCode()).getGr2());
+				
 			}
 			
 			if(bStock.containsKey(mi.getProductCode())){

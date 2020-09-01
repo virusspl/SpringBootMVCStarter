@@ -56,7 +56,7 @@
 			<div class="col-xs-12">
 				<h2 th:text="#{magpart.title}" class="text-primary"></h2>
 			</div>
-			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-20">
 				<span th:text="#{magpart.message}"> Welcome message </span>
 			</div>
 			<a th:href="@{'/'}" class="btn btn-link btn-sm"> <span
@@ -65,12 +65,16 @@
 			</a>
 		</div>
 		<div class="underline"></div>
-		<a th:if="!${list}" th:href="@{/magpart/list}"
-			class="btn btn-info btn-md margin-top-10"> <span
-			class="glyphicon glyphicon-object-align-left"></span> <span
-			th:text="|#{action.show}|">title</span>
-		</a>
-
+		<div class="row" th:if="!${list}">
+			<div class="col-xs-12 margin-top-10">
+				<a th:title="|#{general.warning.longrender}|" data-toggle="tooltip"
+					data-placement="right" th:href="@{/magpart/list}"
+					class="btn btn-info btn-md"> <span
+					class="glyphicon glyphicon-object-align-left"></span> <span
+					th:text="|#{action.show}|">title</span>
+				</a>
+			</div>
+		</div>
 		<div class="row" th:if="${list}">
 			<div class="col-xs-12">
 				<h1 th:text="#{general.list}" class="text-primary"></h1>
@@ -81,6 +85,8 @@
 						<thead>
 							<tr>
 								<th th:text="#{general.productCode}">head</th>
+								<th th:text="#{general.category}">head</th>
+								<th th:text="|Gr. 2|">head</th>
 								<th th:text="|#{general.stock} #{magpart.total}|">head</th>
 								<th th:text="|#{magpart.parcels} #{magpart.total}|">head</th>
 								<th th:text="|#{general.stock} A|">head</th>
@@ -94,6 +100,8 @@
 						<tbody>
 							<tr th:each="line : ${list}">
 								<td><span th:text="${line.productCode}"></span></td>
+								<td><span th:text="${line.category}"></span></td>
+								<td><span th:text="${line.gr2}"></span></td>
 								<td><span th:text="${line.totalStock}"></span></td>
 								<td><span th:text="${line.totalCount}"></span></td>
 								<td><span th:text="${line.stockA}"></span></td>
