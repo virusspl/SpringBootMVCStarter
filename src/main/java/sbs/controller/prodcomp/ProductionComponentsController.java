@@ -220,10 +220,10 @@ public class ProductionComponentsController {
 				for (X3ConsumptionProductInfo info : acvInfo) {
 					safetyStockMap.put(info.getProductCode(), info.getSafetyStock());
 				}
-				// replanish point map
-				Map<String, Integer> replanishMap = new TreeMap<>();
+				// replenish point map
+				Map<String, Integer> replenishMap = new TreeMap<>();
 				for (X3ConsumptionProductInfo info : acvInfo) {
-					replanishMap.put(info.getProductCode(), info.getReorderPoint());
+					replenishMap.put(info.getProductCode(), info.getReorderPoint());
 				}
 
 				List<List<String>> table = new ArrayList<>();
@@ -245,8 +245,8 @@ public class ProductionComponentsController {
 					line.add(safetyStockMap.containsKey(entry.getKey())
 							? textHelper.numberFormatIntegerRoundNoSpace(safetyStockMap.get(entry.getKey()))
 							: "-");
-					line.add(replanishMap.containsKey(entry.getKey())
-							? textHelper.numberFormatIntegerRoundNoSpace(replanishMap.get(entry.getKey()))
+					line.add(replenishMap.containsKey(entry.getKey())
+							? textHelper.numberFormatIntegerRoundNoSpace(replenishMap.get(entry.getKey()))
 							: "-");
 					line.add(textHelper.numberFormatIntegerRoundNoSpace(x3));
 					line.add(textHelper.numberFormatIntegerRoundNoSpace(geode));
