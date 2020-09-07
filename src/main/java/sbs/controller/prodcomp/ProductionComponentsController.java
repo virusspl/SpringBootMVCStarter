@@ -63,19 +63,18 @@ public class ProductionComponentsController {
 	MemoryService memoryService;
 	@Autowired
 	Environment environment;
-	
+
 	private double outOfMemoryThreshold;
 	private String outOfMemoryMessage;
-	
+
 	public ProductionComponentsController() {
-		
+
 	}
-	
+
 	@RequestMapping("/main")
-	public String view(Model model, Locale locale, 
+	public String view(Model model, Locale locale,
 			@CookieValue(value = "startDateChain", defaultValue = "0") String startDateLong,
-			@CookieValue(value = "endDateChain", defaultValue = "0") String endDateLong
-			) {
+			@CookieValue(value = "endDateChain", defaultValue = "0") String endDateLong) {
 		/*
 		 * Calendar cal = Calendar.getInstance(); cal.add(Calendar.MONTH, -1);
 		 * cal.set(Calendar.DAY_OF_MONTH, 1); formComponent.setStartDate(new
@@ -85,12 +84,12 @@ public class ProductionComponentsController {
 		 * cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 		 * formComponent.setEndDate(new Timestamp(cal.getTimeInMillis()));
 		 */
-		
+
 		this.outOfMemoryThreshold = Double.parseDouble(environment.getRequiredProperty("prodcomp.memory.threshold"));
 		this.outOfMemoryMessage = messageSource.getMessage("prodcomp.error.memory", null, "OUT OF MEMORY!", locale);
-		
+
 		FormComponent formComponent = new FormComponent();
-		if(startDateLong.length()>1 && endDateLong.length()>1) {
+		if (startDateLong.length() > 1 && endDateLong.length() > 1) {
 			formComponent.setStartDate(new java.util.Date(Long.parseLong(startDateLong)));
 			formComponent.setEndDate(new java.util.Date(Long.parseLong(endDateLong)));
 		}
@@ -259,13 +258,12 @@ public class ProductionComponentsController {
 					table.add(line);
 				}
 				model.addAttribute("components", table);
-				if(singleCode != null) {
+				if (singleCode != null) {
 					model.addAttribute("title", singleCode);
-				}
-				else{
+				} else {
 					model.addAttribute("title", messageSource.getMessage("general.list", null, locale));
 				}
-				
+
 			} else {
 				// no file
 				redirectAttrs.addFlashAttribute("main", messageSource.getMessage("action.choose.file", null, locale));
@@ -365,7 +363,7 @@ public class ProductionComponentsController {
 				Map<String, X3Product> products = x3Service.findAllActiveProductsMap("ATW");
 				// get general stock of all products
 				Map<String, Integer> stock = x3Service.findGeneralStockForAllProducts("ATW");
-				if(doReplenish) {
+				if (doReplenish) {
 					// get in replenish (prod orders, buy orders) quantity
 					Map<String, Integer> replenish = x3Service.findProductsInReplenish("ATW");
 					// add stock + replenish
@@ -572,12 +570,11 @@ public class ProductionComponentsController {
 						.getMostRecentDeliveriesMapByCodeBeforeDate(new java.util.Date(), "ATW");
 				Map<String, Integer> stockQ = x3Service.findStockByState("Q", "ATW");
 				Map<String, Integer> stockR = x3Service.findStockByState("R", "ATW");
-				
+
 				List<List<String>> shortageSummary = new ArrayList<>();
 				List<String> shortageLine;
 				String shCode;
-				
-				
+
 				for (Map.Entry<String, Integer> entry : shortageList.entrySet()) {
 					shortageLine = new ArrayList<>();
 					shCode = entry.getKey();
@@ -588,8 +585,8 @@ public class ProductionComponentsController {
 					shortageLine
 							.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getGr2() : "XXX");
 					shortageLine.add(initStock.getOrDefault(entry.getKey(), 0) + "");
-					shortageLine.add(stockQ.containsKey(shCode) ? stockQ.get(shCode)+"" : 0+"");							
-					shortageLine.add(stockR.containsKey(shCode) ? stockR.get(shCode)+"" : 0+"");					
+					shortageLine.add(stockQ.containsKey(shCode) ? stockQ.get(shCode) + "" : 0 + "");
+					shortageLine.add(stockR.containsKey(shCode) ? stockR.get(shCode) + "" : 0 + "");
 					shortageLine.add((expectedDelivery.getOrDefault(entry.getKey(), 0.0)).intValue() + "");
 					shortageLine.add(entry.getValue() + "");
 					shortageLine.add(shortageCost.containsKey(shCode) ? shortageCost.get(shCode) + "" : "-");
@@ -621,7 +618,7 @@ public class ProductionComponentsController {
 									: "-");
 					shortageLine.add(
 							upcomingDeliveries.containsKey(shCode) ? upcomingDeliveries.get(shCode).getCountry() : "-");
-					
+
 					shortageSummary.add(shortageLine);
 				}
 
@@ -652,22 +649,21 @@ public class ProductionComponentsController {
 	 * @return
 	 */
 	private Map<String, Double> getCurrentAcvRequirementQuantitiesByStock(Map<String, List<X3BomItem>> allBoms,
-			String itemCode, Map<String, X3Product> products, Map<String, Integer> stock, double quantityToProduce) 
+			String itemCode, Map<String, X3Product> products, Map<String, Integer> stock, double quantityToProduce)
 			throws OutOfHeapMemoryException {
 
 		// check if we have main item on stock
 		int mainStock = stock.getOrDefault(itemCode, 0);
-		if(mainStock >= quantityToProduce) {
+		if (mainStock >= quantityToProduce) {
 			mainStock -= quantityToProduce;
 			quantityToProduce = 0;
-		}
-		else {
+		} else {
 			quantityToProduce -= mainStock;
 			mainStock = 0;
 		}
 		stock.put(itemCode, mainStock);
 		// calculate requirements after stock check for main
-		
+
 		Map<String, Double> resultMap = new TreeMap<>();
 
 		List<X3BomItem> list = findBomPartsByParentCode(allBoms, itemCode);
@@ -711,7 +707,7 @@ public class ProductionComponentsController {
 				}
 				// SAVE NEW STOCK INFO
 				stock.put(code, currentStock);
-				if(memoryService.getCurrentHeapUsageProc() > this.outOfMemoryThreshold) {
+				if (memoryService.getCurrentHeapUsageProc() > this.outOfMemoryThreshold) {
 					throw new OutOfHeapMemoryException("Out of memory!");
 				}
 				subMap = getCurrentAcvRequirementQuantitiesByStock(allBoms, code, products, stock, qtyReq);
@@ -770,7 +766,7 @@ public class ProductionComponentsController {
 					resultMap.put(code, qty);
 				}
 			}
-			if(memoryService.getCurrentHeapUsageProc() > this.outOfMemoryThreshold) {
+			if (memoryService.getCurrentHeapUsageProc() > this.outOfMemoryThreshold) {
 				throw new OutOfHeapMemoryException("Out of memory!");
 			}
 			subMap = getComponentsQuantitiesMultilevel(allBoms, code, products, acvOnly);
@@ -806,17 +802,16 @@ public class ProductionComponentsController {
 				model.addAttribute("formFindComponents", new FormFindComponents());
 				return "prodcomp/main";
 			}
-			
-		    // create a cookie
-		    Cookie startDateCookie = new Cookie("startDateChain", ""+formComponent.getStartDate().getTime());
-		    Cookie endDateCookie = new Cookie("endDateChain", ""+formComponent.getEndDate().getTime());
-		    // set time to live (seconds)
-		    startDateCookie.setMaxAge(60 * 60* 24 * 31);
-		    endDateCookie.setMaxAge(60 * 60* 24 * 31);
-		    //add cookie to response
-		    response.addCookie(startDateCookie);
-		    response.addCookie(endDateCookie);
 
+			// create a cookie
+			Cookie startDateCookie = new Cookie("startDateChain", "" + formComponent.getStartDate().getTime());
+			Cookie endDateCookie = new Cookie("endDateChain", "" + formComponent.getEndDate().getTime());
+			// set time to live (seconds)
+			startDateCookie.setMaxAge(60 * 60 * 24 * 31);
+			endDateCookie.setMaxAge(60 * 60 * 24 * 31);
+			// add cookie to response
+			response.addCookie(startDateCookie);
+			response.addCookie(endDateCookie);
 
 			// check if component exist
 			String component;
@@ -967,7 +962,7 @@ public class ProductionComponentsController {
 				found = true;
 				localChain = cloneBomPartList(chain);
 				localChain.add(part);
-				if(memoryService.getCurrentHeapUsageProc() > this.outOfMemoryThreshold) {
+				if (memoryService.getCurrentHeapUsageProc() > this.outOfMemoryThreshold) {
 					throw new OutOfHeapMemoryException("Out of memory!");
 				}
 				if (!calculateBomChains(part, localChain, allChains, allBoms)) {
@@ -985,10 +980,33 @@ public class ProductionComponentsController {
 		}
 		return clone;
 	}
-	
+
 	@RequestMapping(value = "/nobomcodes")
 	public String noBomCodes(Model model) {
+		model.addAttribute("formNoBomCodes", new FormNoBomCodes());
+		return "/prodcomp/nobomcodesform";
+	}
 
+	@RequestMapping(value = "/nobomcodes", method = RequestMethod.POST)
+	public String noBomCodesExec(@Valid FormNoBomCodes formNoBomCodes, BindingResult bindingResult,
+			RedirectAttributes redirectAttrs, Model model) {
+
+		// get list or single code to process
+		List<NoBomCodeInfo> noBomCodes = new ArrayList<>();
+		if (formNoBomCodes.getCode().trim().length() == 0) {
+			noBomCodes = x3Service.getNoBomCodesListIncompleteObjects("ATW");
+		} else {
+			NoBomCodeInfo singleInfo = x3Service.getNoBomCodeIncompleteObject(formNoBomCodes.getCode().trim(), "ATW");
+			if (singleInfo == null) {
+				bindingResult.rejectValue("code", "error.no.such.product", "ERROR");
+				return "prodcomp/nobomcodesform";
+			}
+			else {
+				noBomCodes.add(singleInfo);
+			}
+			
+
+		}
 		Calendar today = Calendar.getInstance();
 
 		// get sale for current period (year)
@@ -998,42 +1016,50 @@ public class ProductionComponentsController {
 		Calendar endDate = Calendar.getInstance();
 		endDate.set(Calendar.MONTH, 11);
 		endDate.set(Calendar.DAY_OF_MONTH, 31);
-		Map<String, X3SaleInfo> saleCurrent = x3Service.getSaleInfoInPeriod(startDate.getTime(), endDate.getTime(), "ATW");
-		
+		Map<String, X3SaleInfo> saleCurrent = x3Service.getSaleInfoInPeriod(startDate.getTime(), endDate.getTime(),
+				"ATW");
+
 		// get sale for previous period (year - 1)
 		startDate.add(Calendar.YEAR, -1);
 		endDate.add(Calendar.YEAR, -1);
-		Map<String, X3SaleInfo> salePrevious = x3Service.getSaleInfoInPeriod(startDate.getTime(), endDate.getTime(), "ATW");
-		
+		Map<String, X3SaleInfo> salePrevious = x3Service.getSaleInfoInPeriod(startDate.getTime(), endDate.getTime(),
+				"ATW");
+
 		// get sale for previous period (year - 2)
 		startDate.add(Calendar.YEAR, -1);
 		endDate.add(Calendar.YEAR, -1);
-		Map<String, X3SaleInfo> sale2YearsBack = x3Service.getSaleInfoInPeriod(startDate.getTime(), endDate.getTime(), "ATW");
-		
+		Map<String, X3SaleInfo> sale2YearsBack = x3Service.getSaleInfoInPeriod(startDate.getTime(), endDate.getTime(),
+				"ATW");
+
 		// get GEODE stock
-		Map<String, Integer> geoProduction = geodeService.findStockListForStoreType(JdbcOracleGeodeService.STORE_TYPE_PRODUCTION);
-		Map<String, Integer> geoReceptions = geodeService.findStockListForStoreType(JdbcOracleGeodeService.STORE_TYPE_RECEPTIONS);
-		Map<String, Integer> geoShipments = geodeService.findStockListForStoreType(JdbcOracleGeodeService.STORE_TYPE_SHIPMENTS);
-		
-		// get no bom codes list
-		List<NoBomCodeInfo> noBomCodes = x3Service.getNoBomCodesListIncompleteObjects("ATW");
+		Map<String, Integer> geoProduction = geodeService
+				.findStockListForStoreType(JdbcOracleGeodeService.STORE_TYPE_PRODUCTION);
+		Map<String, Integer> geoReceptions = geodeService
+				.findStockListForStoreType(JdbcOracleGeodeService.STORE_TYPE_RECEPTIONS);
+		Map<String, Integer> geoShipments = geodeService
+				.findStockListForStoreType(JdbcOracleGeodeService.STORE_TYPE_SHIPMENTS);
+
 		int gsProd, gsRcp, gsShi;
-		for(NoBomCodeInfo inf: noBomCodes) {
-			inf.setSaleCurrentYear((int)(saleCurrent.containsKey(inf.getCode()) ? saleCurrent.get(inf.getCode()).getValuePln() : 0));
-			inf.setSalePreviousYear((int)(salePrevious.containsKey(inf.getCode()) ? salePrevious.get(inf.getCode()).getValuePln() : 0));
-			inf.setSale2YearsBack((int)(sale2YearsBack.containsKey(inf.getCode()) ? sale2YearsBack.get(inf.getCode()).getValuePln() : 0));
+		for (NoBomCodeInfo inf : noBomCodes) {
+			inf.setSaleCurrentYear(
+					(int) (saleCurrent.containsKey(inf.getCode()) ? saleCurrent.get(inf.getCode()).getValuePln() : 0));
+			inf.setSalePreviousYear(
+					(int) (salePrevious.containsKey(inf.getCode()) ? salePrevious.get(inf.getCode()).getValuePln()
+							: 0));
+			inf.setSale2YearsBack(
+					(int) (sale2YearsBack.containsKey(inf.getCode()) ? sale2YearsBack.get(inf.getCode()).getValuePln()
+							: 0));
 			gsProd = geoProduction.containsKey(inf.getCode()) ? geoProduction.get(inf.getCode()) : 0;
 			gsRcp = geoReceptions.containsKey(inf.getCode()) ? geoReceptions.get(inf.getCode()) : 0;
 			gsShi = geoShipments.containsKey(inf.getCode()) ? geoShipments.get(inf.getCode()) : 0;
 			inf.setStockGeode(gsProd + gsRcp + gsShi);
 		}
-		
-		
+
 		model.addAttribute("noBomCodes", noBomCodes);
 		model.addAttribute("y0", today.get(Calendar.YEAR));
-		model.addAttribute("y1", today.get(Calendar.YEAR)-1);
-		model.addAttribute("y2", today.get(Calendar.YEAR)-2);
-		
+		model.addAttribute("y1", today.get(Calendar.YEAR) - 1);
+		model.addAttribute("y2", today.get(Calendar.YEAR) - 2);
+
 		return "/prodcomp/nobomcodesview";
 	}
 

@@ -135,6 +135,7 @@ public interface JdbcOracleX3Repository  {
 	public List<X3SalesOrderLine> findAdrSalesOrderLinesBasedOnShipmentMovementsInPeriod(Date startDate, Date endDate);
 	public List<NoBomCodeInfo> getNoBomCodesListIncompleteObjects(String company);
 	public Map<String, X3SaleInfo> getSaleInfoInPeriod(Date startDate, Date endDate, String company);
+	public NoBomCodeInfo getNoBomCodeIncompleteObject(String code, String company);
 
 	
 	

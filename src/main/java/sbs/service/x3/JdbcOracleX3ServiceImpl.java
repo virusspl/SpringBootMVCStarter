@@ -541,5 +541,10 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 		return jdbcOracleX3Repository.getSaleInfoInPeriod(startDate, endDate, company);
 	}
 
+	@Override
+	public NoBomCodeInfo getNoBomCodeIncompleteObject(String code, String company) {
+		return jdbcOracleX3Repository.getNoBomCodeIncompleteObject(code, company);
+	}
+
 
 }

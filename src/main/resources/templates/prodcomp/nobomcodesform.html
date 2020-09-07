@@ -90,65 +90,46 @@
 				<span th:text="#{prodcomp.nobomcodes.message}"> Welcome
 					message </span>
 			</div>
-			<a th:href="@{'/prodcomp/nobomcodes'}" class="btn btn-link btn-sm">
-				<span class="glyphicon glyphicon-menu-left"></span> <span
+			<a th:href="@{'/prodcomp/main'}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
 				th:text="#{action.back}">back</span>
 			</a>
 		</div>
-		<div class="row" th:if="${noBomCodes}">
-			<div class="col-xs-12">
-				<h1 th:text="#{general.list}" class="text-primary"></h1>
-			</div>
-			<div class="col-xs-12">
-				<div class="table-responsive">
-					<table id="srv" class="display" style="font-size: 90%;">
-						<thead>
-							<tr>
-								<th th:text="#{general.productCode}">head</th>
-								<th th:text="#{general.productDescription}">head</th>
-								<th th:text="#{general.category}">head</th>
-								<th th:text="|Gr. 1|">head</th>
-								<th th:text="|Gr. 2|">head</th>
-								<th th:text="#{general.date.creation}">head</th>
-								<th th:text="#{general.date.lastreception}">head</th>
-								<th th:text="#{general.date.lastissue}">head</th>
-								<th th:text="|#{general.stock} X3|">head</th>
-								<th th:text="|#{general.stock} GEODE|">head</th>
-								<th th:text="|#{general.sales} ${y0} [PLN]|">head</th>
-								<th th:text="|#{general.sales} ${y1} [PLN]|">head</th>
-								<th th:text="|#{general.sales} ${y2} [PLN]|">head</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="line : ${noBomCodes}">
-								<td><span th:text="|${line.code}|"></span></td>
-								<td><span th:text="|${line.description}|"></span></td>
-								<td><span th:text="|${line.category}|"></span></td>
-								<td><span th:text="|${line.gr1}|"></span></td>
-								<td><span th:text="|${line.gr2}|"></span></td>
-								<td><span
-									th:text="${#dates.format(line.creationDate, 'yyyy.MM.dd')}"></span></td>
-								<td><span
-									th:text="${#dates.format(line.lastReceptionDate, 'yyyy.MM.dd')}"></span></td>
-								<td><span
-									th:text="${#dates.format(line.lastIssueDate, 'yyyy.MM.dd')}"></span></td>
-								<td><span th:text="|${line.stockX3}|"></span></td>
-								<td><span th:text="|${line.stockGeode}|"></span></td>
-								<td><span th:text="|${line.saleCurrentYear}|"></span></td>
-								<td><span th:text="|${line.salePreviousYear}|"></span></td>
-								<td><span th:text="|${line.sale2YearsBack}|"></span></td>
-							</tr>
-						</tbody>
-					</table>
+
+		<div class="underline margin-top-20"></div>
+		<form th:action="@{/prodcomp/nobomcodes}" method="post"
+			th:object="${formNoBomCodes}">
+			<div class="row margin-top-20">
+				<div class="col-xs-4 col-sm-4">
+					<div class="form-group">
+						<label for="code"
+							th:text="|#{general.productCode} (#{general.optional})|">Product</label>
+						<input type="text" class="form-control" id="code" name="code"
+							th:placeholder="|#{general.productCode} (#{general.optional})|" th:field="*{code}" />
+						<div th:errors="*{code}" class="alert alert-danger margin-top-5">error</div>
+					</div>
 				</div>
 			</div>
-		</div>
-		<a th:href="@{'/prodcomp/nobomcodes'}"
-			class="btn btn-link btn-sm margin-top-10"> <span
-			class="glyphicon glyphicon-menu-left"></span> <span
-			th:text="#{action.back}">back</span>
-		</a>
-	</div>
+			<div class="row margin-top-5">
+				<div class="col-xs-12">
+					<a th:href="@{/prodcomp/main}" class="btn btn-link btn-sm"> <span
+						class="glyphicon glyphicon-menu-left"></span> <span
+						th:text="#{action.back}">back</span>
+					</a>
+					<button class="btn btn-primary btn-sm" type="submit" name="search"
+						th:title="|#{general.warning.longrender}|" data-toggle="tooltip"
+						data-placement="right">
+						<span class="glyphicon glyphicon-search"></span> <span
+							th:text="#{action.search}">search</span>
+					</button>
+				</div>
+			</div>
+		</form>
 
+
+
+
+
+	</div>
 </body>
 </html>

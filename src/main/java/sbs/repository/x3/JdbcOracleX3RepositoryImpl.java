@@ -72,7 +72,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	protected JdbcTemplate jdbc;
 	@Autowired 
-	@Qualifier("oracleX3JdbcTemplate") 
+	@Qualifier("oracleX3v6JdbcTemplate") 
 	protected JdbcTemplate jdbc6;
 	@Autowired 
 	@Qualifier("oracleX3v11JdbcTemplate") 
@@ -4623,6 +4623,55 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         }
         
         return map;
+	}
+
+	@Override
+	public NoBomCodeInfo getNoBomCodeIncompleteObject(String code, String company) {
+		// ===========================================================
+				// ==== TMP JDBC DUALITY =====================================
+				if(company.equalsIgnoreCase("ATW")) {
+					jdbc = jdbc6;
+				}
+				else {
+					jdbc = jdbc11;
+				}
+				// ==== TMP JDBC DUALITY =====================================
+				// ===========================================================
+				
+				List<Map<String,Object>> resultSet = jdbc.queryForList( ""
+						+ "SELECT "
+						+ "ITM.ITMREF_0, "
+						+ "ITM.ITMDES1_0, "
+						+ "ITM.TSICOD_0, "
+						+ "ITM.TSICOD_1, "
+						+ "ITM.TCLCOD_0, "
+						+ "ITV.PHYSTO_0, "
+						+ "ITM.CREDAT_0, "
+						+ "ITV.LASRCPDAT_0, "
+						+ "ITV.LASISSDAT_0 "
+						+ "FROM "
+						+ company + ".ITMMASTER ITM "
+						+ "INNER JOIN " + company + ".ITMMVT ITV "
+						+ "ON ITM.ITMREF_0 = ITV.ITMREF_0 "
+						+ "WHERE ITM.ITMSTA_0 = 1 AND ITM.ITMREF_0 = ?"
+						,
+		                new Object[]{code.toUpperCase()});
+				
+		        NoBomCodeInfo inf = null;
+		        for(Map<String,Object> row: resultSet ){
+		        	inf = new NoBomCodeInfo();
+		        	inf.setCode((String)row.get("ITMREF_0"));
+		        	inf.setCategory((String)row.get("TCLCOD_0"));
+		        	inf.setCreationDate((Timestamp)row.get("CREDAT_0"));
+		        	inf.setDescription((String)row.get("ITMDES1_0"));
+		        	inf.setGr1((String)row.get("TSICOD_0"));
+		        	inf.setGr2((String)row.get("TSICOD_1"));
+		        	inf.setLastIssueDate((Timestamp)row.get("LASISSDAT_0"));
+		        	inf.setLastReceptionDate((Timestamp)row.get("LASRCPDAT_0"));
+		        	inf.setStockX3(((BigDecimal)row.get("PHYSTO_0")).intValue());
+		        }
+		        
+		        return inf;
 	}
 
 	

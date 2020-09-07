@@ -147,7 +147,9 @@ public interface JdbcOracleX3Service {
 	public Map<String, X3ProductEventsHistory> getAcvProductsEventsHistory(Date startDate, Date endDate, List<X3ConsumptionProductInfo> acvInfo, String company);
 	public List<X3SalesOrderLine> findAdrSalesOrderLinesBasedOnShipmentMovementsInPeriod(Date startDate, Date endDate);
 	public List<NoBomCodeInfo> getNoBomCodesListIncompleteObjects(String company);
+	public NoBomCodeInfo getNoBomCodeIncompleteObject(String code, String company);
 	public Map<String, X3SaleInfo> getSaleInfoInPeriod(Date startDate, Date endDate, String company);
+	
 	
 	
 }

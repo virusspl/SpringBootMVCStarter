@@ -112,8 +112,8 @@ public class DataSourceConfig {
 	/*
 	 * ORACLE X3 DATASOURCE
 	 */
-	@Bean("oracleX3DataSource")
-	public DataSource oracleX3DataSource() throws SQLException {
+	@Bean("oracleX3v6DataSource")
+	public DataSource oracleX3v6DataSource() throws SQLException {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName(ORACLE_DRIVER);
 		dataSource.setUrl("jdbc:oracle:thin:@192.168.1.6:1521:X3V6POL");
@@ -122,9 +122,9 @@ public class DataSourceConfig {
 		return dataSource;
 	}
 
-	@Bean(name = "oracleX3JdbcTemplate")
-	public JdbcTemplate oracleX3JdbcTemplate() throws SQLException {
-		return new JdbcTemplate(oracleX3DataSource());
+	@Bean(name = "oracleX3v6JdbcTemplate")
+	public JdbcTemplate oracleX3v6JdbcTemplate() throws SQLException {
+		return new JdbcTemplate(oracleX3v6DataSource());
 	}
 	
 	/*
