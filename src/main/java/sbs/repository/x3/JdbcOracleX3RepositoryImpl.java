@@ -18,6 +18,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -78,13 +79,19 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	@Qualifier("oracleX3v11JdbcTemplate") 
 	protected JdbcTemplate jdbc11;
 	@Autowired
-	private DateHelper dateHelper; 
-	 
+	private DateHelper dateHelper;
+	
+	private String x3v;
+	
+	public JdbcOracleX3RepositoryImpl(Environment env) {
+		this.x3v = env.getRequiredProperty("oracleX3.dbVersion");
+	}
+	
 	@Override
 	public List<String> findAllUsers(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -109,7 +116,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public String findItemDescription(String company, String code) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -135,7 +142,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public List<X3Client> findAllClients(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -173,7 +180,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public X3Client findClientByCode(String company, String code) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -213,7 +220,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public List<X3SalesOrder> findAllSalesOrders(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -260,7 +267,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public List<X3SalesOrder> findOpenedSalesOrders(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -309,7 +316,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public X3SalesOrder findSalesOrderByNumber(String company, String number) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -356,7 +363,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public X3PurchaseOrder findPurchaseOrderByNumber(String company, String number) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -403,7 +410,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public List<X3Product> findAllActiveProducts(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -442,7 +449,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, X3Product> findAllActiveProductsMap(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -487,7 +494,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, Double> getAllProductsQuantities(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -521,7 +528,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public X3Product findProductByCode(String company, String code) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -560,7 +567,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public X3ProductionOrderDetails getProductionOrderInfoByNumber(String company, String number) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -645,7 +652,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public List<X3BomItem> findBomPartsByParent(String company, String productCode) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -707,7 +714,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public List<WpslookRow> findLocationsOfProduct(String company, String code) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -766,7 +773,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			int operationNumber) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -816,7 +823,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			int operationNumber) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -848,7 +855,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public String findFinalClientByOrder(String company, String order) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -877,7 +884,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, X3UtrMachine> findAllUtrMachines(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -943,7 +950,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, X3UtrWorker> findAllUtrWorkers(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -982,7 +989,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		String company = "ATW";
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -1095,7 +1102,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		String company = "ATW";
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -1204,7 +1211,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		String company = "ATW";
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -1264,7 +1271,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		String company = "ATW";
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -1317,7 +1324,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		String company = "ATW";
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -1386,7 +1393,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		String company = "ATW";
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -1434,7 +1441,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		String company = "ATW";
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -1497,7 +1504,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, X3ProductFinalMachine> findX3ProductFinalMachines(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -1543,7 +1550,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		String company = "ATW";
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -1601,7 +1608,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		String company = "ATW";
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -1755,7 +1762,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		String company = "ATW";
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -1892,7 +1899,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, Integer> findAcvAverageUsageInPeriod(String startPeriod, String endPeriod, String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -1935,7 +1942,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, Integer> findAcvMagStock(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -1974,7 +1981,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, Integer> findGeneralMagStock(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -2011,7 +2018,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, Integer> findAcvShipStock(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -2055,7 +2062,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, Integer> findGeneralShipStock(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -2096,7 +2103,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public List<X3ShipmentStockLineWithPrice> findAllShipStockWithAveragePrice(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -2155,7 +2162,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public List<String> findAcvNonProductionCodes(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -2194,7 +2201,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, X3ProductSellDemand> findAcvProductSellDemand(Date startDate, Date endDate, String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -2248,7 +2255,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public List<DirectReceptionsShipmentLine> findDirectReceptionsShipmentLines(Date startDate, Date endDate, String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -2309,7 +2316,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, Map<Integer, Integer>> getAcvConsumptionListForYear(int year, String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -2376,7 +2383,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, Integer> getAcvDemandList(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -2413,7 +2420,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, String> getAcvProductsEnglishDescriptions(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -2453,7 +2460,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, X3ConsumptionSupplyInfo> getAcvListOfLastSupplyInfo(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -2500,7 +2507,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public List<X3ConsumptionProductInfo> getAcvListForConsumptionReport(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -2569,7 +2576,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public List<X3SalesOrderLine> findOpenedSalesOrderLinesInPeriod(Date startDate, Date endDate, String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -2662,7 +2669,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, Integer> findGeneralStockForAllProducts(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -2692,7 +2699,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public X3Workstation findWorkstationByCode(String company, String code) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -2734,7 +2741,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public List<X3Workstation> getWorkstations(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -2776,7 +2783,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public boolean checkIfLocationExist(String company, String location) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -2801,7 +2808,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public String findPackageDescription(String company, String packageCode) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -2839,7 +2846,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, String> getDescriptionsByLanguage(String x3lang, String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -2874,7 +2881,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public List<X3UsageDetail> getAcvUsageDetailsListByYear(int year, String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -2923,7 +2930,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public List<X3CoverageData> getCoverageInitialData(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -2986,7 +2993,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, X3Supplier> getFirstAcvSuppliers(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -3025,7 +3032,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public List<X3SalesOrderItem> findAllSalesOrdersAfvItemsInPeriod(Date startDate, Date endDate, String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -3077,7 +3084,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public List<X3ToolEntry> getAllToolsInRouting(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -3115,7 +3122,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public List<X3KeyValString> getAllBomPartsInBoms(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -3144,7 +3151,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, X3StoreInfo> getX3StoreInfoByCode(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -3200,7 +3207,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, String> getVariousTableData(String company, String table, String x3language) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -3234,7 +3241,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, Integer> findStockByLocation(String company, String location) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -3268,7 +3275,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, Integer> findStockByState(String state, String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -3302,7 +3309,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, List<X3BomItem>> getAllBomPartsTopLevel(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -3371,7 +3378,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public List<X3BomPart> getAllBomEntries(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -3426,7 +3433,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, X3StandardCostEntry> getLastStandardCostsListFromCalculationTable(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -3482,7 +3489,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, X3StandardCostEntry> getStandardCostsMap(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -3526,7 +3533,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			List<X3StandardCostEntry> insertList, String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			// FOR ATW
 			jdbc = jdbc6;
 
@@ -3649,7 +3656,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public List<X3Supplier> findProductSuppliers(String company, String productCode) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -3695,7 +3702,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public X3SupplyStatInfo getSupplyStatistics(String company, String productCode, String supplierCode) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -3744,7 +3751,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, Map<Integer, X3RouteLine>> getRoutesMap(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -3815,7 +3822,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, String> getWorkcenterNumbersMapByMachines(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -3848,7 +3855,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, String> getPendingProductionOrdersBySaleOrders(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -3883,7 +3890,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, Double> getCurrentStandardCostsMap(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -3915,7 +3922,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -4012,7 +4019,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public List<X3AvgPriceLine> getAveragePricesByInvoices(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -4077,7 +4084,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public List<X3AvgPriceLine> getAveragePricesByOrders(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -4149,7 +4156,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, Integer> findStockForAllProductsWithStock(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -4180,7 +4187,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, Double> getExpectedDeliveriesByDate(Date date, String company) {
 				// ===========================================================
 				// ==== TMP JDBC DUALITY =====================================
-				if(company.equalsIgnoreCase("ATW")) {
+				if(this.x3v.equalsIgnoreCase("6")) {
 					jdbc = jdbc6;
 				}
 				else {
@@ -4222,7 +4229,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, Date> getLatestExpectedDeliveryDateForCodeByDate(Date date, String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -4269,7 +4276,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, X3DeliverySimpleInfo> getFirstUpcomingDeliveriesMapByCodeAfterDate(Date date, String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -4322,7 +4329,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, X3DeliverySimpleInfo> getMostRecentDeliveriesMapByCodeBeforeDate(Date date, String company) {
 				// ===========================================================
 				// ==== TMP JDBC DUALITY =====================================
-				if(company.equalsIgnoreCase("ATW")) {
+				if(this.x3v.equalsIgnoreCase("6")) {
 					jdbc = jdbc6;
 				}
 				else {
@@ -4374,7 +4381,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, Integer> findProductsInReplenish(String company) {
 				// ===========================================================
 				// ==== TMP JDBC DUALITY =====================================
-				if(company.equalsIgnoreCase("ATW")) {
+				if(this.x3v.equalsIgnoreCase("6")) {
 					jdbc = jdbc6;
 				}
 				else {
@@ -4407,7 +4414,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			List<X3ConsumptionProductInfo> acvInfo, String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -4530,7 +4537,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public List<NoBomCodeInfo> getNoBomCodesListIncompleteObjects(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -4585,7 +4592,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public Map<String, X3SaleInfo> getSaleInfoInPeriod(Date startDate, Date endDate, String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
-		if(company.equalsIgnoreCase("ATW")) {
+		if(this.x3v.equalsIgnoreCase("6")) {
 			jdbc = jdbc6;
 		}
 		else {
@@ -4629,7 +4636,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	public NoBomCodeInfo getNoBomCodeIncompleteObject(String code, String company) {
 		// ===========================================================
 				// ==== TMP JDBC DUALITY =====================================
-				if(company.equalsIgnoreCase("ATW")) {
+				if(this.x3v.equalsIgnoreCase("6")) {
 					jdbc = jdbc6;
 				}
 				else {
