@@ -12,6 +12,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -64,14 +67,25 @@ public class MovementsController {
 	}
 
 	@RequestMapping("/main")
-	public String view(Model model, Locale locale) {
+	public String view(Model model, Locale locale,
+			@CookieValue(value = "startDateMov", defaultValue = "0") String startDateLong,
+			@CookieValue(value = "endDateMov", defaultValue = "0") String endDateLong) {
+		
+		
 		MovementsForm movementsForm = new MovementsForm();
-		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-		cal.add(Calendar.DAY_OF_MONTH, -1);
-		movementsForm.setEndDate(new Timestamp(cal.getTimeInMillis()));
-		cal.add(Calendar.DAY_OF_MONTH, -6);
-		movementsForm.setStartDate(new Timestamp(cal.getTimeInMillis()));
+		if (startDateLong.length() > 1 && endDateLong.length() > 1) {
+			movementsForm.setStartDate(new java.util.Date(Long.parseLong(startDateLong)));
+			movementsForm.setEndDate(new java.util.Date(Long.parseLong(endDateLong)));
+		}
+		else {
+			Calendar cal = Calendar.getInstance();
+			cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+			cal.add(Calendar.DAY_OF_MONTH, -1);
+			movementsForm.setEndDate(new Timestamp(cal.getTimeInMillis()));
+			cal.add(Calendar.DAY_OF_MONTH, -6);
+			movementsForm.setStartDate(new Timestamp(cal.getTimeInMillis()));
+		}
+		
 		model.addAttribute("movementsForm", movementsForm);
 
 		return "movements/main";
@@ -79,11 +93,22 @@ public class MovementsController {
 
 	@RequestMapping(value = "/calculate", params = { "shipmov" }, method = RequestMethod.POST)
 	public String performSearch(@Valid MovementsForm movementsForm, BindingResult bindingResult, Model model,
-			RedirectAttributes redirectAttrs, Locale locale) {
+			RedirectAttributes redirectAttrs, Locale locale, HttpServletResponse response) {
 
 		if (bindingResult.hasErrors()) {
 			return "movements/main";
 		}
+		
+		// create a cookie
+		Cookie startDateCookie = new Cookie("startDateMov", "" + movementsForm.getStartDate().getTime());
+		Cookie endDateCookie = new Cookie("endDateMov", "" + movementsForm.getEndDate().getTime());
+		// set time to live (seconds)
+		startDateCookie.setMaxAge(60 * 60 * 24 * 31);
+		endDateCookie.setMaxAge(60 * 60 * 24 * 31);
+		// add cookie to response
+		response.addCookie(startDateCookie);
+		response.addCookie(endDateCookie);
+		
 
 		Map<String, Double> prices = x3Service.getCurrentStandardCostsMap("ATW");
 		List<X3ShipmentMovement> movements = x3Service.findAdrShipmentMovementsInPeriod(movementsForm.getStartDate(),
@@ -182,10 +207,21 @@ public class MovementsController {
 
 	@RequestMapping(value = "/calculate", params = { "rcpweightstats" }, method = RequestMethod.POST)
 	public String performRcpWeightStats(@Valid MovementsForm movementsForm, BindingResult bindingResult, Model model,
-			RedirectAttributes redirectAttrs, Locale locale) {
+			RedirectAttributes redirectAttrs, Locale locale, HttpServletResponse response) {
 		if (bindingResult.hasErrors()) {
 			return "movements/main";
 		}
+		
+		// create a cookie
+		Cookie startDateCookie = new Cookie("startDateMov", "" + movementsForm.getStartDate().getTime());
+		Cookie endDateCookie = new Cookie("endDateMov", "" + movementsForm.getEndDate().getTime());
+		// set time to live (seconds)
+		startDateCookie.setMaxAge(60 * 60 * 24 * 31);
+		endDateCookie.setMaxAge(60 * 60 * 24 * 31);
+		// add cookie to response
+		response.addCookie(startDateCookie);
+		response.addCookie(endDateCookie);
+		
 		List<X3WarehouseWeightLine> lines = x3Service.findWeightSumLine(movementsForm.getStartDate(),
 				movementsForm.getEndDate(), JdbcOracleX3Service.WEIGHT_QUERY_RECEPTION);
 		model.addAttribute("startDate", movementsForm.getStartDate());
@@ -197,10 +233,21 @@ public class MovementsController {
 
 	@RequestMapping(value = "/calculate", params = { "shipweightstats" }, method = RequestMethod.POST)
 	public String performShipWeightStats(@Valid MovementsForm movementsForm, BindingResult bindingResult, Model model,
-			RedirectAttributes redirectAttrs, Locale locale) {
+			RedirectAttributes redirectAttrs, Locale locale, HttpServletResponse response) {
 		if (bindingResult.hasErrors()) {
 			return "movements/main";
 		}
+		
+		// create a cookie
+		Cookie startDateCookie = new Cookie("startDateMov", "" + movementsForm.getStartDate().getTime());
+		Cookie endDateCookie = new Cookie("endDateMov", "" + movementsForm.getEndDate().getTime());
+		// set time to live (seconds)
+		startDateCookie.setMaxAge(60 * 60 * 24 * 31);
+		endDateCookie.setMaxAge(60 * 60 * 24 * 31);
+		// add cookie to response
+		response.addCookie(startDateCookie);
+		response.addCookie(endDateCookie);
+		
 		List<X3WarehouseWeightLine> lines = x3Service.findWeightSumLine(movementsForm.getStartDate(),
 				movementsForm.getEndDate(), JdbcOracleX3Service.WEIGHT_QUERY_SHIPMENT);
 		model.addAttribute("startDate", movementsForm.getStartDate());
@@ -212,10 +259,21 @@ public class MovementsController {
 
 	@RequestMapping(value = "/calculate", params = { "rcpweightdetails" }, method = RequestMethod.POST)
 	public String performRcpWeightDetails(@Valid MovementsForm movementsForm, BindingResult bindingResult, Model model,
-			RedirectAttributes redirectAttrs, Locale locale) {
+			RedirectAttributes redirectAttrs, Locale locale, HttpServletResponse response) {
 		if (bindingResult.hasErrors()) {
 			return "movements/main";
 		}
+		
+		// create a cookie
+		Cookie startDateCookie = new Cookie("startDateMov", "" + movementsForm.getStartDate().getTime());
+		Cookie endDateCookie = new Cookie("endDateMov", "" + movementsForm.getEndDate().getTime());
+		// set time to live (seconds)
+		startDateCookie.setMaxAge(60 * 60 * 24 * 31);
+		endDateCookie.setMaxAge(60 * 60 * 24 * 31);
+		// add cookie to response
+		response.addCookie(startDateCookie);
+		response.addCookie(endDateCookie);
+		
 		List<X3WarehouseWeightDetailLine> lines = x3Service.findWeightDetailLine(movementsForm.getStartDate(),
 				movementsForm.getEndDate(), JdbcOracleX3Service.WEIGHT_QUERY_RECEPTION_DETAIL);
 		model.addAttribute("startDate", movementsForm.getStartDate());
@@ -227,10 +285,21 @@ public class MovementsController {
 
 	@RequestMapping(value = "/calculate", params = { "shipweightdetails" }, method = RequestMethod.POST)
 	public String performShipWeightDetails(@Valid MovementsForm movementsForm, BindingResult bindingResult, Model model,
-			RedirectAttributes redirectAttrs, Locale locale) {
+			RedirectAttributes redirectAttrs, Locale locale, HttpServletResponse response) {
 		if (bindingResult.hasErrors()) {
 			return "movements/main";
 		}
+		
+		// create a cookie
+		Cookie startDateCookie = new Cookie("startDateMov", "" + movementsForm.getStartDate().getTime());
+		Cookie endDateCookie = new Cookie("endDateMov", "" + movementsForm.getEndDate().getTime());
+		// set time to live (seconds)
+		startDateCookie.setMaxAge(60 * 60 * 24 * 31);
+		endDateCookie.setMaxAge(60 * 60 * 24 * 31);
+		// add cookie to response
+		response.addCookie(startDateCookie);
+		response.addCookie(endDateCookie);
+		
 		List<X3WarehouseWeightDetailLine> lines = x3Service.findWeightDetailLine(movementsForm.getStartDate(),
 				movementsForm.getEndDate(), JdbcOracleX3Service.WEIGHT_QUERY_SHIPMENT_DETAIL);
 		model.addAttribute("startDate", movementsForm.getStartDate());
@@ -242,10 +311,21 @@ public class MovementsController {
 
 	@RequestMapping(value = "/calculate", params = { "rcpmovements" }, method = RequestMethod.POST)
 	public String performRcpMovements(@Valid MovementsForm movementsForm, BindingResult bindingResult, Model model,
-			RedirectAttributes redirectAttrs, Locale locale) {
+			RedirectAttributes redirectAttrs, Locale locale, HttpServletResponse response) {
 		if (bindingResult.hasErrors()) {
 			return "movements/main";
 		}
+		
+		// create a cookie
+		Cookie startDateCookie = new Cookie("startDateMov", "" + movementsForm.getStartDate().getTime());
+		Cookie endDateCookie = new Cookie("endDateMov", "" + movementsForm.getEndDate().getTime());
+		// set time to live (seconds)
+		startDateCookie.setMaxAge(60 * 60 * 24 * 31);
+		endDateCookie.setMaxAge(60 * 60 * 24 * 31);
+		// add cookie to response
+		response.addCookie(startDateCookie);
+		response.addCookie(endDateCookie);
+		
 
 		List<GeodeMovement> movements = geodeService.findRcpMovementsInPeriod(movementsForm.getStartDate(),
 				movementsForm.getEndDate());
@@ -284,10 +364,21 @@ public class MovementsController {
 	
 	@RequestMapping(value = "/calculate", params = { "shipmovements" }, method = RequestMethod.POST)
 	public String performShipMovements(@Valid MovementsForm movementsForm, BindingResult bindingResult, Model model,
-			RedirectAttributes redirectAttrs, Locale locale) {
+			RedirectAttributes redirectAttrs, Locale locale, HttpServletResponse response) {
 		if (bindingResult.hasErrors()) {
 			return "movements/main";
 		}
+		
+		// create a cookie
+		Cookie startDateCookie = new Cookie("startDateMov", "" + movementsForm.getStartDate().getTime());
+		Cookie endDateCookie = new Cookie("endDateMov", "" + movementsForm.getEndDate().getTime());
+		// set time to live (seconds)
+		startDateCookie.setMaxAge(60 * 60 * 24 * 31);
+		endDateCookie.setMaxAge(60 * 60 * 24 * 31);
+		// add cookie to response
+		response.addCookie(startDateCookie);
+		response.addCookie(endDateCookie);
+		
 		
 		List<GeodeMovement> movements = geodeService.findShipmentMovementsInPeriod(movementsForm.getStartDate(),
 				movementsForm.getEndDate());
