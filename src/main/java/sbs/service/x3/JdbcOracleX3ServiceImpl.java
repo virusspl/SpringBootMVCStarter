@@ -282,7 +282,7 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	}
 
 	@Override
-	@Cacheable(value="acvInfo")
+	//@Cacheable(value="acvInfo")
 	public List<X3ConsumptionProductInfo> getAcvListForConsumptionReport(String company) {
 		return jdbcOracleX3Repository.getAcvListForConsumptionReport(company);
 	}

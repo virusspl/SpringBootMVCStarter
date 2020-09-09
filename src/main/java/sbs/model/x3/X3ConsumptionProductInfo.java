@@ -148,6 +148,8 @@ public class X3ConsumptionProductInfo implements Serializable{
 	public void setLeadTime(int leadTime) {
 		this.leadTime = leadTime;
 	}
+	
+	
 
 	@Override
 	public String toString() {

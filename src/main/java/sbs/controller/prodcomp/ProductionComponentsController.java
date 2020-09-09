@@ -216,8 +216,10 @@ public class ProductionComponentsController {
 					}
 				}
 
+				Map<String, X3ConsumptionProductInfo> acvInfoMap = new TreeMap<>();
 				for (X3ConsumptionProductInfo info : acvInfo) {
 					safetyStockMap.put(info.getProductCode(), info.getSafetyStock());
+					acvInfoMap.put(info.getProductCode(), info);
 				}
 				// replenish point map
 				Map<String, Integer> replenishMap = new TreeMap<>();
@@ -228,8 +230,13 @@ public class ProductionComponentsController {
 				List<List<String>> table = new ArrayList<>();
 				List<String> line;
 				double x3, qty, geode;
+				Calendar cal;
+				int leadTimeDays;
 				for (Map.Entry<String, Double> entry : allComponents.entrySet()) {
-
+					
+					cal = Calendar.getInstance();
+					leadTimeDays = acvInfoMap.containsKey(entry.getKey()) ? acvInfoMap.get(entry.getKey()).getLeadTime() : 0;
+					cal.add(Calendar.DAY_OF_MONTH, leadTimeDays);
 					x3 = quantities.getOrDefault(entry.getKey(), 0.0);
 					// quantities.containsKey(entry.getKey()) ? quantities.get(entry.getKey()) : 0;
 					qty = entry.getValue();
@@ -255,6 +262,7 @@ public class ProductionComponentsController {
 					} else {
 						line.add(textHelper.numberFormatIntegerRoundNoSpace(Math.abs(x3 - qty)));
 					}
+					line.add(dateHelper.formatYyyyMmDd(cal.getTime()));
 					table.add(line);
 				}
 				model.addAttribute("components", table);
@@ -383,6 +391,7 @@ public class ProductionComponentsController {
 				}
 				// get acv info
 				List<X3ConsumptionProductInfo> acvInfo = x3Service.getAcvListForConsumptionReport("ATW");
+				
 				Calendar cal = Calendar.getInstance();
 				cal.add(Calendar.DAY_OF_MONTH, days);
 				Map<String, Double> expectedDelivery = x3Service.getExpectedDeliveriesByDate(cal.getTime(), "ATW");
@@ -456,7 +465,6 @@ public class ProductionComponentsController {
 						qstock = acvStock.getOrDefault(req.getKey(), 0);
 						shortage = qreq - qstock;
 						currentMaxProdForReq = (int) (qstock / qunitreq);
-
 						if (shortage > 0) {
 							if (qstock / qunitreq < maxProd) {
 								maxProd = (int) (qstock / qunitreq);
@@ -698,7 +706,7 @@ public class ProductionComponentsController {
 				if (currentStock >= qtyReq) {
 					// if there is stock for all current component req,
 					// decrease stock and ignore subcomponents
-					// IF IN PRODUCATION ORDERS ALSO SKIP... TODO?
+					// IF IN PRODUCATION ORDERS ALSO SKIP...?
 					currentStock -= qtyReq;
 					continue;
 				} else {
