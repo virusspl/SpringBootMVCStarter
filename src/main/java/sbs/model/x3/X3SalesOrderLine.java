@@ -24,8 +24,10 @@ public class X3SalesOrderLine {
 	private double exchangeRate;
 	private String currency;
 	private int demandState;
-	
+	private String finalClientCode;
+	private String finalClientName;
 
+	
 	public X3SalesOrderLine() {
 		
 	}
@@ -198,19 +200,35 @@ public class X3SalesOrderLine {
 	public void setProductCategory(String productCategory) {
 		this.productCategory = productCategory;
 	}
+	
+	public String getFinalClientCode() {
+		return finalClientCode;
+	}
+
+	public void setFinalClientCode(String finalClientCode) {
+		this.finalClientCode = finalClientCode;
+	}
+
+	public String getFinalClientName() {
+		return finalClientName;
+	}
+
+	public void setFinalClientName(String finalClientName) {
+		this.finalClientName = finalClientName;
+	}
 
 	@Override
 	public String toString() {
 		return "X3SalesOrderLine [orderNumber=" + orderNumber + ", orderLineNumber=" + orderLineNumber
-				+ ", productCode=" + productCode + ", productDescription=" + productDescription + ", productGr1="
-				+ productGr1 + ", productGr2=" + productGr2 + ", productGr3=" + productGr3 + ", clientCode="
-				+ clientCode + ", clientName=" + clientName + ", country=" + country + ", demandedDate=" + demandedDate
-				+ ", creationDate=" + creationDate + ", updateDate=" + updateDate + ", originalDate=" + originalDate
-				+ ", quantityLeftToSend=" + quantityLeftToSend + ", quantityOrdered=" + quantityOrdered + ", unitPrice="
-				+ unitPrice + ", exchangeRate=" + exchangeRate + ", currency=" + currency + "]";
+				+ ", productCode=" + productCode + ", productDescription=" + productDescription + ", productCategory="
+				+ productCategory + ", productGr1=" + productGr1 + ", productGr2=" + productGr2 + ", productGr3="
+				+ productGr3 + ", clientCode=" + clientCode + ", clientName=" + clientName + ", country=" + country
+				+ ", demandedDate=" + demandedDate + ", creationDate=" + creationDate + ", updateDate=" + updateDate
+				+ ", originalDate=" + originalDate + ", quantityLeftToSend=" + quantityLeftToSend + ", quantityOrdered="
+				+ quantityOrdered + ", unitPrice=" + unitPrice + ", exchangeRate=" + exchangeRate + ", currency="
+				+ currency + ", demandState=" + demandState + ", finalClientCode=" + finalClientCode
+				+ ", finalClientName=" + finalClientName + "]";
 	}
-
-
 
 	
 }

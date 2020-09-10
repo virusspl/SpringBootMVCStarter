@@ -175,6 +175,8 @@ public class MovementsController {
 			tmpKey = mvt.getDocument()+";"+mvt.getItemCode();
 			mvt.setOrderDate(orderLinesMap.containsKey(tmpKey) ? orderLinesMap.get(tmpKey).getCreationDate():null);
 			mvt.setDemandedDate(orderLinesMap.containsKey(tmpKey) ? orderLinesMap.get(tmpKey).getDemandedDate():null);
+			mvt.setFinalClientCode(orderLinesMap.containsKey(tmpKey) ? orderLinesMap.get(tmpKey).getFinalClientCode():"");
+			mvt.setFinalClientName(orderLinesMap.containsKey(tmpKey) ? orderLinesMap.get(tmpKey).getFinalClientName():"");
 
 			totalValue += mvt.getValue();
 			counter++;

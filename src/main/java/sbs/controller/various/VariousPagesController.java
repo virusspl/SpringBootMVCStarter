@@ -34,6 +34,7 @@ import sbs.model.shipments.ShipmentState;
 import sbs.model.tools.ToolsProjectState;
 import sbs.model.users.Role;
 import sbs.model.users.User;
+import sbs.scheduling.StandardCostsScheduler;
 import sbs.service.bhptickets.BhpTicketStateService;
 import sbs.service.bhptickets.BhpTicketsService;
 import sbs.service.downtimes.DowntimeResponseTypesService;
@@ -102,10 +103,13 @@ public class VariousPagesController {
 	CustomShipmentLineStatesService customShipmentLineStatesService;
 	@Autowired
 	MemoryService memoryService;
+	@Autowired
+	StandardCostsScheduler costsScheduler;
 	
 	@RequestMapping("/test")
 	public String test(Model model, Locale locale) throws InterruptedException {
 
+		
 		
 		//memoryService.debugListMemoryPoolBeans();
 		

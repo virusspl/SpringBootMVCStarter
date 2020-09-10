@@ -7,7 +7,7 @@ import sbs.helpers.TextHelper;
 public class X3ShipmentMovement {
 
 	
-	TextHelper textHelper;
+	private TextHelper textHelper;
 	
 	private String itemCode;
 	private String itemDescription;
@@ -16,6 +16,8 @@ public class X3ShipmentMovement {
 	private String document;
 	private String clientCode;
 	private String clientName;
+	private String finalClientCode;
+	private String finalClientName;
 	private String movementNumber;
 	private Timestamp date;
 	private double quantity;
@@ -181,15 +183,41 @@ public class X3ShipmentMovement {
 	public void setValueFormat(String valueFormat) {
 		this.valueFormat = valueFormat;
 	}
+	
+	/**
+	 * null in raw query result
+	 */
+	public String getFinalClientCode() {
+		return finalClientCode;
+	}
+
+	public void setFinalClientCode(String finalClientCode) {
+		this.finalClientCode = finalClientCode;
+	}
+	
+	/**
+	 * null in raw query result
+	 */
+	public String getFinalClientName() {
+		return finalClientName;
+	}
+
+	public void setFinalClientName(String finalClientName) {
+		this.finalClientName = finalClientName;
+	}
 
 	@Override
 	public String toString() {
 		return "X3ShipmentMovement [itemCode=" + itemCode + ", itemDescription=" + itemDescription + ", itemCategory="
 				+ itemCategory + ", gr2=" + gr2 + ", document=" + document + ", clientCode=" + clientCode
-				+ ", clientName=" + clientName + ", movementNumber=" + movementNumber + ", date=" + date + ", quantity="
-				+ quantity + ", emergencyAveragePrice=" + emergencyAveragePrice + ", price=" + price + ", value="
-				+ value + "]";
+				+ ", clientName=" + clientName + ", finalClientCode=" + finalClientCode + ", finalClientName="
+				+ finalClientName + ", movementNumber=" + movementNumber + ", date=" + date + ", quantity=" + quantity
+				+ ", emergencyAveragePrice=" + emergencyAveragePrice + ", price=" + price + ", value=" + value
+				+ ", orderDate=" + orderDate + ", demandedDate=" + demandedDate + ", quantityFormat=" + quantityFormat
+				+ ", priceFormat=" + priceFormat + ", valueFormat=" + valueFormat + "]";
 	}
+
+
 
 
 	

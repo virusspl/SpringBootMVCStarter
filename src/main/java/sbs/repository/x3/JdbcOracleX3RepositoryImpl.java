@@ -1132,9 +1132,12 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "ITM.TSICOD_2, "
 				+ "BPR.BPRNUM_0, "
 				+ "BPR.BPRNAM_0, "
-				+ "BPR.CRY_0 "
+				+ "BPR.CRY_0,"
+				+ "SOR.XCLIORI_0,"
+				+ "BPR2.BPRNAM_0 AS BPRNAM2 "
 				
 				+ "FROM ("
+				+ "("
 				+ "("
 				+ "("
 				+ "(" + company + ".SORDERQ SOQ INNER JOIN " + company + ".SORDERP SOP "
@@ -1148,7 +1151,8 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "INNER JOIN " + company + ".BPARTNER BPR ON SOR.X_CODCLI_0 = BPR.BPRNUM_0) "
 				+ "INNER JOIN " + company + ".YCHGSTKGX YCHGX "
 				+ "ON SOR.SOHNUM_0 = YCHGX.YWO_0 "
-				+ "AND ITM.ITMREF_0 = YCHGX.ITMREF_0 "
+				+ "AND ITM.ITMREF_0 = YCHGX.ITMREF_0)"
+				+ "INNER JOIN " + company + ".BPARTNER BPR2 ON SOR.XCLIORI_0 = BPR2.BPRNUM_0 "
 				+ "WHERE "
 				+ "YCHGX.CREDAT_0 >= ? "
 				+ "AND "
@@ -1199,6 +1203,8 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			line.setExchangeRate(((BigDecimal)row.get("CHGRAT_0")).doubleValue());
 			line.setCurrency((String)row.get("CUR_0"));
 			line.setDemandState(((BigDecimal)row.get("DEMSTA_0")).intValue());
+			line.setFinalClientCode((String)row.get("XCLIORI_0"));
+			line.setFinalClientName((String)row.get("BPRNAM2"));
 			list.add(line);
 		}
 
