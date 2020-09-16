@@ -21,6 +21,7 @@ public class X3ConsumptionProductInfo implements Serializable{
 	private int ewz;
 	private int technicalLot;
 	private int leadTime;
+	private int averageDeliveryDays;
 	
 	
 	public X3ConsumptionProductInfo() {
@@ -149,7 +150,13 @@ public class X3ConsumptionProductInfo implements Serializable{
 		this.leadTime = leadTime;
 	}
 	
-	
+	public int getAverageDeliveryDays() {
+		return averageDeliveryDays;
+	}
+
+	public void setAverageDeliveryDays(int averageDeliveryDays) {
+		this.averageDeliveryDays = averageDeliveryDays;
+	}
 
 	@Override
 	public String toString() {
@@ -158,8 +165,9 @@ public class X3ConsumptionProductInfo implements Serializable{
 				+ buyerCode + ", buyGroupCode=" + buyGroupCode + ", lastIssueDate=" + lastIssueDate
 				+ ", lastReceptionDate=" + lastReceptionDate + ", reorderPoint=" + reorderPoint + ", safetyStock="
 				+ safetyStock + ", maxStsock=" + maxStsock + ", ewz=" + ewz + ", technicalLot=" + technicalLot
-				+ ", leadTime=" + leadTime + "]";
+				+ ", leadTime=" + leadTime + ", averageDeliveryDays=" + averageDeliveryDays + "]";
 	}
+
 
 	
 }

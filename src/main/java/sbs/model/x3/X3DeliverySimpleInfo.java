@@ -9,6 +9,7 @@ public class X3DeliverySimpleInfo {
 	private int quantityOrdered;
 	private int quantityReceived;
 	private java.util.Date date;
+	private java.util.Date orderDate;
 	private String supplierCode;
 	private String supplierName;
 	private String country;
@@ -31,6 +32,14 @@ public class X3DeliverySimpleInfo {
 
 	public void setDate(java.util.Date date) {
 		this.date = date;
+	}
+
+	public java.util.Date getOrderDate() {
+		return orderDate;
+	}
+
+	public void setOrderDate(java.util.Date orderDate) {
+		this.orderDate = orderDate;
 	}
 
 	public String getSupplierCode() {
@@ -103,11 +112,9 @@ public class X3DeliverySimpleInfo {
 	public String toString() {
 		return "X3DeliverySimpleInfo [documentNr=" + documentNr + ", documentLine=" + documentLine + ", productCode="
 				+ productCode + ", quantityLeftToGet=" + quantityLeftToGet + ", quantityOrdered=" + quantityOrdered
-				+ ", quantityReceived=" + quantityReceived + ", date=" + date + ", supplierCode=" + supplierCode
-				+ ", supplierName=" + supplierName + ", country=" + country + "]";
+				+ ", quantityReceived=" + quantityReceived + ", date=" + date + ", orderDate=" + orderDate
+				+ ", supplierCode=" + supplierCode + ", supplierName=" + supplierName + ", country=" + country + "]";
 	}
-
-
 
 	
 }

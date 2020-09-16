@@ -2539,6 +2539,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "itf.MAXSTO_0, "
 				+ "itf.REOMINQTY_0, "
 				+ "itf.MFGLOTQTY_0, "
+				+ "itf.YLTACQ_0, "
 				+ "itv.LASRCPDAT_0, "
 				+ "itv.LASISSDAT_0 "
 				+ "FROM ("
@@ -2564,7 +2565,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			info.setAverageCost(((BigDecimal)row.get("AVC_0")).doubleValue());
 			info.setBuyerCode((String)row.get("BUY_0"));
 			info.setBuyGroupCode((String)row.get("YFAMGROUP_0"));
-			info.setLeadTime(((BigDecimal)row.get("OFS_0")).intValue());
+			info.setLeadTime(((BigDecimal)row.get("YLTACQ_0")).intValue());
 			info.setSafetyStock(((BigDecimal)row.get("SAFSTO_0")).intValue());
 			info.setReorderPoint(((BigDecimal)row.get("REOTSD_0")).intValue());
 			info.setMaxStsock(((BigDecimal)row.get("MAXSTO_0")).intValue());
@@ -4305,6 +4306,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 					+ "BPR.BPRNAM_0, " 
 					+ "BPR.CRY_0, "
 					+ "POQ.X_RCPDAT_0, " 
+					+ "POQ.ORDDAT_0, " 
 					+ "(POQ.QTYSTU_0 - POQ.RCPQTYSTU_0) AS TO_GET, "
 					+ "ROW_NUMBER() OVER (PARTITION BY POQ.ITMREF_0 ORDER BY POQ.X_RCPDAT_0 ASC) AS ROWNUMBER "
 					+ "FROM " + company + ".PORDERQ POQ INNER JOIN "  + company + ".BPARTNER BPR ON POQ.BPSNUM_0 = BPR.BPRNUM_0 "
@@ -4328,6 +4330,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			info.setSupplierName((String)row.get("BPRNAM_0"));
 			info.setCountry((String)row.get("CRY_0"));
 			info.setDate((Timestamp)row.get("X_RCPDAT_0"));
+			info.setOrderDate((Timestamp)row.get("ORDDAT_0"));
 			map.put(info.getProductCode(), info); 
 		}
 		return map;

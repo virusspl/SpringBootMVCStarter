@@ -113,7 +113,9 @@
 								<th th:text="|GEO Prd/Rcp|">head</th>
 								<th th:text="#{general.quantity}">head</th>
 								<th th:text="#{general.demand.short}">head</th>
+								<th th:text="#{prodcomp.averagedeliverydays}">head</th>
 								<th th:text="#{prodcomp.theoretical.date.delivery.short}">head</th>
+								<th th:text="|#{general.date} Nicim|">head</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -129,6 +131,8 @@
 								<td><span th:text="${line[8]}"></span></td>
 								<td><span th:text="${line[9]}"></span></td>
 								<td><span th:text="${line[10]}"></span></td>
+								<td><span th:text="${line[11]}"></span></td>
+								<td><span th:text="${line[12]}"></span></td>
 							</tr>
 						</tbody>
 					</table>

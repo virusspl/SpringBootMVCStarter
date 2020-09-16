@@ -200,6 +200,8 @@ public class ProductionComponentsController {
 				Map<String, X3Product> products = x3Service.findAllActiveProductsMap("ATW");
 				// get acv info
 				List<X3ConsumptionProductInfo> acvInfo = x3Service.getAcvListForConsumptionReport("ATW");
+				Map<String, X3DeliverySimpleInfo> upcomingDeliveries = x3Service
+						.getFirstUpcomingDeliveriesMapByCodeAfterDate(new java.util.Date(), "ATW");
 				// safety stock map
 				Map<String, Integer> safetyStockMap = new TreeMap<>();
 				Map<String, List<X3BomItem>> allBoms = x3Service.getAllBomPartsTopLevel("ATW");
@@ -234,9 +236,6 @@ public class ProductionComponentsController {
 				int leadTimeDays;
 				for (Map.Entry<String, Double> entry : allComponents.entrySet()) {
 					
-					cal = Calendar.getInstance();
-					leadTimeDays = acvInfoMap.containsKey(entry.getKey()) ? acvInfoMap.get(entry.getKey()).getLeadTime() : 0;
-					cal.add(Calendar.DAY_OF_MONTH, leadTimeDays);
 					x3 = quantities.getOrDefault(entry.getKey(), 0.0);
 					// quantities.containsKey(entry.getKey()) ? quantities.get(entry.getKey()) : 0;
 					qty = entry.getValue();
@@ -262,7 +261,23 @@ public class ProductionComponentsController {
 					} else {
 						line.add(textHelper.numberFormatIntegerRoundNoSpace(Math.abs(x3 - qty)));
 					}
-					line.add(dateHelper.formatYyyyMmDd(cal.getTime()));
+					// lead time days
+					leadTimeDays = acvInfoMap.containsKey(entry.getKey()) ? acvInfoMap.get(entry.getKey()).getLeadTime() : 0;
+					line.add(leadTimeDays > 0 ? leadTimeDays+"" : "-");
+					// theoretical average delivery
+					if(upcomingDeliveries.containsKey(entry.getKey()) && leadTimeDays > 0){
+						cal = Calendar.getInstance();
+						cal.setTime(upcomingDeliveries.get(entry.getKey()).getOrderDate());
+						cal.add(Calendar.DAY_OF_MONTH, leadTimeDays);
+						line.add(dateHelper.formatYyyyMmDd(cal.getTime()));
+					}
+					else {
+						line.add("-");
+					}
+					// declared delivery
+					line.add(upcomingDeliveries.containsKey(entry.getKey())
+							? dateHelper.formatYyyyMmDd(upcomingDeliveries.get(entry.getKey()).getDate())
+							: "-");
 					table.add(line);
 				}
 				model.addAttribute("components", table);
