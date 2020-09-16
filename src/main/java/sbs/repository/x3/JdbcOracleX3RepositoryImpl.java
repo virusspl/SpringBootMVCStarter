@@ -27,6 +27,7 @@ import sbs.config.error.NotFoundException;
 import sbs.controller.dirrcpship.DirectReceptionsShipmentLine;
 import sbs.controller.prodcomp.NoBomCodeInfo;
 import sbs.helpers.DateHelper;
+import sbs.model.generic.StringIntPair;
 import sbs.model.proprog.Project;
 import sbs.model.wpslook.WpslookRow;
 import sbs.model.x3.X3AvgPriceLine;
@@ -38,6 +39,7 @@ import sbs.model.x3.X3ConsumptionSupplyInfo;
 import sbs.model.x3.X3CoverageData;
 import sbs.model.x3.X3DeliverySimpleInfo;
 import sbs.model.x3.X3EnvironmentInfo;
+import sbs.model.x3.X3HistockRawEntry;
 import sbs.model.x3.X3KeyValString;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductEvent;
@@ -4640,7 +4642,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 
 	@Override
 	public NoBomCodeInfo getNoBomCodeIncompleteObject(String code, String company) {
-		// ===========================================================
+				// ===========================================================
 				// ==== TMP JDBC DUALITY =====================================
 				if(this.x3v.equalsIgnoreCase("6")) {
 					jdbc = jdbc6;
@@ -4685,6 +4687,182 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		        }
 		        
 		        return inf;
+	}
+
+	@Override
+	public List<X3HistockRawEntry> getHistockRawEntries(int years, String company) {
+		// ===========================================================
+		// ==== TMP JDBC DUALITY =====================================
+		if(this.x3v.equalsIgnoreCase("6")) {
+			jdbc = jdbc6;
+		}
+		else {
+			jdbc = jdbc11;
+		}
+		// ==== TMP JDBC DUALITY =====================================
+		// ===========================================================
+		
+		Calendar startPoint = Calendar.getInstance();
+		startPoint.add(Calendar.YEAR, -years);
+		
+		List<Map<String,Object>> resultSet = jdbc.queryForList( ""
+				+ "SELECT "
+				+ "POQ.POHNUM_0 AS porder, "
+				+ "POQ.POPLIN_0 AS line, "
+				+ "POQ.ITMREF_0 AS code, "
+				+ "ITM.TSICOD_0 AS gr1, "
+				+ "ITM.TSICOD_1 AS gr2, "
+				+ "ITM.TCLCOD_0 AS cat, "
+				+ "POQ.QTYSTU_0 AS qordered, "
+				+ "SUM(PRD.QTYSTU_0) AS qreceived, "
+				+ "POQ.ORDDAT_0 AS orddat, "
+				+ "MAX(PRD.RCPDAT_0) AS last_rcpdat, "
+				+ "COUNT(PRD.PTHNUM_0) AS rcp_counter "
+			+ "FROM "
+				+ "("
+				+ company + ".PRECEIPTD PRD INNER JOIN " + company + ".PORDERQ POQ "
+				+ "ON (PRD.POQSEQ_0 = POQ.POQSEQ_0) "
+				+ "AND (PRD.POPLIN_0 = POQ.POPLIN_0) "
+				+ "AND (PRD.POHNUM_0 = POQ.POHNUM_0) "
+				+ ") INNER JOIN " + company + ".ITMMASTER ITM "
+				+ "ON PRD.ITMREF_0 = ITM.ITMREF_0 "
+			+ "GROUP BY "
+				+ "POQ.POHNUM_0, "
+				+ "POQ.POPLIN_0, "
+				+ "POQ.ITMREF_0, "
+				+ "ITM.TSICOD_0, "
+				+ "ITM.TSICOD_1, "
+				+ "ITM.TCLCOD_0, "
+				+ "POQ.QTYSTU_0, "
+				+ "POQ.ORDDAT_0, "
+				+ "POQ.LINCLEFLG_0 "
+			+ "HAVING "
+				+ "POQ.ORDDAT_0 >= ? "
+				+ "AND "
+				+ "POQ.LINCLEFLG_0 = ? "
+			+ "ORDER BY "
+				+ "POQ.ORDDAT_0 DESC "
+				,
+                new Object[]{startPoint.getTime(), 2});
+		List<X3HistockRawEntry> list = new ArrayList<>();
+		X3HistockRawEntry line;
+        for(Map<String,Object> row: resultSet ){
+        	line = new X3HistockRawEntry();
+        	line.setOrder((String)row.get("porder"));
+        	line.setLine(((BigDecimal)row.get("line")).intValue());
+        	line.setCode((String)row.get("code"));
+        	line.setGr1((String)row.get("gr1"));
+        	line.setGr2((String)row.get("gr2"));
+        	line.setCategory((String)row.get("cat"));
+        	line.setQuantityOrdered(((BigDecimal)row.get("qordered")).intValue());
+        	line.setQuantityReceived(((BigDecimal)row.get("qreceived")).intValue());
+        	line.setOrderDate((Timestamp)row.get("orddat"));
+        	line.setLastReceptionDate((Timestamp)row.get("last_rcpdat"));
+        	line.setReceptionsCounter(((BigDecimal)row.get("rcp_counter")).intValue());
+
+        	list.add(line);
+        	
+        }
+        
+        return list;
+		
+	}
+	
+	@Override
+	public List<X3HistockRawEntry> getHistockRawPendingEntries(int years, String company) {
+		// ===========================================================
+				// ==== TMP JDBC DUALITY =====================================
+				if(this.x3v.equalsIgnoreCase("6")) {
+					jdbc = jdbc6;
+				}
+				else {
+					jdbc = jdbc11;
+				}
+				// ==== TMP JDBC DUALITY =====================================
+				// ===========================================================
+				
+				Calendar startPoint = Calendar.getInstance();
+				startPoint.add(Calendar.YEAR, -years);
+				
+				List<Map<String,Object>> resultSet = jdbc.queryForList( ""
+						+ "SELECT "
+						+ "POQ.POHNUM_0 AS porder, "
+						+ "POQ.POPLIN_0 AS line, "
+						+ "POQ.ITMREF_0 AS code, "
+						+ "ITM.TSICOD_0 AS gr1, "
+						+ "ITM.TSICOD_1 AS gr2, "
+						+ "ITM.TCLCOD_0 AS cat, "
+						+ "POQ.QTYSTU_0 AS qordered, "
+						+ "POQ.ORDDAT_0 AS orddat "
+					+ "FROM "
+						+ company + ".PORDERQ POQ INNER JOIN " + company + ".ITMMASTER ITM "
+						+ "ON POQ.ITMREF_0 = ITM.ITMREF_0 "
+						+ "WHERE "
+						+ "POQ.ORDDAT_0 >= ? "
+						+ "AND "
+						+ "POQ.LINCLEFLG_0 != ? "
+					+ "ORDER BY "
+						+ "POQ.ORDDAT_0 DESC "
+						,
+		                new Object[]{startPoint.getTime(), 2});
+				List<X3HistockRawEntry> list = new ArrayList<>();
+				X3HistockRawEntry line;
+		        for(Map<String,Object> row: resultSet ){
+		        	line = new X3HistockRawEntry();
+		        	line.setOrder((String)row.get("porder"));
+		        	line.setLine(((BigDecimal)row.get("line")).intValue());
+		        	line.setCode((String)row.get("code"));
+		        	line.setGr1((String)row.get("gr1"));
+		        	line.setGr2((String)row.get("gr2"));
+		        	line.setCategory((String)row.get("cat"));
+		        	line.setQuantityOrdered(((BigDecimal)row.get("qordered")).intValue());
+		        	line.setQuantityReceived(0);
+		        	line.setOrderDate((Timestamp)row.get("orddat"));
+		        	line.setLastReceptionDate(new Timestamp(new java.util.Date().getTime()));
+		        	line.setReceptionsCounter(0);
+
+		        	list.add(line);
+		        	
+		        }
+		        
+		        return list;
+				
+	}
+
+	@Override
+	public void updateAverageDeliveryDaysInDatabase(List<StringIntPair> list, String company) {
+		// ===========================================================
+		// ==== TMP JDBC DUALITY =====================================
+		if(this.x3v.equalsIgnoreCase("6")) {
+			jdbc = jdbc6;
+		}
+		else {
+			jdbc = jdbc11;
+		}
+		// ==== TMP JDBC DUALITY =====================================
+		// ===========================================================
+		
+		String sql = ""
+				+ "UPDATE " 
+				+ company + ".ITMFACILIT SET "
+				+ "YLTACQ_0 = ? "
+				+ "WHERE "
+				+ "ITMREF_0 = ?";
+		jdbc.batchUpdate(sql, new BatchPreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement ps, int i) throws SQLException {
+				StringIntPair entry = list.get(i);
+				ps.setInt(1, entry.getIntValue());
+				ps.setString(2, entry.getStringValue());
+			}
+			@Override
+			public int getBatchSize() {
+				return list.size();
+			}
+		});
+		
+		
+		
 	}
 
 	

@@ -110,6 +110,7 @@ public class VariousPagesController {
 	public String test(Model model, Locale locale) throws InterruptedException {
 
 		
+		//String result = x3Service.updateAverageDeliveryDays("ATW");
 		
 		//memoryService.debugListMemoryPoolBeans();
 		

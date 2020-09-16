@@ -2,6 +2,7 @@ package sbs.service.x3;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import sbs.controller.dirrcpship.DirectReceptionsShipmentLine;
 import sbs.controller.prodcomp.NoBomCodeInfo;
+import sbs.model.generic.StringIntPair;
 import sbs.model.proprog.Project;
 import sbs.model.wpslook.WpslookRow;
 import sbs.model.x3.X3AvgPriceLine;
@@ -24,6 +26,7 @@ import sbs.model.x3.X3ConsumptionSupplyInfo;
 import sbs.model.x3.X3CoverageData;
 import sbs.model.x3.X3DeliverySimpleInfo;
 import sbs.model.x3.X3EnvironmentInfo;
+import sbs.model.x3.X3HistockRawEntry;
 import sbs.model.x3.X3KeyValString;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductEventsHistory;
@@ -53,11 +56,12 @@ import sbs.model.x3.X3WarehouseWeightLine;
 import sbs.model.x3.X3Workstation;
 import sbs.repository.x3.JdbcOracleX3Repository;
 
+
 @Service
 public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	@Autowired
 	JdbcOracleX3Repository jdbcOracleX3Repository;
-	
+
 	@Override
 	public String convertLocaleToX3Lang(Locale locale) {
 		String x3lang;
@@ -71,45 +75,45 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 		}
 		return x3lang;
 	}
-	
+
 	@Override
-	@Cacheable(value="x3AllUsers")
-	public List<String> findAllUsers(String company){
+	@Cacheable(value = "x3AllUsers")
+	public List<String> findAllUsers(String company) {
 		return jdbcOracleX3Repository.findAllUsers(company);
 	}
 
 	@Override
-	@Cacheable(value="x3ItemDescByCode")
+	@Cacheable(value = "x3ItemDescByCode")
 	public String findItemDescription(String company, String product) {
 		return jdbcOracleX3Repository.findItemDescription(company, product);
 	}
 
 	@Override
-	@Cacheable(value="x3AllClients")
+	@Cacheable(value = "x3AllClients")
 	public List<X3Client> findAllClients(String company) {
 		return jdbcOracleX3Repository.findAllClients(company);
 	}
 
 	@Override
-	@Cacheable(value="x3AllSalesOrders")
+	@Cacheable(value = "x3AllSalesOrders")
 	public List<X3SalesOrder> findAllSalesOrders(String company) {
 		return jdbcOracleX3Repository.findAllSalesOrders(company);
 	}
 
 	@Override
-	@Cacheable(value="x3OpenedSalesOrders")
+	@Cacheable(value = "x3OpenedSalesOrders")
 	public List<X3SalesOrder> findOpenedSalesOrders(String company) {
 		return jdbcOracleX3Repository.findOpenedSalesOrders(company);
 	}
 
 	@Override
-	@Cacheable(value="x3AllActiveProducts")
+	@Cacheable(value = "x3AllActiveProducts")
 	public List<X3Product> findAllActiveProducts(String company) {
 		return jdbcOracleX3Repository.findAllActiveProducts(company);
 	}
-	
+
 	@Override
-	@Cacheable(value="x3AllActiveProductsMap")
+	@Cacheable(value = "x3AllActiveProductsMap")
 	public Map<String, X3Product> findAllActiveProductsMap(String company) {
 		return jdbcOracleX3Repository.findAllActiveProductsMap(company);
 	}
@@ -147,12 +151,15 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	@Override
 	public List<X3BomItem> findProductionPartsByProductionOrderAndOperation(String company, String productionOrder,
 			int operationNumber) {
-		return jdbcOracleX3Repository.findProductionPartsByProductionOrderAndOperation(company, productionOrder, operationNumber);
+		return jdbcOracleX3Repository.findProductionPartsByProductionOrderAndOperation(company, productionOrder,
+				operationNumber);
 	}
 
 	@Override
-	public String findOperationDescriptionByProductionOrder(String company, String productionOrder, int operationNumber) {
-		return jdbcOracleX3Repository.findOperationDescriptionByProductionOrder(company, productionOrder, operationNumber);
+	public String findOperationDescriptionByProductionOrder(String company, String productionOrder,
+			int operationNumber) {
+		return jdbcOracleX3Repository.findOperationDescriptionByProductionOrder(company, productionOrder,
+				operationNumber);
 	}
 
 	@Override
@@ -161,13 +168,13 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	}
 
 	@Override
-	@Cacheable(value="x3AllUtrMachines")
+	@Cacheable(value = "x3AllUtrMachines")
 	public Map<String, X3UtrMachine> findAllUtrMachines(String company) {
 		return jdbcOracleX3Repository.findAllUtrMachines(company);
 	}
 
 	@Override
-	@Cacheable(value="x3AllUtrWorkers")
+	@Cacheable(value = "x3AllUtrWorkers")
 	public Map<String, X3UtrWorker> findAllUtrWorkers(String company) {
 		return jdbcOracleX3Repository.findAllUtrWorkers(company);
 	}
@@ -181,13 +188,13 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	public Map<String, X3UtrFault> findUtrFaultsInPeriod(Date startDate, Date endDate) {
 		return jdbcOracleX3Repository.findUtrFaultsInPeriod(startDate, endDate);
 	}
-	
+
 	@Override
-	@Cacheable(value="x3AllUtrFaults")
+	@Cacheable(value = "x3AllUtrFaults")
 	public Map<String, X3UtrFault> findAllUtrFaults() {
 		return jdbcOracleX3Repository.findAllUtrFaults();
 	}
-	
+
 	@Override
 	public X3UtrFault findUtrFault(String number) {
 		return jdbcOracleX3Repository.findUtrFault(number);
@@ -199,19 +206,19 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	}
 
 	@Override
-	@Cacheable(value="x3AllUtrFaultLines")
+	@Cacheable(value = "x3AllUtrFaultLines")
 	public List<X3UtrFaultLine> findAllUtrFaultLines() {
 		return jdbcOracleX3Repository.findAllUtrFaultLines();
 	}
 
 	@Override
-	@Cacheable(value="x3productFinalMachines")
+	@Cacheable(value = "x3productFinalMachines")
 	public Map<String, X3ProductFinalMachine> findX3ProductFinalMachines(String company) {
 		return jdbcOracleX3Repository.findX3ProductFinalMachines(company);
 	}
 
 	@Override
-	//@Cacheable(value="x3PendingProjectsProgress")
+	// @Cacheable(value="x3PendingProjectsProgress")
 	public List<Project> findPendingProjectsProgress() {
 		return jdbcOracleX3Repository.findPendingProjectsProgress();
 	}
@@ -231,16 +238,16 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 		return jdbcOracleX3Repository.findWeightDetailLine(startDate, endDate, weightQueryType);
 	}
 
-
 	@Override
 	public Map<String, Integer> findAcvMagStock(String company) {
 		return jdbcOracleX3Repository.findAcvMagStock(company);
 	}
-	
+
 	@Override
 	public Map<String, Integer> findAcvShipStock(String company) {
 		return jdbcOracleX3Repository.findAcvShipStock(company);
 	}
+
 	@Override
 	public List<X3ShipmentStockLineWithPrice> findAllShipStockWithAveragePrice(String company) {
 		return jdbcOracleX3Repository.findAllShipStockWithAveragePrice(company);
@@ -262,8 +269,9 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	}
 
 	@Override
-	public List<DirectReceptionsShipmentLine> findDirectReceptionsShipmentLines(Date startDate, Date endDate, String company) {
-		return jdbcOracleX3Repository.findDirectReceptionsShipmentLines(startDate,  endDate, company);
+	public List<DirectReceptionsShipmentLine> findDirectReceptionsShipmentLines(Date startDate, Date endDate,
+			String company) {
+		return jdbcOracleX3Repository.findDirectReceptionsShipmentLines(startDate, endDate, company);
 	}
 
 	@Override
@@ -282,7 +290,7 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	}
 
 	@Override
-	//@Cacheable(value="acvInfo")
+	// @Cacheable(value="acvInfo")
 	public List<X3ConsumptionProductInfo> getAcvListForConsumptionReport(String company) {
 		return jdbcOracleX3Repository.getAcvListForConsumptionReport(company);
 	}
@@ -323,25 +331,24 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	}
 
 	@Override
-	@Cacheable(value="x3Descriptions")
+	@Cacheable(value = "x3Descriptions")
 	public Map<String, String> getDescriptionsByLanguage(String x3lang, String company) {
 		return jdbcOracleX3Repository.getDescriptionsByLanguage(x3lang, company);
 	}
 
-
 	@Override
-	@Cacheable(value="x3AcvUsageDetails")
+	@Cacheable(value = "x3AcvUsageDetails")
 	public List<X3UsageDetail> getAcvUsageDetailsListByYear(int year, String company) {
-		return jdbcOracleX3Repository.getAcvUsageDetailsListByYear(year, company); 
+		return jdbcOracleX3Repository.getAcvUsageDetailsListByYear(year, company);
 	}
 
 	@Override
 	public List<X3CoverageData> getCoverageInitialData(String company) {
-		return jdbcOracleX3Repository.getCoverageInitialData(company); 
+		return jdbcOracleX3Repository.getCoverageInitialData(company);
 	}
 
 	@Override
-	@Cacheable(value="x3FirstSuppliers")
+	@Cacheable(value = "x3FirstSuppliers")
 	public Map<String, X3Supplier> getFirstAcvSuppliers(String company) {
 		return jdbcOracleX3Repository.getFirstAcvSuppliers(company);
 	}
@@ -377,13 +384,13 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	}
 
 	@Override
-	@Cacheable(value="x3AllBomPartsTopLevel")
+	@Cacheable(value = "x3AllBomPartsTopLevel")
 	public Map<String, List<X3BomItem>> getAllBomPartsTopLevel(String company) {
 		return jdbcOracleX3Repository.getAllBomPartsTopLevel(company);
 	}
 
 	@Override
-	@Cacheable(value="getAllBomEntries")	
+	@Cacheable(value = "getAllBomEntries")
 	public List<X3BomPart> getAllBomEntries(String company) {
 		return jdbcOracleX3Repository.getAllBomEntries(company);
 	}
@@ -395,23 +402,24 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 
 	@Override
 	public String updateStandardCostsTable(String company) {
-		Map<String, X3StandardCostEntry> stdCostsUpdate = jdbcOracleX3Repository.getLastStandardCostsListFromCalculationTable(company);
+		Map<String, X3StandardCostEntry> stdCostsUpdate = jdbcOracleX3Repository
+				.getLastStandardCostsListFromCalculationTable(company);
 		Map<String, X3StandardCostEntry> stdCostsCurrent = jdbcOracleX3Repository.getStandardCostsMap(company);
 		List<X3StandardCostEntry> updateList = new ArrayList<>();
 		List<X3StandardCostEntry> insertList = new ArrayList<>();
-		
-		for(Entry<String, X3StandardCostEntry> entry: stdCostsUpdate.entrySet()){
-			if(stdCostsCurrent.containsKey(entry.getKey())){
+
+		for (Entry<String, X3StandardCostEntry> entry : stdCostsUpdate.entrySet()) {
+			if (stdCostsCurrent.containsKey(entry.getKey())) {
 				updateList.add(entry.getValue());
-			}
-			else{
+			} else {
 				insertList.add(entry.getValue());
 			}
 		}
 
 		jdbcOracleX3Repository.insertStandardCostsInQuickTable(updateList, insertList, company);
-		
-		return "Finished standard costs update for " + company + " (update: " + updateList.size() + ", insert: " + insertList.size()  + ")";		
+
+		return "Finished standard costs update for " + company + " (update: " + updateList.size() + ", insert: "
+				+ insertList.size() + ")";
 	}
 
 	@Override
@@ -430,9 +438,9 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	}
 
 	@Override
-	@Cacheable(value="x3RoutesMap")
+	@Cacheable(value = "x3RoutesMap")
 	public Map<String, Map<Integer, X3RouteLine>> getRoutesMap(String company) {
-			return jdbcOracleX3Repository.getRoutesMap(company);
+		return jdbcOracleX3Repository.getRoutesMap(company);
 	}
 
 	@Override
@@ -456,13 +464,13 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	}
 
 	@Override
-	@Cacheable(value="x3Workstations")
+	@Cacheable(value = "x3Workstations")
 	public List<X3Workstation> getWorkstations(String company) {
 		return jdbcOracleX3Repository.getWorkstations(company);
 	}
 
 	@Override
-	@Cacheable(value="x3StandardCostsMap")
+	@Cacheable(value = "x3StandardCostsMap")
 	public Map<String, Double> getCurrentStandardCostsMap(String company) {
 		return jdbcOracleX3Repository.getCurrentStandardCostsMap(company);
 	}
@@ -519,10 +527,11 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	}
 
 	@Override
-	@Cacheable(value="acvProductsEventsHistory")
+	@Cacheable(value = "acvProductsEventsHistory")
 	public Map<String, X3ProductEventsHistory> getAcvProductsEventsHistory(Date startDate, Date endDate,
 			List<X3ConsumptionProductInfo> acvInfo, String company) {
-		Map<String, X3ProductEventsHistory> history = jdbcOracleX3Repository.getAcvProductsEventsHistory(startDate, endDate, acvInfo, company); 
+		Map<String, X3ProductEventsHistory> history = jdbcOracleX3Repository.getAcvProductsEventsHistory(startDate,
+				endDate, acvInfo, company);
 		return history;
 	}
 
@@ -546,5 +555,163 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 		return jdbcOracleX3Repository.getNoBomCodeIncompleteObject(code, company);
 	}
 
+	@Override
+	public String updateAverageDeliveryDays(String company) {
+
+		// ======  CLOSED ORDERS
+		// (query gets history -1 year, descending by order date)
+		List<X3HistockRawEntry> closedReceptionLines = jdbcOracleX3Repository.getHistockRawEntries(1, company);
+
+		// create map of codes with delivery lists (descending deliveries)
+		Map<String, List<X3HistockRawEntry>> mapByCode = new HashMap<>();
+		List<X3HistockRawEntry> linesList;
+		String code;
+		for (X3HistockRawEntry line : closedReceptionLines) {
+			code = line.getCode();
+			if (mapByCode.containsKey(code)) {
+				mapByCode.get(code).add(line);
+			} else {
+				linesList = new ArrayList<>();
+				linesList.add(line);
+				mapByCode.put(code, linesList);
+			}
+		}
+
+		// 3-times average reception time map
+		Map<String, HistockPair> averageMap = new HashMap<>();
+		int tmpAvg, size, qtySum, daysWeight;
+		for (Entry<String, List<X3HistockRawEntry>> rawEntry : mapByCode.entrySet()) {
+
+			// reset tmp values
+			tmpAvg = 0;
+			qtySum = 0;
+			daysWeight = 0;
+			size = Math.min(3, rawEntry.getValue().size());
+
+			//
+			for (int i = 0; i < size; i++) {
+				daysWeight += rawEntry.getValue().get(i).getDaysToDelivery()
+						* rawEntry.getValue().get(i).getQuantityReceived();
+				qtySum += rawEntry.getValue().get(i).getQuantityReceived();
+			}
+
+			if (qtySum > 0) {
+				tmpAvg = daysWeight / qtySum + 1;
+			} else {
+				tmpAvg = 0;
+			}
+
+			averageMap.put(rawEntry.getKey(), new HistockPair(tmpAvg, qtySum));
+		}
+
+		// ======  PENDING ORDERS
+		// get data for opened average processing
+		List<X3HistockRawEntry> openedOrderLines = jdbcOracleX3Repository.getHistockRawPendingEntries(1, company);
+
+		// create map of codes with delivery lists (descending deliveries)
+		Map<String, List<X3HistockRawEntry>> mapByCodeOpened = new HashMap<>();
+		List<X3HistockRawEntry> linesOpenedList;
+		int currAvg;
+		for (X3HistockRawEntry line : openedOrderLines) {
+			code = line.getCode();
+			currAvg = averageMap.containsKey(code) ? averageMap.get(code).getAvg() : 0;
+			// if days > avg, add to list in map below
+			// only for lines where delivery time > current average
+			if (line.getDaysToDelivery() > currAvg) {
+				if (mapByCodeOpened.containsKey(code)) {
+					mapByCodeOpened.get(code).add(line);
+				} else {
+					linesOpenedList = new ArrayList<>();
+					linesOpenedList.add(line);
+					mapByCodeOpened.put(code, linesOpenedList);
+				}
+			}
+		}
+
+		// count average of max 3 opened orders
+		Map<String, HistockPair> averageOpenedMap = new HashMap<>();
+		for (Entry<String, List<X3HistockRawEntry>> rawEntry : mapByCodeOpened.entrySet()) {
+
+			// reset tmp values
+			tmpAvg = 0;
+			qtySum = 0;
+			daysWeight = 0;
+			size = Math.min(3, rawEntry.getValue().size());
+
+			for (int i = 0; i < size; i++) {
+				daysWeight += rawEntry.getValue().get(i).getDaysToDelivery()
+						* rawEntry.getValue().get(i).getQuantityOrdered();
+				qtySum += rawEntry.getValue().get(i).getQuantityOrdered();
+			}
+
+			if (qtySum > 0) {
+				tmpAvg = daysWeight / qtySum + 1;
+			} else {
+				tmpAvg = 0;
+			}
+
+			averageOpenedMap.put(rawEntry.getKey(), new HistockPair(tmpAvg, qtySum));
+		}
+
+		// update closed average receptions times with pending orders average
+		HistockPair closedAvg;
+		HistockPair pendingAvg;
+		int newAvgVal;
+		for (Entry<String, HistockPair> ent : averageMap.entrySet()) {
+			code = ent.getKey();
+
+			if (averageOpenedMap.containsKey(code)) {
+				closedAvg = averageMap.get(code);
+				pendingAvg = averageOpenedMap.get(code);
+				newAvgVal = (closedAvg.getAvg() * closedAvg.getWeight() + pendingAvg.getAvg() * pendingAvg.getWeight())
+						/ (closedAvg.getWeight() + pendingAvg.getWeight());
+				averageMap.put(code, new HistockPair(newAvgVal, closedAvg.getWeight() + pendingAvg.getWeight()));
+			}
+		}
+
+		// prepare average days list
+		List<StringIntPair> input = new ArrayList<>();
+		for (Entry<String, HistockPair> entry : averageMap.entrySet()) {
+			input.add(new StringIntPair(entry.getKey(), entry.getValue().getAvg()));
+		}
+
+		// update
+		jdbcOracleX3Repository.updateAverageDeliveryDaysInDatabase(input, "ATW");
+
+		return "Finished average delivery days update (" + input.size() +")";
+
+	}
+
+	class HistockPair {
+		int avg;
+		int weight;
+
+		public HistockPair(int avg, int weight) {
+			this.avg = avg;
+			this.weight = weight;
+		}
+
+		public int getAvg() {
+			return avg;
+		}
+
+		public void setAvg(int avg) {
+			this.avg = avg;
+		}
+
+		public int getWeight() {
+			return weight;
+		}
+
+		public void setWeight(int weight) {
+			this.weight = weight;
+		}
+
+		@Override
+		public String toString() {
+			return "HistockPair-AVG [" + avg + "(w:" + weight + ")";
+		}
+
+	}
 
 }
