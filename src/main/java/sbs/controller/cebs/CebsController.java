@@ -204,7 +204,6 @@ public class CebsController {
 		if(!sent) {
 			// db_start
 				CebsLine line = linesService.findByLongId(itemId);
-				System.out.println("remove: " + line);
 				if(line!=null) {
 					linesService.remove(line);
 				}
