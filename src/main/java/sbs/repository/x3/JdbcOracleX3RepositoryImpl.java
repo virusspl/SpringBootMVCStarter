@@ -951,7 +951,6 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         	else{
         		machine.setCritical(false);
         	}
-        	System.out.println(machine.getCodeNicim() + ": " + machine.getName());
         	map.put(machine.getCode(), machine);
         }
 		return map;
