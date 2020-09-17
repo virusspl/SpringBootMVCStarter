@@ -895,20 +895,8 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		// ==== TMP JDBC DUALITY =====================================
 		// ===========================================================
 		
-/*
-		List<Map<String,Object>> resultSet = jdbc.queryForList(
-				"SELECT "
-				+ company + ".YMANUPREVE.YCESPITE_0, "
-				+ company + ".YMANUPREVE.YCESPDESCR_0, "
-				+ company + ".YMANUPREVE.YFLAG_0  "
-				+ "FROM "
-				+ company + ".YMANUPREVE "
-				,
-                new Object[]{});
-*/        
-
-		List<Map<String,Object>> resultSet = jdbc.queryForList(
-				"SELECT "
+		/*
+		String sqlV6 = "SELECT "
 				+ "ym.YCESPITE_0, "
 				+ "ym.YCESPDESCR_0, "
 				+ "ym.YFLAG_0, "
@@ -925,17 +913,37 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ company + ".VFXDASSETINF "
 				+ "ON "
 				+ company + ".FXDASSETS.AASREF_0 = " + company + ".VFXDASSETINF.AASREF_0) fx "
-				+ "ON ym.YCESPITE_0 = fx.AASDES2_0"
-				,
-                new Object[]{});
+				+ "ON ym.YCESPITE_0 = fx.AASDES2_0";
+ 		*/ 		
+		String sqlV11 = "" 
+				+ "SELECT "
+					+ "ym.YCESPITE_0, "
+					+ "ym.YCESPDESCR_0, "
+					+ "ym.YFLAG_0, "
+					+ "ym.YSOCE_0, "
+					+ "fx.AASREF_0, "
+					+ "fx.AASDES2_0 "
+				+ "FROM "
+					+ company + ".YMANUPREVE ym LEFT JOIN " + company + ".FXDASSETS fx "
+				+ "ON "
+					+ "ym.YCESPITE_0 = fx.AASDES2_0";
+		
+		List<Map<String,Object>> resultSet = jdbc.queryForList(sqlV11,new Object[]{});
         
         Map <String, X3UtrMachine> map = new HashMap<>();
         X3UtrMachine machine;
+        String nicimCode;
         for(Map<String,Object> row: resultSet ){
         	machine = new X3UtrMachine();
         	machine.setCode((String)row.get("YCESPITE_0"));
         	machine.setName((String)row.get("YCESPDESCR_0"));
-        	machine.setCodeNicim((String)row.get("NICCOD_0"));
+        	if(machine.getName().split(" ").length > 0) {
+        		nicimCode = machine.getName().split(" ")[0];
+        	}
+        	else {
+        		nicimCode = "N/D";
+        	}
+        	machine.setCodeNicim(nicimCode);
         	machine.setCompany(((BigDecimal)row.get("YSOCE_0")).intValue());
         	if(((BigDecimal)row.get("YFLAG_0")).intValue() == 2){
         		machine.setCritical(true);
@@ -943,6 +951,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         	else{
         		machine.setCritical(false);
         	}
+        	System.out.println(machine.getCodeNicim() + ": " + machine.getName());
         	map.put(machine.getCode(), machine);
         }
 		return map;
