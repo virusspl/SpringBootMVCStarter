@@ -714,4 +714,9 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 
 	}
 
+	@Override
+	public List<String> getComponentSuppliers(String component, String company) {
+		return jdbcOracleX3Repository.getComponentSuppliers(component, company);
+	}
+
 }

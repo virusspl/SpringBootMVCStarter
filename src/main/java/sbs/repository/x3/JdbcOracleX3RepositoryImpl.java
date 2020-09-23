@@ -4876,5 +4876,44 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		
 	}
 
+	@Override
+	public List<String> getComponentSuppliers(String component, String company) {
+		// ===========================================================
+		// ==== TMP JDBC DUALITY =====================================
+		if(this.x3v.equalsIgnoreCase("6")) {
+			jdbc = jdbc6;
+		}
+		else {
+			jdbc = jdbc11;
+		}
+		// ==== TMP JDBC DUALITY =====================================
+		// ===========================================================
+		
+        List<Map<String,Object>> resultSet = jdbc.queryForList(""
+        		+ "SELECT "
+        		+ "BPR.BPRNUM_0, "
+        		+ "BPR.BPRNAM_0, "
+        		+ "BPR.CRY_0 "
+        		+ "FROM "
+        		+ company + ".ITMBPS IBS INNER JOIN " + company + ".BPARTNER BPR "
+        		+ "ON "
+        		+ "IBS.BPSNUM_0 = BPR.BPRNUM_0 "
+        		+ "WHERE "
+        		+ "IBS.ITMREF_0 = ? "
+,
+                new Object[]{component});
+        
+        List<String> result = new ArrayList<>();
+        for(Map<String,Object> row: resultSet ){
+        	result.add(
+        			(String)row.get("BPRNUM_0") + " - " +
+        			(String)row.get("BPRNAM_0") + " [" +
+        			(String)row.get("CRY_0") + "]"
+        			);
+        }
+        
+		return result;
+	}
+
 	
 }

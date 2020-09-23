@@ -141,6 +141,7 @@ public interface JdbcOracleX3Repository  {
 	public List<X3HistockRawEntry> getHistockRawEntries(int years, String company);
 	public List<X3HistockRawEntry> getHistockRawPendingEntries(int years, String company);
 	public void updateAverageDeliveryDaysInDatabase(List<StringIntPair> list, String company);
+	public List<String> getComponentSuppliers(String component, String company);
 	
 	
 }

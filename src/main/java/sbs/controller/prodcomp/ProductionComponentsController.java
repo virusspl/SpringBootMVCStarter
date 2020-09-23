@@ -847,6 +847,8 @@ public class ProductionComponentsController {
 				model.addAttribute("formFindComponents", new FormFindComponents());
 				return "prodcomp/main";
 			}
+			// get component suppliers
+			List<String> suppliers = x3Service.getComponentSuppliers(component, "ATW");
 
 			// get sales orders
 			List<X3SalesOrderLine> orders = x3Service.findOpenedSalesOrderLinesInPeriod(formComponent.getStartDate(),
@@ -924,6 +926,7 @@ public class ProductionComponentsController {
 			model.addAttribute("component", component);
 			model.addAttribute("componentDescription", componentDescription);
 			model.addAttribute("title", component);
+			model.addAttribute("suppliers", suppliers);
 			return "prodcomp/view";
 		} catch (OutOfHeapMemoryException er) {
 			model.addAttribute("error", this.outOfMemoryMessage);
