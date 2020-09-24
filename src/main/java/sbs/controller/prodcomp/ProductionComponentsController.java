@@ -263,11 +263,11 @@ public class ProductionComponentsController {
 					}
 					// lead time days
 					leadTimeDays = acvInfoMap.containsKey(entry.getKey()) ? acvInfoMap.get(entry.getKey()).getAverageDeliveryDays() : 0;
-					line.add(leadTimeDays > 0 ? leadTimeDays+"" : "-");
+					line.add(leadTimeDays+"");
 					// theoretical average delivery
-					if(upcomingDeliveries.containsKey(entry.getKey()) && leadTimeDays > 0){
+					if(upcomingDeliveries.containsKey(entry.getKey())){
 						cal = Calendar.getInstance();
-						cal.setTime(upcomingDeliveries.get(entry.getKey()).getOrderDate());
+						cal.setTime(upcomingDeliveries.get(entry.getKey()).getDate());
 						cal.add(Calendar.DAY_OF_MONTH, leadTimeDays);
 						line.add(dateHelper.formatYyyyMmDd(cal.getTime()));
 					}
