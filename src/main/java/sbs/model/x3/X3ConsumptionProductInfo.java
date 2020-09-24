@@ -153,7 +153,9 @@ public class X3ConsumptionProductInfo implements Serializable{
 	public int getAverageDeliveryDays() {
 		return averageDeliveryDays;
 	}
-
+	/**
+	 * @param averageDeliveryDays average delivery deviation in days
+	 */
 	public void setAverageDeliveryDays(int averageDeliveryDays) {
 		this.averageDeliveryDays = averageDeliveryDays;
 	}

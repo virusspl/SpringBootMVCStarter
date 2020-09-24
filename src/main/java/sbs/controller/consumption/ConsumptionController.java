@@ -261,7 +261,7 @@ public class ConsumptionController {
 		headers.add("In order");
 		headers.add("Buyer");
 		headers.add("Lead time");
-		headers.add("Avg. dlv. days");
+		headers.add("Avg. dlv. dev.");
 		headers.add("Last issue");
 		headers.add("Last suppl.");
 		headers.add("Last suppl. nam.");
