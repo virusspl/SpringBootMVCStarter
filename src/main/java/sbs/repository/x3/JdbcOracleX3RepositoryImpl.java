@@ -27,7 +27,7 @@ import sbs.config.error.NotFoundException;
 import sbs.controller.dirrcpship.DirectReceptionsShipmentLine;
 import sbs.controller.prodcomp.NoBomCodeInfo;
 import sbs.helpers.DateHelper;
-import sbs.model.generic.StringIntPair;
+import sbs.model.generic.StringDoublePair;
 import sbs.model.proprog.Project;
 import sbs.model.wpslook.WpslookRow;
 import sbs.model.x3.X3AvgPriceLine;
@@ -4729,6 +4729,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "POQ.QTYSTU_0 AS qordered, "
 				+ "SUM(PRD.QTYSTU_0) AS qreceived, "
 				+ "POQ.ORDDAT_0 AS orddat, "
+				+ "POQ.EXTRCPDAT_0 AS demdlvdat, "
 				+ "MAX(PRD.RCPDAT_0) AS last_rcpdat, "
 				+ "COUNT(PRD.PTHNUM_0) AS rcp_counter "
 			+ "FROM "
@@ -4748,6 +4749,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "ITM.TCLCOD_0, "
 				+ "POQ.QTYSTU_0, "
 				+ "POQ.ORDDAT_0, "
+				+ "POQ.EXTRCPDAT_0, "
 				+ "POQ.LINCLEFLG_0 "
 			+ "HAVING "
 				+ "POQ.ORDDAT_0 >= ? "
@@ -4770,6 +4772,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         	line.setQuantityOrdered(((BigDecimal)row.get("qordered")).intValue());
         	line.setQuantityReceived(((BigDecimal)row.get("qreceived")).intValue());
         	line.setOrderDate((Timestamp)row.get("orddat"));
+        	line.setExpectedDeliveryDate((Timestamp)row.get("demdlvdat"));
         	line.setLastReceptionDate((Timestamp)row.get("last_rcpdat"));
         	line.setReceptionsCounter(((BigDecimal)row.get("rcp_counter")).intValue());
 
@@ -4806,6 +4809,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 						+ "ITM.TSICOD_1 AS gr2, "
 						+ "ITM.TCLCOD_0 AS cat, "
 						+ "POQ.QTYSTU_0 AS qordered, "
+						+ "POQ.EXTRCPDAT_0 AS demdlvdat, "
 						+ "POQ.ORDDAT_0 AS orddat "
 					+ "FROM "
 						+ company + ".PORDERQ POQ INNER JOIN " + company + ".ITMMASTER ITM "
@@ -4831,6 +4835,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		        	line.setQuantityOrdered(((BigDecimal)row.get("qordered")).intValue());
 		        	line.setQuantityReceived(0);
 		        	line.setOrderDate((Timestamp)row.get("orddat"));
+		        	line.setExpectedDeliveryDate((Timestamp)row.get("demdlvdat"));
 		        	line.setLastReceptionDate(new Timestamp(new java.util.Date().getTime()));
 		        	line.setReceptionsCounter(0);
 
@@ -4843,7 +4848,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	}
 
 	@Override
-	public void updateAverageDeliveryDaysInDatabase(List<StringIntPair> list, String company) {
+	public void updateAverageDeliveryDaysInDatabase(List<StringDoublePair> list, String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
 		if(this.x3v.equalsIgnoreCase("6")) {
@@ -4864,8 +4869,8 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		jdbc.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
-				StringIntPair entry = list.get(i);
-				ps.setInt(1, entry.getIntValue());
+				StringDoublePair entry = list.get(i);
+				ps.setDouble(1, entry.getDoubleValue());
 				ps.setString(2, entry.getStringValue());
 			}
 			@Override

@@ -149,6 +149,9 @@ public interface JdbcOracleX3Service {
 	public List<NoBomCodeInfo> getNoBomCodesListIncompleteObjects(String company);
 	public NoBomCodeInfo getNoBomCodeIncompleteObject(String code, String company);
 	public Map<String, X3SaleInfo> getSaleInfoInPeriod(Date startDate, Date endDate, String company);
+	/**
+	 * update average delivery deviation days
+	 */
 	public String updateAverageDeliveryDays(String company);
 	public List<String> getComponentSuppliers(String component, String company);
 	

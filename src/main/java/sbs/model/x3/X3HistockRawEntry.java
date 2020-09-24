@@ -14,6 +14,7 @@ public class X3HistockRawEntry {
 	private int quantityOrdered;
 	private int quantityReceived;
 	private Timestamp orderDate;
+	private Timestamp expectedDeliveryDate;
 	private Timestamp lastReceptionDate;
 	private int receptionsCounter;
 	
@@ -109,8 +110,21 @@ public class X3HistockRawEntry {
 		this.receptionsCounter = receptionsCounter;
 	}
 
+	public Timestamp getExpectedDeliveryDate() {
+		return expectedDeliveryDate;
+	}
+
+	public void setExpectedDeliveryDate(Timestamp expectedDeliveryDate) {
+		this.expectedDeliveryDate = expectedDeliveryDate;
+	}
+
 	public int getDaysToDelivery() {
 		long diff = lastReceptionDate.getTime() - orderDate.getTime();
+		return (int)TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+	}
+	
+	public int getDeliveryDeviation() {
+		long diff = lastReceptionDate.getTime() - expectedDeliveryDate.getTime();
 		return (int)TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 	}
 

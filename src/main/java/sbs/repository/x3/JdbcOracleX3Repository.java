@@ -6,7 +6,7 @@ import java.util.Map;
 
 import sbs.controller.dirrcpship.DirectReceptionsShipmentLine;
 import sbs.controller.prodcomp.NoBomCodeInfo;
-import sbs.model.generic.StringIntPair;
+import sbs.model.generic.StringDoublePair;
 import sbs.model.proprog.Project;
 import sbs.model.wpslook.WpslookRow;
 import sbs.model.x3.X3AvgPriceLine;
@@ -140,7 +140,10 @@ public interface JdbcOracleX3Repository  {
 	public NoBomCodeInfo getNoBomCodeIncompleteObject(String code, String company);
 	public List<X3HistockRawEntry> getHistockRawEntries(int years, String company);
 	public List<X3HistockRawEntry> getHistockRawPendingEntries(int years, String company);
-	public void updateAverageDeliveryDaysInDatabase(List<StringIntPair> list, String company);
+	/**
+	 * average delivery deviation
+	 */
+	public void updateAverageDeliveryDaysInDatabase(List<StringDoublePair> list, String company);
 	public List<String> getComponentSuppliers(String component, String company);
 	
 	

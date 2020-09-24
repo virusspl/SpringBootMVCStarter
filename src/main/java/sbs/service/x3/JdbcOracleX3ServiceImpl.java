@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import sbs.controller.dirrcpship.DirectReceptionsShipmentLine;
 import sbs.controller.prodcomp.NoBomCodeInfo;
+import sbs.model.generic.StringDoublePair;
 import sbs.model.generic.StringIntPair;
 import sbs.model.proprog.Project;
 import sbs.model.wpslook.WpslookRow;
@@ -555,6 +556,10 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 		return jdbcOracleX3Repository.getNoBomCodeIncompleteObject(code, company);
 	}
 
+	
+	/**
+	 * average delivery deviation days
+	 */
 	@Override
 	public String updateAverageDeliveryDays(String company) {
 
@@ -579,29 +584,30 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 
 		// 3-times average reception time map
 		Map<String, HistockPair> averageMap = new HashMap<>();
-		int tmpAvg, size, qtySum, daysWeight;
+		double tmpDblAvg;
+		int size, qtySum, daysWeight;
 		for (Entry<String, List<X3HistockRawEntry>> rawEntry : mapByCode.entrySet()) {
 
 			// reset tmp values
-			tmpAvg = 0;
+			tmpDblAvg = 0.0;
 			qtySum = 0;
 			daysWeight = 0;
 			size = Math.min(3, rawEntry.getValue().size());
 
 			//
 			for (int i = 0; i < size; i++) {
-				daysWeight += rawEntry.getValue().get(i).getDaysToDelivery()
+				daysWeight += rawEntry.getValue().get(i).getDeliveryDeviation()
 						* rawEntry.getValue().get(i).getQuantityReceived();
 				qtySum += rawEntry.getValue().get(i).getQuantityReceived();
 			}
 
 			if (qtySum > 0) {
-				tmpAvg = daysWeight / qtySum + 1;
+				tmpDblAvg = daysWeight * 1.0 / qtySum;
 			} else {
-				tmpAvg = 0;
+				tmpDblAvg = 0.0;
 			}
 
-			averageMap.put(rawEntry.getKey(), new HistockPair(tmpAvg, qtySum));
+			averageMap.put(rawEntry.getKey(), new HistockPair(tmpDblAvg, qtySum));
 		}
 
 		// ======  PENDING ORDERS
@@ -611,13 +617,13 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 		// create map of codes with delivery lists (descending deliveries)
 		Map<String, List<X3HistockRawEntry>> mapByCodeOpened = new HashMap<>();
 		List<X3HistockRawEntry> linesOpenedList;
-		int currAvg;
+		double currDblAvg;
 		for (X3HistockRawEntry line : openedOrderLines) {
 			code = line.getCode();
-			currAvg = averageMap.containsKey(code) ? averageMap.get(code).getAvg() : 0;
+			currDblAvg = averageMap.containsKey(code) ? averageMap.get(code).getAvg() : 0;
 			// if days > avg, add to list in map below
 			// only for lines where delivery time > current average
-			if (line.getDaysToDelivery() > currAvg) {
+			if (line.getDeliveryDeviation() > currDblAvg) {
 				if (mapByCodeOpened.containsKey(code)) {
 					mapByCodeOpened.get(code).add(line);
 				} else {
@@ -633,69 +639,69 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 		for (Entry<String, List<X3HistockRawEntry>> rawEntry : mapByCodeOpened.entrySet()) {
 
 			// reset tmp values
-			tmpAvg = 0;
+			currDblAvg = 0.0;
 			qtySum = 0;
 			daysWeight = 0;
 			size = Math.min(3, rawEntry.getValue().size());
 
 			for (int i = 0; i < size; i++) {
-				daysWeight += rawEntry.getValue().get(i).getDaysToDelivery()
+				daysWeight += rawEntry.getValue().get(i).getDeliveryDeviation()
 						* rawEntry.getValue().get(i).getQuantityOrdered();
 				qtySum += rawEntry.getValue().get(i).getQuantityOrdered();
 			}
 
 			if (qtySum > 0) {
-				tmpAvg = daysWeight / qtySum + 1;
+				currDblAvg = daysWeight * 1.0 / qtySum;
 			} else {
-				tmpAvg = 0;
+				currDblAvg = 0.0;
 			}
 
-			averageOpenedMap.put(rawEntry.getKey(), new HistockPair(tmpAvg, qtySum));
+			averageOpenedMap.put(rawEntry.getKey(), new HistockPair(currDblAvg, qtySum));
 		}
 
 		// update closed average receptions times with pending orders average
 		HistockPair closedAvg;
 		HistockPair pendingAvg;
-		int newAvgVal;
+		double newAvgDblVal;
 		for (Entry<String, HistockPair> ent : averageMap.entrySet()) {
 			code = ent.getKey();
 
 			if (averageOpenedMap.containsKey(code)) {
 				closedAvg = averageMap.get(code);
 				pendingAvg = averageOpenedMap.get(code);
-				newAvgVal = (closedAvg.getAvg() * closedAvg.getWeight() + pendingAvg.getAvg() * pendingAvg.getWeight())
+				newAvgDblVal = (closedAvg.getAvg() * closedAvg.getWeight() + pendingAvg.getAvg() * pendingAvg.getWeight())
 						/ (closedAvg.getWeight() + pendingAvg.getWeight());
-				averageMap.put(code, new HistockPair(newAvgVal, closedAvg.getWeight() + pendingAvg.getWeight()));
+				averageMap.put(code, new HistockPair(newAvgDblVal, closedAvg.getWeight() + pendingAvg.getWeight()));
 			}
 		}
 
 		// prepare average days list
-		List<StringIntPair> input = new ArrayList<>();
+		List<StringDoublePair> input = new ArrayList<>();
 		for (Entry<String, HistockPair> entry : averageMap.entrySet()) {
-			input.add(new StringIntPair(entry.getKey(), entry.getValue().getAvg()));
+			input.add(new StringDoublePair(entry.getKey(), entry.getValue().getAvg()));
 		}
 
 		// update
 		jdbcOracleX3Repository.updateAverageDeliveryDaysInDatabase(input, "ATW");
 
-		return "Finished average delivery days update (" + input.size() +")";
+		return "Finished average delivery deviation days update (" + input.size() +")";
 
 	}
 
 	class HistockPair {
-		int avg;
+		double avg;
 		int weight;
 
-		public HistockPair(int avg, int weight) {
+		public HistockPair(double avg, int weight) {
 			this.avg = avg;
 			this.weight = weight;
 		}
 
-		public int getAvg() {
+		public double getAvg() {
 			return avg;
 		}
 
-		public void setAvg(int avg) {
+		public void setAvg(double avg) {
 			this.avg = avg;
 		}
 
