@@ -261,6 +261,7 @@ public class ConsumptionController {
 		headers.add("In order");
 		headers.add("Buyer");
 		headers.add("Lead time");
+		headers.add("Avg. dlv. days");
 		headers.add("Last issue");
 		headers.add("Last suppl.");
 		headers.add("Last suppl. nam.");
@@ -301,6 +302,7 @@ public class ConsumptionController {
 			lineValues.add(product.getInOrder());
 			lineValues.add(product.getBuyerCode());
 			lineValues.add(product.getLeadTime());
+			lineValues.add(product.getAverageDeliveryDays());			
 			if(product.getLastIssueDate().before(date1600.getTime())){
 				lineValues.add("");
 			}

@@ -262,7 +262,7 @@ public class ProductionComponentsController {
 						line.add(textHelper.numberFormatIntegerRoundNoSpace(Math.abs(x3 - qty)));
 					}
 					// lead time days
-					leadTimeDays = acvInfoMap.containsKey(entry.getKey()) ? acvInfoMap.get(entry.getKey()).getLeadTime() : 0;
+					leadTimeDays = acvInfoMap.containsKey(entry.getKey()) ? acvInfoMap.get(entry.getKey()).getAverageDeliveryDays() : 0;
 					line.add(leadTimeDays > 0 ? leadTimeDays+"" : "-");
 					// theoretical average delivery
 					if(upcomingDeliveries.containsKey(entry.getKey()) && leadTimeDays > 0){
