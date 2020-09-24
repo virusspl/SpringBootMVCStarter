@@ -683,7 +683,7 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 
 		// update
 		jdbcOracleX3Repository.updateAverageDeliveryDaysInDatabase(input, "ATW");
-
+		System.out.println("DONE");
 		return "Finished average delivery deviation days update (" + input.size() +")";
 
 	}

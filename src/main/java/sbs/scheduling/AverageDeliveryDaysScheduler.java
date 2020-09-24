@@ -25,7 +25,7 @@ public class AverageDeliveryDaysScheduler {
 	@Scheduled(cron = "0 0 5 * * MON-FRI")
 	public void updateATW() {
 		String result = x3Service.updateAverageDeliveryDays("ATW");
-		parametersService.storeSystemInfoParameter("SCHDL-AVGDAY-ATW", "Average delivery days", result);		
+		parametersService.storeSystemInfoParameter("SCHDL-AVGDAY-ATW", "Average delivery deviation days", result);		
 		logger.info(result);
 	}
 	
