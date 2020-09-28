@@ -47,6 +47,13 @@ public class SystemController {
 		
 		return "system/log";
 	}
+	
+	@RequestMapping("/gc")
+	public String home() {
+		System.gc();
+		return "redirect:/system/log";
+	}
+	
 
 	@SuppressWarnings("unused")
 	private String getLogContent() {

@@ -109,6 +109,7 @@ public class VariousPagesController {
 	@RequestMapping("/test")
 	public String test(Model model, Locale locale) throws InterruptedException {
 
+		System.gc();
 		
 		//String result = x3Service.updateAverageDeliveryDays("ATW");
 		

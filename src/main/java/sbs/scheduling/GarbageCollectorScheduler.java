@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import sbs.service.system.SystemInfoParametersService;
 import sbs.service.x3.JdbcOracleX3Service;
 
-public class AverageDeliveryDaysScheduler {
+public class GarbageCollectorScheduler {
 
 	@Autowired
 	JdbcOracleX3Service x3Service;
@@ -17,15 +17,16 @@ public class AverageDeliveryDaysScheduler {
 	
 	Logger logger;
 	
-	public AverageDeliveryDaysScheduler() {
+	public GarbageCollectorScheduler() {
 		logger = LoggerFactory.getLogger(AverageDeliveryDaysScheduler.class);
 	}
 
-	// each Monday at 5 o'clock
-	@Scheduled(cron = "0 0 5 * * MON")
+	// each day at 6 o'clock
+	@Scheduled(cron = "0 0 6 * * *")
 	public void updateATW() {
-		String result = x3Service.updateAverageDeliveryDays("ATW");
-		parametersService.storeSystemInfoParameter("SCHDL-AVGDAY-ATW", "Average delivery deviation days", result);		
+		String result = "GC request: " + new java.util.Date();
+		parametersService.storeSystemInfoParameter("SCHDL-GBCLCTR-SYS", "Garbage Collector requested", result);
+		System.gc();
 		logger.info(result);
 	}
 	

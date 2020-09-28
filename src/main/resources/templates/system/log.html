@@ -100,22 +100,38 @@
 				<h5 th:text="${snap.get('name')}" class="underlin bold text-rimary"></h5>
 				<ul style="list-style-type: square;">
 					<li><span th:text="|init:|"></span>&nbsp;<span
-						th:text="${#numbers.formatDecimal(snap.get('init'), 0, 'POINT', 1, 'COMMA')}" class="bold"></span> [MB]</li>
+						th:text="${#numbers.formatDecimal(snap.get('init'), 0, 'POINT', 1, 'COMMA')}"
+						class="bold"></span> [MB]</li>
 					<li><span th:text="|used:|"></span> <span
 						th:text="${#numbers.formatDecimal(snap.get('used'), 0, 'POINT', 1, 'COMMA')}"
 						class="bold"></span> [MB] <span
-						th:text="${#numbers.formatDecimal(snap.get('usedProc'), 0, 'POINT', 1, 'COMMA')}" class="bold"></span> [%]
-					</li>
+						th:text="${#numbers.formatDecimal(snap.get('usedProc'), 0, 'POINT', 1, 'COMMA')}"
+						class="bold"></span> [%]</li>
 					<li><span th:text="|committed:|"></span> <span
-						th:text="${#numbers.formatDecimal(snap.get('committed'), 0, 'POINT', 1, 'COMMA')}" class="bold"></span> [MB] <span
-						th:text="|${#numbers.formatDecimal(snap.get('committedProc'), 0, 'POINT', 1, 'COMMA')}|" class="bold"></span> [%]
-					</li>
-					<li>
-						<span th:text="|max:|"></span>&nbsp;<span
-						th:text="${#numbers.formatDecimal(snap.get('max'), 0, 'POINT', 1, 'COMMA')}" class="bold"></span> [MB]
-					</li>
+						th:text="${#numbers.formatDecimal(snap.get('committed'), 0, 'POINT', 1, 'COMMA')}"
+						class="bold"></span> [MB] <span
+						th:text="|${#numbers.formatDecimal(snap.get('committedProc'), 0, 'POINT', 1, 'COMMA')}|"
+						class="bold"></span> [%]</li>
+					<li><span th:text="|max:|"></span>&nbsp;<span
+						th:text="${#numbers.formatDecimal(snap.get('max'), 0, 'POINT', 1, 'COMMA')}"
+						class="bold"></span> [MB]</li>
 				</ul>
-
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<a th:href="@{/system/log}"
+					class="btn btn-primary btn-md margin-top-5"> <span
+					class="glyphicon glyphicon-refresh"></span> <span
+					th:text="#{general.refresh}"></span>
+				</a> <a th:href="@{/system/gc}"
+					class="btn btn-danger btn-md margin-top-5"
+					>
+					<!-- th:onclick="|return confirm('Garbate Collector. #{general.areyousure}')|" -->
+					<span
+					class="glyphicon glyphicon-trash"></span> <span
+					th:text="#{system.gc.request}"></span>
+				</a>
 			</div>
 		</div>
 		<!-- /MEMORY -->

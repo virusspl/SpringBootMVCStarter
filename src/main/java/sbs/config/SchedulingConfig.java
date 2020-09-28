@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import sbs.scheduling.AverageDeliveryDaysScheduler;
 import sbs.scheduling.DocViewCacheScheduler;
-import sbs.scheduling.RmgtScheduler;
+import sbs.scheduling.GarbageCollectorScheduler;
 import sbs.scheduling.StandardCostsScheduler;
 
 @Configuration
@@ -28,9 +28,17 @@ public class SchedulingConfig {
 		return new AverageDeliveryDaysScheduler();
 	}
 	
-	//@Bean
+	@Bean
+	public GarbageCollectorScheduler garbageCollectorScheduler(){
+		return new GarbageCollectorScheduler();
+	}
+	
+	
+	/*
+	@Bean
 	public RmgtScheduler scheduleRMGT(){
 		return new RmgtScheduler();
 	}
+	*/
 	
 }
