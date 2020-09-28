@@ -18,7 +18,7 @@ public class GarbageCollectorScheduler {
 	Logger logger;
 	
 	public GarbageCollectorScheduler() {
-		logger = LoggerFactory.getLogger(AverageDeliveryDaysScheduler.class);
+		logger = LoggerFactory.getLogger(GarbageCollectorScheduler.class);
 	}
 
 	// each day at 6 o'clock
