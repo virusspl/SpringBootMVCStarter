@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import sbs.controller.dirrcpship.DirectReceptionsShipmentLine;
 import sbs.controller.prodcomp.NoBomCodeInfo;
 import sbs.model.generic.StringDoublePair;
-import sbs.model.generic.StringIntPair;
 import sbs.model.proprog.Project;
 import sbs.model.wpslook.WpslookRow;
 import sbs.model.x3.X3AvgPriceLine;
@@ -283,6 +282,11 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	@Override
 	public Map<String, Integer> getAcvDemandList(String company) {
 		return jdbcOracleX3Repository.getAcvDemandList(company);
+	}
+	
+	@Override
+	public Map<String, Integer> getDemandListInPeriod(Date startDate, Date endDate, String company) {
+		return jdbcOracleX3Repository.getDemandListInPeriod(startDate, endDate, company);
 	}
 
 	@Override
@@ -675,15 +679,16 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 			}
 		}
 
+		
+		
 		// prepare average days list
 		List<StringDoublePair> input = new ArrayList<>();
 		for (Entry<String, HistockPair> entry : averageMap.entrySet()) {
-			input.add(new StringDoublePair(entry.getKey(), entry.getValue().getAvg()));
+			input.add(new StringDoublePair(entry.getKey(), (double)Math.round(entry.getValue().getAvg())));
 		}
 
 		// update
 		jdbcOracleX3Repository.updateAverageDeliveryDaysInDatabase(input, "ATW");
-		System.out.println("DONE");
 		return "Finished average delivery deviation days update (" + input.size() +")";
 
 	}
@@ -724,5 +729,6 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	public List<String> getComponentSuppliers(String component, String company) {
 		return jdbcOracleX3Repository.getComponentSuppliers(component, company);
 	}
+
 
 }

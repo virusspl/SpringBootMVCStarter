@@ -109,10 +109,10 @@ public class VariousPagesController {
 	@RequestMapping("/test")
 	public String test(Model model, Locale locale) throws InterruptedException {
 
-		System.gc();
 		
-		//String result = x3Service.updateAverageDeliveryDays("ATW");
 		
+		String result = x3Service.updateAverageDeliveryDays("ATW");
+		System.out.println(result);
 		//memoryService.debugListMemoryPoolBeans();
 		
 		/*ArrayList<String> list = new ArrayList<>();

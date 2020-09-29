@@ -2433,6 +2433,47 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	}
 	
 	@Override
+	public Map<String, Integer> getDemandListInPeriod(Date startDate, Date endDate, String company) {
+		// ===========================================================
+		// ==== TMP JDBC DUALITY =====================================
+		if(this.x3v.equalsIgnoreCase("6")) {
+			jdbc = jdbc6;
+		}
+		else {
+			jdbc = jdbc11;
+		}
+		// ==== TMP JDBC DUALITY =====================================
+		// ===========================================================
+		
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "Sum(ord.RMNEXTQTY_0) AS theSum, "
+				+ "ord.ITMREF_0 "
+				+ "FROM "
+				+ company + ".ORDERS ord "
+				+ "WHERE "
+				+ "(ord.WIPTYP_0 = 1 OR ord.WIPTYP_0 = 6) "
+				+ "AND "
+				+ "ord.WIPSTA_0 <= 3 "
+				+ "AND "
+				+ "ENDDAT_0 >= startDate "
+				+ "AND "
+				+ "ENDDAT_0 <= endDate "
+				+ "GROUP BY "
+				+ "ord.ITMREF_0 "	
+				,
+                new Object[]{startDate, endDate}
+				);
+		
+		Map <String, Integer> result = new HashMap<>();
+		for(Map<String,Object> row: resultSet ){
+				result.put((String)row.get("ITMREF_0"), ((BigDecimal)row.get("theSum")).intValue());
+		}
+	
+		return result;
+	}
+	
+	@Override
 	public Map<String, String> getAcvProductsEnglishDescriptions(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
@@ -4922,5 +4963,4 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		return result;
 	}
 
-	
 }
