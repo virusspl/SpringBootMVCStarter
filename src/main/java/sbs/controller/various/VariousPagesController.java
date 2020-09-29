@@ -111,8 +111,9 @@ public class VariousPagesController {
 
 		
 		
-		String result = x3Service.updateAverageDeliveryDays("ATW");
-		System.out.println(result);
+		//String result = x3Service.updateAverageDeliveryDays("ATW");
+		//System.out.println(result);
+		
 		//memoryService.debugListMemoryPoolBeans();
 		
 		/*ArrayList<String> list = new ArrayList<>();

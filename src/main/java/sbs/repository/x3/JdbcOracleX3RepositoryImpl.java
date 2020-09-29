@@ -2456,9 +2456,9 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "AND "
 				+ "ord.WIPSTA_0 <= 3 "
 				+ "AND "
-				+ "ENDDAT_0 >= startDate "
+				+ "ord.ENDDAT_0 >= ? "
 				+ "AND "
-				+ "ENDDAT_0 <= endDate "
+				+ "ord.ENDDAT_0 <= ? "
 				+ "GROUP BY "
 				+ "ord.ITMREF_0 "	
 				,

@@ -26,6 +26,10 @@
 				autoclose : true,
 				language : 'pl'
 			});
+			$('#tillDate').datepicker({
+				autoclose : true,
+				language : 'pl'
+			});
 		</script>
 		<script th:if="__${#locale}__ == 'en'">
 			$('#startDate').datepicker({
@@ -36,6 +40,10 @@
 				autoclose : true,
 				language : 'en-GB'
 			});
+			$('#tillDate').datepicker({
+				autoclose : true,
+				language : 'en-GB'
+			});
 		</script>
 		<script th:if="__${#locale}__ == 'it'">
 			$('#startDate').datepicker({
@@ -43,6 +51,10 @@
 				language : 'it'
 			});
 			$('#endDate').datepicker({
+				autoclose : true,
+				language : 'it'
+			});
+			$('#tillDate').datepicker({
 				autoclose : true,
 				language : 'it'
 			});
@@ -159,6 +171,17 @@
 							type="text" class="form-control" id="item" name="item"
 							th:placeholder="#{general.quantity}" th:field="*{quantity}" />
 						<div th:errors="*{quantity}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-md-3 col-xs-12 margin-top-10">
+					<div class="form-group">
+						<!-- end date -->
+						<label for="tillDate" th:text="#{general.date.end}">endDate</label>
+						<input type="text" class="form-control" id="tillDate"
+							name="tillDate" th:placeholder="#{general.date.end}"
+							th:field="*{tillDate}" autocomplete="off" />
+						<div th:errors="*{tillDate}"
 							class="alert alert-danger margin-top-5">error</div>
 					</div>
 				</div>

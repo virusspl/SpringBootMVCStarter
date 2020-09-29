@@ -11,6 +11,8 @@ public class FormFindComponents {
 	@NotNull
 	@Min(1)
 	private int quantity;
+	@NotNull
+	private java.util.Date tillDate;
 	
 	public FormFindComponents() {
 	
@@ -31,12 +33,20 @@ public class FormFindComponents {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
+	
+
+	public java.util.Date getTillDate() {
+		return tillDate;
+	}
+
+	public void setTillDate(java.util.Date tillDate) {
+		this.tillDate = tillDate;
+	}
 
 	@Override
 	public String toString() {
-		return "FormFindComponents [item=" + item + ", quantity=" + quantity + "]";
+		return "FormFindComponents [item=" + item + ", quantity=" + quantity + ", tillDate=" + tillDate + "]";
 	}
 
-	
 	
 }

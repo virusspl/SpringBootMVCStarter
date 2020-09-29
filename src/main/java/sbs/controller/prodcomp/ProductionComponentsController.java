@@ -117,6 +117,7 @@ public class ProductionComponentsController {
 
 		redirectAttrs.addFlashAttribute("code", formFindComponents.getItem());
 		redirectAttrs.addFlashAttribute("quantity", formFindComponents.getQuantity());
+		redirectAttrs.addFlashAttribute("tillDate", formFindComponents.getTillDate());
 		redirectAttrs.addFlashAttribute("single", true);
 
 		return "redirect:/prodcomp/make";
@@ -125,7 +126,10 @@ public class ProductionComponentsController {
 	@RequestMapping("/make")
 	public String doMake(Model model, Locale locale, RedirectAttributes redirectAttrs)
 			throws FileNotFoundException, IOException {
+		
 		String singleCode = null;
+		Map<String, Integer> demandMap = null; 
+		
 		try {
 			// get file
 			File file;
@@ -141,6 +145,15 @@ public class ProductionComponentsController {
 				bw.write(code + ";" + quantity);
 				bw.close();
 				file = tmpFile;
+				
+				Calendar cal = Calendar.getInstance();
+				java.util.Date start, end;
+				cal.setTime((java.util.Date)model.asMap().get("tillDate"));
+				end = cal.getTime();
+				cal.add(Calendar.YEAR,-100);
+				start = cal.getTime();
+				// demand map
+				demandMap = x3Service.getDemandListInPeriod(start, end, "ATW");
 			} else {
 				file = (File) model.asMap().get("file");
 			}
@@ -254,6 +267,18 @@ public class ProductionComponentsController {
 							? textHelper.numberFormatIntegerRoundNoSpace(replenishMap.get(entry.getKey()))
 							: "-");
 					line.add(textHelper.numberFormatIntegerRoundNoSpace(x3));
+					if(demandMap != null) {
+						if(demandMap.containsKey(entry.getKey())) {
+							line.add(textHelper.numberFormatIntegerRoundNoSpace(demandMap.get(entry.getKey())));
+						}
+						else {
+							line.add("-");
+						}
+						
+					}
+					else {
+						line.add("-");
+					}
 					line.add(textHelper.numberFormatIntegerRoundNoSpace(geode));
 					line.add(textHelper.numberFormatIntegerRoundNoSpace(qty));
 					if (x3 - qty >= 0) {
