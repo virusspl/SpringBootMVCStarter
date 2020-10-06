@@ -14,22 +14,48 @@ import org.springframework.stereotype.Repository;
 
 import sbs.helpers.TextHelper;
 import sbs.model.hr.HrUserInfo;
+import sbs.service.optima.JdbcOptimaService;
 
 @Repository
-public class JdbcAdrOptimaRepositoryImpl implements JdbcAdrOptimaRepository {
+public class JdbcOptimaRepositoryImpl implements JdbcOptimaRepository {
 
 	@Autowired
 	@Qualifier("optimaAdrJdbcTemplate")
-	private JdbcTemplate jdbc;
+	private JdbcTemplate jdbcAdr;
+	@Autowired
+	@Qualifier("optimaWpsJdbcTemplate")
+	private JdbcTemplate jdbcWps;
+	@Autowired
+	@Qualifier("optimaAdeccoJdbcTemplate")
+	private JdbcTemplate jdbcAdecco;
+	@Autowired
+	@Qualifier("optimaUaJdbcTemplate")
+	private JdbcTemplate jdbcUa;
 	@Autowired
 	private TextHelper textHelper;
 
+	
+	private JdbcTemplate jdbc(int database) {
+		switch (database) {
+			case JdbcOptimaService.DB_ADR:
+				return jdbcAdr;
+			case JdbcOptimaService.DB_WPS:
+				return jdbcWps;
+			case JdbcOptimaService.DB_ADECCO:
+				return jdbcAdecco;
+			case JdbcOptimaService.DB_UA:
+				return jdbcUa;
+			default:
+				return null;
+		}
+		 
+	}
+	
 	/*
 	 * FIND ALL
 	 */
-	
 	@Override
-	public List<HrUserInfo> findAllCurrentlyEmployed() {
+	public List<HrUserInfo> findAllCurrentlyEmployed(int database) {
 		String query = "SELECT "
 				+ "PRI_PraId, "
 				+ "PRI_Kod, "
@@ -62,33 +88,27 @@ public class JdbcAdrOptimaRepositoryImpl implements JdbcAdrOptimaRepository {
 				+ "PRE_OddelegowanyKraj, " 
 				+ "PKR_Numer, " 
 				+ "PRE_KategoriaOpis AS [Usr_Column1], " 
-				+ "wartoscATR AS [Usr_Column2], "
-				+ "wartoscATRPoz AS [Usr_Column3], " 
-				+ "wartoscATRKat AS [Usr_Column4], "
 				+ "PRE_ETARodzajUmowy AS [Usr_Column5], " 
 				+ "PRE_WaznoscBadanOkres AS [Usr_Column6], "
 				+ "PRE_HDKUwagi AS [Usr_Column7], "
 				+ "PRE_Paszport AS [Usr_Column8] "
-				+ "FROM CDN_ADR_S_A_2017.CDN.Pracidx A " 
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.CDN.PracKod B ON B.PRA_PraId = A.PRI_PraId "  
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.CDN.PracEtaty C ON C.PRE_PraId = B.PRA_PraId "
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.CDN.Dzialy D ON C.PRE_DzlId = D.DZL_DzlId "
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.CDN.Centra E ON C.PRE_CntId = E.CNT_CntId "
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.cdn.danekadmod F on C.PRE_ETADkmIdStanowisko = F.DKM_DkmId "
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.CDN.Zaklady Z ON Z.Zak_ZakID = C.PRE_ZakID "
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.CDN.Zeto_Atrybuty AS UsrA ON pri_praid = usra.id "
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.CDN.Zeto_Atrybuty_Poziom AS UsrB ON pri_praid = usrb.id "
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.CDN.Zeto_Atrybuty_Kategoria AS UsrC ON pri_praid = usrc.id "
+				+ "FROM CDN.Pracidx A " 
+				+ "LEFT OUTER JOIN CDN.PracKod B ON B.PRA_PraId = A.PRI_PraId "  
+				+ "LEFT OUTER JOIN CDN.PracEtaty C ON C.PRE_PraId = B.PRA_PraId "
+				+ "LEFT OUTER JOIN CDN.Dzialy D ON C.PRE_DzlId = D.DZL_DzlId "
+				+ "LEFT OUTER JOIN CDN.Centra E ON C.PRE_CntId = E.CNT_CntId "
+				+ "LEFT OUTER JOIN cdn.danekadmod F on C.PRE_ETADkmIdStanowisko = F.DKM_DkmId "
+				+ "LEFT OUTER JOIN CDN.Zaklady Z ON Z.Zak_ZakID = C.PRE_ZakID "
 				+ "LEFT OUTER JOIN (SELECT "
 				+ "					PKR_Numer, PKR_PrcId "
-				+ "					FROM CDN_ADR_S_A_2017.CDN.PracKartyRcp "
+				+ "					FROM CDN.PracKartyRcp "
 				+ "					WHERE PKR_OkresDo >= ? "
 				+ ") AS Krt ON A.PRI_PraId = Krt.PKR_PrcId "				
 				+ "WHERE "
 				+ "((( "
 				+ "	1 = ( " 
 				+ "	select top 1 1 " 
-				+ "	from CDN_ADR_S_A_2017.CDN.PracEtaty PracEtaty "
+				+ "	from CDN.PracEtaty PracEtaty "
 				+ "	where "
 				+ " 	PRI_PraId = PRE_PraId "
 				+ "		and (PRE_DzlId = 3 or PRE_AdresDzialu like '1%') "
@@ -109,7 +129,7 @@ public class JdbcAdrOptimaRepositoryImpl implements JdbcAdrOptimaRepository {
 		cal.add(Calendar.MONTH, 1);
 		nextMonthStart = cal.getTime();
 		
-		List<Map<String, Object>> resultSet = jdbc.queryForList(
+		List<Map<String, Object>> resultSet = jdbc(database).queryForList(
 				query
 				, new Object[] {today, nextMonthStart, currentMonthStart, today, today });
 		
@@ -138,7 +158,7 @@ public class JdbcAdrOptimaRepositoryImpl implements JdbcAdrOptimaRepository {
 	 */
 	
 	@Override
-	public HrUserInfo findCurrentlyEmployedById(String userId) {
+	public HrUserInfo findCurrentlyEmployedById(String userId, int database) {
 		String query = "SELECT "
 				+ "PRI_PraId, "
 				+ "PRI_Kod, "
@@ -171,33 +191,27 @@ public class JdbcAdrOptimaRepositoryImpl implements JdbcAdrOptimaRepository {
 				+ "PRE_OddelegowanyKraj, " 
 				+ "PKR_Numer, " 
 				+ "PRE_KategoriaOpis AS [Usr_Column1], " 
-				+ "wartoscATR AS [Usr_Column2], "
-				+ "wartoscATRPoz AS [Usr_Column3], " 
-				+ "wartoscATRKat AS [Usr_Column4], "
 				+ "PRE_ETARodzajUmowy AS [Usr_Column5], " 
 				+ "PRE_WaznoscBadanOkres AS [Usr_Column6], "
 				+ "PRE_HDKUwagi AS [Usr_Column7], "
 				+ "PRE_Paszport AS [Usr_Column8] "
-				+ "FROM CDN_ADR_S_A_2017.CDN.Pracidx A " 
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.CDN.PracKod B ON B.PRA_PraId = A.PRI_PraId "  
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.CDN.PracEtaty C ON C.PRE_PraId = B.PRA_PraId "
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.CDN.Dzialy D ON C.PRE_DzlId = D.DZL_DzlId "
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.CDN.Centra E ON C.PRE_CntId = E.CNT_CntId "
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.cdn.danekadmod F on C.PRE_ETADkmIdStanowisko = F.DKM_DkmId "
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.CDN.Zaklady Z ON Z.Zak_ZakID = C.PRE_ZakID "
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.CDN.Zeto_Atrybuty AS UsrA ON pri_praid = usra.id "
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.CDN.Zeto_Atrybuty_Poziom AS UsrB ON pri_praid = usrb.id "
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.CDN.Zeto_Atrybuty_Kategoria AS UsrC ON pri_praid = usrc.id "
+				+ "FROM CDN.Pracidx A " 
+				+ "LEFT OUTER JOIN CDN.PracKod B ON B.PRA_PraId = A.PRI_PraId "  
+				+ "LEFT OUTER JOIN CDN.PracEtaty C ON C.PRE_PraId = B.PRA_PraId "
+				+ "LEFT OUTER JOIN CDN.Dzialy D ON C.PRE_DzlId = D.DZL_DzlId "
+				+ "LEFT OUTER JOIN CDN.Centra E ON C.PRE_CntId = E.CNT_CntId "
+				+ "LEFT OUTER JOIN cdn.danekadmod F on C.PRE_ETADkmIdStanowisko = F.DKM_DkmId "
+				+ "LEFT OUTER JOIN CDN.Zaklady Z ON Z.Zak_ZakID = C.PRE_ZakID "
 				+ "LEFT OUTER JOIN (SELECT "
 				+ "					PKR_Numer, PKR_PrcId "
-				+ "					FROM CDN_ADR_S_A_2017.CDN.PracKartyRcp "
+				+ "					FROM CDN.PracKartyRcp "
 				+ "					WHERE PKR_OkresDo >= ? "
 				+ ") AS Krt ON A.PRI_PraId = Krt.PKR_PrcId "				
 				+ "WHERE "
 				+ "((( "
 				+ "	1 = ( " 
 				+ "	select top 1 1 " 
-				+ "	from CDN_ADR_S_A_2017.CDN.PracEtaty PracEtaty "
+				+ "	from CDN.PracEtaty PracEtaty "
 				+ "	where "
 				+ " 	PRI_PraId = PRE_PraId "
 				+ "		and (PRE_DzlId = 3 or PRE_AdresDzialu like '1%') "
@@ -219,7 +233,7 @@ public class JdbcAdrOptimaRepositoryImpl implements JdbcAdrOptimaRepository {
 		cal.add(Calendar.MONTH, 1);
 		nextMonthStart = cal.getTime();
 		
-		List<Map<String, Object>> resultSet = jdbc.queryForList(
+		List<Map<String, Object>> resultSet = jdbc(database).queryForList(
 				query
 				, new Object[] {today, nextMonthStart, currentMonthStart, today, today, userId });
 		
@@ -246,7 +260,7 @@ public class JdbcAdrOptimaRepositoryImpl implements JdbcAdrOptimaRepository {
 	 */
 	
 	@Override
-	public HrUserInfo findCurrentlyEmployedByCardNo(String cardNo) {
+	public HrUserInfo findCurrentlyEmployedByCardNo(String cardNo, int database) {
 		String query = "SELECT "
 				+ "PRI_PraId, "
 				+ "PRI_Kod, "
@@ -279,33 +293,27 @@ public class JdbcAdrOptimaRepositoryImpl implements JdbcAdrOptimaRepository {
 				+ "PRE_OddelegowanyKraj, " 
 				+ "PKR_Numer, " 
 				+ "PRE_KategoriaOpis AS [Usr_Column1], " 
-				+ "wartoscATR AS [Usr_Column2], "
-				+ "wartoscATRPoz AS [Usr_Column3], " 
-				+ "wartoscATRKat AS [Usr_Column4], "
 				+ "PRE_ETARodzajUmowy AS [Usr_Column5], " 
 				+ "PRE_WaznoscBadanOkres AS [Usr_Column6], "
 				+ "PRE_HDKUwagi AS [Usr_Column7], "
 				+ "PRE_Paszport AS [Usr_Column8] "
-				+ "FROM CDN_ADR_S_A_2017.CDN.Pracidx A " 
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.CDN.PracKod B ON B.PRA_PraId = A.PRI_PraId "  
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.CDN.PracEtaty C ON C.PRE_PraId = B.PRA_PraId "
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.CDN.Dzialy D ON C.PRE_DzlId = D.DZL_DzlId "
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.CDN.Centra E ON C.PRE_CntId = E.CNT_CntId "
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.cdn.danekadmod F on C.PRE_ETADkmIdStanowisko = F.DKM_DkmId "
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.CDN.Zaklady Z ON Z.Zak_ZakID = C.PRE_ZakID "
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.CDN.Zeto_Atrybuty AS UsrA ON pri_praid = usra.id "
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.CDN.Zeto_Atrybuty_Poziom AS UsrB ON pri_praid = usrb.id "
-				+ "LEFT OUTER JOIN CDN_ADR_S_A_2017.CDN.Zeto_Atrybuty_Kategoria AS UsrC ON pri_praid = usrc.id "
+				+ "FROM CDN.Pracidx A " 
+				+ "LEFT OUTER JOIN CDN.PracKod B ON B.PRA_PraId = A.PRI_PraId "  
+				+ "LEFT OUTER JOIN CDN.PracEtaty C ON C.PRE_PraId = B.PRA_PraId "
+				+ "LEFT OUTER JOIN CDN.Dzialy D ON C.PRE_DzlId = D.DZL_DzlId "
+				+ "LEFT OUTER JOIN CDN.Centra E ON C.PRE_CntId = E.CNT_CntId "
+				+ "LEFT OUTER JOIN cdn.danekadmod F on C.PRE_ETADkmIdStanowisko = F.DKM_DkmId "
+				+ "LEFT OUTER JOIN CDN.Zaklady Z ON Z.Zak_ZakID = C.PRE_ZakID "
 				+ "LEFT OUTER JOIN (SELECT "
 				+ "					PKR_Numer, PKR_PrcId "
-				+ "					FROM CDN_ADR_S_A_2017.CDN.PracKartyRcp "
+				+ "					FROM CDN.PracKartyRcp "
 				+ "					WHERE PKR_OkresDo >= ? "
 				+ ") AS Krt ON A.PRI_PraId = Krt.PKR_PrcId "				
 				+ "WHERE "
 				+ "((( "
 				+ "	1 = ( " 
 				+ "	select top 1 1 " 
-				+ "	from CDN_ADR_S_A_2017.CDN.PracEtaty PracEtaty "
+				+ "	from CDN.PracEtaty PracEtaty "
 				+ "	where "
 				+ " 	PRI_PraId = PRE_PraId "
 				+ "		and (PRE_DzlId = 3 or PRE_AdresDzialu like '1%') "
@@ -327,7 +335,7 @@ public class JdbcAdrOptimaRepositoryImpl implements JdbcAdrOptimaRepository {
 		cal.add(Calendar.MONTH, 1);
 		nextMonthStart = cal.getTime();
 		
-		List<Map<String, Object>> resultSet = jdbc.queryForList(
+		List<Map<String, Object>> resultSet = jdbc(database).queryForList(
 				query
 				, new Object[] {today, nextMonthStart, currentMonthStart, today, today, cardNo });
 		

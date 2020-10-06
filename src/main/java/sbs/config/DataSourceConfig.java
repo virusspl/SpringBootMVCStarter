@@ -164,7 +164,7 @@ public class DataSourceConfig {
 	}
 
 	/*
-	 * SQL SERVER - OPTIMA
+	 * SQL SERVER - OPTIMA - ADR
 	 */
 	@Bean("optimaAdrDataSource")
 	public DataSource optimaAdrDataSource() throws SQLException {
@@ -179,6 +179,57 @@ public class DataSourceConfig {
 	@Bean(name = "optimaAdrJdbcTemplate")
 	public JdbcTemplate optimaAdrJdbcTemplate() throws SQLException {
 		return new JdbcTemplate(optimaAdrDataSource());
+	}
+	/*
+	 * SQL SERVER - OPTIMA - WPS
+	 */
+	@Bean("optimaWpsDataSource")
+	public DataSource optimaWpsDataSource() throws SQLException {
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setDriverClassName(SQLSERVER_DRIVER);
+		dataSource.setUrl("jdbc:sqlserver://ATWSRV-OPTIMA\\OPTIMA:50066;databaseName=CDN_W_P_S__Sp__z_o_o_;");
+		dataSource.setUsername("sa");
+		dataSource.setPassword("Optima123!");
+		return dataSource;
+	}
+	
+	@Bean(name = "optimaWpsJdbcTemplate")
+	public JdbcTemplate optimaWpsJdbcTemplate() throws SQLException {
+		return new JdbcTemplate(optimaWpsDataSource());
+	}
+	/*
+	 * SQL SERVER - OPTIMA - ADECCO
+	 */
+	@Bean("optimaAdeccoDataSource")
+	public DataSource optimaAdeccoDataSource() throws SQLException {
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setDriverClassName(SQLSERVER_DRIVER);
+		dataSource.setUrl("jdbc:sqlserver://ATWSRV-OPTIMA\\OPTIMA:50066;databaseName=CDN_Adecco;");
+		dataSource.setUsername("sa");
+		dataSource.setPassword("Optima123!");
+		return dataSource;
+	}
+	
+	@Bean(name = "optimaAdeccoJdbcTemplate")
+	public JdbcTemplate optimaAdeccoJdbcTemplate() throws SQLException {
+		return new JdbcTemplate(optimaAdeccoDataSource());
+	}
+	/*
+	 * SQL SERVER - OPTIMA - UA
+	 */
+	@Bean("optimaUaDataSource")
+	public DataSource optimaUaDataSource() throws SQLException {
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setDriverClassName(SQLSERVER_DRIVER);
+		dataSource.setUrl("jdbc:sqlserver://ATWSRV-OPTIMA\\OPTIMA:50066;databaseName=CDN_Ukrai_cy;");
+		dataSource.setUsername("sa");
+		dataSource.setPassword("Optima123!");
+		return dataSource;
+	}
+	
+	@Bean(name = "optimaUaJdbcTemplate")
+	public JdbcTemplate optimaUaJdbcTemplate() throws SQLException {
+		return new JdbcTemplate(optimaUaDataSource());
 	}
 
 	/*

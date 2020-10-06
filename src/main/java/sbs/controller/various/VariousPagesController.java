@@ -42,7 +42,7 @@ import sbs.service.downtimes.DowntimeTypesService;
 import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.inventory.InventoryDataTypesService;
 import sbs.service.mail.MailService;
-import sbs.service.optima.JdbcAdrOptimaService;
+import sbs.service.optima.JdbcOptimaService;
 import sbs.service.qcheck.QCheckStatesService;
 import sbs.service.qsurveys.QSurveyQuestionTypesService;
 import sbs.service.redmine.RedmineService;
@@ -68,7 +68,7 @@ public class VariousPagesController {
 	@Autowired
 	JdbcOracleX3Service x3Service;
 	@Autowired
-	JdbcAdrOptimaService jdbcAdrOptimaService;
+	JdbcOptimaService optimaService;
 	@Autowired
 	JdbcOracleGeodeService jdbcOracleGeodeService;
 	@Autowired
@@ -109,6 +109,17 @@ public class VariousPagesController {
 	@RequestMapping("/test")
 	public String test(Model model, Locale locale) throws InterruptedException {
 
+		
+		/*
+		List<HrUserInfo> list = optimaService.findAllCurrentlyEmployed();
+		for(HrUserInfo hr: list) {
+			if(hr.getLastName().equalsIgnoreCase("Latusek")) {
+					System.out.println(hr);
+			}
+		}
+		*/
+		
+		System.out.println(optimaService.findCurrentlyEmployedById("00325", JdbcOptimaService.DB_ADR));
 		
 		
 		//String result = x3Service.updateAverageDeliveryDays("ATW");

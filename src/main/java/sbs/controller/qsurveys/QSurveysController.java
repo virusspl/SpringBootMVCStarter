@@ -35,7 +35,7 @@ import sbs.model.qsurveys.QSurveyQuestionType;
 import sbs.model.qsurveys.QSurveyTemplate;
 import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3ProductionOrderDetails;
-import sbs.service.optima.JdbcAdrOptimaService;
+import sbs.service.optima.JdbcOptimaService;
 import sbs.service.qsurveys.QSurveyAnswersService;
 import sbs.service.qsurveys.QSurveyBomAnswersService;
 import sbs.service.qsurveys.QSurveyQuestionTypesService;
@@ -68,7 +68,7 @@ public class QSurveysController {
 	@Autowired
 	JdbcOracleX3Service x3Service;
 	@Autowired
-	JdbcAdrOptimaService hrService;
+	JdbcOptimaService hrService;
 	@Autowired
 	MessageSource messageSource;
 	@Autowired
@@ -540,7 +540,7 @@ public class QSurveysController {
 	@RequestMapping(value = "/create")
 	public String createSurvey(Model model) {
 		sessionInfo.setTemplates(templatesService.findAllActiveAscByTitle());
-		sessionInfo.setWorkers(hrService.findAllCurrentlyEmployed());
+		sessionInfo.setWorkers(hrService.findAllCurrentlyEmployed(JdbcOptimaService.DB_ADR));
 		model.addAttribute("formSurveyCreate", new FormSurveyCreate());
 		return "qsurveys/create";
 	}
@@ -566,7 +566,7 @@ public class QSurveysController {
 		
 		if (!formSurveyCreate.isOperatorManual()) {
 			// USER CHOOSE
-			hrUser = hrService.findCurrentlyEmployedById(formSurveyCreate.getOperatorId());
+			hrUser = hrService.findCurrentlyEmployedById(formSurveyCreate.getOperatorId(), JdbcOptimaService.DB_ADR);
 			if (hrUser == null) {
 				bindingResult.rejectValue("operatorId", "error.user.not.found", "ERROR");
 			}

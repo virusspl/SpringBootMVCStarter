@@ -22,7 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import sbs.model.hr.HrUserInfo;
 import sbs.model.users.User;
-import sbs.service.optima.JdbcAdrOptimaService;
+import sbs.service.optima.JdbcOptimaService;
 import sbs.service.users.RoleService;
 import sbs.service.users.UserService;
 
@@ -40,7 +40,7 @@ public class LoginController {
 	@Autowired
 	UserDetailsService userDetailsService;
 	@Autowired
-	JdbcAdrOptimaService optimaService;
+	JdbcOptimaService optimaService;
 
 
 	@RequestMapping(value = "/readcard")
@@ -62,7 +62,7 @@ public class LoginController {
 		String message = "";
 
 		String cardNo = rcpCardForm.getCardNumber().trim().toUpperCase();
-		HrUserInfo hrInfo = optimaService.findCurrentlyEmployedByCardNo(cardNo);
+		HrUserInfo hrInfo = optimaService.findCurrentlyEmployedByCardNo(cardNo, JdbcOptimaService.DB_ADR);
 		if (hrInfo != null) {
 			userHolder.setInfo(hrInfo);
 			message = messageSource.getMessage("rcplogin.userfound", null, locale) + ": <b>"
@@ -93,7 +93,7 @@ public class LoginController {
 		User current = userService.getAuthenticatedUser();
 		if(current != null && current.getRcpNumber().length()>0) {
 			String message = ""; 
-			HrUserInfo hrInfo = optimaService.findCurrentlyEmployedByCardNo(current.getRcpNumber());
+			HrUserInfo hrInfo = optimaService.findCurrentlyEmployedByCardNo(current.getRcpNumber(), JdbcOptimaService.DB_ADR);
 			if (hrInfo != null) {
 				userHolder.setInfo(hrInfo);
 				message = messageSource.getMessage("rcplogin.userfound", null, locale) + ": <b>"

@@ -8,10 +8,9 @@ import org.springframework.security.authentication.event.InteractiveAuthenticati
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
-import sbs.controller.auth.HrUserInfoSessionHolder;
 import sbs.model.hr.HrUserInfo;
 import sbs.model.users.User;
-import sbs.service.optima.JdbcAdrOptimaService;
+import sbs.service.optima.JdbcOptimaService;
 import sbs.service.users.UserService;
 
 @Component
@@ -23,7 +22,7 @@ public class AuthenticationApplicationListener {
 	@Autowired
 	UserDetailsService userDetailsService;
 	@Autowired
-	JdbcAdrOptimaService optimaService;
+	JdbcOptimaService optimaService;
 	@Autowired
 	UserService userService;
 	
@@ -34,7 +33,7 @@ public class AuthenticationApplicationListener {
 		// get RCP info
 		User current = userService.getAuthenticatedUser();
 		if (current != null && current.getRcpNumber().length() > 0) {
-			HrUserInfo hrInfo = optimaService.findCurrentlyEmployedByCardNo(current.getRcpNumber());
+			HrUserInfo hrInfo = optimaService.findCurrentlyEmployedByCardNo(current.getRcpNumber(), JdbcOptimaService.DB_ADR);
 			if (hrInfo != null) {
 				userHolder.setInfo(hrInfo);
 			}
