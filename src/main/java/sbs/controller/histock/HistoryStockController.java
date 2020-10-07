@@ -113,32 +113,35 @@ public class HistoryStockController {
 			line = new ArrayList<>();
 			line.add(info.getProductCode()); // 0
 			line.add(info.getProductDescriptionPl()); // 1  
-			line.add(textHelper.numberFormatIntegerRoundNoSpace(info.getStock())); // 2
-			line.add(textHelper.numberFormatDotNoSpace(info.getAverageCost())); // 3
-			line.add(textHelper.numberFormatIntegerRoundNoSpace(info.getEwz())); // 4
-			line.add(textHelper.numberFormatIntegerRoundNoSpace(info.getTechnicalLot())); // 5
-			line.add(textHelper.numberFormatIntegerRoundNoSpace(info.getMaxStsock())); // 6
-			line.add(textHelper.numberFormatIntegerRoundNoSpace(info.getReorderPoint())); // 7
-			line.add(textHelper.numberFormatIntegerRoundNoSpace(info.getSafetyStock())); // 8
+			line.add(
+					products.containsKey(info.getProductCode()) ? products.get(info.getProductCode()).getGr2() : "N/D" 
+					); // 2
+			line.add(textHelper.numberFormatIntegerRoundNoSpace(info.getStock())); // 3
+			line.add(textHelper.numberFormatDotNoSpace(info.getAverageCost())); // 4
+			line.add(textHelper.numberFormatIntegerRoundNoSpace(info.getEwz())); // 5
+			line.add(textHelper.numberFormatIntegerRoundNoSpace(info.getTechnicalLot())); // 6
+			line.add(textHelper.numberFormatIntegerRoundNoSpace(info.getMaxStsock())); // 7
+			line.add(textHelper.numberFormatIntegerRoundNoSpace(info.getReorderPoint())); // 8
+			line.add(textHelper.numberFormatIntegerRoundNoSpace(info.getSafetyStock())); // 9
 			if(history.containsKey(info.getProductCode())) {
 				hist = history.get(info.getProductCode());
 				hist.countDrops(info.getSafetyStock());
-				line.add(textHelper.numberFormatIntegerRoundNoSpace(hist.getZeroCounter())); // 9
-				line.add(textHelper.numberFormatIntegerRoundNoSpace(hist.getZeroDays())); // 10
-				line.add(textHelper.numberFormatIntegerRoundNoSpace(hist.getMinimumCounter())); // 11	
-				line.add(textHelper.numberFormatIntegerRoundNoSpace(hist.getMinimumDays())); //	12
-				line.add(hist.getZeroDates()); // 13
-				line.add(hist.getMinimumDates()); // 14
+				line.add(textHelper.numberFormatIntegerRoundNoSpace(hist.getZeroCounter())); // 10
+				line.add(textHelper.numberFormatIntegerRoundNoSpace(hist.getZeroDays())); // 11
+				line.add(textHelper.numberFormatIntegerRoundNoSpace(hist.getMinimumCounter())); // 12	
+				line.add(textHelper.numberFormatIntegerRoundNoSpace(hist.getMinimumDays())); //	13
+				line.add(hist.getZeroDates()); // 14
+				line.add(hist.getMinimumDates()); // 15
 			}
 			else {
-				line.add("N/D"); // 9
 				line.add("N/D"); // 10
 				line.add("N/D"); // 11
 				line.add("N/D"); // 12
-				line.add(""); // 13 (empty zero dates)
-				line.add(""); // 14 (empty minimum dates)
+				line.add("N/D"); // 13
+				line.add(""); // 14 (empty zero dates)
+				line.add(""); // 15 (empty minimum dates)
 			}
-			line.add(products.containsKey(info.getProductCode()) ? products.get(info.getProductCode()).isVerifyStock()+"" : "B/D"); // 15
+			line.add(products.containsKey(info.getProductCode()) ? products.get(info.getProductCode()).isVerifyStock()+"" : "B/D"); // 16
 			lines.add(line);
 		}
 		model.addAttribute("startDate", dateHelper.formatDdMmYyyy(startDate));

@@ -75,6 +75,7 @@
 							<tr>
 								<th th:text="|#{general.productCode}|">head</th>
 								<th th:text="|#{general.productDescription}|">head</th>
+								<th th:text="|Gr.2|">head</th>
 								<th th:text="|#{general.stock} X3|">head</th>
 								<th th:text="|#{general.cost}|">head</th>
 								<th th:text="|EWZ|">head</th>
@@ -100,21 +101,22 @@
 								<td><span th:text="${line[6]}"></span></td>
 								<td><span th:text="${line[7]}"></span></td>
 								<td><span th:text="${line[8]}"></span></td>
+								<td><span th:text="${line[9]}"></span></td>
 								<td>
-								<span th:text="${line[9]}"
-									th:title="|${line[13]}|"
-									data-toggle="tooltip" data-placement="top"
-									style="display: block;"
-								></span></td>
-								<td><span th:text="${line[10]}"></span></td>
-								<td>
-								<span th:text="${line[11]}"
+								<span th:text="${line[10]}"
 									th:title="|${line[14]}|"
 									data-toggle="tooltip" data-placement="top"
 									style="display: block;"
 								></span></td>
-								<td><span th:text="${line[12]}"></span></td>
-								<td><span th:text="${line[15]}"></span></td>
+								<td><span th:text="${line[11]}"></span></td>
+								<td>
+								<span th:text="${line[12]}"
+									th:title="|${line[15]}|"
+									data-toggle="tooltip" data-placement="top"
+									style="display: block;"
+								></span></td>
+								<td><span th:text="${line[13]}"></span></td>
+								<td><span th:text="${line[16]}"></span></td>
 							</tr>
 						</tbody>
 					</table>
