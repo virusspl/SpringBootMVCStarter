@@ -144,7 +144,7 @@
 
 		<div class="row" th:if="${salesObjects}">
 			<div class="col-xs-12">
-				<h3 th:text="|${component} - ${componentDescription} ${coverage}|"
+				<h3 th:text="|${component} - ${category} - ${componentDescription} ${coverage}|"
 					class="text-primary"></h3>
 					<ul>
 					<li th:each="suppl: ${suppliers}"><span th:text="|${suppl}|"></span></li>
@@ -224,7 +224,7 @@
 
 		<div class="row" th:if="${salesObjects}">
 			<div class="col-xs-12">
-				<h3 th:text="|${component} - ${componentDescription} ${coverage}|"
+				<h3 th:text="|${component} - ${category} - ${componentDescription} ${coverage}|"
 					class="text-primary"></h3>
 			</div>
 			<div class="col-xs-12">

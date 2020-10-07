@@ -866,11 +866,16 @@ public class ProductionComponentsController {
 			String componentDescription;
 			formComponent.setComponent(formComponent.getComponent().toUpperCase().trim());
 			component = formComponent.getComponent();
-			componentDescription = x3Service.findItemDescription("ATW", component);
-			if (componentDescription == null) {
+			
+			X3Product x3Product = x3Service.findProductByCode("ATW", component);
+			//componentDescription = x3Service.findItemDescription("ATW", component);
+			if (x3Product == null) {
 				bindingResult.rejectValue("component", "error.no.such.product", "ERROR");
 				model.addAttribute("formFindComponents", new FormFindComponents());
 				return "prodcomp/main";
+			}
+			else {
+				componentDescription = x3Product.getDescription();
 			}
 			// get component suppliers
 			List<String> suppliers = x3Service.getComponentSuppliers(component, "ATW");
@@ -952,6 +957,7 @@ public class ProductionComponentsController {
 			model.addAttribute("componentDescription", componentDescription);
 			model.addAttribute("title", component);
 			model.addAttribute("suppliers", suppliers);
+			model.addAttribute("category", x3Product.getCategory());
 			return "prodcomp/view";
 		} catch (OutOfHeapMemoryException er) {
 			model.addAttribute("error", this.outOfMemoryMessage);
