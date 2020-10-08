@@ -4357,9 +4357,10 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 					+ "BPR.BPRNAM_0, " 
 					+ "BPR.CRY_0, "
 					+ "POQ.EXTRCPDAT_0, " 
+					+ "POQ.X_RCPDAT_0, " 
 					+ "POQ.ORDDAT_0, " 
 					+ "(POQ.QTYSTU_0 - POQ.RCPQTYSTU_0) AS TO_GET, "
-					+ "ROW_NUMBER() OVER (PARTITION BY POQ.ITMREF_0 ORDER BY POQ.EXTRCPDAT_0 ASC) AS ROWNUMBER "
+					+ "ROW_NUMBER() OVER (PARTITION BY POQ.ITMREF_0 ORDER BY POQ.X_RCPDAT_0 ASC) AS ROWNUMBER "
 					+ "FROM " + company + ".PORDERQ POQ INNER JOIN "  + company + ".BPARTNER BPR ON POQ.BPSNUM_0 = BPR.BPRNUM_0 "
 					+ "WHERE POQ.LINCLEFLG_0 = 1  AND POQ.X_RCPDAT_0 >= ? AND (POQ.QTYSTU_0 - POQ.RCPQTYSTU_0) > 0 "
 				+ ")  WHERE ROWNUMBER = 1 "
@@ -4380,7 +4381,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			info.setSupplierCode((String)row.get("BPRNUM_0"));
 			info.setSupplierName((String)row.get("BPRNAM_0"));
 			info.setCountry((String)row.get("CRY_0"));
-			info.setDate((Timestamp)row.get("EXTRCPDAT_0"));
+			info.setDate((Timestamp)row.get("X_RCPDAT_0"));
 			info.setOrderDate((Timestamp)row.get("ORDDAT_0"));
 			map.put(info.getProductCode(), info); 
 		}
