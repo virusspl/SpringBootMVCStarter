@@ -39,6 +39,7 @@ import sbs.model.x3.X3BomPart;
 import sbs.model.x3.X3ConsumptionProductInfo;
 import sbs.model.x3.X3DeliverySimpleInfo;
 import sbs.model.x3.X3Product;
+import sbs.model.x3.X3ProductFinalMachine;
 import sbs.model.x3.X3SaleInfo;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.service.geode.JdbcOracleGeodeService;
@@ -211,6 +212,7 @@ public class ProductionComponentsController {
 				Map<String, Double> quantities = x3Service.getAllProductsQuantities("ATW");
 				Map<String, Double> geodeStock = geodeService.getStockOnProductionAndReceptions();
 				Map<String, X3Product> products = x3Service.findAllActiveProductsMap("ATW");
+				Map<String, X3ProductFinalMachine> finalMachines = x3Service.findX3ProductFinalMachines("ATW");
 				// get acv info
 				List<X3ConsumptionProductInfo> acvInfo = x3Service.getAcvListForConsumptionReport("ATW");
 				Map<String, X3DeliverySimpleInfo> upcomingDeliveries = x3Service
@@ -260,6 +262,7 @@ public class ProductionComponentsController {
 							products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getDescription() : "-");
 					line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getCategory() : "-");
 					line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getGr2() : "-");
+					line.add(finalMachines.containsKey(entry.getKey()) ? finalMachines.get(entry.getKey()).getMachineCode() : "-");
 					line.add(safetyStockMap.containsKey(entry.getKey())
 							? textHelper.numberFormatIntegerRoundNoSpace(safetyStockMap.get(entry.getKey()))
 							: "-");
