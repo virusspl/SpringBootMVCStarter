@@ -68,7 +68,7 @@ public class JdbcOracleGeodeRepositoryImpl implements JdbcOracleGeodeRepository 
                 + "ON GEOATW.STOCKOBJ.ITM_0 = GEOATW.ITEM.ITM_0 "
                 + "WHERE GEOATW.STOCKOBJ.ITM_0 != 'TMP' "
                 + "ORDER BY "
-                + "GEOATW.SLOT.STO_0, GEOATW.SLOT.ADD_0";
+                + "GEOATW.SLOT.STO_0 ASC, GEOATW.SLOT.ADD_0 ASC, GEOATW.STOCKOBJ.INPDAT_0 ASC";
 		
 		return jdbc.queryForList(query, new Object[]{});
 	}
