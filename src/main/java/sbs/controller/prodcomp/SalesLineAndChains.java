@@ -11,6 +11,7 @@ public class SalesLineAndChains {
 	private X3SalesOrderLine line;
 	private List<List<X3BomPart>> chains;
 	private double toSendValue;
+	private int baseComponentQuantity;
 	
 	public SalesLineAndChains() {
 		chains = new ArrayList<>();
@@ -21,6 +22,15 @@ public class SalesLineAndChains {
 		chains = new ArrayList<>();
 		this.line = line;
 		calculateToSendValue();
+	}
+	
+	
+	public int getBaseComponentQuantity() {
+		return baseComponentQuantity;
+	}
+
+	public void setBaseComponentQuantity(int baseComponentQuantity) {
+		this.baseComponentQuantity = baseComponentQuantity;
 	}
 
 	public X3SalesOrderLine getLine() {

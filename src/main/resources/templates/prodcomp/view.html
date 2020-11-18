@@ -240,6 +240,7 @@
 								<th th:text="#{general.client.name}">head</th>
 								<th th:text="#{general.order.sales}">head</th>
 								<th th:text="#{general.line}">head</th>
+								<th th:text="#{prodcomp.baseComponentQuantity.short}">head</th>
 								<th th:text="#{general.date.demanded.short}">head</th>
 								<th th:text="#{prodtosale.ordered}">head</th>
 								<th th:text="#{prodtosale.lefttosend}">head</th>
@@ -254,6 +255,7 @@
 								<td><span th:text="${obj.line.clientName}"></span></td>
 								<td><span th:text="${obj.line.orderNumber}"></span></td>
 								<td><span th:text="${obj.line.orderLineNumber}"></span></td>
+								<td><span th:text="${obj.baseComponentQuantity}"></span></td>
 								<td><span
 									th:text="${#dates.format(obj.line.demandedDate, 'yyyy.MM.dd')}"></span></td>
 								<td><span th:text="${obj.line.quantityOrdered}"></span></td>
@@ -270,6 +272,7 @@
 								<th th:text="#{general.client.name}">head</th>
 								<th th:text="#{general.order.sales}">head</th>
 								<th th:text="#{general.line}">head</th>
+								<th th:text="#{prodcomp.baseComponentQuantity.short}">head</th>
 								<th th:text="#{general.date.demanded.short}">head</th>
 								<th th:text="#{prodtosale.ordered}">head</th>
 								<th th:text="#{prodtosale.lefttosend}">head</th>

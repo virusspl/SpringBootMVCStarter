@@ -941,6 +941,7 @@ public class ProductionComponentsController {
 					if (finalChain.get(0).getParentCode().equalsIgnoreCase(line.getProductCode())) {
 						fillCurrentStockInfo(finalChain, generalStock);
 						object.addClonedAndCalculatedChain(finalChain);
+						object.setBaseComponentQuantity(object.getTargetProductDemand(component));;
 					}
 				}
 				if (object.getChains().size() > 0) {
