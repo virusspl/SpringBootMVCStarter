@@ -107,6 +107,8 @@
 								<th th:text="|#{general.productDescription}|">head</th>
 								<th th:text="|#{general.category}|">head</th>
 								<th th:text="|Gr.2|">head</th>
+								<th th:text="#{general.machine}">head</th>
+								<th th:text="#{general.department}">head</th>
 								<th th:text="|#{general.quantity}|">head</th>
 								<th th:text="|#{general.average} [PLN]|">head</th>
 								<th th:text="|#{general.average.weighted} [PLN]|">head</th>
@@ -118,6 +120,8 @@
 								<th th:text="|#{general.productDescription}|">head</th>
 								<th th:text="|#{general.category}|">head</th>
 								<th th:text="|Gr.2|">head</th>
+								<th th:text="#{general.machine}">head</th>
+								<th th:text="#{general.department}">head</th>
 								<th th:text="|#{general.quantity}|">head</th>
 								<th th:text="|#{general.average} [PLN]|">head</th>
 								<th th:text="|#{general.average.weighted} [PLN]|">head</th>
@@ -129,6 +133,8 @@
 								<td><span th:text="${line.productDescription}"></span></td>
 								<td><span th:text="${line.category}"></span></td>
 								<td><span th:text="${line.gr2}"></span></td>
+								<td><span th:text="${line.lastMachineCode}"></span></td>
+								<td><span th:text="#{${line.lastDepartmentCode}}"></span></td>
 								<td><span th:text="${#numbers.formatDecimal(line.quantity,1,0,'POINT')}"></span></td>
 								<td><span th:text="${#numbers.formatDecimal(line.avgPrice,1,2,'POINT')}"></span></td>
 								<td><span th:text="${#numbers.formatDecimal(line.weightAvgPrice,1,2,'POINT')}"></span></td>

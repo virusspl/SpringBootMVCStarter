@@ -10,8 +10,28 @@ public class X3AvgPriceLine {
 	private Double avgPrice;
 	private Double weightAvgPrice;
 	
+	// empty on init by repository
+	private String lastMachineCode;
+	private String lastDepartmentCode;
+	
 	public X3AvgPriceLine() {
 	
+	}
+
+	public String getLastMachineCode() {
+		return lastMachineCode;
+	}
+
+	public void setLastMachineCode(String lastMachineCode) {
+		this.lastMachineCode = lastMachineCode;
+	}
+
+	public String getLastDepartmentCode() {
+		return lastDepartmentCode;
+	}
+
+	public void setLastDepartmentCode(String lastDepartmentCode) {
+		this.lastDepartmentCode = lastDepartmentCode;
 	}
 
 	public String getProductCode() {
@@ -69,6 +89,8 @@ public class X3AvgPriceLine {
 	public void setWeightAvgPrice(Double weightAvgPrice) {
 		this.weightAvgPrice = weightAvgPrice;
 	}
+	
+	
 
 	@Override
 	public String toString() {

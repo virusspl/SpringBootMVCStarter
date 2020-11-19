@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sbs.helpers.TextHelper;
 import sbs.model.x3.X3RouteLine;
 import sbs.model.x3.X3SalesOrderLine;
+import sbs.service.production.ProductionService;
 import sbs.service.x3.JdbcOracleX3Service;
 
 @Controller
@@ -32,64 +33,14 @@ public class SaleShipController {
 	MessageSource messageSource;
 	@Autowired
 	TextHelper textHelper;
-	
-	private static final String DEPARTMENT_ASSEMBLY = "department.assembly";
-	private static final String DEPARTMENT_WELDING = "department.welding";
-	private static final String DEPARTMENT_MECHANICAL = "department.mechanical";
-	private static final String DEPARTMENT_UNASSIGNED= "general.unassigned";
-	
-	private String[] assemblyCenters;
-	private String[] weldingCenters;
-	private String[] mechanicalCenters;
-	
-	
-	public SaleShipController() {
-		assemblyCenters = new String[]{"08","09","10","11","12","13"};
-		weldingCenters = new String[]{"15","16","18","19"};
-		mechanicalCenters = new String[]{"01","02","03","04","06","07","14"};
-	}
-	
-	private boolean isStringInArray(String str, String[] array){
-		boolean result = false;
-		for(String s: array){
-			if(s.equals(str)){
-				return true;
-			}
-		}
-		return result;
-	}
+	@Autowired
+	ProductionService prodService;
 
-	private String getMainDepartmentCodeByMachineCenter(String center){
-		if(isStringInArray(center, assemblyCenters)){
-			return DEPARTMENT_ASSEMBLY;
-		}
-		else if(isStringInArray(center, weldingCenters)){
-			return DEPARTMENT_WELDING;
-		}
-		else if(isStringInArray(center, mechanicalCenters)){
-			return DEPARTMENT_MECHANICAL;
-		}
-		else{
-			return DEPARTMENT_UNASSIGNED;
-		}
-	}
-	
-	private X3RouteLine getLastRouteLineExcludingKAL(Map<Integer, X3RouteLine> routeLinesMap){
-		X3RouteLine result = null;
-	
-		for(X3RouteLine entry: routeLinesMap.values()){
-			if(entry.getMachine().startsWith("KAL")){
-				if(result==null){
-					result = entry;
-				}
-			}
-			else {
-				result = entry;
-			}
-		}
-		return result;
+	public SaleShipController() {
 		
 	}
+	
+
 	
 	@RequestMapping(value = "/main")
 	public String showForm(Model model) {
@@ -108,8 +59,6 @@ public class SaleShipController {
 		}
 		
 		List<X3SalesOrderLine> orderLines = x3Service.findOpenedSalesOrderLinesInPeriod(saleShipForm.getStartDate(), saleShipForm.getEndDate(), "ATW");
-		Map<String, Map<Integer, X3RouteLine>> routes = x3Service.getRoutesMap("ATW"); // cache
-		Map<String, String> workcenters = x3Service.getWorkcenterNumbersMapByMachines("ATW");
 		Map<String, Integer> magStock = x3Service.findGeneralMagStock("ATW");
 		Map<String, Integer> shipStock = x3Service.findGeneralShipStock("ATW");
 		Map<String, Integer> stockQ = x3Service.findStockByState("Q", "ATW");
@@ -125,10 +74,10 @@ public class SaleShipController {
 		String productionOrderAndLineInt;
 		int tmpQ, tmpR;
 		for(X3SalesOrderLine ord: orderLines){
-			if(routes.containsKey(ord.getProductCode())){
-				routeInt = getLastRouteLineExcludingKAL(routes.get(ord.getProductCode()));
+			routeInt = prodService.getLastRouteLineExcludingKAL(ord.getProductCode(), "ATW");
+			if(routeInt != null){
 				machineInt = routeInt.getMachine();
-				departmentCodeInt = getMainDepartmentCodeByMachineCenter(workcenters.get(machineInt));
+				departmentCodeInt = prodService.getMainDepartmentCodeByMachine(machineInt, "ATW");
 				productionOrderAndLineInt = productionOrdersBySaleOrders.containsKey(ord.getOrderNumber()+"/"+ord.getOrderLineNumber()) ? productionOrdersBySaleOrders.get(ord.getOrderNumber()+"/"+ord.getOrderLineNumber()) : "N/D";
 			}
 			else {

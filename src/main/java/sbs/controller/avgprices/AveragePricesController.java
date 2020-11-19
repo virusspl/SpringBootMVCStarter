@@ -9,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import sbs.model.x3.X3AvgPriceLine;
+import sbs.model.x3.X3RouteLine;
+import sbs.service.production.ProductionService;
 import sbs.service.x3.JdbcOracleX3Service;
 import sbs.helpers.DateHelper;
 
@@ -23,6 +25,8 @@ public class AveragePricesController {
 	DateHelper dateHelper;
 	@Autowired
 	JdbcOracleX3Service x3Service;
+	@Autowired
+	ProductionService prodService;
 
 	@RequestMapping("/main")
 	public String viewIndex() {
@@ -64,6 +68,19 @@ public class AveragePricesController {
 		else if (type == TYPE_ORDERS) {
 			list = x3Service.getAveragePricesByOrders(company);
 			titleCode = "avgprices.byorders";
+		}
+		
+		for(X3AvgPriceLine line: list) {
+			X3RouteLine rtLin = prodService.getLastRouteLineExcludingKAL(line.getProductCode(), company);
+			if(rtLin != null) {
+				line.setLastMachineCode(rtLin.getMachine());
+				line.setLastDepartmentCode(prodService.getMainDepartmentCodeByMachine(rtLin.getMachine(), company));
+			}
+			else {
+				line.setLastMachineCode("N/A");
+				line.setLastDepartmentCode("general.na");
+			}
+			
 		}
 		
 		model.addAttribute("list", list);
