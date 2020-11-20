@@ -30,12 +30,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sbs.helpers.DateHelper;
 import sbs.model.geode.GeodeMovement;
 import sbs.model.x3.X3ProductFinalMachine;
+import sbs.model.x3.X3RouteLine;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
 import sbs.model.x3.X3ShipmentStockLineWithPrice;
 import sbs.model.x3.X3WarehouseWeightDetailLine;
 import sbs.model.x3.X3WarehouseWeightLine;
 import sbs.service.geode.JdbcOracleGeodeService;
+import sbs.service.production.ProductionService;
 import sbs.service.x3.JdbcOracleX3Service;
 
 @Controller
@@ -50,6 +52,8 @@ public class MovementsController {
 	JdbcOracleX3Service x3Service;
 	@Autowired
 	DateHelper dateHelper;
+	@Autowired
+	ProductionService prodService;
 
 	List<String> productionStores;
 	List<String> receptionStores;
@@ -136,6 +140,8 @@ public class MovementsController {
 		Map<String, X3ProductFinalMachine> machinesIndex = x3Service.findX3ProductFinalMachines("ATW");
 		
 		String tmpKey;
+		X3RouteLine routeInt;
+		
 		for (X3ShipmentMovement mvt : movements) {
 			if (prices.containsKey(mvt.getItemCode()) && !mvt.getItemCategory().equalsIgnoreCase("ACV")) {
 				mvt.setPrice(prices.get(mvt.getItemCode()));
@@ -177,6 +183,15 @@ public class MovementsController {
 			mvt.setDemandedDate(orderLinesMap.containsKey(tmpKey) ? orderLinesMap.get(tmpKey).getDemandedDate():null);
 			mvt.setFinalClientCode(orderLinesMap.containsKey(tmpKey) ? orderLinesMap.get(tmpKey).getFinalClientCode():"");
 			mvt.setFinalClientName(orderLinesMap.containsKey(tmpKey) ? orderLinesMap.get(tmpKey).getFinalClientName():"");
+
+			routeInt = prodService.getLastRouteLineExcludingKAL(mvt.getItemCode(), "ATW");
+			if (routeInt != null) {
+				mvt.setLastMachineCode(routeInt.getMachine());
+				mvt.setLastDepartmentCode(prodService.getMainDepartmentCodeByMachine(mvt.getLastMachineCode(), "ATW"));
+			} else {
+				mvt.setLastMachineCode("N/A");
+				mvt.setLastDepartmentCode("general.na");
+			}
 
 			totalValue += mvt.getValue();
 			counter++;

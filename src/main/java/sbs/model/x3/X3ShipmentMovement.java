@@ -30,11 +30,30 @@ public class X3ShipmentMovement {
 	private String priceFormat;
 	private String valueFormat;
 	
+	// empty on init from repository
+	private String lastMachineCode;
+	private String lastDepartmentCode;
 	
 	
 	public X3ShipmentMovement() {
 		textHelper = new TextHelper();
 		
+	}
+
+	public String getLastMachineCode() {
+		return lastMachineCode;
+	}
+
+	public void setLastMachineCode(String lastMachineCode) {
+		this.lastMachineCode = lastMachineCode;
+	}
+
+	public String getLastDepartmentCode() {
+		return lastDepartmentCode;
+	}
+
+	public void setLastDepartmentCode(String lastDepartmentCode) {
+		this.lastDepartmentCode = lastDepartmentCode;
 	}
 
 	public String getItemCode() {
