@@ -146,6 +146,7 @@ public interface JdbcOracleX3Repository  {
 	 */
 	public void updateAverageDeliveryDaysInDatabase(List<StringDoublePair> list, String company);
 	public List<String> getComponentSuppliers(String component, String company);
+	public Map<String, String> findAllUsersMap(String company);
 	
 	
 	

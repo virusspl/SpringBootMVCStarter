@@ -28,9 +28,30 @@ public class SaleShipLine {
 	private int quantityToGive;
 	private String country;
 	private String demandStateCode;
+	private String creationUserCode;
+	private String creationUserName;
+	
 	
 	public SaleShipLine() {
 	
+	}
+	
+	
+
+	public String getCreationUserCode() {
+		return creationUserCode;
+	}
+
+	public void setCreationUserCode(String creationUserCode) {
+		this.creationUserCode = creationUserCode;
+	}
+
+	public String getCreationUserName() {
+		return creationUserName;
+	}
+
+	public void setCreationUserName(String creationUserName) {
+		this.creationUserName = creationUserName;
 	}
 
 	public String getSalesOrder() {

@@ -730,5 +730,10 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 		return jdbcOracleX3Repository.getComponentSuppliers(component, company);
 	}
 
+	@Override
+	public Map<String, String> findAllUsersMap(String company) {
+		return jdbcOracleX3Repository.findAllUsersMap(company);
+	}
+
 
 }

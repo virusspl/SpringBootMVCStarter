@@ -26,12 +26,30 @@ public class X3SalesOrderLine {
 	private int demandState;
 	private String finalClientCode;
 	private String finalClientName;
+	private String creationUserCode;
+	private String creationUserName;
 
 	
 	public X3SalesOrderLine() {
 		
 	}
 	
+	public String getCreationUserCode() {
+		return creationUserCode;
+	}
+
+	public void setCreationUserCode(String creationUserCode) {
+		this.creationUserCode = creationUserCode;
+	}
+	
+	public String getCreationUserName() {
+		return creationUserName;
+	}
+
+	public void setCreationUserName(String creationUserName) {
+		this.creationUserName = creationUserName;
+	}
+
 	public int getDemandState() {
 		return demandState;
 	}

@@ -97,6 +97,8 @@ public class SaleShipController {
 			line.setOriginalDate(ord.getOriginalDate());
 			line.setCreationDate(ord.getCreationDate());
 			line.setUpdateDate(ord.getUpdateDate());
+			line.setCreationUserCode(ord.getCreationUserCode());
+			line.setCreationUserName(ord.getCreationUserName());
 			line.setProductCode(ord.getProductCode());
 			line.setProductDescription(ord.getProductDescription());
 			line.setProductCategory(ord.getProductCategory());

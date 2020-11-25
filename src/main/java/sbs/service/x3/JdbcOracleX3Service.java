@@ -155,7 +155,7 @@ public interface JdbcOracleX3Service {
 	 */
 	public String updateAverageDeliveryDays(String company);
 	public List<String> getComponentSuppliers(String component, String company);
-	
+	public Map<String, String> findAllUsersMap(String company);
 	
 	
 }

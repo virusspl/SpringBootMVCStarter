@@ -113,6 +113,35 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         
 		return result;
 	}
+	
+	@Override
+	public Map<String, String> findAllUsersMap(String company) {
+		// ===========================================================
+		// ==== TMP JDBC DUALITY =====================================
+		if(this.x3v.equalsIgnoreCase("6")) {
+			jdbc = jdbc6;
+		}
+		else {
+			jdbc = jdbc11;
+		}
+		// ==== TMP JDBC DUALITY =====================================
+		// ===========================================================
+		
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT " 
+						+ company + ".AUTILIS.USR_0, "
+						+ company + ".AUTILIS.NOMUSR_0 "
+								+ " FROM " + company + ".AUTILIS",
+				new Object[]{});
+		
+		Map<String, String> result = new HashMap<>();
+		for(Map<String,Object> row: resultSet ){
+			
+			result.put((String)row.get("USR_0"), (String)row.get("NOMUSR_0"));
+		}
+		
+		return result;
+	}
 
 	@Override
 	public String findItemDescription(String company, String code) {
@@ -1130,6 +1159,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "SOQ.DEMDLVDAT_0, "
 				+ "SOP.X_DATAORI_0, "
 				+ "SOQ.CREDAT_0, "
+				+ "SOQ.CREUSR_0, "
 				+ "SOQ.UPDDAT_0, "
 				+ "SOQ.DEMSTA_0, "
 				+ "SOP.NETPRI_0, "
@@ -1191,6 +1221,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		
 		List<X3SalesOrderLine> list = new ArrayList<>();
 		X3SalesOrderLine line;
+		Map<String, String> users = this.findAllUsersMap(company);
 		for(Map<String,Object> row: resultSet ){
 			line = new X3SalesOrderLine();
 			line.setOrderNumber((String)row.get("SOHNUM_0"));
@@ -1207,6 +1238,8 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			line.setOriginalDate(((Timestamp)row.get("X_DATAORI_0")));
 			line.setCreationDate(((Timestamp)row.get("CREDAT_0")));
 			line.setUpdateDate(((Timestamp)row.get("UPDDAT_0")));
+			line.setCreationUserCode(((String)row.get("CREUSR_0")));
+			line.setCreationUserName(users.get(line.getCreationUserCode()));
 			line.setQuantityLeftToSend(((BigDecimal)row.get("LEFT_TO_SEND")).intValue());
 			line.setQuantityOrdered(((BigDecimal)row.get("QTYSTU_0")).intValue());
 			line.setUnitPrice(((BigDecimal)row.get("NETPRI_0")).doubleValue());
@@ -2654,6 +2687,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "SOQ.DEMDLVDAT_0, "
 				+ "SOP.X_DATAORI_0, "
 				+ "SOQ.CREDAT_0, "
+				+ "SOQ.CREUSR_0, "
 				+ "SOQ.UPDDAT_0, "
 				+ "SOQ.DEMSTA_0, "
 				+ "SOP.NETPRI_0, "
@@ -2697,6 +2731,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		
 		List<X3SalesOrderLine> list = new ArrayList<>();
 		X3SalesOrderLine line;
+		Map<String, String> users = this.findAllUsersMap(company);
 		for(Map<String,Object> row: resultSet ){
 			line = new X3SalesOrderLine();
 			line.setOrderNumber((String)row.get("SOHNUM_0"));
@@ -2714,6 +2749,8 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			line.setOriginalDate(((Timestamp)row.get("X_DATAORI_0")));
 			line.setCreationDate(((Timestamp)row.get("CREDAT_0")));
 			line.setUpdateDate(((Timestamp)row.get("UPDDAT_0")));
+			line.setCreationUserCode(((String)row.get("CREUSR_0")));
+			line.setCreationUserName(users.get(line.getCreationUserCode()));
 			line.setQuantityLeftToSend(((BigDecimal)row.get("LEFT_TO_SEND")).intValue());
 			line.setQuantityOrdered(((BigDecimal)row.get("QTYSTU_0")).intValue());
 			line.setUnitPrice(((BigDecimal)row.get("NETPRI_0")).doubleValue());
