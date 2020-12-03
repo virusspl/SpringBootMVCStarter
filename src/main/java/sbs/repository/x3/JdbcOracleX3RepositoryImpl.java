@@ -5001,4 +5001,39 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		return result;
 	}
 
+	@Override
+	public Map<String, Double> getAverageCostsMap(String company) {
+		// ===========================================================
+		// ==== TMP JDBC DUALITY =====================================
+		if(this.x3v.equalsIgnoreCase("6")) {
+			jdbc = jdbc6;
+		}
+		else {
+			jdbc = jdbc11;
+		}
+		// ==== TMP JDBC DUALITY =====================================
+		// ===========================================================
+		
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				"SELECT "
+				+ "itm.ITMREF_0, "
+				+ "itv.AVC_0 "
+				+ "FROM "
+				+ company + ".ITMMASTER itm INNER JOIN " + company + ".ITMMVT itv "
+				+ "ON itm.ITMREF_0 = itv.ITMREF_0 "
+				+ "WHERE itm.TCLCOD_0 = ? "
+
+				,
+                new Object[]{"ACV"}
+				);
+		
+		Map<String, Double> map = new HashMap<>();
+
+        for(Map<String,Object> row: resultSet ){
+        	map.put((String)row.get("ITMREF_0"), ((BigDecimal)row.get("AVC_0")).doubleValue());
+        }
+        
+        return map;
+	}
+
 }

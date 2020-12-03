@@ -31,6 +31,7 @@ import sbs.model.users.User;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3PurchaseOrder;
 import sbs.model.x3.X3SalesOrder;
+import sbs.model.x3.X3StandardCostEntry;
 import sbs.model.x3.X3StoreInfo;
 import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.inventory.InventoryColumnsService;
@@ -737,6 +738,8 @@ public class InventoryController {
 		List<InventoryEntry> entries = inventoryEntriesService.findByInventoryIdSortByLines(inventory.getId());
 		Map<String, Integer> shipmentStock = x3Service.findStockByLocation("ATW", "GEODE");
 		Map<String, Integer> inventoryStock = new HashMap<>();
+		Map<String, X3StandardCostEntry> stdCosts = x3Service.getStandardCostsMap("ATW");
+		Map<String, Double> avgCosts = x3Service.getAverageCostsMap("ATW");
 		
 		
 		for(InventoryEntry entry: entries){
@@ -752,10 +755,17 @@ public class InventoryController {
 		List<String> lineValues;
 		int invQty;
 		int x3Qty;
+		double price = 0.0;
 		
 		for(X3Product product: allProducts){
 			invQty = inventoryStock.getOrDefault(product.getCode(), 0);
 			x3Qty = shipmentStock.getOrDefault(product.getCode(), 0);
+			if(product.getCategory().equalsIgnoreCase("AFV")) {
+				price = stdCosts.containsKey(product.getCode()) ? stdCosts.get(product.getCode()).getTotalCost() : 0.0;
+			}
+			if(price == 0.0) {
+				price = avgCosts.containsKey(product.getCode()) ? avgCosts.get(product.getCode()) : 0.0;
+			}
 			
 			if(invQty > 0 || x3Qty > 0){
 				lineValues = new ArrayList<>();
@@ -765,6 +775,8 @@ public class InventoryController {
 				lineValues.add(""+(invQty));
 				lineValues.add(""+x3Qty);
 				lineValues.add(""+ (invQty - x3Qty));
+				lineValues.add("" + textHelper.numberFormatDotNoSpace(price));
+				lineValues.add("" + textHelper.numberFormatDotNoSpace((invQty - x3Qty) * price));
 				lines.add(lineValues);
 			}
 		}		
@@ -774,6 +786,7 @@ public class InventoryController {
 
 		return "inventory/summary";
 	}
+	
 	@RequestMapping("/inventory/summary/{id}")
 	@Transactional
 	public String showInventorySummaryView(@PathVariable("id") int id, Model model, Locale locale, RedirectAttributes redirectAttrs) throws NotFoundException {
