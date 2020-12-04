@@ -12,6 +12,7 @@ public class SalesLineAndChains {
 	private List<List<X3BomPart>> chains;
 	private double toSendValue;
 	private int baseComponentQuantity;
+	private int relativeTargetDemand;
 	
 	public SalesLineAndChains() {
 		chains = new ArrayList<>();
@@ -25,6 +26,14 @@ public class SalesLineAndChains {
 	}
 	
 	
+	public int getRelativeTargetDemand() {
+		return relativeTargetDemand;
+	}
+
+	public void setRelativeTargetDemand(int relativeTargetDemand) {
+		this.relativeTargetDemand = relativeTargetDemand;
+	}
+
 	public int getBaseComponentQuantity() {
 		return baseComponentQuantity;
 	}
@@ -88,6 +97,36 @@ public class SalesLineAndChains {
 			}
 		}
 		return demand;
+	}
+
+	/**
+	 * chains must be completed before this step
+	 */
+	public void updateRelativeTargetDemand() {
+		this.relativeTargetDemand = 0;
+		boolean need;
+		X3BomPart part;
+		Double relativeDemandTmp;
+		// for every chain
+		for(List<X3BomPart> list: chains) {
+			// loop objects till target
+			need = false;
+			for(int i = 0; i<list.size(); i++) {
+				part = list.get(i);
+				if(part.getQuantityDemand()>part.getCurrentStock()) {
+					need = true;
+					// if at last part in chain
+					if(i==list.size()-1) {
+						relativeDemandTmp = need ? part.getQuantityDemand().intValue() : 0.0;
+						this.setRelativeTargetDemand(relativeDemandTmp.intValue());
+					}
+					
+					
+					
+				}
+			}
+		}
+		
 	}
 	
 }

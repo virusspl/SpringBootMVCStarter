@@ -942,6 +942,8 @@ public class ProductionComponentsController {
 						fillCurrentStockInfo(finalChain, generalStock);
 						object.addClonedAndCalculatedChain(finalChain);
 						object.setBaseComponentQuantity(object.getTargetProductDemand(component));;
+						// calculate demand based on upper components availability
+						object.updateRelativeTargetDemand();
 					}
 				}
 				if (object.getChains().size() > 0) {
@@ -1023,6 +1025,7 @@ public class ProductionComponentsController {
 				found = true;
 				localChain = cloneBomPartList(chain);
 				localChain.add(part);
+				// memory check
 				if (memoryService.getCurrentHeapUsageProc() > this.outOfMemoryThreshold) {
 					throw new OutOfHeapMemoryException("Out of memory!");
 				}

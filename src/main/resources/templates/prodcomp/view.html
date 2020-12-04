@@ -185,7 +185,6 @@
 									<td><span th:text="${obj.line.quantityLeftToSend}"></span></td>
 									<td><span
 										th:text="${#numbers.formatDecimal(obj.toSendValue, 1, 'WHITESPACE', 2, 'POINT')}"></span></td>
-
 								</tr>
 								<tr th:each="chain : ${obj.chains}">
 									<td colspan="10">
@@ -241,6 +240,7 @@
 								<th th:text="#{general.order.sales}">head</th>
 								<th th:text="#{general.line}">head</th>
 								<th th:text="#{prodcomp.baseComponentQuantity.short}">head</th>
+								<th th:text="#{general.required}">head</th>
 								<th th:text="#{general.date.demanded.short}">head</th>
 								<th th:text="#{prodtosale.ordered}">head</th>
 								<th th:text="#{prodtosale.lefttosend}">head</th>
@@ -256,6 +256,7 @@
 								<td><span th:text="${obj.line.orderNumber}"></span></td>
 								<td><span th:text="${obj.line.orderLineNumber}"></span></td>
 								<td><span th:text="${obj.baseComponentQuantity}"></span></td>
+								<td><span th:text="${obj.relativeTargetDemand}"></span></td>
 								<td><span
 									th:text="${#dates.format(obj.line.demandedDate, 'yyyy.MM.dd')}"></span></td>
 								<td><span th:text="${obj.line.quantityOrdered}"></span></td>
@@ -273,6 +274,7 @@
 								<th th:text="#{general.order.sales}">head</th>
 								<th th:text="#{general.line}">head</th>
 								<th th:text="#{prodcomp.baseComponentQuantity.short}">head</th>
+								<th th:text="#{general.required}">head</th>
 								<th th:text="#{general.date.demanded.short}">head</th>
 								<th th:text="#{prodtosale.ordered}">head</th>
 								<th th:text="#{prodtosale.lefttosend}">head</th>
