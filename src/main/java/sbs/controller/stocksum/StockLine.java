@@ -3,6 +3,7 @@ package sbs.controller.stocksum;
 public class StockLine {
 
 	private String code;
+	private String description;
 	private double stockX3;
 	private double stockGeodeProd;
 	private double stockGeodeRcp;
@@ -22,6 +23,16 @@ public class StockLine {
 		this.stockGeodeProd = stockGeodeProd;
 		this.stockGeodeRcp = stockGeodeRcp;
 		this.demand = demand;
+	}
+
+	
+	public String getDescription() {
+		return description;
+	}
+
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 

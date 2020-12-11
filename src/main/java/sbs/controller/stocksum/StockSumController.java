@@ -91,9 +91,11 @@ public class StockSumController {
 		for(StockLine line: list.values()) {
 			if(products.containsKey(line.getCode())) {
 				line.setCategory(products.get(line.getCode()).getCategory());
+				line.setDescription(products.get(line.getCode()).getDescription());
 			}
 			else {
 				line.setCategory("N/D");
+				line.setDescription("N/D");
 			}
 		}
 		

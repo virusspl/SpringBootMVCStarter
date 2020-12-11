@@ -88,6 +88,7 @@
 							<thead>
 								<tr>
 									<th th:text="|#{general.productCode}|">head</th>
+									<th th:text="|#{general.productDescription}|">head</th>
 									<th th:text="|#{general.category}|">head</th>
 									<th th:text="|#{general.stock} X3|">head</th>
 									<th th:text="|Geode PRD|">head</th>
@@ -98,6 +99,7 @@
 							<tfoot>
 								<tr>
 									<th th:text="|#{general.productCode}|">head</th>
+									<th th:text="|#{general.productDescription}|">head</th>
 									<th th:text="|#{general.category}|">head</th>
 									<th th:text="|#{general.stock} X3|">head</th>
 									<th th:text="|Geode PRD|">head</th>
@@ -108,6 +110,7 @@
 							<tbody>
 								<tr th:each="line : ${list}">
 									<td><span th:text="${line.code}"></span></td>
+									<td><span th:text="${line.description}"></span></td>									
 									<td><span th:text="${line.category}"></span></td>
 									<td><span
 										th:text="${#numbers.formatDecimal(line.stockX3,1,0)}"></span></td>
