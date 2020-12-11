@@ -912,7 +912,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	}
 
 	@Override
-	public Map<String, X3UtrMachine> findAllUtrMachines(String company) {
+	public Map<String, X3UtrMachine> findAllUtrMachines(String company, int ysoce) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
 		if(this.x3v.equalsIgnoreCase("6")) {
@@ -955,9 +955,11 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "FROM "
 					+ company + ".YMANUPREVE ym LEFT JOIN " + company + ".FXDASSETS fx "
 				+ "ON "
-					+ "ym.YCESPITE_0 = fx.AASDES2_0";
+					+ "ym.YCESPITE_0 = fx.AASDES2_0 "
+				+ "WHERE "
+					+ "ym.YSOCE_0 = ? ";
 		
-		List<Map<String,Object>> resultSet = jdbc.queryForList(sqlV11,new Object[]{});
+		List<Map<String,Object>> resultSet = jdbc.queryForList(sqlV11,new Object[]{ysoce});
         
         Map <String, X3UtrMachine> map = new HashMap<>();
         X3UtrMachine machine;

@@ -169,8 +169,8 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 
 	@Override
 	@Cacheable(value = "x3AllUtrMachines")
-	public Map<String, X3UtrMachine> findAllUtrMachines(String company) {
-		return jdbcOracleX3Repository.findAllUtrMachines(company);
+	public Map<String, X3UtrMachine> findAllUtrMachines(String company, int ysoce) {
+		return jdbcOracleX3Repository.findAllUtrMachines(company, ysoce);
 	}
 
 	@Override

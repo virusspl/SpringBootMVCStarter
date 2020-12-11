@@ -66,7 +66,7 @@ public interface JdbcOracleX3Repository  {
 	public List<X3BomItem> findProductionPartsByProductionOrderAndOperation(String company, String productionOrder, int operationNumber);
 	public String findOperationDescriptionByProductionOrder(String company, String productionOrder, int operationNumber);
 	public String findFinalClientByOrder(String company, String order);
-	public Map<String, X3UtrMachine> findAllUtrMachines(String company);
+	public Map<String, X3UtrMachine> findAllUtrMachines(String company, int ysoce);
 	public Map<String, X3UtrWorker> findAllUtrWorkers(String company);
 	public List<X3ShipmentMovement> findAdrShipmentMovementsInPeriod(Date startDate, Date endDate);
 	public Map<String, X3UtrFault> findUtrFaultsInPeriod(Date startDate, Date endDate);

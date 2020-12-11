@@ -55,10 +55,6 @@ public class UtrController {
 	List<String> bodiesMachines;
 	List<String> armsMachines;
 
-	int criticalMachinesCnt;
-	int nonCriticalMachinesCnt;
-	int criticalMachinesCntWps;
-	int nonCriticalMachinesCntWps;
 	int hoursInShift;
 
 	@Autowired
@@ -66,10 +62,6 @@ public class UtrController {
 		excludedMachines = Arrays.asList(env.getRequiredProperty("utr.machines.mtbfexcluded").split(";"));
 		bodiesMachines = Arrays.asList(env.getRequiredProperty("utr.machineschart.bodies").split(";"));
 		armsMachines = Arrays.asList(env.getRequiredProperty("utr.machineschart.arms").split(";"));
-		criticalMachinesCnt = Integer.parseInt(env.getRequiredProperty("utr.machines.criticalCnt"));
-		nonCriticalMachinesCnt = Integer.parseInt(env.getRequiredProperty("utr.machines.nonCriticalCnt"));
-		criticalMachinesCntWps = Integer.parseInt(env.getRequiredProperty("utr.machines.criticalCnt.wps"));
-		nonCriticalMachinesCntWps = Integer.parseInt(env.getRequiredProperty("utr.machines.nonCriticalCnt.wps"));
 		hoursInShift = Integer.parseInt(env.getRequiredProperty("utr.hoursInShift"));
 	}
 
@@ -101,7 +93,7 @@ public class UtrController {
 		Date endDate = utrDispatchForm.getEndDate();
 
 		// get dictionaries
-		Map<String, X3UtrMachine> machines = x3Service.findAllUtrMachines("ATW");
+		Map<String, X3UtrMachine> machines = x3Service.findAllUtrMachines("ATW", company);
 		Map<String, X3UtrWorker> workersUnsorted = x3Service.findAllUtrWorkers("ATW");
 		Map<String, X3UtrWorker> workers = new TreeMap<String, X3UtrWorker>(workersUnsorted);
 		Map<String, X3UtrFault> faults = x3Service.findUtrFaultsInPeriod(startDate, endDate);
@@ -123,9 +115,15 @@ public class UtrController {
 		}
 
 		// make critical machines list
+		// and count critical + non-critical
+		int nonCriticalMachinesCnt = 0;
+		int criticalMachinesCnt = 0;
 		for (X3UtrMachine machine : machines.values()) {
 			if (machine.isCritical()) {
+				criticalMachinesCnt++;
 				criticalMachines.add(machine);
+			} else {
+				nonCriticalMachinesCnt++;
 			}
 		}
 
@@ -181,15 +179,8 @@ public class UtrController {
 		int mwt = minutesOfWorkTotal / validFaultsCnt;
 		int daysInPeriod = countDaysInPeriod(startDate, endDate);
 		int mtbf = 0;
-		if (company == 1) {
-			// ADRP
-			mtbf = calculateMtbf(daysInPeriod, validFaultsCnt, utrDispatchForm.getCritical(), criticalMachinesCnt,
-					nonCriticalMachinesCnt);
-		} else {
-			// WPS
-			mtbf = calculateMtbf(daysInPeriod, validFaultsCnt, utrDispatchForm.getCritical(), criticalMachinesCntWps,
-					nonCriticalMachinesCntWps);
-		}
+		mtbf = calculateMtbf(daysInPeriod, validFaultsCnt, utrDispatchForm.getCritical(), criticalMachinesCnt,
+				nonCriticalMachinesCnt);
 
 		// pass values to view
 		model.addAttribute("faultsCounter", validFaultsCnt);
@@ -197,8 +188,8 @@ public class UtrController {
 		model.addAttribute("mttr", dateHelper.convertMinutesToHours(mttr));
 		model.addAttribute("mrt", dateHelper.convertMinutesToHours(mrt));
 		model.addAttribute("mwt", dateHelper.convertMinutesToHours(mwt));
-		model.addAttribute("criticalCnt", criticalMachinesCnt);
-		model.addAttribute("nonCriticalCnt", nonCriticalMachinesCnt);
+		model.addAttribute("criticalMachinesCnt", criticalMachinesCnt);
+		model.addAttribute("nonCriticalMachinesCnt", nonCriticalMachinesCnt);
 		model.addAttribute("mtbf", mtbf);
 		model.addAttribute("workers", workers.values());
 		model.addAttribute("criticalMachines", criticalMachines);
@@ -218,8 +209,13 @@ public class UtrController {
 		final String SATURDAY_COLOR = "#ffffcc";
 		final String SUNDAY_COLOR = "#ffdddd";
 
-		// get dictionaries
-		Map<String, X3UtrMachine> machines = x3Service.findAllUtrMachines("ATW");
+		// get machines ADR + WPS
+		Map<String, X3UtrMachine> machines = x3Service.findAllUtrMachines("ATW", 1);
+		Map<String, X3UtrMachine> machinesWPS = x3Service.findAllUtrMachines("ATW", 2);
+		for (Map.Entry<String, X3UtrMachine> machine : machinesWPS.entrySet()) {
+			machines.put(machine.getKey(), machine.getValue());
+		}
+
 		Map<String, X3UtrFault> faults = x3Service.findAllUtrFaults();
 		List<X3UtrFaultLine> lines = x3Service.findAllUtrFaultLines();
 		// link maps
@@ -264,7 +260,7 @@ public class UtrController {
 
 		for (X3UtrMachine m : machines.values()) {
 			if (m.getCompany() == X3UtrMachine.ADRP) {
-				
+
 				if (m.getCodeNicim() == null) {
 					// if NICIM code empty - skip
 					continue;
@@ -291,15 +287,14 @@ public class UtrController {
 				default:
 					break;
 				}
-			
-			} 
-			else if (m.getCompany() == X3UtrMachine.WPS) {
+
+			} else if (m.getCompany() == X3UtrMachine.WPS) {
 				line = new ChartLine(m, periodLength);
 				calculateTimeAvailable(line, periodFaults, start, end);
 				linesCount++;
 				wpsLines.add(line);
 			}
-			
+
 		}
 
 		model.addAttribute("titleDates", datesInPeriod);
@@ -338,7 +333,12 @@ public class UtrController {
 		Date startDate = cal.getTime();
 
 		// get dictionaries
-		Map<String, X3UtrMachine> machines = x3Service.findAllUtrMachines("ATW");
+		// machines ADR + WPS
+		Map<String, X3UtrMachine> machines = x3Service.findAllUtrMachines("ATW", 1);
+		Map<String, X3UtrMachine> machinesWPS = x3Service.findAllUtrMachines("ATW", 2);
+		for (Map.Entry<String, X3UtrMachine> machine : machinesWPS.entrySet()) {
+			machines.put(machine.getKey(), machine.getValue());
+		}
 		Map<String, X3UtrFault> faults = x3Service.findUtrFaultsInPeriod(startDate, endDate);
 		List<X3UtrFaultLine> lines = x3Service.findUtrFaultLinesAfterDate(startDate);
 
@@ -358,7 +358,7 @@ public class UtrController {
 			if (fault.getInputDateTime() == null) {
 				continue;
 			}
-			if(fault.getFaultType() == X3UtrFault.NOSTOP_TYPE){
+			if (fault.getFaultType() == X3UtrFault.NOSTOP_TYPE) {
 				continue;
 			}
 			if (dateHelper.isDateInRange(new Timestamp(today.getTime().getTime()), fault.getInputDateTime(),
@@ -548,7 +548,6 @@ public class UtrController {
 			machinesCnt = criticalMachinesCnt + nonCriticalMachinesCnt;
 			break;
 		}
-
 		return (int) ((daysInPeriod * 1.0 / faultsCnt) * hoursInShift * machinesCnt);
 	}
 
@@ -566,12 +565,9 @@ public class UtrController {
 	/**
 	 * remove faults in given map by criteria
 	 * 
-	 * @param critical
-	 *            based on maintenance form, 0 all, 1 normal, 2 critical
-	 * @param stop
-	 *            base on maintenance form, 0 all, 1 faults, 2 crashes
-	 * @param faults
-	 *            map
+	 * @param critical based on maintenance form, 0 all, 1 normal, 2 critical
+	 * @param stop     base on maintenance form, 0 all, 1 faults, 2 crashes
+	 * @param faults   map
 	 */
 	private void removeFaultsByCriteria(int critical, int stop, Map<String, X3UtrFault> faults) {
 		ArrayList<String> toDelete = new ArrayList<>();

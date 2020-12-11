@@ -81,7 +81,13 @@ public interface JdbcOracleX3Service {
 	public String findOperationDescriptionByProductionOrder(String company, String order, int operation);
 	public String findFinalClientByOrder(String company, String order);
 	public List<X3ShipmentMovement> findAdrShipmentMovementsInPeriod(Date startDate, Date endDate);
-	public Map<String, X3UtrMachine> findAllUtrMachines(String company);
+	/**
+	 * 
+	 * @param company
+	 * @param ysoce 1 - ADRP; 2 - WPS
+	 * @return
+	 */
+	public Map<String, X3UtrMachine> findAllUtrMachines(String company, int ysoce);
 	public Map<String, X3UtrWorker> findAllUtrWorkers(String company);
 	public Map<String, X3UtrFault> findUtrFaultsInPeriod(Date startDate, Date endDate);
 	public Map<String, X3UtrFault> findAllUtrFaults();
