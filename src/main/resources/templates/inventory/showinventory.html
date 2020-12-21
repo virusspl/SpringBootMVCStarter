@@ -4,7 +4,8 @@
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
 	layout:decorator="layout/main">
 <head lang="pl">
-<title th:text="|${inventory.title} - ${#dates.format(inventory.inventoryDate, 'yyyy.MM.dd')}|"></title>
+<title
+	th:text="|${inventory.title} - ${#dates.format(inventory.inventoryDate, 'yyyy.MM.dd')}|"></title>
 <style>
 .columnstable {
 	width: 100%;
@@ -48,10 +49,10 @@ tr.columnsrow:nth-child(odd) {
 		<script th:src="@{/datatables/buttons.print.min.js}"
 			type="text/javascript"></script>
 		<script th:src="@{/datatables/dataTables.buttons.min.js}"
-			type="text/javascript"></script>	
+			type="text/javascript"></script>
 		<script th:src="@{/datatables/jszip.min.js}" type="text/javascript"></script>
 		<script th:src="@{/datatables/pdfmake.min.js}" type="text/javascript"></script>
-		<script th:src="@{/datatables/vfs_fonts.js}" type="text/javascript"></script>		
+		<script th:src="@{/datatables/vfs_fonts.js}" type="text/javascript"></script>
 		<!-- entries table -->
 		<script th:if="__${#locale}__ == 'pl'">
 			$('#srv').DataTable({
@@ -128,6 +129,15 @@ tr.columnsrow:nth-child(odd) {
 				class="glyphicon glyphicon-menu-left"></span> <span
 				th:text="#{action.back}">back</span>
 			</a>
+			<a href="http://192.168.1.23/DOCS/inv_falcon.pdf" target="_blank"  class="btn btn-link btn-sm">
+					<span class="glyphicon glyphicon-link"></span> <span
+					th:text="#{general.manual}"></span>
+			</a>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				
+			</div>
 		</div>
 		<!-- /INTRO -->
 
@@ -259,16 +269,16 @@ tr.columnsrow:nth-child(odd) {
 					<a th:href="@{/inventory/list}" class="btn btn-link btn-sm"> <span
 						class="glyphicon glyphicon-menu-left"></span> <span
 						th:text="#{action.back}">back</span>
-					</a>
-					<a th:href="|@{/inventory/summary/}${inventory.id}|" class="btn btn-link btn-sm"> <span
+					</a> <a th:href="|@{/inventory/summary/}${inventory.id}|"
+						class="btn btn-link btn-sm"> <span
 						class="glyphicon glyphicon-th-list"></span> <span
 						th:text="#{general.summary}"></span>
-					</a>
-					<a th:href="|@{/inventory/shipmentsummary/}${inventory.id}|" class="btn btn-link btn-sm"> <span
+					</a> <a th:href="|@{/inventory/shipmentsummary/}${inventory.id}|"
+						class="btn btn-link btn-sm"> <span
 						class="glyphicon glyphicon-indent-left"></span> <span
 						th:text="#{department.shipments.warehouse}"></span>
 					</a>
-					
+
 				</div>
 			</div>
 			<!-- /back button -->
@@ -292,7 +302,7 @@ tr.columnsrow:nth-child(odd) {
 								<th th:each="column: ${columns}" th:text="${column.columnName}"></th>
 								<th th:text="|Login|"></th>
 								<th th:text="#{general.user}"></th>
-								
+
 							</tr>
 						</thead>
 						<tbody>
