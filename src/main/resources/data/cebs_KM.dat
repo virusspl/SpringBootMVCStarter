@@ -1,17 +1,34 @@
-KM;Kebab Mały;8
-KD;Kebab Duży;12
-BM;Box Mały;10
-BD;Box Duży;14
-FR;Frytki;5
-SK;Sałatka Kebab;13
-SV;Sałatka Vega;12
-KCM;Kebab w chlebku Mały;8
-KCD;Kebab w chlebku Duży;12
-RKM;Rollo Mały;8
-RKD;Rollo Duży;12
-HDF;Hot Dog Francuski;5
-HDA;Hot Dog Amerykański;7.5
-NG;Nuggets (4 szt.);7
-PS;Paluszki serowe (4 szt.);7
-KMV;Kebab Mały Vega;8
-KDV;Kebab Duży Vega;12
+PM;Pita Mała;9
+PD;Pita Duża;13
+KMV;Pita Mała Vega;9
+KDV;KPita Duża Vega;13
+KUM;Kebab Uczniowski Mały;8
+KUD;Kebab Uczniowski Duży;12
+KCM;Kebab w chlebku Mały;9
+KCD;Kebab w chlebku Duży;13
+RKM;Tortilla Kebab Mały;9
+RKD;Tortilla Kebab Duży;13
+DRFM;DonerRollo Fryt Mały;10
+DRFD;DonerRollo Fryt Duży;14
+BM;Box Mały;11
+BS;Box Średni;13
+BD;Box Duży;15
+KZO;Kebab Zestaw Obiadowy;22
+FRM;Frytki Małe;5
+FRD;Frytki Duże;7
+SK;Sałatka Kebab;15
+SV;Sałatka Vego;13
+PS;Paluszki serowe (5 szt.);7.5
+VPSPM;Vego Paluszki Serowe Panierowane Mały;9
+VPSPD;Vego Paluszki Serowe Panierowane Duży;13
+PSZO;Paluszki Serowe Zestaw Obiadowy;19
+KNM;Kinder Menu;14
+HDF;Hot Dog Francuski;5.5
+HDA;Hot Dog Amerykański;8
+NG;Nuggets (5 szt.);7.5
+NACC;Coca Cola; 5.5
+NAFA;Fanta; 5.5
+NANE;Nestea; 5.5
+NACA;Cappy;4
+NAWP;Napój w puszcze;4
+NAWO;Woda;3
