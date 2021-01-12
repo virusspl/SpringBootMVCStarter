@@ -28,6 +28,7 @@ public class X3SalesOrderLine {
 	private String finalClientName;
 	private String creationUserCode;
 	private String creationUserName;
+	private double margin;
 
 	
 	public X3SalesOrderLine() {
@@ -233,6 +234,15 @@ public class X3SalesOrderLine {
 
 	public void setFinalClientName(String finalClientName) {
 		this.finalClientName = finalClientName;
+	}
+	
+
+	public double getMargin() {
+		return margin;
+	}
+
+	public void setMargin(double margin) {
+		this.margin = margin;
 	}
 
 	@Override

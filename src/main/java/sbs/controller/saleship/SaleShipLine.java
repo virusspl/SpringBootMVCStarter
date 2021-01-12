@@ -30,6 +30,7 @@ public class SaleShipLine {
 	private String demandStateCode;
 	private String creationUserCode;
 	private String creationUserName;
+	private double saleMargin;
 	
 	
 	public SaleShipLine() {
@@ -247,8 +248,14 @@ public class SaleShipLine {
 	public void setProductCategory(String productCategory) {
 		this.productCategory = productCategory;
 	}
+
+	public double getSaleMargin() {
+		return saleMargin;
+	}
+
+	public void setSaleMargin(double saleMargin) {
+		this.saleMargin = saleMargin;
+	}
 	
-
-
 	
 }

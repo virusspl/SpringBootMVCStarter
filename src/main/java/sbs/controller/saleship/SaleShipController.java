@@ -115,6 +115,7 @@ public class SaleShipController {
 			line.setQuantityRemainingToShip(ord.getQuantityLeftToSend());
 			line.setQuantityShipped(ord.getQuantityOrdered()-ord.getQuantityLeftToSend());
 			line.setQuantityToGive(line.getQuantityRemainingToShip()-line.getStockShipments() < 0 ? 0 : line.getQuantityRemainingToShip()-line.getStockShipments() );
+			line.setSaleMargin(ord.getMargin()*ord.getExchangeRate());
 			lines.add(line);
 		}
 		

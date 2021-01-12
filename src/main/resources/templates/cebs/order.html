@@ -81,9 +81,8 @@
 					&lt;b/&gt;4.&lt;/b/&gt; Kiedy zamówienie przyjedzie do firmy, powiadomienie zostanie wysłane mailem.
 					&lt;br/&gt;
 					&lt;br/&gt;
-					|">
-					Welcome message </span>
-			</div>
+					|"></span>
+				</div>
 			<a th:href="@{/}" class="btn btn-link btn-sm"> <span
 				class="glyphicon glyphicon-menu-left"></span> <span
 				th:text="#{action.back}">back</span>
@@ -131,6 +130,13 @@
 						class="text-primary center"></h3>
 					<!-- Organizator: &lt;b&gt;${organizer}&lt;/b&gt; ;) -->
 
+					<div class="center alert alert-info margin-top-20">
+						<a th:href="|http://192.168.1.23/APACHE_IMG/cebs/_Menu_KebabMania.jpg|" target="_blank"> <span
+							class="glyphicon glyphicon-menu-hamburger"></span>&nbsp;&nbsp;<span
+							th:text="|Menu KebabMania Lesko|">back</span>
+						</a>
+					</div>
+
 					<div th:if="${confirmed}"
 						class="center alert alert-success margin-top-20">
 						<span class="glyphicon glyphicon-check"></span>&nbsp; <span
@@ -146,10 +152,11 @@
 								zostanie przekazana osobnym mailem.|"></span>
 					</div>
 					<div th:if="${sent}"
-						class="center alert alert-warning margin-top-20">
+						class="center alert alert-success margin-top-20">
+						<!-- &lt;b&gt; -->
 						<span class="glyphicon glyphicon-ban-circle"></span> <span
-							th:utext="|&lt;b&gt;Zamówienie zostało wysłane do baru. 
-								Możliwość dopisywania się do zamówienia jest aktualnie zablokowana.&lt;/br&gt;|">
+							th:utext="|Zamówienie zostało wysłane do baru. 
+								Możliwość dopisywania się do zamówienia jest aktualnie zablokowana.|">
 						</span>
 					</div>
 					<div class="margin-top-20 center"

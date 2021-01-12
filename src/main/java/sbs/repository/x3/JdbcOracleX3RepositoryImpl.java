@@ -2693,6 +2693,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "SOQ.UPDDAT_0, "
 				+ "SOQ.DEMSTA_0, "
 				+ "SOP.NETPRI_0, "
+				+ "SOP.PFM_0, "
 				+ "SOR.CUR_0, "
 				+ "SOR.CHGRAT_0, "
 				+ "ITM.ITMREF_0, "
@@ -2756,6 +2757,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			line.setQuantityLeftToSend(((BigDecimal)row.get("LEFT_TO_SEND")).intValue());
 			line.setQuantityOrdered(((BigDecimal)row.get("QTYSTU_0")).intValue());
 			line.setUnitPrice(((BigDecimal)row.get("NETPRI_0")).doubleValue());
+			line.setMargin(((BigDecimal)row.get("PFM_0")).doubleValue());
 			line.setExchangeRate(((BigDecimal)row.get("CHGRAT_0")).doubleValue());
 			line.setCurrency((String)row.get("CUR_0"));
 			line.setDemandState(((BigDecimal)row.get("DEMSTA_0")).intValue());
