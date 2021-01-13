@@ -223,6 +223,7 @@
 									<th th:text="#{general.productDescription}">head</th>
 									<th th:text="#{general.category}">head</th>
 									<th th:text="|Gr.2|">head</th>
+									<th th:text="|#{general.price} [PLN]|">head</th>
 									<th th:text="|#{general.margin} [PLN]|">head</th>
 									<th th:text="#{general.machine}">head</th>
 									<th th:text="#{general.department}">head</th>
@@ -253,6 +254,7 @@
 									<th th:text="#{general.productDescription}">head</th>
 									<th th:text="#{general.category}">head</th>									
 									<th th:text="|Gr.2|">head</th>
+									<th th:text="|#{general.price} [PLN]|">head</th>
 									<th th:text="|#{general.margin} [PLN]|">head</th>
 									<th th:text="#{general.machine}">head</th>
 									<th th:text="#{general.department}">head</th>
@@ -287,6 +289,7 @@
 									<td><span th:text="${line.productDescription}"></span></td>
 									<td><span th:text="${line.productCategory}"></span></td>
 									<td><span th:text="${line.productGr2}"></span></td>
+									<td><span th:text="${#numbers.formatDecimal(line.unitPrice, 1, 'NONE', 2, 'POINT')}"></span></td>									
 									<td><span th:text="${#numbers.formatDecimal(line.saleMargin, 1, 'NONE', 2, 'POINT')}"></span></td>									
 									<td><span th:text="${line.machineCode}"></span></td>
 									<td><span th:text="#{${line.departmentCode}}"></span></td>

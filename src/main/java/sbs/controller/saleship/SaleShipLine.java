@@ -31,6 +31,7 @@ public class SaleShipLine {
 	private String creationUserCode;
 	private String creationUserName;
 	private double saleMargin;
+	private double unitPrice;
 	
 	
 	public SaleShipLine() {
@@ -256,6 +257,15 @@ public class SaleShipLine {
 	public void setSaleMargin(double saleMargin) {
 		this.saleMargin = saleMargin;
 	}
+
+	public double getUnitPrice() {
+		return unitPrice;
+	}
+
+	public void setUnitPrice(double unitPrice) {
+		this.unitPrice = unitPrice;
+	}
+	
 	
 	
 }
