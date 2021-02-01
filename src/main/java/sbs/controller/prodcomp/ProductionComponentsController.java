@@ -733,9 +733,9 @@ public class ProductionComponentsController {
 				continue;
 			}
 			// skip if no stock verify flag
-			if (!products.get(code).isVerifyStock()) {
-				continue;
-			}
+			//if (!products.get(code).isVerifyStock()) {
+			//	continue;
+			//}
 
 			if (products.get(code).getCategory().equalsIgnoreCase("ACV")) {
 				// add to requirements list if ACV
