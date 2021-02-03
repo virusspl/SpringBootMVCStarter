@@ -22,6 +22,8 @@ public class X3ConsumptionProductInfo implements Serializable{
 	private int technicalLot;
 	private int leadTime;
 	private int averageDeliveryDays;
+	private double weight;
+	private String weightUnit;
 	
 	
 	public X3ConsumptionProductInfo() {
@@ -150,6 +152,22 @@ public class X3ConsumptionProductInfo implements Serializable{
 		this.leadTime = leadTime;
 	}
 	
+	public double getWeight() {
+		return weight;
+	}
+
+	public void setWeight(double weight) {
+		this.weight = weight;
+	}
+
+	public String getWeightUnit() {
+		return weightUnit;
+	}
+
+	public void setWeightUnit(String weightUnit) {
+		this.weightUnit = weightUnit;
+	}
+
 	public int getAverageDeliveryDays() {
 		return averageDeliveryDays;
 	}

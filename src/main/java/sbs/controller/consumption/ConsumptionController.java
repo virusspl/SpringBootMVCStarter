@@ -248,6 +248,8 @@ public class ConsumptionController {
 		headers.add("Product");
 		headers.add("Descr PL");
 		headers.add("Descr EN");
+		headers.add("Weight");
+		headers.add("Unit");
 		headers.add("Pur. Fam. Code");
 		headers.add("Purchasing family");		
 		headers.add("Reorder point");
@@ -289,6 +291,8 @@ public class ConsumptionController {
 			lineValues.add(product.getProductCode());
 			lineValues.add(product.getProductDescriptionPl());
 			lineValues.add(enDescriptions.containsKey(product.getProductCode()) ? enDescriptions.get(product.getProductCode()) : "" );
+			lineValues.add(product.getWeight());
+			lineValues.add(product.getWeightUnit());
 			lineValues.add(product.getBuyGroupCode());
 			lineValues.add(buyGroups.containsKey(product.getBuyGroupCode()) ? buyGroups.get(product.getBuyGroupCode()) : "" );
 			lineValues.add(product.getReorderPoint());

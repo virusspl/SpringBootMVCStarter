@@ -2613,6 +2613,8 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "itm.ITMREF_0, "
 				+ "itm.YFAMGROUP_0, "
 				+ "itm.ITMDES1_0, "
+				+ "itm.ITMWEI_0, "
+				+ "itm.WEU_0, "
 				+ "itv.PHYSTO_0, "
 				+ "itv.ORDSTO_0, "
 				+ "itv.AVC_0,"
@@ -2648,6 +2650,8 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			info.setStock(((BigDecimal)row.get("PHYSTO_0")).intValue());
 			info.setInOrder(((BigDecimal)row.get("ORDSTO_0")).intValue());
 			info.setAverageCost(((BigDecimal)row.get("AVC_0")).doubleValue());
+			info.setWeight(((BigDecimal)row.get("ITMWEI_0")).doubleValue());
+			info.setWeightUnit((String)row.get("WEU_0"));
 			info.setBuyerCode((String)row.get("BUY_0"));
 			info.setBuyGroupCode((String)row.get("YFAMGROUP_0"));
 			info.setAverageDeliveryDays(((BigDecimal)row.get("YLTACQ_0")).intValue());
