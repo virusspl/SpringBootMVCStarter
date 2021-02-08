@@ -2,6 +2,7 @@ package sbs.controller.qsurveys;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -88,9 +89,41 @@ public class QSurveysController {
 	
 	@RequestMapping(value = "/list")
 	public String list(Model model) {
-		model.addAttribute("surveys", surveysService.findAllSortByDateDesc());
+		
+		model.addAttribute("qSurveyListForm", getFormWithInitDates());
+		
 		return "qsurveys/list";
 	}
+	
+	private QSurveyListForm getFormWithInitDates () {{
+		QSurveyListForm qSurveyListForm = new QSurveyListForm();
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.MONTH, -1);
+		//cal.set(Calendar.DAY_OF_MONTH, 1);
+		qSurveyListForm.setStartDate(new Timestamp(cal.getTimeInMillis()));
+		
+		cal = Calendar.getInstance();
+		//cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+		qSurveyListForm.setEndDate(new Timestamp(cal.getTimeInMillis()));
+		return qSurveyListForm;
+	}
+		
+	}
+	
+	@RequestMapping(value = "/makelist", params = { "viewlist" }, method = RequestMethod.POST)
+	public String viewList(@Valid QSurveyListForm qSurveyListForm, BindingResult bindingResult, Model model,
+			RedirectAttributes redirectAttrs, Locale locale) {
+		
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("qSurveyListForm", getFormWithInitDates());
+			return "qsurveys/list";
+		}
+		model.addAttribute("surveys", surveysService.findInPeriodSortByDateDesc(qSurveyListForm.getStartDate(), qSurveyListForm.getEndDate()));
+		//model.addAttribute("surveys", surveysService.findAllSortByDateDesc());
+		return "qsurveys/list";
+				
+	}
+	
 	
 	@RequestMapping("/show/{id}")
 	@Transactional
@@ -124,6 +157,8 @@ public class QSurveysController {
 		model.addAttribute("surveyInfo",survey);
 		return "qsurveys/show";
 	}
+	
+
 	
 	@RequestMapping(value = "/make", params = { "bom" }, method = RequestMethod.POST)
 	@Transactional

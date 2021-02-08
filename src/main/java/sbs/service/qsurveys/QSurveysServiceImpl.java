@@ -1,5 +1,6 @@
 package sbs.service.qsurveys;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,11 @@ public class QSurveysServiceImpl extends GenericServiceAdapter<QSurvey, Integer>
 	@Override
 	public List<QSurvey> findAllSortByDateDesc() {
 		return qSurveysRepository.findAllSortByDateDesc();
+	}
+
+	@Override
+	public List<QSurvey> findInPeriodSortByDateDesc(Date startDate, Date endDate) {
+		return qSurveysRepository.findInPeriodSortByDateDesc(startDate, endDate);
 	}
 
 }
