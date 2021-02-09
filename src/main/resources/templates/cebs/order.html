@@ -82,7 +82,7 @@
 					&lt;br/&gt;
 					&lt;br/&gt;
 					|"></span>
-				</div>
+			</div>
 			<a th:href="@{/}" class="btn btn-link btn-sm"> <span
 				class="glyphicon glyphicon-menu-left"></span> <span
 				th:text="#{action.back}">back</span>
@@ -130,13 +130,6 @@
 						class="text-primary center"></h3>
 					<!-- Organizator: &lt;b&gt;${organizer}&lt;/b&gt; ;) -->
 
-					<div class="center alert alert-info margin-top-20">
-						<a th:href="|http://192.168.1.23/APACHE_IMG/cebs/_Menu_KebabMania.jpg|" target="_blank"> <span
-							class="glyphicon glyphicon-menu-hamburger"></span>&nbsp;&nbsp;<span
-							th:text="|Menu KebabMania Lesko|">back</span>
-						</a>
-					</div>
-
 					<div th:if="${confirmed}"
 						class="center alert alert-success margin-top-20">
 						<span class="glyphicon glyphicon-check"></span>&nbsp; <span
@@ -145,14 +138,14 @@
 
 					</div>
 					<div th:if="!${confirmed}"
-						class="center alert alert-warning margin-top-20">
+						class="center alert alert-warning margin-top-00">
 						<span class="glyphicon glyphicon-exclamation-sign"></span> <span
 							th:utext="|&lt;b&gt;Możliwość zamówienia nie została jeszcze potwierdzona w barze.
 								&lt;/br&gt;Wpisz zamówienie i czekaj.&lt;/b&gt; Informacja o konieczności zapłaty 
 								zostanie przekazana osobnym mailem.|"></span>
 					</div>
 					<div th:if="${sent}"
-						class="center alert alert-success margin-top-20">
+						class="center alert alert-success margin-top-00">
 						<!-- &lt;b&gt; -->
 						<span class="glyphicon glyphicon-ban-circle"></span> <span
 							th:utext="|Zamówienie zostało wysłane do baru. 
@@ -176,7 +169,8 @@
 							class="btn btn-info btn-md margin-top-5"> <span
 							class="glyphicon glyphicon-ban-circle"></span> &nbsp;<span
 							th:text="|Zamówienie wysłane - koniec zapisów|"></span>
-						</a> <br /> <a th:href="@{/cebs/manage/createsummarymail}" style="width: 100%;"
+						</a> <br /> <a th:href="@{/cebs/manage/createsummarymail}"
+							style="width: 100%;"
 							th:onclick="|return confirm('Podsumowanie zostanie wysłane na Twojego maila')|"
 							class="btn btn-info btn-md margin-top-5"> <span
 							class="glyphicon glyphicon-envelope"></span> &nbsp;<span
@@ -249,6 +243,7 @@
 				style="border-left: 1px solid #337ab7;">
 				<h3 th:text="|Dodaj do swojego zamówienia|"
 					class="text-primary center"></h3>
+
 				<form th:action="@{/cebs/order/add}" method="post"
 					th:object="${cebsOrderForm}">
 					<div class="row margin-top-20">
@@ -281,9 +276,16 @@
 									th:placeholder="|Uwagi|" th:field="*{comment}"></input>
 							</div>
 						</div>
+
 					</div>
-
-
+					<div class="center alert alert-info margin-top-5">
+						<a class="bold"
+							th:href="|http://192.168.1.23/APACHE_IMG/cebs/_Menu_KebabMania.jpg|"
+							target="_blank"> <span
+							class="glyphicon glyphicon-menu-hamburger"></span>&nbsp;&nbsp;<span
+							th:text="|Menu KebabMania Lesko|">back</span>
+						</a>
+					</div>
 					<div class="row margin-top-20">
 						<div class="col-xs-12">
 							<table class="table-hover"
