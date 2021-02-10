@@ -14,6 +14,8 @@ public class ProductionServiceImpl implements ProductionService {
 	private String[] assemblyCenters;
 	private String[] weldingCenters;
 	private String[] mechanicalCenters;
+	private String[] toolsCenters;
+	private String[] unasignedCenters;
 	private Map<String, String> workcenters;
 	private Map<String, Map<Integer, X3RouteLine>> routesATW;
 	private Map<String, Map<Integer, X3RouteLine>> routesWPS;
@@ -21,9 +23,11 @@ public class ProductionServiceImpl implements ProductionService {
 	JdbcOracleX3Service x3Service;
 	
 	public ProductionServiceImpl() {
-		assemblyCenters = new String[]{"08","09","10","11","12","13"};
-		weldingCenters = new String[]{"15","16","18","19"};
+		assemblyCenters = new String[]{"08","09","10","11","12","13", "15"};
 		mechanicalCenters = new String[]{"01","02","03","04","06","07","14"};
+		weldingCenters = new String[]{"16","18","19"};
+		toolsCenters = new String[]{"20"};
+		unasignedCenters = new String[]{"17","25", "PUSTE", "ZZ2"};
 		
 	}
 
@@ -59,6 +63,12 @@ public class ProductionServiceImpl implements ProductionService {
 		}
 		else if(isStringInArray(center, mechanicalCenters)){
 			return DEPARTMENT_MECHANICAL;
+		}
+		else if(isStringInArray(center, toolsCenters)){
+			return DEPARTMENT_TOOLS;
+		}
+		else if(isStringInArray(center, unasignedCenters)){
+			return DEPARTMENT_UNASSIGNED;
 		}
 		else{
 			return DEPARTMENT_UNASSIGNED;
