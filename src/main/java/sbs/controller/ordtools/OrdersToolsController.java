@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import sbs.helpers.DateHelper;
@@ -57,8 +58,8 @@ public class OrdersToolsController {
 		return "ordtools/main";
 	}
 
-	@RequestMapping(value = "/makelist", params = { "viewlist" }, method = RequestMethod.POST)
-	public String viewList(@Valid OrdersToolsForm ordersToolsForm, BindingResult bindingResult, Model model,
+	@RequestMapping(value = "/makelist", params = { "filled" }, method = RequestMethod.POST)
+	public String viewList(@Valid OrdersToolsForm ordersToolsForm, @RequestParam boolean filled, BindingResult bindingResult, Model model,
 			RedirectAttributes redirectAttrs, Locale locale) {
 		if (bindingResult.hasErrors()) {
 			return "ordtools/main";
@@ -71,7 +72,8 @@ public class OrdersToolsController {
 				ordersToolsForm.getEndDate(), "ATW");
 
 		List<X3KeyValString> allBomParts = x3Service.getAllBomPartsInBoms("ATW");
-		List<X3ToolEntry> allTools = x3Service.getAllToolsInRouting("ATW");
+		
+		List<X3ToolEntry> allTools = x3Service.getAllToolsInRouting(filled, "ATW");
 		Map<String, Set<String>> bomPartsByCode = prepareMapByCode(allBomParts);
 		Map<String, List<X3ToolEntry>> toolsOperations = prepareToolsOperations(allTools);
 		// ^List<X3ToolEntry>

@@ -364,8 +364,8 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	}
 
 	@Override
-	public List<X3ToolEntry> getAllToolsInRouting(String company) {
-		return jdbcOracleX3Repository.getAllToolsInRouting(company);
+	public List<X3ToolEntry> getAllToolsInRouting(boolean filled, String company) {
+		return jdbcOracleX3Repository.getAllToolsInRouting(filled, company);
 	}
 
 	@Override

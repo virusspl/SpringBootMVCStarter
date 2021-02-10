@@ -184,11 +184,18 @@
 						th:text="#{action.back}">back</span>
 					</a>
 					<button class="btn btn-primary btn-sm" type="submit" onclick="disableLong(this)"
-						name="viewlist"
+						name="filled" value="true"
 						data-toggle="tooltip" data-placement="bottom" th:title="#{general.warning.longtask}"
 						>
-						<span class="glyphicon glyphicon-search"></span> <span
-							th:text="#{prodtosale.makelist}">search</span>
+						<span class="glyphicon glyphicon-search"></span>&nbsp;&nbsp;<span
+							th:text="#{prodtosale.makelist.filled}">search</span>
+					</button>
+					<button class="btn btn-primary btn-sm" type="submit" onclick="disableLong(this)"
+						name="filled" value="false"
+						data-toggle="tooltip" data-placement="bottom" th:title="#{general.warning.longtask}"
+						>
+						<span class="glyphicon glyphicon-search"></span>&nbsp;&nbsp;<span
+							th:text="#{prodtosale.makelist.empty}">search</span>
 					</button>
 				</div>
 			</div>

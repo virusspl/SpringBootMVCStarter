@@ -3186,7 +3186,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	}
 
 	@Override
-	public List<X3ToolEntry> getAllToolsInRouting(String company) {
+	public List<X3ToolEntry> getAllToolsInRouting(boolean filled, String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
 		if(this.x3v.equalsIgnoreCase("6")) {
@@ -3197,16 +3197,23 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		}
 		// ==== TMP JDBC DUALITY =====================================
 		// ===========================================================
-		
-		List<Map<String,Object>> resultSet = jdbc.queryForList(
-				"SELECT " 
+		String query = "SELECT " 
 				+ company + ".ROUOPE.ITMREF_0, "
 				+ company + ".ROUOPE.XATTR_0, "
 				+ company + ".ROUOPE.OPENUM_0, "
 				+ company + ".ROUOPE.WST_0 "
                 + "FROM " + company + ".ROUOPE "
             	+ "WHERE " 
-            	+ "LENGTH(TRIM(" + company + ".ROUOPE.XATTR_0)) > 0 ",
+            	+ "LENGTH(TRIM(" + company + ".ROUOPE.XATTR_0)) ";
+		if(filled) {
+			query += " > 1 ";
+		}
+		else {
+			query += " <= 1 ";
+		}
+		
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+				query,
                 new Object[]{});
 
         List<X3ToolEntry> result = new ArrayList<>();
