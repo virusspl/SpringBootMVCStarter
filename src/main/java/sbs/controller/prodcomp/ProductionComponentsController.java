@@ -736,6 +736,15 @@ public class ProductionComponentsController {
 			//if (!products.get(code).isVerifyStock()) {
 			//	continue;
 			//}
+			
+			// skip if FAR or WUR
+			if (
+					products.get(code).getGr2().equalsIgnoreCase("FAR") || 
+					products.get(code).getGr2().equalsIgnoreCase("WUR") ||
+					products.get(code).getGr2().equalsIgnoreCase("OPK")
+					) {
+				continue;
+			}
 
 			if (products.get(code).getCategory().equalsIgnoreCase("ACV")) {
 				// add to requirements list if ACV
