@@ -3204,12 +3204,12 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ company + ".ROUOPE.WST_0 "
                 + "FROM " + company + ".ROUOPE "
             	+ "WHERE " 
-            	+ "LENGTH(TRIM(" + company + ".ROUOPE.XATTR_0)) ";
+            	+ "LENGTH(" + company + ".ROUOPE.XATTR_0) ";
 		if(filled) {
-			query += " > 1 ";
+			query += "> 1 ";
 		}
 		else {
-			query += " <= 1 ";
+			query += "<= 1 ";
 		}
 		
 		List<Map<String,Object>> resultSet = jdbc.queryForList(

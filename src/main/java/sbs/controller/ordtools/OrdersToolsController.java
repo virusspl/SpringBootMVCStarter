@@ -47,12 +47,12 @@ public class OrdersToolsController {
 
 		OrdersToolsForm ordersToolsForm = new OrdersToolsForm();
 		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.MONTH, -1);
+		cal.add(Calendar.DAY_OF_MONTH, 5);
 		ordersToolsForm.setStartDate(new Timestamp(cal.getTimeInMillis()));
 
 		cal = Calendar.getInstance();
-		cal.add(Calendar.MONTH, 1);
-		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+		cal.add(Calendar.DAY_OF_MONTH, 14);
+		//cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 		ordersToolsForm.setEndDate(new Timestamp(cal.getTimeInMillis()));
 		model.addAttribute("ordersToolsForm", ordersToolsForm);
 		return "ordtools/main";
@@ -76,6 +76,7 @@ public class OrdersToolsController {
 		List<X3ToolEntry> allTools = x3Service.getAllToolsInRouting(filled, "ATW");
 		Map<String, Set<String>> bomPartsByCode = prepareMapByCode(allBomParts);
 		Map<String, List<X3ToolEntry>> toolsOperations = prepareToolsOperations(allTools);
+		
 		// ^List<X3ToolEntry>
 		// loop through lines
 		OrdersToolsLine line;
@@ -97,11 +98,20 @@ public class OrdersToolsController {
 					line.setTool(tool);
 					list.add(line);
 				}
-			} else {
+			} 
+			/*
+			 * used when program was used in correct way - to show all orders
+			 * now, there is second button to show only empty or only filled
+			 * so in case of empty tools, no need to show the line 
+			 */
+			
+			/*
+			else {
 				line = createOrdersToolsLineFromX3Info(sois);
 				line.setTool(new X3ToolEntry());
 				list.add(line);
 			}
+			*/
 		}
 
 		model.addAttribute("list", list);
