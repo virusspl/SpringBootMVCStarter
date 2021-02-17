@@ -83,10 +83,15 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	@Autowired
 	private DateHelper dateHelper;
 	
+	private Timestamp x3DateZero;
 	private String x3v;
 	
 	public JdbcOracleX3RepositoryImpl(Environment env) {
 		this.x3v = env.getRequiredProperty("oracleX3.dbVersion");
+		Calendar c = Calendar.getInstance();
+		c.set(1599, 11, 31, 0, 0, 1);  
+		this.x3DateZero = new Timestamp(c.getTimeInMillis());
+		
 	}
 	
 	@Override
@@ -714,16 +719,16 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "AND ("
 					+ company + ".BOMD.BOMSTRDAT_0 < ? "
 					+ "OR "
-					+ company + ".BOMD.BOMSTRDAT_0 = TO_TIMESTAMP('1599/12/31 00:00:00')"
+					+ company + ".BOMD.BOMSTRDAT_0 <= ? )"
 				+ ")"
 				+ "AND ("
 					+ company + ".BOMD.BOMENDDAT_0 > ? "
 					+ "OR "
-					+ company + ".BOMD.BOMENDDAT_0 = TO_TIMESTAMP('1599/12/31 00:00:00')"
+					+ company + ".BOMD.BOMENDDAT_0 <= ? "
 				+ ") "
 				+ "ORDER BY "
 				+ company + ".BOMD.BOMSEQ_0",
-                new Object[]{productCode.toUpperCase(), now, now});
+                new Object[]{productCode.toUpperCase(), now, this.x3DateZero, now, this.x3DateZero});
         
 		List<X3BomItem> result = new ArrayList<>();
 		X3BomItem item = null;
@@ -3429,7 +3434,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		}
 		// ==== TMP JDBC DUALITY =====================================
 		// ===========================================================
-		
+
 		Timestamp now = dateHelper.getCurrentTime();
 		List<Map<String,Object>> resultSet = jdbc.queryForList(
 				"SELECT "
@@ -3451,16 +3456,16 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "AND ("
 					+ company + ".BOMD.BOMSTRDAT_0 < ? "
 					+ "OR "
-					+ company + ".BOMD.BOMSTRDAT_0 = TO_TIMESTAMP('1599/12/31 00:00:00')"
+					+ company + ".BOMD.BOMSTRDAT_0 <= ? "
 				+ ")"
 				+ "AND ("
 					+ company + ".BOMD.BOMENDDAT_0 > ? "
 					+ "OR "
-					+ company + ".BOMD.BOMENDDAT_0 = TO_TIMESTAMP('1599/12/31 00:00:00')"
+					+ company + ".BOMD.BOMENDDAT_0 <= ? "
 				+ ") "
 				+ "ORDER BY "
 				+ company + ".BOMD.BOMSEQ_0",
-                new Object[]{now, now});
+                new Object[]{now, this.x3DateZero, now, this.x3DateZero});
         
 
 		Map<String, List<X3BomItem>> map = new HashMap<>();
@@ -3513,16 +3518,16 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "AND ("
 					+ company + ".BOMD.BOMSTRDAT_0 < ? "
 					+ "OR "
-					+ company + ".BOMD.BOMSTRDAT_0 = TO_TIMESTAMP('1599/12/31 00:00:00')"
+					+ company + ".BOMD.BOMSTRDAT_0 <= ? "
 				+ ")"
 				+ "AND ("
 					+ company + ".BOMD.BOMENDDAT_0 > ? "
 					+ "OR "
-					+ company + ".BOMD.BOMENDDAT_0 = TO_TIMESTAMP('1599/12/31 00:00:00')"
+					+ company + ".BOMD.BOMENDDAT_0 <= ?"
 				+ ") "
 				+ "ORDER BY "
 				+ company + ".BOMD.BOMSEQ_0",
-                new Object[]{now, now});
+                new Object[]{now, this.x3DateZero, now, this.x3DateZero});
         
 
 		List<X3BomPart> result = new ArrayList<>();
