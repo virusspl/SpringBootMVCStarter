@@ -32,6 +32,32 @@
 <link th:href="@{/lightbox2/css/lightbox.min.css}" type="text/css"
 	rel="stylesheet" media="screen,projection" />
 <title th:text="#{name.company}">ADR Polska Sp. z o.o.</title>
+
+<style>
+.neons {
+   margin-top: 10rem;
+   text-align: center;
+}
+.neons h1 {
+  font-size: 5rem;
+  text-align: center;
+   font-weight: bold;
+  -webkit-animation: glow 2s ease-in-out infinite alternate;
+  -moz-animation: glow 2s ease-in-out infinite alternate;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+@-webkit-keyframes glow {
+     from {
+      color: Gold;
+    text-shadow: 0 0 10px #f06c6c, 0 0 20px #f06c6c, 0 0 30px #f06c6c, 0 0 40px #f06c6c, 0 0 50px #f06c6c, 0 0 60px #f06c6c, 0 0 70px #f06c6c, 0 0 90px #f06c6c;
+  }
+  
+  to {
+     color: MediumVioletRed;
+    text-shadow: 0 0 20px #f06c6c, 0 0 30px #f06c6c, 0 0 40px #f06c6c, 0 0 50px #f06c6c, 0 0 60px #f06c6c, 0 0 70px #f06c6c, 0 0 80px #f06c6c, 0 1 90px #f06c6c;
+  }
+}
+</style>
 </head>
 <body>
 	<!--=================================== NAVI =================================-->
@@ -208,6 +234,52 @@
 				</div>
 			</div>
 		</div>
+		
+		<!--  TMP - SERVER ADDRESS - TMP -->
+						<div class="panel-group">
+					<div class="panel panel-danger">
+						<div class="panel-heading bold" style="text-align: center;">
+							<span class="glyphicon glyphicon glyphicon-exclamation-sign"
+								style="margin-right: 10px;"></span>
+								<span class="glyphicon glyphicon-menu-right"
+								style="margin-right: 10px;"></span>
+								<span class="glyphicon glyphicon-menu-right"
+								style="margin-right: 10px;"></span>
+								<span style="margin-right: 10px;"
+								th:text="|ZMIANA ADRESU APLIKACJI|"></span>
+								<span class="glyphicon glyphicon-menu-left"
+								style="margin-right: 10px;"></span>
+								<span class="glyphicon glyphicon-menu-left"
+								style="margin-right: 10px;"></span>
+								<span class="glyphicon glyphicon-exclamation-sign"
+								style="margin-right: 10px;"></span>
+								
+						</div>
+						  
+						<div id="NEON_LIGHT_MESSAGE_SERVER_ADDRESS">
+							<div class="panel-body center bold" style="color: #a83e3e;'">
+								<span>
+								Uwaga! W najbliższym czasie aplikacja zostanie przeniesiona na nowy serwer.
+								Obecne linki, prowadzące do strony, a także odnośniki z paska zakładek i ulubionych przestaną działać.
+								<br/><br/>Wszyscy użytkownicy są proszeni o dodanie nowego adresu do ulubionych lub paska zakładek i sprawdzenie, czy strona otwiera się poprawnie. 
+								<br/>Aplikacja pod nowym adresem nie posiada jeszcze danych, zostaną one przeniesione z dotychczasowej wersji podczas przerwy technicznej, w dniu migracji.
+								 </span>
+							</div>
+							
+							<div class="neons" style="margin-top: -10px;">
+								<h1><a style="
+								color: #B22222;
+								font-style: italic;
+								font-family: 'Trebuchet MS', Tahoma, Verdana, Arial, sans-serif;
+								text-decoration: underline;
+								" href="http://adrpsrv-intranet:8080/adr/" target="_blank">http://adrpsrv-intranet:8080/adr/</a></h1>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+		<!--  TMP - SERVER ADDRESS - TMP -->
+		
 		<!-- /RCP INFO -->
 		<!-- CONTENT -->
 		<section layout:fragment="content">
