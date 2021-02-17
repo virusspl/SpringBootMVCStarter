@@ -118,6 +118,7 @@
 								<th th:text="#{prodcomp.averagedeliverydeviation}">head</th>
 								<th th:text="#{prodcomp.theoretical.date.delivery.short}">head</th>
 								<th th:text="|#{general.date.demanded.short}|">head</th>
+								<th th:text="|#{prodcomp.remaining}|">head</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -136,6 +137,7 @@
 								<td><span th:text="${line[11]}"></span></td>
 								<td><span th:text="${line[12]}"></span></td>
 								<td><span th:text="${line[13]}"></span></td>
+								<td><span th:text="${line[15]}"></span></td>
 								<td><span th:text="${line[14]}"></span></td>
 							</tr>
 						</tbody>

@@ -298,8 +298,10 @@ public class ProductionComponentsController {
 						cal.setTime(upcomingDeliveries.get(entry.getKey()).getDate());
 						cal.add(Calendar.DAY_OF_MONTH, leadTimeDays);
 						line.add(dateHelper.formatYyyyMmDd(cal.getTime()));
+						line.add(upcomingDeliveries.get(entry.getKey()).getQuantityLeftToGet()+"");
 					}
 					else {
+						line.add("-");
 						line.add("-");
 					}
 					// declared delivery
