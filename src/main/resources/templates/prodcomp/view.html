@@ -247,6 +247,7 @@
 								<th th:text="#{prodtosale.ordered}">head</th>
 								<th th:text="#{prodtosale.lefttosend}">head</th>
 								<th th:text="|#{general.value} [PLN]|">head</th>
+								<th th:text="|#{prodcomp.cover}|">head</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -265,6 +266,7 @@
 								<td><span th:text="${obj.line.quantityLeftToSend}"></span></td>
 								<td><span
 									th:text="${#numbers.formatDecimal(obj.toSendValue, 1, 'NONE', 2, 'POINT')}"></span></td>
+								<td><span th:text="${obj.fullyCovered}"></span></td>
 							</tr>
 						</tbody>
 						<tfoot>
@@ -281,6 +283,7 @@
 								<th th:text="#{prodtosale.ordered}">head</th>
 								<th th:text="#{prodtosale.lefttosend}">head</th>
 								<th th:text="|#{general.value} [PLN]]|">head</th>
+								<th th:text="|#{prodcomp.cover}|">head</th>
 							</tr>
 						</tfoot>
 					</table>

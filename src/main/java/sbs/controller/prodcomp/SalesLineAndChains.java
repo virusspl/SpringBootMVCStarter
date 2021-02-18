@@ -13,9 +13,11 @@ public class SalesLineAndChains {
 	private double toSendValue;
 	private int baseComponentQuantity;
 	private int relativeTargetDemand;
+	private boolean fullyCovered;
 	
 	public SalesLineAndChains() {
 		chains = new ArrayList<>();
+		fullyCovered = false;
 	}
 
 	public SalesLineAndChains(X3SalesOrderLine line) {
@@ -66,6 +68,14 @@ public class SalesLineAndChains {
 
 	public void setToSendValue(double toSendValue) {
 		this.toSendValue = toSendValue;
+	}
+	
+	public boolean isFullyCovered() {
+		return fullyCovered;
+	}
+
+	public void setFullyCovered(boolean fullyCovered) {
+		this.fullyCovered = fullyCovered;
 	}
 
 	/**
@@ -123,6 +133,21 @@ public class SalesLineAndChains {
 					
 					
 					
+				}
+			}
+		}
+		
+	}
+
+	public void updateMainLineSupplyState() {
+		X3BomPart part;
+		this.fullyCovered = true;
+		for(List<X3BomPart> list: chains) {
+			for(int i = 0; i<list.size(); i++) {
+				part = list.get(i);
+				if(part.getQuantityDemand()>part.getCurrentStock()) {
+					this.fullyCovered = false;
+
 				}
 			}
 		}

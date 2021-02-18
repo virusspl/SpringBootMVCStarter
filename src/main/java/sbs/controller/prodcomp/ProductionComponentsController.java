@@ -962,7 +962,7 @@ public class ProductionComponentsController {
 					targetCodeDemand += object.getTargetProductDemand(component);
 				}
 			}
-
+			updateMainLinesSupplyState(salesObjects);
 			model.addAttribute("salesObjects", salesObjects);
 			model.addAttribute("coverage", "[" + targetCodeDemand + "/" + generalStock.get(component) + "]");
 			/*
@@ -980,6 +980,13 @@ public class ProductionComponentsController {
 			model.addAttribute("error", this.outOfMemoryMessage);
 			return "prodcomp/view";
 		}
+	}
+
+	private void updateMainLinesSupplyState(List<SalesLineAndChains> salesObjects) {
+		for(SalesLineAndChains line: salesObjects) {
+			line.updateMainLineSupplyState();
+		}
+		
 	}
 
 	private void fillCurrentStockInfo(List<X3BomPart> finalChain, Map<String, Integer> generalStock) {
