@@ -246,10 +246,15 @@ public class ProductionComponentsController {
 
 				List<List<String>> table = new ArrayList<>();
 				List<String> line;
+				String gr2;
 				double x3, qty, geode;
 				Calendar cal;
 				int leadTimeDays;
 				for (Map.Entry<String, Double> entry : allComponents.entrySet()) {
+					gr2 = products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getGr2() : "-";
+					if(gr2.equalsIgnoreCase("PRE") || gr2.equalsIgnoreCase("BLA")) {
+						continue;
+					}
 					
 					x3 = quantities.getOrDefault(entry.getKey(), 0.0);
 					// quantities.containsKey(entry.getKey()) ? quantities.get(entry.getKey()) : 0;

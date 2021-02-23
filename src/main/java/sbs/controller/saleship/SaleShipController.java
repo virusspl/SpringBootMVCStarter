@@ -81,9 +81,12 @@ public class SaleShipController {
 				productionOrderAndLineInt = productionOrdersBySaleOrders.containsKey(ord.getOrderNumber()+"/"+ord.getOrderLineNumber()) ? productionOrdersBySaleOrders.get(ord.getOrderNumber()+"/"+ord.getOrderLineNumber()) : "N/D";
 			}
 			else {
-				machineInt = "N/A";
-				departmentCodeInt = "general.na";
-				productionOrderAndLineInt = "N/A";
+				// should be N/A instead of "ACV" - the real case can be != ACV, but request was to write ACV
+				machineInt = "ACV";
+				productionOrderAndLineInt = "ACV";
+				// should be "general.na"
+				departmentCodeInt = "general.acv";
+				
 			}
 			
 			line = new SaleShipLine();

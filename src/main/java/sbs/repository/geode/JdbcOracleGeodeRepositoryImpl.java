@@ -43,10 +43,11 @@ public class JdbcOracleGeodeRepositoryImpl implements JdbcOracleGeodeRepository 
                 + "ON GEOATW.STOCKOBJ.ITM_0 = GEOATW.ITEM.ITM_0 "
                 + "WHERE (UPPER(GEOATW.STOCKOBJ.ITM_0) = ?) "
                 + "AND GEOATW.SLOT.STO_0 != ? "
+                + "AND GEOATW.SLOT.STO_0 != ? "
                 + "ORDER BY "
                 + "GEOATW.SLOT.STO_0, GEOATW.SLOT.ADD_0";
 		
-		return jdbc.queryForList(query, new Object[]{product.toUpperCase(), "TMP"});
+		return jdbc.queryForList(query, new Object[]{product.toUpperCase(), "TMP", "J00"});
 	}
 
 
@@ -66,7 +67,9 @@ public class JdbcOracleGeodeRepositoryImpl implements JdbcOracleGeodeRepository 
                 + "AND (GEOATW.SLOT.STO_0 = GEOATW.STOCKOBJ.STO_0)) "
                 + "INNER JOIN GEOATW.ITEM "
                 + "ON GEOATW.STOCKOBJ.ITM_0 = GEOATW.ITEM.ITM_0 "
-                + "WHERE GEOATW.STOCKOBJ.ITM_0 != 'TMP' "
+                + "WHERE "
+                + "GEOATW.STOCKOBJ.STO_0 != 'TMP' AND "
+                + "GEOATW.STOCKOBJ.STO_0 != 'J00' "
                 + "ORDER BY "
                 + "GEOATW.SLOT.STO_0 ASC, GEOATW.SLOT.ADD_0 ASC, GEOATW.STOCKOBJ.INPDAT_0 ASC";
 		
