@@ -247,13 +247,18 @@ public class ProductionComponentsController {
 				List<List<String>> table = new ArrayList<>();
 				List<String> line;
 				String gr2;
+				boolean showUpcomming;
 				double x3, qty, geode;
 				Calendar cal;
 				int leadTimeDays;
 				for (Map.Entry<String, Double> entry : allComponents.entrySet()) {
+					// show or hide upcomming dates/quantities
 					gr2 = products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getGr2() : "-";
 					if(gr2.equalsIgnoreCase("PRE") || gr2.equalsIgnoreCase("BLA")) {
-						continue;
+						showUpcomming = false;
+					}
+					else {
+						showUpcomming = true;
 					}
 					
 					x3 = quantities.getOrDefault(entry.getKey(), 0.0);
@@ -282,7 +287,6 @@ public class ProductionComponentsController {
 						else {
 							line.add("-");
 						}
-						
 					}
 					else {
 						line.add("-");
@@ -298,7 +302,7 @@ public class ProductionComponentsController {
 					leadTimeDays = acvInfoMap.containsKey(entry.getKey()) ? acvInfoMap.get(entry.getKey()).getAverageDeliveryDays() : 0;
 					line.add(leadTimeDays+"");
 					// theoretical average delivery
-					if(upcomingDeliveries.containsKey(entry.getKey())){
+					if(upcomingDeliveries.containsKey(entry.getKey()) && showUpcomming){
 						cal = Calendar.getInstance();
 						cal.setTime(upcomingDeliveries.get(entry.getKey()).getDate());
 						cal.add(Calendar.DAY_OF_MONTH, leadTimeDays);
@@ -310,7 +314,7 @@ public class ProductionComponentsController {
 						line.add("-");
 					}
 					// declared delivery
-					line.add(upcomingDeliveries.containsKey(entry.getKey())
+					line.add((upcomingDeliveries.containsKey(entry.getKey()) && showUpcomming)
 							? dateHelper.formatYyyyMmDd(upcomingDeliveries.get(entry.getKey()).getDate())
 							: "-");
 					table.add(line);
