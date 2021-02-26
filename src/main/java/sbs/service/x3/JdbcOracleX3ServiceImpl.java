@@ -678,9 +678,7 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 				averageMap.put(code, new HistockPair(newAvgDblVal, closedAvg.getWeight() + pendingAvg.getWeight()));
 			}
 		}
-
-		
-		
+				
 		// prepare average days list
 		List<StringDoublePair> input = new ArrayList<>();
 		for (Entry<String, HistockPair> entry : averageMap.entrySet()) {

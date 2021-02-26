@@ -132,9 +132,13 @@ public class X3HistockRawEntry {
 	public String toString() {
 		return "X3HistockRawEntry [order=" + order + ", line=" + line + ", code=" + code + ", gr1=" + gr1 + ", gr2="
 				+ gr2 + ", category=" + category + ", quantityOrdered=" + quantityOrdered + ", quantityReceived="
-				+ quantityReceived + ", orderDate=" + orderDate + ", lastReceptionDate=" + lastReceptionDate
-				+ ", receptionsCounter=" + receptionsCounter + ", getDaysToDelivery()=" + getDaysToDelivery() + "]";
+				+ quantityReceived + ", orderDate=" + orderDate + ", expectedDeliveryDate=" + expectedDeliveryDate
+				+ ", lastReceptionDate=" + lastReceptionDate + ", receptionsCounter=" + receptionsCounter
+				+ ", getDaysToDelivery()=" + getDaysToDelivery() + ", getDeliveryDeviation()=" + getDeliveryDeviation()
+				+ "]";
 	}
+
+
 
 
 

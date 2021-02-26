@@ -119,7 +119,8 @@ public class VariousPagesController {
 		}
 		*/
 		
-		System.out.println(optimaService.findCurrentlyEmployedById("00325", JdbcOptimaService.DB_ADR));
+		//String result = x3Service.updateAverageDeliveryDays("ATW");
+		//System.out.println(optimaService.findCurrentlyEmployedById("00325", JdbcOptimaService.DB_ADR));
 		
 		
 		//String result = x3Service.updateAverageDeliveryDays("ATW");
