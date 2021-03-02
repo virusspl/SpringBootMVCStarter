@@ -33,6 +33,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import sbs.config.error.OutOfHeapMemoryException;
 import sbs.helpers.DateHelper;
+import sbs.helpers.FileHelper;
 import sbs.helpers.TextHelper;
 import sbs.model.x3.X3BomItem;
 import sbs.model.x3.X3BomPart;
@@ -44,12 +45,21 @@ import sbs.model.x3.X3SaleInfo;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.system.MemoryService;
+import sbs.service.users.UserService;
 import sbs.service.x3.JdbcOracleX3Service;
+import sbs.singleton.LockSingleton;
 
 @Controller
 @RequestMapping("prodcomp")
 public class ProductionComponentsController {
 
+	
+	/*
+	 1. find components: /make
+	 2. find final products: /findchains
+	 3. check plan: /makeplan
+	 */
+	
 	@Autowired
 	MessageSource messageSource;
 	@Autowired
@@ -64,12 +74,19 @@ public class ProductionComponentsController {
 	MemoryService memoryService;
 	@Autowired
 	Environment environment;
-
+	@Autowired
+	FileHelper fileHelper;
+	@Autowired
+	LockSingleton lock;
+	@Autowired
+	UserService userService;
+	
 	private double outOfMemoryThreshold;
 	private String outOfMemoryMessage;
+	private boolean doLog;
 
 	public ProductionComponentsController() {
-
+		this.doLog = true;
 	}
 
 	@RequestMapping("/main")
@@ -85,7 +102,7 @@ public class ProductionComponentsController {
 		 * cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 		 * formComponent.setEndDate(new Timestamp(cal.getTimeInMillis()));
 		 */
-
+		
 		this.outOfMemoryThreshold = Double.parseDouble(environment.getRequiredProperty("prodcomp.memory.threshold"));
 		this.outOfMemoryMessage = messageSource.getMessage("prodcomp.error.memory", null, "OUT OF MEMORY!", locale);
 
@@ -102,9 +119,10 @@ public class ProductionComponentsController {
 	@RequestMapping(value = "/findcomponents", params = { "find" }, method = RequestMethod.POST)
 	public String findComponents(@Valid FormFindComponents formFindComponents, BindingResult bindingResult,
 			RedirectAttributes redirectAttrs, Model model) {
-
+		
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("formComponent", new FormComponent());
+			model.addAttribute("error", "components lock");
 			return "prodcomp/main";
 		}
 
@@ -127,6 +145,11 @@ public class ProductionComponentsController {
 	@RequestMapping("/make")
 	public String doMake(Model model, Locale locale, RedirectAttributes redirectAttrs)
 			throws FileNotFoundException, IOException {
+		
+		// activity log
+		if(doLog) {
+			fileHelper.appendToTmpLog("make");
+		}
 		
 		String singleCode = null;
 		Map<String, Integer> demandMap = null; 
@@ -205,6 +228,16 @@ public class ProductionComponentsController {
 					file.delete();
 				}
 
+				// pending lock
+				if(lock.isComponentsLock()) {
+					redirectAttrs.addFlashAttribute("error", messageSource.getMessage("general.procedure.pending", null, locale) + " (" + lock.getComponentsLockUser() + ")");
+					return "redirect:/prodcomp/main";
+				}
+				else {
+					lock.setComponentsLock(true);
+					lock.setComponentsLockUser(userService.getAuthenticatedUser().getName());
+				}
+				
 				// DO CALCULATION
 				// get all boms
 				Map<String, Double> allComponents = new TreeMap<>();
@@ -326,6 +359,8 @@ public class ProductionComponentsController {
 					model.addAttribute("title", messageSource.getMessage("general.list", null, locale));
 				}
 
+				// pending lock
+				lock.cancelComponentsLock();
 			} else {
 				// no file
 				redirectAttrs.addFlashAttribute("main", messageSource.getMessage("action.choose.file", null, locale));
@@ -342,6 +377,12 @@ public class ProductionComponentsController {
 	@RequestMapping("/makeplan")
 	public String doMakePlan(Model model, Locale locale, RedirectAttributes redirectAttrs)
 			throws FileNotFoundException, IOException {
+		
+		// activity log
+		if(doLog) {
+			fileHelper.appendToTmpLog("makeplan");
+		}
+		
 		try {
 			if (model.asMap().get("days") == null) {
 				return "redirect:/prodcomp/main";
@@ -418,6 +459,17 @@ public class ProductionComponentsController {
 					br.close();
 					file.delete();
 				}
+				
+				// pending lock
+				if(lock.isComponentsLock()) {
+					redirectAttrs.addFlashAttribute("error", messageSource.getMessage("general.procedure.pending", null, locale) + " (" + lock.getComponentsLockUser() + ")");
+					return "redirect:/prodcomp/main";
+				}
+				else {
+					lock.setComponentsLock(true);
+					lock.setComponentsLockUser(userService.getAuthenticatedUser().getName());
+				}
+				
 				// DO CALCULATION
 				// get all boms
 				Map<String, List<X3BomItem>> allBoms = x3Service.getAllBomPartsTopLevel("ATW");
@@ -683,7 +735,7 @@ public class ProductionComponentsController {
 
 					shortageSummary.add(shortageLine);
 				}
-
+				lock.cancelComponentsLock();
 				model.addAttribute("days", days);
 				model.addAttribute("shortage", shortageSummary);
 				model.addAttribute("planlines", table);
@@ -867,6 +919,12 @@ public class ProductionComponentsController {
 	@RequestMapping(value = "/findchains", params = { "find" }, method = RequestMethod.POST)
 	public String findChains(@Valid FormComponent formComponent, BindingResult bindingResult, Model model,
 			Locale locale, RedirectAttributes redirectAttrs, HttpServletResponse response) {
+		
+		// activity log
+		if(doLog) {
+			fileHelper.appendToTmpLog("findchains");
+		}
+	
 		try {
 			// standard validation
 			if (bindingResult.hasErrors()) {
@@ -943,6 +1001,16 @@ public class ProductionComponentsController {
 			chain = new ArrayList<>();
 			chain.add(initComponent);
 
+			// pending lock
+			if(lock.isComponentsLock()) {
+				redirectAttrs.addFlashAttribute("error", messageSource.getMessage("general.procedure.pending", null, locale) + " (" + lock.getComponentsLockUser() + ")");
+				return "redirect:/prodcomp/main";
+			}
+			else {
+				lock.setComponentsLock(true);
+				lock.setComponentsLockUser(userService.getAuthenticatedUser().getName());
+			}
+			
 			// just do it (BOM calculation)
 			calculateBomChains(initComponent, chain, allChains, allBoms);
 			List<List<X3BomPart>> finalChains = reverseLists(allChains);
@@ -972,6 +1040,9 @@ public class ProductionComponentsController {
 				}
 			}
 			updateMainLinesSupplyState(salesObjects);
+			// pending lock
+			lock.cancelComponentsLock();
+			
 			model.addAttribute("salesObjects", salesObjects);
 			model.addAttribute("coverage", "[" + targetCodeDemand + "/" + generalStock.get(component) + "]");
 			/*
