@@ -204,7 +204,7 @@ public class UserController {
 		String body = templateEngine.process("users/mail.passwordset", context);
 		String[] to = {user.getEmail()};
 		mailService.sendEmail("webapp@atwsystem.pl", to, addressCCList.toArray(new String[0]),
-				"ADR Polska S.A. - Dane do logowania w aplikacji webowej", body);
+				"ADR Polska - Dane do logowania w aplikacji webowej", body);
 	}
 	
 

@@ -99,7 +99,7 @@ public class BhpTicketsController {
 		context.setVariable("host", InetAddress.getLocalHost().getHostName());
 		String body = templateEngine.process("bhptickets/mailtemplate", context);
 		mailService.sendEmail("webapp@atwsystem.pl", mailingList.toArray(new String[0]),
-				supervisorsMailingList.toArray(new String[0]), "ADR Polska S.A. - BHP", body);
+				supervisorsMailingList.toArray(new String[0]), "ADR Polska - BHP", body);
 
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("email.sent", null, locale));
 
