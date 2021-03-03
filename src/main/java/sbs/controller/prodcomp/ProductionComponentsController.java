@@ -86,7 +86,7 @@ public class ProductionComponentsController {
 	private boolean doLog;
 
 	public ProductionComponentsController() {
-		this.doLog = true;
+		this.doLog = false;
 	}
 
 	@RequestMapping("/main")
@@ -300,21 +300,32 @@ public class ProductionComponentsController {
 					geode = geodeStock.getOrDefault(entry.getKey(), 0.0);
 
 					line = new ArrayList<>();
+					
+					// product code (0)
 					line.add(entry.getKey());
+					// description (1)
 					line.add(
 							products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getDescription() : "-");
+					// category (2)
 					line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getCategory() : "-");
+					// group 2 (3)
 					line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getGr2() : "-");
+					// machine (4)
 					line.add(finalMachines.containsKey(entry.getKey()) ? finalMachines.get(entry.getKey()).getMachineCode() : "-");
+					// safety stock (5)
 					line.add(safetyStockMap.containsKey(entry.getKey())
 							? textHelper.numberFormatIntegerRoundNoSpace(safetyStockMap.get(entry.getKey()))
 							: "-");
+					// replenish point (6)
 					line.add(replenishMap.containsKey(entry.getKey())
 							? textHelper.numberFormatIntegerRoundNoSpace(replenishMap.get(entry.getKey()))
 							: "-");
+					// x3 stock (7)
 					line.add(textHelper.numberFormatIntegerRoundNoSpace(x3));
+					// demand X3 (8)
 					if(demandMap != null) {
 						if(demandMap.containsKey(entry.getKey())) {
+
 							line.add(textHelper.numberFormatIntegerRoundNoSpace(demandMap.get(entry.getKey())));
 						}
 						else {
@@ -324,17 +335,20 @@ public class ProductionComponentsController {
 					else {
 						line.add("-");
 					}
+					// geode prd/rcp (9)
 					line.add(textHelper.numberFormatIntegerRoundNoSpace(geode));
+					// quantity (10)
 					line.add(textHelper.numberFormatIntegerRoundNoSpace(qty));
+					// demand (11)
 					if (x3 - qty >= 0) {
 						line.add(textHelper.numberFormatIntegerRoundNoSpace(0.0));
 					} else {
 						line.add(textHelper.numberFormatIntegerRoundNoSpace(Math.abs(x3 - qty)));
 					}
-					// lead time days
+					// lead time days (12)
 					leadTimeDays = acvInfoMap.containsKey(entry.getKey()) ? acvInfoMap.get(entry.getKey()).getAverageDeliveryDays() : 0;
 					line.add(leadTimeDays+"");
-					// theoretical average delivery
+					// theoretical delivery date (13) & quantity left to receive (14)
 					if(upcomingDeliveries.containsKey(entry.getKey()) && showUpcomming){
 						cal = Calendar.getInstance();
 						cal.setTime(upcomingDeliveries.get(entry.getKey()).getDate());
@@ -346,7 +360,7 @@ public class ProductionComponentsController {
 						line.add("-");
 						line.add("-");
 					}
-					// declared delivery
+					// expected delivery date (15)
 					line.add((upcomingDeliveries.containsKey(entry.getKey()) && showUpcomming)
 							? dateHelper.formatYyyyMmDd(upcomingDeliveries.get(entry.getKey()).getDate())
 							: "-");
