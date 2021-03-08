@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -142,6 +144,16 @@ public class ProductionComponentsController {
 		return "redirect:/prodcomp/make";
 	}
 
+	private Map<String, Integer> getDemandMapByDate(Date date) {
+		Calendar cal = Calendar.getInstance();
+		java.util.Date start, end;
+		cal.setTime(date);
+		end = cal.getTime();
+		cal.add(Calendar.YEAR,-100);
+		start = cal.getTime();
+		return x3Service.getDemandListInPeriod(start, end, "ATW");
+	}
+	
 	@RequestMapping("/make")
 	public String doMake(Model model, Locale locale, RedirectAttributes redirectAttrs)
 			throws FileNotFoundException, IOException {
@@ -152,7 +164,7 @@ public class ProductionComponentsController {
 		}
 		
 		String singleCode = null;
-		Map<String, Integer> demandMap = null; 
+		Map<String, Integer> demandMap = new HashMap<>(); 
 		
 		try {
 			// get file
@@ -170,14 +182,8 @@ public class ProductionComponentsController {
 				bw.close();
 				file = tmpFile;
 				
-				Calendar cal = Calendar.getInstance();
-				java.util.Date start, end;
-				cal.setTime((java.util.Date)model.asMap().get("tillDate"));
-				end = cal.getTime();
-				cal.add(Calendar.YEAR,-100);
-				start = cal.getTime();
-				// demand map
-				demandMap = x3Service.getDemandListInPeriod(start, end, "ATW");
+				// demand map (for single version - in file version other call)
+				demandMap = getDemandMapByDate((java.util.Date)model.asMap().get("tillDate"));
 			} else {
 				file = (File) model.asMap().get("file");
 			}
@@ -194,6 +200,24 @@ public class ProductionComponentsController {
 					int lineNo = 0;
 					while ((line = br.readLine()) != null) {
 						lineNo++;
+						// extract date from first line
+						if(!line.contains(";")) {
+							// try parse date
+							try {
+								SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+								Date date = formatter.parse(line.trim());
+								// make demand map - for file version - in single version other call
+								demandMap = getDemandMapByDate(date);
+								continue;
+							} catch (ParseException e) {
+								System.out.println("error");
+								redirectAttrs.addFlashAttribute("error", line + " - " + messageSource.getMessage("general.bad.format", null, locale));
+								br.close();
+								file.delete();
+								return "redirect:/prodcomp/main";
+							}
+						}
+						// lines other than date
 						split = line.split(";");
 						// structure
 						if (split.length != 2) {
