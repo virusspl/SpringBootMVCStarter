@@ -1,0 +1,26 @@
+.neons {
+	/*margin-top: 0rem;*/
+	text-align: center;
+}
+.neons span {
+	color: #0080c0; 
+	font-style: italic;
+	font-family: 'Trebuchet MS', Tahoma, Verdana, Arial, sans-serif;
+	/*font-size: 5rem;*/
+	text-align: center;
+	font-weight: bold;
+	-webkit-animation: glow 1s ease-in-out infinite alternate;
+	-moz-animation: glow 1s ease-in-out infinite alternate;
+	animation: glow 1s ease-in-out infinite alternate;
+}
+@-webkit-keyframes glow {
+	from {
+		color: #ffffff;
+		text-shadow: 0 0 10px #0080c0, 0 0 20px #0080c0, 0 0 30px #0080c0, 0 0 40px #0080c0, 0 0 50px #0080c0, 0 0 60px #0080c0, 0 0 70px #0080c0, 0 0 90px #0080c0;
+ 	}
+  
+	to {
+		color: #0080bb;
+		text-shadow: 0 0 20px #0080c0, 0 0 30px #0080c0, 0 0 40px #0080c0, 0 0 50px #0080c0, 0 0 60px #0080c0, 0 0 70px #0080c0, 0 0 80px #0080c0, 0 1 90px #0080c0;
+	}
+}

@@ -106,9 +106,14 @@
 			</div>
 			<div class="col-xs-12">
 				<input class="form-control" autocomplete="off" type="text"
-					id="message" th:placeholder="#{users.monitor.contents}" /> <span
+					id="message" th:placeholder="#{users.monitor.contents}" /> 
+					<span
 					class="btn btn-primary margin-top-10" th:text="#{action.add}"
-					onclick="sendMessage()">add</span> <span
+					onclick="sendMessage()">add</span> 
+					<span
+					class="btn btn-primary margin-top-10" th:text="|#{users.monitor.shortbreak} - 5 min|"
+					onclick="send5MinBreake()">add</span> 
+					<span
 					class="btn btn-info margin-top-10" th:text="#{action.remove}"
 					onclick="requestCancelMessage()">remove</span>
 			</div>

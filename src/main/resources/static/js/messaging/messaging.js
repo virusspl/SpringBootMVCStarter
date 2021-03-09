@@ -53,6 +53,20 @@ function sendMessage() {
 	document.getElementById("message").focus();
 }
 
+function send5MinBreake() {
+	
+	var date = new Date(new Date().getTime() + 5 * 60000);
+	var minutes = date.getMinutes();
+	var hour = date.getHours();
+	
+	stompClient.send("/app/postmessage", {}, JSON.stringify({
+		'sender' : $("#name").val(),
+		'content' : 'Krótka przerwa techniczna - ' + hour + ':' + minutes
+	}));
+	document.getElementById("message").value = "";
+	document.getElementById("message").focus();
+}
+
 function showMessage(sender, message) {
 	alert(message);
 	$("#liveContainer").html(

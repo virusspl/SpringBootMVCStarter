@@ -23,6 +23,8 @@
 	media="screen,projection" />
 <link th:href="@{/css/map.css}" type="text/css" rel="stylesheet"
 	media="screen,projection" />
+<link th:href="@{/css/neons.css}" type="text/css" rel="stylesheet"
+	media="screen,projection" />
 <link th:href="@{/datatables/jquery.dataTables.min.css}" type="text/css"
 	rel="stylesheet" media="screen,projection" />
 <link th:href="@{/datatables/buttons.dataTables.min.css}"
@@ -32,6 +34,9 @@
 <link th:href="@{/lightbox2/css/lightbox.min.css}" type="text/css"
 	rel="stylesheet" media="screen,projection" />
 <title th:text="#{name.company}">ADR Polska Sp. z o.o.</title>
+
+
+
 </head>
 <body>
 	<!--=================================== NAVI =================================-->
@@ -131,9 +136,9 @@
 				</div>
 				<!-- /YOU USE MICROSOFT BROWSER WARNING -->
 				<!-- LIVE FEED -->
-				<div id="liveContainer" >
-					<div id="live" class="alert alert-info bold" th:if="${live}"
-						style="margin-bottom: 10px;">
+				<div id="liveContainer" class="neons"
+					style="margin-bottom: 10px; font-size: 144%;">
+					<div id="live" class="alert alert-info bold" th:if="${live}">
 						<span th:utext="${live}">error</span>
 					</div>
 				</div>
@@ -216,16 +221,16 @@
 		<!-- /CONTENT -->
 		<!-- clear before footer -->
 		<div class="row" style="min-height: 1px; margin-bottom: 50px;"></div>
-	<!--=================================== FOOTER  ===============================-->
-			<div class="underline"></div>
-			<p class="text-muted small-text">
-				<small>Krzysztof
-					Michalak 2017 &copy; <span th:text="#{department.it}">IT
-						Department</span>, <span th:text="#{name.company}">ADR Polska</span>
-					/ build v. <a th:href="@{/cebs/order}"><span th:text="${build}">build</span></a>
-				</small>
-			</p>
-	<!--=================================== /FOOTER  ==============================-->		
+		<!--=================================== FOOTER  ===============================-->
+		<div class="underline"></div>
+		<p class="text-muted small-text">
+			<small>Krzysztof Michalak 2017 &copy; <span
+				th:text="#{department.it}">IT Department</span>, <span
+				th:text="#{name.company}">ADR Polska</span> / build v. <a
+				th:href="@{/cebs/order}"><span th:text="${build}">build</span></a>
+			</small>
+		</p>
+		<!--=================================== /FOOTER  ==============================-->
 	</div>
 	<!--=================================== /CONTENT ==============================-->
 
