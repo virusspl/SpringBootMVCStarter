@@ -32,13 +32,20 @@ public class SaleShipLine {
 	private String creationUserName;
 	private double saleMargin;
 	private double unitPrice;
+	private String orderSource;
 	
 	
 	public SaleShipLine() {
 	
 	}
 	
-	
+	public String getOrderSource() {
+		return orderSource;
+	}
+
+	public void setOrderSource(String orderSource) {
+		this.orderSource = orderSource;
+	}
 
 	public String getCreationUserCode() {
 		return creationUserCode;

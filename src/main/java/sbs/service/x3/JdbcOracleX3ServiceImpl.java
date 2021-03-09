@@ -738,5 +738,10 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 		return jdbcOracleX3Repository.getAverageCostsMap(company);
 	}
 
+	@Override
+	public Map<Integer, String> getX3Menu(String company, int menu, String x3language) {
+		return jdbcOracleX3Repository.getX3Menu(company, menu, x3language);
+	}
+
 
 }

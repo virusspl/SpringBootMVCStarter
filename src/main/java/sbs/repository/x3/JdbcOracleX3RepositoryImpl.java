@@ -1171,6 +1171,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "SOQ.DEMSTA_0, "
 				+ "SOP.NETPRI_0, "
 				+ "SOR.CUR_0, "
+				+ "SOR.YFTIPORD_0, "
 				+ "SOR.CHGRAT_0, "
 				+ "ITM.ITMREF_0, "
 				+ "ITM.ITMDES1_0, "
@@ -1251,6 +1252,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			line.setQuantityOrdered(((BigDecimal)row.get("QTYSTU_0")).intValue());
 			line.setUnitPrice(((BigDecimal)row.get("NETPRI_0")).doubleValue());
 			line.setExchangeRate(((BigDecimal)row.get("CHGRAT_0")).doubleValue());
+			line.setOrderSourceMenuPosition(((BigDecimal)row.get("YFTIPORD_0")).intValue());
 			line.setCurrency((String)row.get("CUR_0"));
 			line.setDemandState(((BigDecimal)row.get("DEMSTA_0")).intValue());
 			line.setFinalClientCode((String)row.get("XCLIORI_0"));
@@ -2704,6 +2706,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "SOP.NETPRI_0, "
 				+ "SOP.PFM_0, "
 				+ "SOR.CUR_0, "
+				+ "SOR.YFTIPORD_0, "
 				+ "SOR.CHGRAT_0, "
 				+ "ITM.ITMREF_0, "
 				+ "ITM.ITMDES1_0, "
@@ -2763,6 +2766,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 			line.setUpdateDate(((Timestamp)row.get("UPDDAT_0")));
 			line.setCreationUserCode(((String)row.get("CREUSR_0")));
 			line.setCreationUserName(users.get(line.getCreationUserCode()));
+			line.setOrderSourceMenuPosition(((BigDecimal)row.get("YFTIPORD_0")).intValue());
 			line.setQuantityLeftToSend(((BigDecimal)row.get("LEFT_TO_SEND")).intValue());
 			line.setQuantityOrdered(((BigDecimal)row.get("QTYSTU_0")).intValue());
 			line.setUnitPrice(((BigDecimal)row.get("NETPRI_0")).doubleValue());
@@ -5054,6 +5058,38 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         }
         
         return map;
+	}
+
+	@Override
+	public Map<Integer, String> getX3Menu(String company, int menu, String x3language) {
+		// ===========================================================
+		// ==== TMP JDBC DUALITY =====================================
+		if(this.x3v.equalsIgnoreCase("6")) {
+			jdbc = jdbc6;
+		}
+		else {
+			jdbc = jdbc11;
+		}
+		// ==== TMP JDBC DUALITY =====================================
+		// ===========================================================
+		
+		List<Map<String,Object>> resultSet = jdbc.queryForList( ""
+				+ "SELECT "
+				+ "APL.LANNUM_0, "
+				+ "APL.LANMES_0 "
+				+ "FROM "
+				+ company + ".APLSTD APL "
+				+ "WHERE "
+				+ "APL.LANCHP_0 = ? "
+				+ "AND APL.LAN_0 = ? "
+				,
+                new Object[]{menu, x3language});
+		
+        Map <Integer, String> map = new HashMap<>();
+        for(Map<String,Object> row: resultSet ){
+        	map.put(((BigDecimal)row.get("LANNUM_0")).intValue(), (String)row.get("LANMES_0"));
+        }
+		return map;
 	}
 
 }

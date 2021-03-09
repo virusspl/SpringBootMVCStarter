@@ -29,6 +29,7 @@ public class X3SalesOrderLine {
 	private String creationUserCode;
 	private String creationUserName;
 	private double margin;
+	private int orderSourceMenuPosition;
 
 	
 	public X3SalesOrderLine() {
@@ -243,6 +244,17 @@ public class X3SalesOrderLine {
 
 	public void setMargin(double margin) {
 		this.margin = margin;
+	}
+	
+	/**
+	 * X3 menu: 6237
+	 */
+	public int getOrderSourceMenuPosition() {
+		return orderSourceMenuPosition;
+	}
+
+	public void setOrderSourceMenuPosition(int orderSourceMenuPosition) {
+		this.orderSourceMenuPosition = orderSourceMenuPosition;
 	}
 
 	@Override

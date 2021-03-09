@@ -59,6 +59,7 @@ public class SaleShipController {
 		}
 		
 		List<X3SalesOrderLine> orderLines = x3Service.findOpenedSalesOrderLinesInPeriod(saleShipForm.getStartDate(), saleShipForm.getEndDate(), "ATW");
+		Map<Integer, String> menu6237 = x3Service.getX3Menu("ATW", 6237, JdbcOracleX3Service.LANG_POLISH);
 		Map<String, Integer> magStock = x3Service.findGeneralMagStock("ATW");
 		Map<String, Integer> shipStock = x3Service.findGeneralShipStock("ATW");
 		Map<String, Integer> stockQ = x3Service.findStockByState("Q", "ATW");
@@ -120,6 +121,7 @@ public class SaleShipController {
 			line.setQuantityToGive(line.getQuantityRemainingToShip()-line.getStockShipments() < 0 ? 0 : line.getQuantityRemainingToShip()-line.getStockShipments() );
 			line.setSaleMargin(ord.getMargin()*ord.getExchangeRate());
 			line.setUnitPrice(ord.getUnitPrice()*ord.getExchangeRate());
+			line.setOrderSource(menu6237.get(ord.getOrderSourceMenuPosition()));
 			
 			lines.add(line);
 		}
