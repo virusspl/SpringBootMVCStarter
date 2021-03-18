@@ -170,7 +170,7 @@ public class DataSourceConfig {
 	public DataSource optimaAdrDataSource() throws SQLException {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName(SQLSERVER_DRIVER);
-		dataSource.setUrl("jdbc:sqlserver://ATWSRV-OPTIMA\\OPTIMA:50066;databaseName=CDN_ADR_S_A_2017;");
+		dataSource.setUrl("jdbc:sqlserver://ADRPSRV-OPTIMA\\SQL2019:49945;databaseName=CDN_ADR_S_A_2017;");
 		dataSource.setUsername("sa");
 		dataSource.setPassword("Optima123!");
 		return dataSource;
@@ -187,7 +187,7 @@ public class DataSourceConfig {
 	public DataSource optimaWpsDataSource() throws SQLException {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName(SQLSERVER_DRIVER);
-		dataSource.setUrl("jdbc:sqlserver://ATWSRV-OPTIMA\\OPTIMA:50066;databaseName=CDN_W_P_S__Sp__z_o_o_;");
+		dataSource.setUrl("jdbc:sqlserver://ADRPSRV-OPTIMA\\SQL2019:49945;databaseName=CDN_W_P_S__Sp__z_o_o_;");
 		dataSource.setUsername("sa");
 		dataSource.setPassword("Optima123!");
 		return dataSource;
@@ -204,7 +204,7 @@ public class DataSourceConfig {
 	public DataSource optimaAdeccoDataSource() throws SQLException {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName(SQLSERVER_DRIVER);
-		dataSource.setUrl("jdbc:sqlserver://ATWSRV-OPTIMA\\OPTIMA:50066;databaseName=CDN_Adecco;");
+		dataSource.setUrl("jdbc:sqlserver://ADRPSRV-OPTIMA\\SQL2019:49945;databaseName=CDN_Adecco;");
 		dataSource.setUsername("sa");
 		dataSource.setPassword("Optima123!");
 		return dataSource;
@@ -221,7 +221,7 @@ public class DataSourceConfig {
 	public DataSource optimaUaDataSource() throws SQLException {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName(SQLSERVER_DRIVER);
-		dataSource.setUrl("jdbc:sqlserver://ATWSRV-OPTIMA\\OPTIMA:50066;databaseName=CDN_Ukrai_cy;");
+		dataSource.setUrl("jdbc:sqlserver://ADRPSRV-OPTIMA\\SQL2019:49945;databaseName=CDN_Ukrai_cy;");
 		dataSource.setUsername("sa");
 		dataSource.setPassword("Optima123!");
 		return dataSource;
