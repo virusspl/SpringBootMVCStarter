@@ -210,7 +210,6 @@ public class ProductionComponentsController {
 								demandMap = getDemandMapByDate(date);
 								continue;
 							} catch (ParseException e) {
-								System.out.println("error");
 								redirectAttrs.addFlashAttribute("error", line + " - " + messageSource.getMessage("general.bad.format", null, locale));
 								br.close();
 								file.delete();
@@ -252,14 +251,14 @@ public class ProductionComponentsController {
 					file.delete();
 				}
 
-				// pending lock
-				if(lock.isComponentsLock()) {
+				// pending lock start
+				if(this.lock.isComponentsLock()) {
 					redirectAttrs.addFlashAttribute("error", messageSource.getMessage("general.procedure.pending", null, locale) + " (" + lock.getComponentsLockUser() + ")");
 					return "redirect:/prodcomp/main";
 				}
 				else {
-					lock.setComponentsLock(true);
-					lock.setComponentsLockUser(userService.getAuthenticatedUser().getName());
+					this.lock.setComponentsLock(true);
+					this.lock.setComponentsLockUser(userService.getAuthenticatedUser().getName());
 				}
 				
 				// DO CALCULATION
@@ -396,9 +395,6 @@ public class ProductionComponentsController {
 				} else {
 					model.addAttribute("title", messageSource.getMessage("general.list", null, locale));
 				}
-
-				// pending lock
-				lock.cancelComponentsLock();
 			} else {
 				// no file
 				redirectAttrs.addFlashAttribute("main", messageSource.getMessage("action.choose.file", null, locale));
@@ -409,6 +405,9 @@ public class ProductionComponentsController {
 		} catch (OutOfHeapMemoryException er) {
 			model.addAttribute("error", this.outOfMemoryMessage);
 			return "prodcomp/view";
+		} finally {
+			// pending lock end
+			this.lock.cancelComponentsLock();
 		}
 	}
 
@@ -498,14 +497,14 @@ public class ProductionComponentsController {
 					file.delete();
 				}
 				
-				// pending lock
-				if(lock.isComponentsLock()) {
+				// pending lock start
+				if(this.lock.isComponentsLock()) {
 					redirectAttrs.addFlashAttribute("error", messageSource.getMessage("general.procedure.pending", null, locale) + " (" + lock.getComponentsLockUser() + ")");
 					return "redirect:/prodcomp/main";
 				}
 				else {
-					lock.setComponentsLock(true);
-					lock.setComponentsLockUser(userService.getAuthenticatedUser().getName());
+					this.lock.setComponentsLock(true);
+					this.lock.setComponentsLockUser(userService.getAuthenticatedUser().getName());
 				}
 				
 				// DO CALCULATION
@@ -773,7 +772,6 @@ public class ProductionComponentsController {
 
 					shortageSummary.add(shortageLine);
 				}
-				lock.cancelComponentsLock();
 				model.addAttribute("days", days);
 				model.addAttribute("shortage", shortageSummary);
 				model.addAttribute("planlines", table);
@@ -783,11 +781,13 @@ public class ProductionComponentsController {
 				redirectAttrs.addFlashAttribute("main", messageSource.getMessage("action.choose.file", null, locale));
 				return "redirect:/prodcomp/main";
 			}
-
 			return "prodcomp/view";
 		} catch (OutOfHeapMemoryException er) {
 			model.addAttribute("error", this.outOfMemoryMessage);
 			return "prodcomp/view";
+		} finally {
+			// pending lock end
+			this.lock.cancelComponentsLock();
 		}
 	}
 
@@ -1039,14 +1039,14 @@ public class ProductionComponentsController {
 			chain = new ArrayList<>();
 			chain.add(initComponent);
 
-			// pending lock
-			if(lock.isComponentsLock()) {
+			// pending lock start
+			if(this.lock.isComponentsLock()) {
 				redirectAttrs.addFlashAttribute("error", messageSource.getMessage("general.procedure.pending", null, locale) + " (" + lock.getComponentsLockUser() + ")");
 				return "redirect:/prodcomp/main";
 			}
 			else {
-				lock.setComponentsLock(true);
-				lock.setComponentsLockUser(userService.getAuthenticatedUser().getName());
+				this.lock.setComponentsLock(true);
+				this.lock.setComponentsLockUser(userService.getAuthenticatedUser().getName());
 			}
 			
 			// just do it (BOM calculation)
@@ -1078,9 +1078,6 @@ public class ProductionComponentsController {
 				}
 			}
 			updateMainLinesSupplyState(salesObjects);
-			// pending lock
-			lock.cancelComponentsLock();
-			
 			model.addAttribute("salesObjects", salesObjects);
 			model.addAttribute("coverage", "[" + targetCodeDemand + "/" + generalStock.get(component) + "]");
 			/*
@@ -1097,6 +1094,9 @@ public class ProductionComponentsController {
 		} catch (OutOfHeapMemoryException er) {
 			model.addAttribute("error", this.outOfMemoryMessage);
 			return "prodcomp/view";
+		} finally {
+			// pending lock end
+			this.lock.cancelComponentsLock();
 		}
 	}
 

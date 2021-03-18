@@ -54,6 +54,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		<!-- STARTER AOP -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+	    	<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
 		<!-- THYMELEAF -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
