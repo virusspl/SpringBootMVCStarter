@@ -84,7 +84,11 @@
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-xs-12">
-				<h1 th:text="#{prodcomp.title}" class="text-primary"></h1>
+				<h1 class="text-primary"> 
+				<span th:text="#{prodcomp.title}"></span>
+				<span th:if="${startDate}" 
+				th:text="|[${#dates.format(startDate, 'dd.MM.yyyy')} - ${#dates.format(endDate, 'dd.MM.yyyy')}]|"></span>
+				</h1>
 			</div>
 			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
 				<span th:text="#{prodcomp.message}"> Welcome message </span>

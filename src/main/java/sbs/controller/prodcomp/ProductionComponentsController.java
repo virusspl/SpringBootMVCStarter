@@ -1085,6 +1085,9 @@ public class ProductionComponentsController {
 			 * ystem.out.println(obj.getLine()); for(List<X3BomPart> schain:
 			 * obj.getChains()){ S ystem.out.println(chainToString(schain)); } }
 			 */
+			
+			model.addAttribute("startDate", formComponent.getStartDate());
+			model.addAttribute("endDate", formComponent.getEndDate());
 			model.addAttribute("component", component);
 			model.addAttribute("componentDescription", componentDescription);
 			model.addAttribute("title", component);
