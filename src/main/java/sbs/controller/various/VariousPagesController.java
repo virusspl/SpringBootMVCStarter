@@ -264,6 +264,13 @@ public class VariousPagesController {
 			roleService.save(userRole);
 			msg += "[role: " + userRole.getName() + "], ";
 		}
+		Role userWeather = roleService.findByName("ROLE_WEATHER");
+		if (userWeather == null) {
+			userWeather = new Role();
+			userWeather.setName("ROLE_WEATHER");
+			roleService.save(userWeather);
+			msg += "[role: " + userWeather.getName() + "], ";
+		}
 		Role qualityManagerRole = roleService.findByName("ROLE_QSURVEYMANAGER");
 		if (qualityManagerRole == null) {
 			qualityManagerRole = new Role();

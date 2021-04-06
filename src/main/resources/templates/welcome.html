@@ -16,33 +16,43 @@
 				<span th:text="#{welcome.message}"> Welcome message </span>
 			</div>
 		</div>
+
 		<!-- MODULES -->
 		<div class="row">
 			<!-- NAMEDAY -->
 			<div id="social" class="col-md-6" th:if="${dayCode}">
+
 				<h3 class="text-primary" th:text="|#{welcome.goodmorning}!|">tickets</h3>
 				<div class="underline margin-bottom-5"></div>
-				<table>
-					<tr>
-						<td style="vertical-align: top;"><span
-							class="btn-sm glyphicon glyphicon-calendar"></span></td>
-						<td><span
-							th:utext="|#{welcome.todaywegot} &lt;b&gt;#{${dayCode}}&lt;/b&gt;, ${today}|"></span></td>
-					</tr>
-					<tr>
-						<td style="vertical-align: top;"><span
-							class="btn-sm glyphicon glyphicon-gift"></span></td>
-						<td><span
-							th:utext="|#{welcome.nameday} &lt;b&gt;${nameDay}&lt;/b&gt;|"></span></td>
-					</tr>
-					<tr th:if="${strangeDay}">
-						<td style="vertical-align: top;"><span
-							class="btn-sm glyphicon glyphicon-arrow-right"></span></td>
-						<td style="padding-top: 4px;"><span
-							th:utext="|${strangeDay}|"></span></td>
-					</tr>
-				</table>
+				<div>
+					<table>
+						<tr>
+							<td style="vertical-align: top;"><span
+								class="btn-sm glyphicon glyphicon-calendar"></span></td>
+							<td><span
+								th:utext="|#{welcome.todaywegot} &lt;b&gt;#{${dayCode}}&lt;/b&gt;, ${today}|"></span></td>
+						</tr>
+						<tr>
+							<td style="vertical-align: top;"><span
+								class="btn-sm glyphicon glyphicon-gift"></span></td>
+							<td><span
+								th:utext="|#{welcome.nameday} &lt;b&gt;${nameDay}&lt;/b&gt;|"></span></td>
+						</tr>
+						<tr th:if="${strangeDay}">
+							<td style="vertical-align: top;"><span
+								class="btn-sm glyphicon glyphicon-arrow-right"></span></td>
+							<td style="padding-top: 4px;"><span
+								th:utext="|${strangeDay}|"></span></td>
+						</tr>
+
+					</table>
+				</div>
 			</div>
+
+			<!-- 
+			<a target="_blank" href="https://booked.com.pl/weather/sanok-147118"><img src="https://w.bookcdn.com/weather/picture/32_147118_1_18_3498db_250_2980b9_ffffff_ffffff_1_2071c9_ffffff_0_6.png"  alt="booked.net"/></a>
+			 -->
+
 			<!-- NO AUTH -->
 			<div class="col-md-6 margin-top-10" id="no-login"
 				sec:authorize="!isAuthenticated()">
@@ -68,6 +78,32 @@
 					</div>
 				</div>
 			</div>
+
+			<!-- WEATHER -->
+			<div sec:authorize="hasAnyRole('ROLE_WEATHER', 'ROLE_ADMIN')">
+				<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
+					<h3 class="text-primary" th:text="|#{welcome.weather}|">tickets</h3>
+
+				</div>
+				<div class="col-xs-12 col-xs-offset-0 center margin-top-10">
+					<!--<img src="https://www.theweather.com/wimages/foto2dba88d5ad8f5af91b5b9def9cf81559.png"/>  -->
+					<a class="weatherwidget-io"
+						href="https://forecast7.com/pl/49d5622d21/sanok/"
+						data-label_1="SANOK" data-days="5">SANOK</a>
+					<script>
+						!function(d, s, id) {
+							var js, fjs = d.getElementsByTagName(s)[0];
+							if (!d.getElementById(id)) {
+								js = d.createElement(s);
+								js.id = id;
+								js.src = 'https://weatherwidget.io/js/widget.min.js';
+								fjs.parentNode.insertBefore(js, fjs);
+							}
+						}(document, 'script', 'weatherwidget-io-js');
+					</script>
+				</div>
+			</div>
+			<!-- /WEATHER -->
 			<!-- ADMIN -->
 			<div id="adminOnly"
 				sec:authorize="hasAnyRole('ROLE_OWNER', 'ROLE_ADMIN')">
@@ -110,14 +146,13 @@
 				</div>
 				<div class="col-xs-12 margin-top-10"></div>
 				<div class="col-xs-12 margin-top-5">
-					
-					<a class="btn btn-success btn-md margin-top-5"
-						target="_blank"
+
+					<a class="btn btn-success btn-md margin-top-5" target="_blank"
 						href="http://adrpsrv-x3/"> <span
 						class="glyphicon glyphicon-equalizer"></span>&nbsp;&nbsp;<span
 						th:text="|Sage ERP X3|">Phone numbers</span>
 					</a>
-				
+
 					<!-- HR DROP -->
 					<div class="dropdown" style="display: inline;">
 						<button class="btn btn-primary dropdown-toggle"
@@ -446,14 +481,12 @@
 						class="btn btn-info btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-object-align-left"></span> <span
 						th:text="|#{stocksum.title}|">title</span>
-					</a> 
-					<a th:href="@{/magpart/main}"
+					</a> <a th:href="@{/magpart/main}"
 						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STOCKSUMUSER')"
 						class="btn btn-info btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-object-align-left"></span> <span
 						th:text="|#{magpart.title}|">title</span>
-					</a> 
-					<a th:href="@{/saleship/main}"
+					</a> <a th:href="@{/saleship/main}"
 						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SALESHIPUSER')"
 						class="btn btn-info btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-share"></span> <span
