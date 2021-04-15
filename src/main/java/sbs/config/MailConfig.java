@@ -22,7 +22,7 @@ public class MailConfig {
 	@Bean
 	public JavaMailSender javaMailSender() {
 		JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
-		javaMailSender.setHost("mail.atwsystem.pl");
+		javaMailSender.setHost("192.168.1.11");
 		javaMailSender.setPort(25);
 		javaMailSender.setJavaMailProperties(getMailProperties());
 		return javaMailSender;
