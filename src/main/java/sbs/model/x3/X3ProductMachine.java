@@ -1,6 +1,6 @@
 package sbs.model.x3;
 
-public class X3ProductFinalMachine {
+public class X3ProductMachine {
 
 	private String productCode;
 	private int operation;
@@ -12,11 +12,11 @@ public class X3ProductFinalMachine {
 	public static final String ASSEMBLY = "ASSEMBLY";
 	
 	
-	public X3ProductFinalMachine() {
+	public X3ProductMachine() {
 	
 	}
 	
-	public X3ProductFinalMachine(String productCode, int operation, String machineCode, String machineName,
+	public X3ProductMachine(String productCode, int operation, String machineCode, String machineName,
 			String machineGroup) {
 		super();
 		this.productCode = productCode;

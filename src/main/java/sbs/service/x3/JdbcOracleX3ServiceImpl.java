@@ -30,7 +30,7 @@ import sbs.model.x3.X3HistockRawEntry;
 import sbs.model.x3.X3KeyValString;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductEventsHistory;
-import sbs.model.x3.X3ProductFinalMachine;
+import sbs.model.x3.X3ProductMachine;
 import sbs.model.x3.X3ProductSellDemand;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3PurchaseOrder;
@@ -213,8 +213,14 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 
 	@Override
 	@Cacheable(value = "x3productFinalMachines")
-	public Map<String, X3ProductFinalMachine> findX3ProductFinalMachines(String company) {
+	public Map<String, X3ProductMachine> findX3ProductFinalMachines(String company) {
 		return jdbcOracleX3Repository.findX3ProductFinalMachines(company);
+	}
+	
+	@Override
+	@Cacheable(value = "x3productFirstMachines")
+	public Map<String, X3ProductMachine> findX3ProductFirstMachines(String company) {
+		return jdbcOracleX3Repository.findX3ProductFirstMachines(company);
 	}
 
 	@Override
@@ -742,6 +748,7 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	public Map<Integer, String> getX3Menu(String company, int menu, String x3language) {
 		return jdbcOracleX3Repository.getX3Menu(company, menu, x3language);
 	}
+
 
 
 }

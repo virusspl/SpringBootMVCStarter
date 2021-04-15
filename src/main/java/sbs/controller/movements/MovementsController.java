@@ -29,7 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import sbs.helpers.DateHelper;
 import sbs.model.geode.GeodeMovement;
-import sbs.model.x3.X3ProductFinalMachine;
+import sbs.model.x3.X3ProductMachine;
 import sbs.model.x3.X3RouteLine;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.model.x3.X3ShipmentMovement;
@@ -137,7 +137,7 @@ public class MovementsController {
 		LinkedHashSet<String> unassignedMachinesSet = new LinkedHashSet<>();
 		String unassignedMachines = "";
 
-		Map<String, X3ProductFinalMachine> machinesIndex = x3Service.findX3ProductFinalMachines("ATW");
+		Map<String, X3ProductMachine> machinesIndex = x3Service.findX3ProductFinalMachines("ATW");
 		
 		String tmpKey;
 		X3RouteLine routeInt;
@@ -161,13 +161,13 @@ public class MovementsController {
 				}
 				
 				switch (machinesIndex.get(mvt.getItemCode()).getMachineDepartment()) {
-				case X3ProductFinalMachine.MECHANICAL:
+				case X3ProductMachine.MECHANICAL:
 					mechanicalValue += mvt.getValue();
 					break;
-				case X3ProductFinalMachine.WELDING:
+				case X3ProductMachine.WELDING:
 					weldingValue += mvt.getValue();
 					break;
-				case X3ProductFinalMachine.ASSEMBLY:
+				case X3ProductMachine.ASSEMBLY:
 					assemblyValue += mvt.getValue();
 					break;
 				default:

@@ -117,7 +117,8 @@
 								<th th:text="|#{general.date.demanded.short}|">head</th>
 								<th th:text="|#{prodcomp.remaining}|">head</th>
 								<th th:text="|Gr. 2|">head</th>
-								<th th:text="#{general.machine}">head</th>
+								<th th:text="#{prodcomp.machine.first}">head</th>
+								<th th:text="#{prodcomp.machine.last}">head</th>
 								<th th:text="#{general.stock.safe}">head</th>
 								<th th:text="#{general.replanishpoint.short}">head</th>
 								<th th:text="|#{general.demand.short} X3|">head</th>
@@ -137,6 +138,7 @@
 								<td><span th:text="${line[15]}"></span></td>
 								<td><span th:text="${line[14]}"></span></td>
 								<td><span th:text="${line[3]}"></span></td>
+								<td><span th:text="${line[16]}"></span></td>
 								<td><span th:text="${line[4]}"></span></td>
 								<td><span th:text="${line[5]}"></span></td>
 								<td><span th:text="${line[6]}"></span></td>

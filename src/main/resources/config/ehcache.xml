@@ -74,6 +74,9 @@
 	<cache name="x3productFinalMachines" maxBytesLocalHeap="23m"
 		timeToLiveSeconds="86400">
 	</cache>
+	<cache name="x3productFirstMachines" maxBytesLocalHeap="23m"
+		timeToLiveSeconds="86400">
+	</cache>
 	<cache name="x3Descriptions" maxBytesLocalDisk="115m"
 		timeToLiveSeconds="604800">
 	</cache>

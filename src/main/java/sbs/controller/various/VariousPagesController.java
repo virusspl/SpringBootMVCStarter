@@ -8,6 +8,7 @@ import java.net.URLConnection;
 import java.util.List;
 */
 import java.util.Locale;
+import java.util.Map;
 
 import javax.mail.MessagingException;
 
@@ -34,6 +35,7 @@ import sbs.model.shipments.ShipmentState;
 import sbs.model.tools.ToolsProjectState;
 import sbs.model.users.Role;
 import sbs.model.users.User;
+import sbs.model.x3.X3ProductMachine;
 import sbs.scheduling.StandardCostsScheduler;
 import sbs.service.bhptickets.BhpTicketStateService;
 import sbs.service.bhptickets.BhpTicketsService;
@@ -109,6 +111,8 @@ public class VariousPagesController {
 	@RequestMapping("/test")
 	public String test(Model model, Locale locale) throws InterruptedException {
 
+		//Map<String, X3ProductMachine> mach = x3Service.findX3ProductFirstMachines("ATW");
+		//System.out.println(mach.containsKey("RZ08L006") ? mach.get("RZ08L006").getMachineCode() : "-");
 		
 		/*
 		List<HrUserInfo> list = optimaService.findAllCurrentlyEmployed();

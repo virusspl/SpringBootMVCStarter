@@ -42,7 +42,7 @@ import sbs.model.x3.X3BomPart;
 import sbs.model.x3.X3ConsumptionProductInfo;
 import sbs.model.x3.X3DeliverySimpleInfo;
 import sbs.model.x3.X3Product;
-import sbs.model.x3.X3ProductFinalMachine;
+import sbs.model.x3.X3ProductMachine;
 import sbs.model.x3.X3SaleInfo;
 import sbs.model.x3.X3SalesOrderLine;
 import sbs.service.geode.JdbcOracleGeodeService;
@@ -268,7 +268,8 @@ public class ProductionComponentsController {
 				Map<String, Double> quantities = x3Service.getAllProductsQuantities("ATW");
 				Map<String, Double> geodeStock = geodeService.getStockOnProductionAndReceptions();
 				Map<String, X3Product> products = x3Service.findAllActiveProductsMap("ATW");
-				Map<String, X3ProductFinalMachine> finalMachines = x3Service.findX3ProductFinalMachines("ATW");
+				Map<String, X3ProductMachine> finalMachines = x3Service.findX3ProductFinalMachines("ATW");
+				Map<String, X3ProductMachine> firstMachines = x3Service.findX3ProductFirstMachines("ATW");
 				// get acv info
 				List<X3ConsumptionProductInfo> acvInfo = x3Service.getAcvListForConsumptionReport("ATW");
 				Map<String, X3DeliverySimpleInfo> upcomingDeliveries = x3Service
@@ -277,6 +278,7 @@ public class ProductionComponentsController {
 				Map<String, Integer> safetyStockMap = new TreeMap<>();
 				Map<String, List<X3BomItem>> allBoms = x3Service.getAllBomPartsTopLevel("ATW");
 
+				
 				for (Map.Entry<String, Integer> main : fileInfo.entrySet()) {
 					subComponents = getComponentsQuantitiesMultilevel(allBoms, main.getKey(), products, false);
 					for (Map.Entry<String, Double> sub : subComponents.entrySet()) {
@@ -333,7 +335,7 @@ public class ProductionComponentsController {
 					line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getCategory() : "-");
 					// group 2 (3)
 					line.add(products.containsKey(entry.getKey()) ? products.get(entry.getKey()).getGr2() : "-");
-					// machine (4)
+					// final machine (4)
 					line.add(finalMachines.containsKey(entry.getKey()) ? finalMachines.get(entry.getKey()).getMachineCode() : "-");
 					// safety stock (5)
 					line.add(safetyStockMap.containsKey(entry.getKey())
@@ -387,6 +389,8 @@ public class ProductionComponentsController {
 					line.add((upcomingDeliveries.containsKey(entry.getKey()) && showUpcomming)
 							? dateHelper.formatYyyyMmDd(upcomingDeliveries.get(entry.getKey()).getDate())
 							: "-");
+					// final machine (16)
+					line.add(firstMachines.containsKey(entry.getKey()) ? firstMachines.get(entry.getKey()).getMachineCode() : "-");
 					table.add(line);
 				}
 				model.addAttribute("components", table);
@@ -885,6 +889,7 @@ public class ProductionComponentsController {
 		return resultMap;
 	}
 
+	// for "make"
 	private Map<String, Double> getComponentsQuantitiesMultilevel(Map<String, List<X3BomItem>> allBoms, String itemCode,
 			Map<String, X3Product> products, boolean acvOnly) throws OutOfHeapMemoryException {
 		Map<String, Double> resultMap = new TreeMap<>();

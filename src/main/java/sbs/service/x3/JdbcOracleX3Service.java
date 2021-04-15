@@ -20,7 +20,7 @@ import sbs.model.x3.X3EnvironmentInfo;
 import sbs.model.x3.X3KeyValString;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductEventsHistory;
-import sbs.model.x3.X3ProductFinalMachine;
+import sbs.model.x3.X3ProductMachine;
 import sbs.model.x3.X3ProductSellDemand;
 import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3PurchaseOrder;
@@ -94,7 +94,8 @@ public interface JdbcOracleX3Service {
 	public X3UtrFault findUtrFault(String X3FaultNumber);
 	public List<X3UtrFaultLine> findUtrFaultLinesAfterDate(Date startDate);
 	public List<X3UtrFaultLine> findAllUtrFaultLines();
-	public Map<String, X3ProductFinalMachine> findX3ProductFinalMachines(String company);
+	public Map<String, X3ProductMachine> findX3ProductFinalMachines(String company);
+	public Map<String, X3ProductMachine> findX3ProductFirstMachines(String company);
 	public List<Project> findPendingProjectsProgress();
 	public Project findProjectProgressByNumber(String number);
 	public List<X3WarehouseWeightLine> findWeightSumLine(Date startDate, Date endDate, int weightQueryType);
@@ -164,6 +165,7 @@ public interface JdbcOracleX3Service {
 	public List<String> getComponentSuppliers(String component, String company);
 	public Map<String, String> findAllUsersMap(String company);
 	public Map<String, Double> getAverageCostsMap(String company);
+	
 	
 	
 }
