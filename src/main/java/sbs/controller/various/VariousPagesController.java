@@ -8,7 +8,6 @@ import java.net.URLConnection;
 import java.util.List;
 */
 import java.util.Locale;
-import java.util.Map;
 
 import javax.mail.MessagingException;
 
@@ -35,7 +34,6 @@ import sbs.model.shipments.ShipmentState;
 import sbs.model.tools.ToolsProjectState;
 import sbs.model.users.Role;
 import sbs.model.users.User;
-import sbs.model.x3.X3ProductMachine;
 import sbs.scheduling.StandardCostsScheduler;
 import sbs.service.bhptickets.BhpTicketStateService;
 import sbs.service.bhptickets.BhpTicketsService;
