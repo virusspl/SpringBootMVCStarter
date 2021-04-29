@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,6 +30,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sbs.controller.upload.UploadController;
 import sbs.helpers.DateHelper;
 import sbs.model.geode.GeolookRow;
+import sbs.model.x3.X3Product;
 import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.x3.JdbcOracleX3Service;
 
@@ -107,12 +109,14 @@ public class GeodeLookupController {
 		// https://www.mkyong.com/java/how-to-write-data-to-temporary-file-in-java/
 		File downloadFile = File.createTempFile("geode", ".csv");
 		List<GeolookRow> list = jdbcOracleGeodeService.findAllLocationsOfProducts();
+		Map<String, X3Product> products = jdbcOracleX3Service.findAllActiveProductsMap("ATW");
 		BufferedWriter bw = new BufferedWriter(new FileWriter(downloadFile));
-		bw.write("store;address;product;quantity;unit;object;date" + System.getProperty("line.separator"));
+		bw.write("store;address;product;description;quantity;unit;object;date" + System.getProperty("line.separator"));
 		for (GeolookRow row : list) {
 			bw.write(row.getStore() + ";");
 			bw.write(row.getAddress() + ";");
 			bw.write(row.getProduct() + ";");
+			bw.write((products.containsKey(row.getProduct()) ? products.get(row.getProduct()).getDescription() : "-") + ";");
 			bw.write(row.getQuantity() + ";");
 			bw.write(row.getUnit() + ";");
 			bw.write(row.getObject() + ";");
