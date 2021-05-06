@@ -116,7 +116,7 @@ public class GeodeLookupController {
 			bw.write(row.getStore() + ";");
 			bw.write(row.getAddress() + ";");
 			bw.write(row.getProduct() + ";");
-			bw.write((products.containsKey(row.getProduct()) ? products.get(row.getProduct()).getDescription() : "-") + ";");
+			bw.write((products.containsKey(row.getProduct()) ? products.get(row.getProduct()).getDescription().replace(";", " ") : "-") + ";");
 			bw.write(row.getQuantity() + ";");
 			bw.write(row.getUnit() + ";");
 			bw.write(row.getObject() + ";");
