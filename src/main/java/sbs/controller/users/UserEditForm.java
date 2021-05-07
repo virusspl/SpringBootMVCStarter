@@ -19,6 +19,8 @@ public class UserEditForm {
 	@NotNull
 	@Size(min = 2, max=25)
 	private String name;
+	@Size(min = 2, max=25)
+	private String company;
 	
 	@Size(max=25)
 	private String rcpNumber;
@@ -104,7 +106,14 @@ public class UserEditForm {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-	
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
 
 	public String getRcpNumber() {
 		return rcpNumber;

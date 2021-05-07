@@ -103,6 +103,15 @@
 				</div>
 				<div class="col-xs-6 col-sm-4">
 					<div class="form-group">
+						<label for="company" th:text="#{general.company}">txt</label>
+						<select class="form-control" id="company" name="company"
+							th:placeholder="#{general.company}"
+							th:field="*{company}">
+							<option value="ATW">ATW</option>
+							<option value="WPS">WPS</option>
+						</select>
+					</div>
+					<div class="form-group">
 						<label for="id" th:text="#{user.id}">Username</label> <input
 							type="hidden" th:field="${userEditForm.id}"></input>
 						<div id="id">

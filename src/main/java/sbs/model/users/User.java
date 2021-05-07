@@ -34,6 +34,7 @@ public class User {
     private String password;
     private String avatarfilename;
     private String rcpNumber;
+    private String company;
     private Set<Role> roles;
     private Set<BhpTicket> createdBhpTickets;
     private Set<BhpTicket> assignedBhpTickets;
@@ -116,9 +117,20 @@ public class User {
         this.roles = roles;
     }
 	
+    @NotEmpty
+    @Size(min = 2, max = 25)
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", roles=" + roles + "]";
+		return "User [id=" + id + ", active=" + active + ", username=" + username + ", name=" + name + ", email="
+				+ email + ", rcpNumber=" + rcpNumber + ", company=" + company + "]";
 	}
 
 	public String getAvatarfilename() {

@@ -18,6 +18,8 @@ public class UserCreateForm {
 	@Email  
 	@NotEmpty
 	private String email;
+	@Size(min = 2, max=25)
+	private String company;
 	
 	private Set<Role> roles;
 	
@@ -65,6 +67,15 @@ public class UserCreateForm {
 	 */
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 	public Set<Role> getRoles() {

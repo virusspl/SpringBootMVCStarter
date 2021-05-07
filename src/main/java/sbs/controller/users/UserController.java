@@ -116,6 +116,7 @@ public class UserController {
 		userEditForm.setUsername(user.getUsername());
 		userEditForm.setName(user.getName());
 		userEditForm.setEmail(user.getEmail());
+		userEditForm.setCompany(user.getCompany());
 		userEditForm.setActive(user.isActive());
 		userEditForm.setRoles(user.getRoles());
 		userEditForm.setRcpNumber(user.getRcpNumber());
@@ -139,6 +140,7 @@ public class UserController {
 		modelUser.setUsername(userEditForm.getUsername());
 		modelUser.setName(userEditForm.getName());
 		modelUser.setEmail(userEditForm.getEmail());
+		modelUser.setCompany((userEditForm.getCompany()));
 		modelUser.setActive(userEditForm.getActive());
 		modelUser.setRcpNumber(userEditForm.getRcpNumber().trim());
 		userService.update(modelUser);
@@ -272,6 +274,7 @@ public class UserController {
 		user.setUsername(userCreateForm.getUsername());
 		user.setName(userCreateForm.getName());
 		user.setEmail(userCreateForm.getEmail());
+		user.setCompany(userCreateForm.getCompany());
 		user.setRcpNumber("");
 		user.getRoles().add(userRole);
 		userRole.getUsers().add(user);
