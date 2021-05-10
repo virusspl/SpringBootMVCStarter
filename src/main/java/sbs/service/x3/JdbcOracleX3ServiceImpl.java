@@ -281,13 +281,13 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	}
 
 	@Override
-	public Map<String, Map<Integer, Integer>> getAcvConsumptionListForYear(int year, String company) {
-		return jdbcOracleX3Repository.getAcvConsumptionListForYear(year, company);
+	public Map<String, Map<Integer, Integer>> getConsumptionListForYear(int year, String company) {
+		return jdbcOracleX3Repository.getConsumptionListForYear(year, company);
 	}
 
 	@Override
-	public Map<String, Integer> getAcvDemandList(String company) {
-		return jdbcOracleX3Repository.getAcvDemandList(company);
+	public Map<String, Integer> getDemandList(String company) {
+		return jdbcOracleX3Repository.getDemandList(company);
 	}
 	
 	@Override
@@ -296,19 +296,19 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	}
 
 	@Override
-	public Map<String, X3ConsumptionSupplyInfo> getAcvListOfLastSupplyInfo(String company) {
-		return jdbcOracleX3Repository.getAcvListOfLastSupplyInfo(company);
+	public Map<String, X3ConsumptionSupplyInfo> getListOfLastSupplyInfo(String company) {
+		return jdbcOracleX3Repository.getListOfLastSupplyInfo(company);
 	}
 
 	@Override
 	// @Cacheable(value="acvInfo")
-	public List<X3ConsumptionProductInfo> getAcvListForConsumptionReport(String company) {
-		return jdbcOracleX3Repository.getAcvListForConsumptionReport(company);
+	public List<X3ConsumptionProductInfo> getListForConsumptionReport(String category, String company) {
+		return jdbcOracleX3Repository.getListForConsumptionReport(category, company);
 	}
 
 	@Override
-	public Map<String, String> getAcvProductsEnglishDescriptions(String company) {
-		return jdbcOracleX3Repository.getAcvProductsEnglishDescriptions(company);
+	public Map<String, String> getProductsEnglishDescriptions(String company) {
+		return jdbcOracleX3Repository.getProductsEnglishDescriptions(company);
 	}
 
 	@Override

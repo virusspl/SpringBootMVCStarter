@@ -40,9 +40,16 @@
 					th:onclick="|return confirm('#{general.areyousure}')|"
 					data-toggle="tooltip" data-placement="bottom"
 					th:title="|#{general.time} ~ 20 s|"
-					th:href="@{/consumption/exportConsumption/ATW}"> <span
+					th:href="@{/consumption/exportConsumption/ACV/ATW}"> <span
 					class="glyphicon glyphicon-save-file" style="margin-right: 10px;"></span>
-					<span th:text="|#{consumption.export.consumption} ADR|">begin</span>
+					<span th:text="|#{consumption.export.consumption} ACV ADR|">begin</span>
+				</a> <a class="btn btn-primary btn-md margin-top-5" id="cnsA"
+					th:onclick="|return confirm('#{general.areyousure}')|"
+					data-toggle="tooltip" data-placement="bottom"
+					th:title="|#{general.time} ~ 20 s|"
+					th:href="@{/consumption/exportConsumption/AFV/ATW}"> <span
+					class="glyphicon glyphicon-save-file" style="margin-right: 10px;"></span>
+					<span th:text="|#{consumption.export.consumption} AVF ADR|">begin</span>
 				</a> <a class="btn btn-info btn-md margin-top-5" id="cvrA"
 					th:onclick="|return confirm('#{general.areyousure}')|"
 					data-toggle="tooltip" data-placement="bottom"
@@ -54,9 +61,9 @@
 					th:onclick="|return confirm('#{general.areyousure}')|"
 					data-toggle="tooltip" data-placement="bottom"
 					th:title="|#{general.time} ~ 5 s|"
-					th:href="@{/consumption/exportConsumption/WPS}"> <span
+					th:href="@{/consumption/exportConsumption/ACV/WPS}"> <span
 					class="glyphicon glyphicon-save-file" style="margin-right: 10px;"></span>
-					<span th:text="|#{consumption.export.consumption} WPS|">begin</span>
+					<span th:text="|#{consumption.export.consumption} ACV WPS|">begin</span>
 				</a>
 			</div>
 		</div>
@@ -64,7 +71,8 @@
 		<!-- BLOCK MESSAGE -->
 		<div class="row">
 			<div class="col-xs-12">
-				<h3 class="text-primary" th:text="#{general.information}">Panel With title</h3>
+				<h3 class="text-primary" th:text="#{general.information}">Panel
+					With title</h3>
 			</div>
 			<div class="col-xs-12 margin-top-10">
 				<span th:utext="#{consumption.description}"></span>
@@ -73,7 +81,7 @@
 	</div>
 </body>
 </html>
-				<!-- 
+<!-- 
 				<ul>
 					<li>Product code</li>
 					<li>Product decription PL</li>

@@ -59,7 +59,7 @@ public class ConsumptionController {
     	
     	List<X3CoverageData> initialData = x3Service.getCoverageInitialData("ATW");
     	Map<String, String> descriptions = x3Service.getDescriptionsByLanguage(x3Service.convertLocaleToX3Lang(locale), "ATW");
-		Map<String, Integer> demand = x3Service.getAcvDemandList("ATW");
+		Map<String, Integer> demand = x3Service.getDemandList("ATW");
 		List<X3UsageDetail> usage = x3Service.getAcvUsageDetailsListByYear(cal.get(Calendar.YEAR), "ATW");
 		Map<String, X3Supplier> suppliers = x3Service.getFirstAcvSuppliers("ATW");
     	
@@ -220,11 +220,16 @@ public class ConsumptionController {
 		return lineValues;
 	}
 
-	@RequestMapping("/exportConsumption/{company}")
-    public ModelAndView exportConsumption(@PathVariable("company") String company, Model model, Locale locale){
+	@RequestMapping("/exportConsumption/{category}/{company}")
+    public ModelAndView exportConsumption(@PathVariable("category") String category, @PathVariable("company") String company, Model model, Locale locale){
     	
 		if(!company.equals("ATW") && !company.equals("WPS")){
 			model.addAttribute("error",  messageSource.getMessage("error.company.unknown", null, locale) + ": " + company);
+			return new ModelAndView("consumption/dispatch");
+		}
+		
+		if(!category.equals("ACV") && !category.equals("AFV")){
+			model.addAttribute("error",  "category (AFV/ACV)" + ": " + category);
 			return new ModelAndView("consumption/dispatch");
 		}
 		
@@ -233,13 +238,13 @@ public class ConsumptionController {
     	int consInitYear = cal.get(Calendar.YEAR);
     	
     	// get data
-    	Map<String, Map<Integer, Integer>> consumption0 = x3Service.getAcvConsumptionListForYear((consInitYear-2), company);
-    	Map<String, Map<Integer, Integer>> consumption1 = x3Service.getAcvConsumptionListForYear((consInitYear-1), company);
-    	Map<String, Map<Integer, Integer>> consumption2 = x3Service.getAcvConsumptionListForYear(consInitYear, company);
-    	Map<String, Integer> demand = x3Service.getAcvDemandList(company);
-    	Map<String, String> enDescriptions = x3Service.getAcvProductsEnglishDescriptions(company);
-    	Map<String, X3ConsumptionSupplyInfo> lastSupply = x3Service.getAcvListOfLastSupplyInfo(company);
-    	List<X3ConsumptionProductInfo> productsList = x3Service.getAcvListForConsumptionReport(company);
+    	Map<String, Map<Integer, Integer>> consumption0 = x3Service.getConsumptionListForYear((consInitYear-2), company);
+    	Map<String, Map<Integer, Integer>> consumption1 = x3Service.getConsumptionListForYear((consInitYear-1), company);
+    	Map<String, Map<Integer, Integer>> consumption2 = x3Service.getConsumptionListForYear(consInitYear, company);
+    	Map<String, Integer> demand = x3Service.getDemandList(company);
+    	Map<String, String> enDescriptions = x3Service.getProductsEnglishDescriptions(company);
+    	Map<String, X3ConsumptionSupplyInfo> lastSupply = x3Service.getListOfLastSupplyInfo(company);
+    	List<X3ConsumptionProductInfo> productsList = x3Service.getListForConsumptionReport(category, company);
     	Map<String, String> buyGroups = x3Service.getVariousTableData(company, "6050", JdbcOracleX3Service.LANG_ITALIAN);
 
     	
@@ -377,7 +382,7 @@ public class ConsumptionController {
 		ExcelContents contents = new ExcelContents();
 		
 		// set contents
-		contents.setFileName("CONS_" + company + "_" +consInitYear+"_EXPORT.xls");
+		contents.setFileName("CONS_" + category+ "_" + company + "_" +consInitYear+".xls");
 		contents.setSheetName(consInitYear+"");
 		contents.setHeaders(headers);
 		contents.setValues(rows);

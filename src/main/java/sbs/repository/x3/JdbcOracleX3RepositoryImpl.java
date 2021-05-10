@@ -2423,7 +2423,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	}
 
 	@Override
-	public Map<String, Map<Integer, Integer>> getAcvConsumptionListForYear(int year, String company) {
+	public Map<String, Map<Integer, Integer>> getConsumptionListForYear(int year, String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
 		if(this.x3v.equalsIgnoreCase("6")) {
@@ -2490,7 +2490,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	/**
 	 * getsALLdemand, not only ACV
 	 */
-	public Map<String, Integer> getAcvDemandList(String company) {
+	public Map<String, Integer> getDemandList(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
 		if(this.x3v.equalsIgnoreCase("6")) {
@@ -2568,7 +2568,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	}
 	
 	@Override
-	public Map<String, String> getAcvProductsEnglishDescriptions(String company) {
+	public Map<String, String> getProductsEnglishDescriptions(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
 		if(this.x3v.equalsIgnoreCase("6")) {
@@ -2593,10 +2593,8 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "txt.LANGUE_0 = ? "
 				+ "AND "
 				+ "txt.ZONE_0 = ? "
-				+ "AND "
-				+ "itm.TCLCOD_0 = ? "
 				,
-                new Object[]{"ITMMASTER", "ENG", "DES1AXX", "ACV"}
+                new Object[]{"ITMMASTER", "ENG", "DES1AXX"}
 				);
 		
 		Map <String, String> result = new HashMap<>();
@@ -2608,7 +2606,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	}
 	
 	@Override
-	public Map<String, X3ConsumptionSupplyInfo> getAcvListOfLastSupplyInfo(String company) {
+	public Map<String, X3ConsumptionSupplyInfo> getListOfLastSupplyInfo(String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
 		if(this.x3v.equalsIgnoreCase("6")) {
@@ -2632,10 +2630,8 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ ") "
 				+ "INNER JOIN " + company + ".ITMMASTER itm "
 				+ "ON prcd.ITMREF_0 = itm.ITMREF_0 "
-				+ "WHERE "
-				+ "itm.TCLCOD_0 = ? "
 				,
-                new Object[]{"ACV"}
+                new Object[]{}
 				);
 		
 		Map <String, X3ConsumptionSupplyInfo> map = new HashMap<>();
@@ -2655,7 +2651,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 	}
 
 	@Override
-	public List<X3ConsumptionProductInfo> getAcvListForConsumptionReport(String company) {
+	public List<X3ConsumptionProductInfo> getListForConsumptionReport(String category, String company) {
 		// ===========================================================
 		// ==== TMP JDBC DUALITY =====================================
 		if(this.x3v.equalsIgnoreCase("6")) {
@@ -2697,7 +2693,7 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 				+ "WHERE itm.TCLCOD_0 = ? "
 
 				,
-                new Object[]{"ACV"}
+                new Object[]{category.toUpperCase()}
 				);
 
 		List<X3ConsumptionProductInfo> list = new ArrayList<>();

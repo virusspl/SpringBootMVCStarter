@@ -102,7 +102,7 @@ public class HistoryStockController {
 		//	code = (String) model.asMap().get("code");
 		//}
 		
-		List<X3ConsumptionProductInfo> acvInfo = x3Service.getAcvListForConsumptionReport("ATW");
+		List<X3ConsumptionProductInfo> acvInfo = x3Service.getListForConsumptionReport("ACV", "ATW");
 		Map<String, X3ProductEventsHistory> history = x3Service.getAcvProductsEventsHistory(startDate, endDate, acvInfo, "ATW");
 		Map<String, X3Product> products = x3Service.findAllActiveProductsMap("ATW");
 		List<List<String>> lines = new ArrayList<>();

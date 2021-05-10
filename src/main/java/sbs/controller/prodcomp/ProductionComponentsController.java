@@ -271,7 +271,7 @@ public class ProductionComponentsController {
 				Map<String, X3ProductMachine> finalMachines = x3Service.findX3ProductFinalMachines("ATW");
 				Map<String, X3ProductMachine> firstMachines = x3Service.findX3ProductFirstMachines("ATW");
 				// get acv info
-				List<X3ConsumptionProductInfo> acvInfo = x3Service.getAcvListForConsumptionReport("ATW");
+				List<X3ConsumptionProductInfo> acvInfo = x3Service.getListForConsumptionReport("ACV", "ATW");
 				Map<String, X3DeliverySimpleInfo> upcomingDeliveries = x3Service
 						.getFirstUpcomingDeliveriesMapByCodeAfterDate(new java.util.Date(), "ATW");
 				// safety stock map
@@ -537,7 +537,7 @@ public class ProductionComponentsController {
 					workStock.put(entry.getKey(), entry.getValue());
 				}
 				// get acv info
-				List<X3ConsumptionProductInfo> acvInfo = x3Service.getAcvListForConsumptionReport("ATW");
+				List<X3ConsumptionProductInfo> acvInfo = x3Service.getListForConsumptionReport("ACV", "ATW");
 				
 				Calendar cal = Calendar.getInstance();
 				cal.add(Calendar.DAY_OF_MONTH, days);

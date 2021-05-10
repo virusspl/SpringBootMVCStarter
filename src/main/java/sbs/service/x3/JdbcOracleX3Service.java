@@ -107,12 +107,12 @@ public interface JdbcOracleX3Service {
 	public Map<String, Integer> findAcvShipStock(String company);
 	public List<X3ShipmentStockLineWithPrice> findAllShipStockWithAveragePrice(String company);
 	public List<DirectReceptionsShipmentLine> findDirectReceptionsShipmentLines(Date startDate, Date endDate, String company);
-	public Map<String, Map<Integer, Integer>> getAcvConsumptionListForYear(int year, String company);
-	public Map<String, Integer> getAcvDemandList(String company);
+	public Map<String, Map<Integer, Integer>> getConsumptionListForYear(int year, String company);
+	public Map<String, Integer> getDemandList(String company);
 	public Map<String, Integer> getDemandListInPeriod(Date startDate, Date endDate, String company);
-	public Map<String, X3ConsumptionSupplyInfo> getAcvListOfLastSupplyInfo(String company);
-	public List<X3ConsumptionProductInfo> getAcvListForConsumptionReport(String company);
-	public Map<String, String> getAcvProductsEnglishDescriptions(String company);
+	public Map<String, X3ConsumptionSupplyInfo> getListOfLastSupplyInfo(String company);
+	public List<X3ConsumptionProductInfo> getListForConsumptionReport(String category, String company);
+	public Map<String, String> getProductsEnglishDescriptions(String company);
 	public List<X3SalesOrderLine> findOpenedSalesOrderLinesInPeriod(Date startDate, Date endDate, String company);
 	public Map<String, Integer> findGeneralStockForAllProducts(String company);
 	public X3Workstation findWorkstationByCode(String company, String code);

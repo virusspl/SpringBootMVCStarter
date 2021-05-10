@@ -39,7 +39,7 @@ public class StockSumController {
 				.findStockListForStoreType(JdbcOracleGeodeService.STORE_TYPE_PRODUCTION);
 		Map<String, Integer> stockGeoRcp = geodeService
 				.findStockListForStoreType(JdbcOracleGeodeService.STORE_TYPE_RECEPTIONS);
-		Map<String, Integer> demand = x3Service.getAcvDemandList("ATW");
+		Map<String, Integer> demand = x3Service.getDemandList("ATW");
 
 		Map<String, StockLine> list = new HashMap<>();
 		
