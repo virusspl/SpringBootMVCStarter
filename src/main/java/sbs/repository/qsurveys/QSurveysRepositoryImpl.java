@@ -25,6 +25,7 @@ public class QSurveysRepositoryImpl extends GenericRepositoryAdapter<QSurvey, In
 	@Override
 	public List<QSurvey> findInPeriodSortByDateDesc(Date startDate, Date endDate) {
 		String hql = "from QSurvey s WHERE s.creationDate >= :startDate AND  s.creationDate <= :endDate ORDER BY creationDate DESC";
+		endDate = new java.util.Date(endDate.getTime() + (1000*60*60*24));
 		@SuppressWarnings("unchecked")
 		List<QSurvey> result = (List<QSurvey>) currentSession()
 				.createQuery(hql)
