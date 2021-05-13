@@ -3,6 +3,8 @@ package sbs.controller.bhptickets;
 import java.util.Date;
 
 import javax.validation.constraints.Future;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -28,6 +30,9 @@ public class TicketCreateForm {
 	int id;
 	String stateDescription;
 	int stateOrder;
+	@Min(1)
+	@Max(3)
+	int priority;
 	
 	public TicketCreateForm() {
 		
@@ -96,6 +101,14 @@ public class TicketCreateForm {
 
 	public void setStateOrder(int stateOrder) {
 		this.stateOrder = stateOrder;
+	}
+	
+	public int getPriority() {
+		return priority;
+	}
+
+	public void setPriority(int priority) {
+		this.priority = priority;
 	}
 
 	@Override

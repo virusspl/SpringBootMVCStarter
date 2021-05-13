@@ -1,6 +1,7 @@
 package sbs.service.bhptickets;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -59,6 +60,11 @@ public class BhpTicketsServiceImpl extends GenericServiceAdapter<BhpTicket, Inte
 			} 
 		}
 		return result;
+	}
+
+	@Override
+	public List<BhpTicket> findAllInPeriod(Date startDate, Date endDate) {
+		return bhpTicketsRepository.findAllInPeriod(startDate, endDate);
 	}
 	
 	

@@ -3,6 +3,7 @@ package sbs.helpers;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -69,6 +70,19 @@ public class DateHelper implements Serializable{
 	
 	public String convertMinutesToHours(int minutes){
 		return String.format("%02d", minutes/60) + ":" + String.format("%02d", minutes%60); 
+	}
+	
+	/**
+	 * 
+	 * @param millis
+	 * @return days, hours, minutes
+	 */
+	public String convertMillisToTimeString(long millis){
+        Duration duration = Duration.ofMillis(millis);
+        return String.format("%dd %dh %dm", 
+                duration.toDays(),
+                duration.toHours() % 24, 
+                duration.toMinutes() % 60);
 	}
 	
 	public String formatDdMmYyyy(Date date){

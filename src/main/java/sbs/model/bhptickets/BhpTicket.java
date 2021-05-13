@@ -65,6 +65,12 @@ public class BhpTicket {
 	@Column(name = "bhpt_tosend", nullable=false)
 	private Boolean toSend;
 	
+	@Column(name = "bhpt_reopened", nullable=false)
+	private Boolean reopened;
+	
+	@Column(name = "bhpt_priority", nullable=false)
+	private int priority;
+	
 
 	public BhpTicket() {
 
@@ -75,6 +81,15 @@ public class BhpTicket {
 		return state;
 	}
 
+
+	public int getPriority() {
+		return priority;
+	}
+
+
+	public void setPriority(int priority) {
+		this.priority = priority;
+	}
 
 
 	public void setState(BhpTicketState state) {
@@ -202,14 +217,24 @@ public class BhpTicket {
 	}
 
 
-
 	public void setToSend(Boolean toSend) {
 		this.toSend = toSend;
 	}
+	
+
+	public Boolean getReopened() {
+		return reopened;
+	}
+
+
+	public void setReopened(Boolean reopened) {
+		this.reopened = reopened;
+	}
+
 
 	@Override
 	public String toString() {
-		return "BhpTicket [state=" + state + ", creator=" + creator + ", assignedUser=" + assignedUser + ", id=" + id
+		return "BhpTicket [state=" + state.getDescription() + ", creator=" + creator.getUsername() + ", assignedUser=" + assignedUser.getUsername() + ", id=" + id
 				+ ", title=" + title + ", description=" + description + ", comment=" + comment + ", utrComment="
 				+ utrComment + ", creationDate=" + creationDate + ", updateDate=" + updateDate + ", toDoDate="
 				+ toDoDate + ", toSend=" + toSend + "]";

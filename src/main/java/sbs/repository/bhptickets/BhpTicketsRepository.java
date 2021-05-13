@@ -1,5 +1,6 @@
 package sbs.repository.bhptickets;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -14,6 +15,7 @@ public interface BhpTicketsRepository extends GenericRepository<BhpTicket,Intege
 	List<BhpTicket> findAllNotArchivedTickets();
 	List<BhpTicket> findArchivedTickets();
 	List<BhpTicket> findAllPendingTickets();
+	List<BhpTicket> findAllInPeriod(Date startDate, Date endDate);
 	
 }
 

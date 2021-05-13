@@ -1,5 +1,6 @@
 package sbs.service.bhptickets;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -14,5 +15,6 @@ public interface BhpTicketsService extends GenericService<BhpTicket, Integer>{
 	public List<BhpTicket> findAllNotArchivedTickets();
 	public List<BhpTicket> findArchivedTickets();
 	public List<BhpTicket> findPendingUtrTickets();
+	public List<BhpTicket> findAllInPeriod(Date startDate, Date endDate);
 	
 }

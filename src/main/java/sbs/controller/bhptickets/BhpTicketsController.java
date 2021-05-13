@@ -10,6 +10,7 @@ import java.nio.file.attribute.FileTime;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -69,6 +70,68 @@ public class BhpTicketsController {
 	@RequestMapping(value = "/dispatch")
 	public String dispatch() {
 		return "bhptickets/dispatch";
+	}
+	
+	@RequestMapping(value = "/summary")
+	public String summary(Model model) {
+		BhpTicketsSummaryForm bhpTicketsSummaryForm = new BhpTicketsSummaryForm();
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		cal.add(Calendar.MONTH, -1);
+		bhpTicketsSummaryForm.setStartDate(new Timestamp(cal.getTimeInMillis()));
+		cal = Calendar.getInstance();
+		cal.add(Calendar.MONTH, -1);
+		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+		bhpTicketsSummaryForm.setEndDate(new Timestamp(cal.getTimeInMillis()));
+		model.addAttribute("bhpTicketsSummaryForm", bhpTicketsSummaryForm);
+		return "bhptickets/summary";
+	}
+	
+	@RequestMapping(value = "/makesummary", method = RequestMethod.POST)
+	public String viewList(@Valid BhpTicketsSummaryForm bhpTicketsSummaryForm, BindingResult bindingResult, Model model,
+			RedirectAttributes redirectAttrs, Locale locale) {
+		
+		if (bindingResult.hasErrors()) {
+			return "bhptickets/summary";
+		}
+		
+		List<BhpTicket> tickets = bhpTicketsService.findAllInPeriod(bhpTicketsSummaryForm.getStartDate(), bhpTicketsSummaryForm.getEndDate());
+		TicketsSummary lowSummary = this.makeSummary(tickets, bhpTicketsSummaryForm.getCompany(), 1);
+		TicketsSummary mediumSummary = this.makeSummary(tickets, bhpTicketsSummaryForm.getCompany(), 2);
+		TicketsSummary highSummary = this.makeSummary(tickets, bhpTicketsSummaryForm.getCompany(), 3);
+		TicketsSummary totalSummary = this.makeSummary(tickets, bhpTicketsSummaryForm.getCompany(), 0);
+		List<TicketsSummary> list = new ArrayList<>();
+		list.add(lowSummary);
+		list.add(mediumSummary);
+		list.add(highSummary);
+		list.add(totalSummary);
+		
+		model.addAttribute("company", bhpTicketsSummaryForm.getCompany());
+		model.addAttribute("period", dateHelper.formatDdMmYy(bhpTicketsSummaryForm.getStartDate()) + " - " + dateHelper.formatDdMmYy(bhpTicketsSummaryForm.getEndDate()));
+		model.addAttribute("summaryList", list);
+		
+		
+		
+		return "/bhptickets/summary";		
+
+	}
+ 
+	private TicketsSummary makeSummary(List<BhpTicket> tickets, String company, int priority) {
+		TicketsSummary summary = new TicketsSummary();
+		
+		for(BhpTicket ticket: tickets) {
+			// skip if different company
+			if(!ticket.getAssignedUser().getCompany().equalsIgnoreCase(company)) {
+				continue;
+			}
+			// skip if different priority (accept all if demand priority is 0)
+			if(priority != 0 && ticket.getPriority()!=priority) {
+				continue;
+			}
+			summary.addTicket(ticket);
+		}
+		summary.calculateResults();
+		return summary;
 	}
 
 	@RequestMapping("/sendemails")
@@ -163,8 +226,6 @@ public class BhpTicketsController {
 			}
 		}
 
-		System.out.println(transferCreateForm.getFromUserId() + " --> " + transferCreateForm.getToUserId());
-
 		// redirect
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/bhptickets/create/transfer";
@@ -186,6 +247,7 @@ public class BhpTicketsController {
 		ticketCreateForm.setId(ticket.getId());
 		ticketCreateForm.setStateDescription(ticket.getState().getDescription());
 		ticketCreateForm.setStateOrder(ticket.getState().getOrder());
+		ticketCreateForm.setPriority(ticket.getPriority());
 		model.addAttribute("ticketCreateForm", ticketCreateForm);
 		model.addAttribute("bhpUsers", userService.findByRole("ROLE_BHPTICKETSUSER"));
 
@@ -229,6 +291,9 @@ public class BhpTicketsController {
 		ticket.setComment("");
 		ticket.setUtrComment("");
 		ticket.setToSend(true);
+		ticket.setReopened(false);
+		ticket.setPriority(ticketCreateForm.getPriority());
+		
 		// relations
 		// state
 		BhpTicketState state = bhpTicketStateService.findByOrder(10);
@@ -278,6 +343,7 @@ public class BhpTicketsController {
 		BhpTicketState reopenState = bhpTicketStateService.findByOrder(25);
 		ticket.setState(reopenState);
 		ticket.setToSend(true);
+		ticket.setReopened(true);
 		reopenState.getTickets().add(ticket);
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
 		return "redirect:/bhptickets/list";
@@ -312,6 +378,7 @@ public class BhpTicketsController {
 		ticket.setTitle(ticketEditForm.getTitle());
 		ticket.setDescription(ticketEditForm.getDescription());
 		ticket.setToSend(ticketEditForm.isToSend());
+		ticket.setPriority(ticketEditForm.getPriority());
 
 		// assigned user
 		User newAssignedUser = userService.findById(ticketEditForm.getAssignedUser());

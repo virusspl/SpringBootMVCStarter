@@ -34,14 +34,21 @@
 			</div>
 			<div class="col-xs-12 margin-top-10">
 				<a class="btn btn-info btn-md margin-top-5"
-					th:href="@{/bhptickets/create}"> <span
+					th:href="@{/bhptickets/create}"
+					sec:authorize="hasAnyRole('ROLE_BHPMANAGER', 'ROLE_ADMIN')"> <span
 					class="glyphicon glyphicon-link" style="margin-right: 10px;"></span>
 					<span th:text="#{action.create}">begin</span>
 				</a> 
+				<a class="btn btn-info btn-md margin-top-5"
+					th:href="@{/bhptickets/summary}"> <span
+					class="glyphicon glyphicon-align-left" style="margin-right: 10px;"></span>
+					<span th:text="#{general.summary}">begin</span>
+				</a>
 				<!-- http://codecouple.pl/2016/09/30/8-spring-boot-email-szablon-i-wysylanie/ -->
 				<a class="btn btn-info btn-md margin-top-5"
 					th:onclick="|return confirm('#{general.areyousure}')|"
-					th:href="@{/bhptickets/sendemails}"> <span
+					th:href="@{/bhptickets/sendemails}"
+					sec:authorize="hasAnyRole('ROLE_BHPMANAGER', 'ROLE_ADMIN')"> <span
 					class="glyphicon glyphicon-envelope" style="margin-right: 10px;"></span>
 					<span th:text="#{bhp.tickets.send.emails}">begin</span>
 				</a>

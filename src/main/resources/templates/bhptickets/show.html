@@ -85,6 +85,16 @@
 								th:text="${ticket.state.description}">title</span>
 						</div>
 					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label for="priority" th:text="#{general.priority}">Title</label> 
+							<span class="form-control" id="priority">
+							<span th:if="${ticket.priority} == 1" th:text="#{bhp.tickets.priority.low}"></span>
+							<span th:if="${ticket.priority} == 2" th:text="#{bhp.tickets.priority.medium}"></span>
+							<span th:if="${ticket.priority} == 3" th:text="#{bhp.tickets.priority.high}"></span>
+							</span> 
+						</div>
+					</div>
 				</div>
 			</div>
 			<!-- BHP TICKET FORM -->

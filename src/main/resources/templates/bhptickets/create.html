@@ -13,6 +13,9 @@
 		<script>
 			$('#assignedUser').selectize();
 		</script>
+		<script>
+			$('#priority').selectize();
+		</script>
 		<!-- DATEPICKER -->
 		<script th:src="@{/datepicker/js/bootstrap-datepicker.min.js}"
 			charset="UTF-8" type="text/javascript"></script>
@@ -105,6 +108,23 @@
 						<div th:errors="*{assignedUser}"
 							class="alert alert-danger margin-top-5">error</div>
 					</div>
+				</div>
+				<div class="col-xs-6 col-sm-4">
+				
+				<div class="form-group">
+						<label for="priority" th:text="#{general.priority}">txt</label> <select
+							class="form-control" id="priority" name="priority"
+							th:placeholder="#{general.priority}" th:field="*{priority}">
+							
+							<option value="0" th:text="|#{action.choose}...|"></option>
+							<option value="1" th:text="#{bhp.tickets.priority.low}"></option>
+							<option value="2" th:text="#{bhp.tickets.priority.medium}"></option>
+							<option value="3" th:text="#{bhp.tickets.priority.high}"></option>
+						</select>
+						<div th:errors="*{priority}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				
 				</div>
 			</div>
 			<div class="row margin-top-10">

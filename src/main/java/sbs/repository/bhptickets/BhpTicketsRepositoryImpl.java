@@ -1,5 +1,6 @@
 package sbs.repository.bhptickets;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -74,6 +75,16 @@ public class BhpTicketsRepositoryImpl extends GenericRepositoryAdapter<BhpTicket
 		Criteria crit = currentSession().createCriteria(BhpTicket.class, "ticket");
 		crit.createAlias("ticket.state", "state");
 		crit.add(Restrictions.ge("state.order", 90));
+		return crit.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public List<BhpTicket> findAllInPeriod(Date startDate, Date endDate) {
+		Criteria crit = currentSession().createCriteria(BhpTicket.class, "ticket");
+		crit.add(Restrictions.ge("ticket.creationDate", startDate));
+		crit.add(Restrictions.le("ticket.creationDate", endDate));
 		return crit.list();
 	}
 
