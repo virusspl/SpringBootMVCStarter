@@ -102,6 +102,15 @@ public class QSurvey {
 	@Column(name = "qs_order_sales_number", length = 25, nullable = false)
 	private String orderSalesNumber;
 	
+	@Column(name = "qs_confirmed", nullable = false)
+	private Boolean confirmed;
+	
+	@Column(name = "qs_confirmation_user_name", length = 50, nullable = false)
+	private String confirmationUserName;
+	
+	@Column(name = "qs_confirmation_date", nullable = true)
+	private Timestamp confirmationDate;
+	
 	public QSurvey() {
 	
 	}
@@ -304,6 +313,30 @@ public class QSurvey {
 
 	public void setOrderSalesNumber(String orderSalesNumber) {
 		this.orderSalesNumber = orderSalesNumber;
+	}
+
+	public Boolean getConfirmed() {
+		return confirmed;
+	}
+
+	public void setConfirmed(Boolean confirmed) {
+		this.confirmed = confirmed;
+	}
+
+	public String getConfirmationUserName() {
+		return confirmationUserName;
+	}
+
+	public void setConfirmationUserName(String confirmationUserName) {
+		this.confirmationUserName = confirmationUserName;
+	}
+
+	public Timestamp getConfirmationDate() {
+		return confirmationDate;
+	}
+
+	public void setConfirmationDate(Timestamp confirmationDate) {
+		this.confirmationDate = confirmationDate;
 	}
 
 	@Override

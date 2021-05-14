@@ -74,9 +74,9 @@ public class QSurveysController {
 	MessageSource messageSource;
 	@Autowired
 	TextHelper textHelper;
-	@Autowired 
+	@Autowired
 	UploadController uploadController;
- 
+
 	@ModelAttribute("sessionInfo")
 	public QSurveySessionInfo sessionInfo() {
 		return sessionInfo;
@@ -86,90 +86,92 @@ public class QSurveysController {
 	public String dispatch() {
 		return "qsurveys/dispatch";
 	}
-	
+
 	@RequestMapping(value = "/list")
 	public String list(Model model) {
-		
+
 		model.addAttribute("qSurveyListForm", getFormWithInitDates());
-		
+
 		return "qsurveys/list";
 	}
-	
-	private QSurveyListForm getFormWithInitDates () {{
-		QSurveyListForm qSurveyListForm = new QSurveyListForm();
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.MONTH, -1);
-		//cal.set(Calendar.DAY_OF_MONTH, 1);
-		qSurveyListForm.setStartDate(new Timestamp(cal.getTimeInMillis()));
-		
-		cal = Calendar.getInstance();
-		//cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-		qSurveyListForm.setEndDate(new Timestamp(cal.getTimeInMillis()));
-		return qSurveyListForm;
+
+	private QSurveyListForm getFormWithInitDates() {
+		{
+			QSurveyListForm qSurveyListForm = new QSurveyListForm();
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.MONTH, -1);
+			// cal.set(Calendar.DAY_OF_MONTH, 1);
+			qSurveyListForm.setStartDate(new Timestamp(cal.getTimeInMillis()));
+
+			cal = Calendar.getInstance();
+			// cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+			qSurveyListForm.setEndDate(new Timestamp(cal.getTimeInMillis()));
+			return qSurveyListForm;
+		}
+
 	}
-		
-	}
-	
+
 	@RequestMapping(value = "/makelist", params = { "viewlist" }, method = RequestMethod.POST)
 	public String viewList(@Valid QSurveyListForm qSurveyListForm, BindingResult bindingResult, Model model,
 			RedirectAttributes redirectAttrs, Locale locale) {
-		
+
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("qSurveyListForm", getFormWithInitDates());
 			return "qsurveys/list";
 		}
-		model.addAttribute("surveys", surveysService.findInPeriodSortByDateDesc(qSurveyListForm.getStartDate(), qSurveyListForm.getEndDate()));
-		//model.addAttribute("surveys", surveysService.findAllSortByDateDesc());
+		model.addAttribute("surveys", surveysService.findInPeriodSortByDateDesc(qSurveyListForm.getStartDate(),
+				qSurveyListForm.getEndDate()));
+		// model.addAttribute("surveys", surveysService.findAllSortByDateDesc());
 		return "qsurveys/list";
-				
+
 	}
-	
-	
+
 	@RequestMapping("/show/{id}")
 	@Transactional
-	public String showSurvey(@PathVariable("id") int id, Model model, Locale locale) throws NoSuchMessageException, NotFoundException {
+	public String showSurvey(@PathVariable("id") int id, Model model, Locale locale)
+			throws NoSuchMessageException, NotFoundException {
 		boolean noBomDate = false;
 		boolean noTemplateDate = false;
-		
+
 		QSurvey survey = surveysService.findById(id);
-		if(survey == null){
+		if (survey == null) {
 			throw new NotFoundException(messageSource.getMessage("qsurveys.error.survey.not.found", null, locale));
 		}
-		
+
 		// bom answers
-		if(survey.getBomSurveyDate()==null){
+		if (survey.getBomSurveyDate() == null) {
 			noBomDate = true;
 			model.addAttribute("noBomDate", noBomDate);
-		}else{
+		} else {
 			model.addAttribute("bomAnswers", bomAnswersService.findBySurveyId(survey.getId()));
 		}
-		
+
 		// template answers
-		if(survey.getTemplateSurveyDate()==null){
+		if (survey.getTemplateSurveyDate() == null) {
 			noTemplateDate = true;
 			model.addAttribute("noTemplateDate", noTemplateDate);
-		}
-		else{
+		} else {
 			model.addAttribute("answers", answersService.findBySurveyId(survey.getId()));
 		}
-		
-		model.addAttribute("photos", uploadController.listFiles(uploadController.getqSurveysPhotoPath()+"/"+survey.getId()));
-		model.addAttribute("surveyInfo",survey);
+
+		model.addAttribute("photos",
+				uploadController.listFiles(uploadController.getqSurveysPhotoPath() + "/" + survey.getId()));
+		model.addAttribute("surveyInfo", survey);
 		return "qsurveys/show";
 	}
-	
 
-	
 	@RequestMapping(value = "/make", params = { "bom" }, method = RequestMethod.POST)
 	@Transactional
-	public String showMakeBomSurvey(@RequestParam String bom, RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
+	public String showMakeBomSurvey(@RequestParam String bom, RedirectAttributes redirectAttrs, Locale locale,
+			Model model) throws NotFoundException {
 
 		QSurvey survey = surveysService.findById(Integer.parseInt(bom));
 		if (survey == null) {
 			throw new NotFoundException("Survey not found");
 		}
 
-		List<X3BomItem> items = x3Service.findProductionPartsByProductionOrderAndOperation("ATW", survey.getOrderNumber(), Integer.parseInt(survey.getOrderOperation()));
+		List<X3BomItem> items = x3Service.findProductionPartsByProductionOrderAndOperation("ATW",
+				survey.getOrderNumber(), Integer.parseInt(survey.getOrderOperation()));
 
 		BomItem item;
 		FormBom form = new FormBom();
@@ -178,14 +180,34 @@ public class QSurveysController {
 			item = new BomItem(items.get(i), survey.getOrderQuantityChecked());
 			form.getItems().add(item);
 		}
-		
+
 		model.addAttribute("formBom", form);
 		model.addAttribute("surveyInfo", survey);
 
 		return "qsurveys/bomsurvey";
 
 	}
-	
+
+	@RequestMapping(value = "/confirm", params = { "surveyId" }, method = RequestMethod.POST)
+	@Transactional
+	public String switchConfirmation(@RequestParam String surveyId, RedirectAttributes redirectAttrs, Locale locale,
+			Model model) throws NotFoundException {
+
+		QSurvey survey = surveysService.findById(Integer.parseInt(surveyId));
+		if (survey == null) {
+			throw new NotFoundException("Survey not found");
+		}
+
+		survey.setConfirmed(!survey.getConfirmed());
+		survey.setConfirmationUserName(userService.getAuthenticatedUser().getName());
+		survey.setConfirmationDate(new Timestamp(new java.util.Date().getTime()));
+
+		// redirect
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
+		return "redirect:/qsurveys/show/" + survey.getId();
+
+	}
+
 	@RequestMapping(value = "/savebom", params = { "bom" }, method = RequestMethod.POST)
 	@Transactional
 	public String finishBomSurvey(@RequestParam String bom, FormBom formBom, BindingResult bindingResult, Locale locale,
@@ -195,7 +217,7 @@ public class QSurveysController {
 		if (survey == null) {
 			throw new NotFoundException("Survey not found");
 		}
-		
+
 		QSurveyBomAnswer bsa;
 		BomItem bsi;
 		ArrayList<QSurveyBomAnswer> answers = new ArrayList<>();
@@ -209,27 +231,27 @@ public class QSurveysController {
 
 			// if empty
 			if (bsi.getAnswerQuantity().trim().length() == 0) {
-				bindingResult.rejectValue("items[" + i + "].answerQuantity", "qsurveys.error.missing.value",
-						"ERROR");
+				bindingResult.rejectValue("items[" + i + "].answerQuantity", "qsurveys.error.missing.value", "ERROR");
 				continue;
-			}			
-			
+			}
+
 			try {
 				stringAnswer = bsi.getAnswerQuantity().trim().replace(',', '.');
 				answer = Double.valueOf(stringAnswer);
-				
-				// for INT only				
+
+				// for INT only
 				// if(bsi.getModelUnit().equals("UN")){
-				// if ((bsi.getModelQuantity() == Math.floor(bsi.getModelQuantity())) && !Double.isInfinite(bsi.getModelQuantity())) {
-				if(bsi.getModelQuantity() % 1 == 0) {
-					// check quantity 
-					if(Double.compare(answer, bsi.getModelQuantity())!=0){
-						bindingResult.rejectValue("items[" + i + "].answerQuantity", "qsurveys.error.value.not.match.model",
-								"ERROR");
+				// if ((bsi.getModelQuantity() == Math.floor(bsi.getModelQuantity())) &&
+				// !Double.isInfinite(bsi.getModelQuantity())) {
+				if (bsi.getModelQuantity() % 1 == 0) {
+					// check quantity
+					if (Double.compare(answer, bsi.getModelQuantity()) != 0) {
+						bindingResult.rejectValue("items[" + i + "].answerQuantity",
+								"qsurveys.error.value.not.match.model", "ERROR");
 						continue;
 					}
 				}
-				
+
 				bsa.setBomSeq(bsi.getSequence());
 				bsa.setPartCode(bsi.getPartCode());
 				bsa.setPartDescription(bsi.getPartDescription());
@@ -237,7 +259,7 @@ public class QSurveysController {
 				bsa.setModelQuantity(bsi.getModelQuantity());
 				bsa.setAnswerQuantity(answer);
 				bsa.setComment(bsi.getComment().trim());
-				
+
 				// survey one-to-many
 				bsa.setSurvey(survey);
 				survey.getBomAnswers().add(bsa);
@@ -246,14 +268,12 @@ public class QSurveysController {
 
 			} catch (NumberFormatException ex) {
 				// if not number
-				bindingResult.rejectValue("items[" + i + "].answerQuantity", "qsurveys.error.number.value",
-						"ERROR");
+				bindingResult.rejectValue("items[" + i + "].answerQuantity", "qsurveys.error.number.value", "ERROR");
 				continue;
 			}
-			
-			if(bsi.getComment().trim().length()>100) {
-				bindingResult.rejectValue("items[" + i + "].comment", "error.bad.length",
-						"ERROR");
+
+			if (bsi.getComment().trim().length() > 100) {
+				bindingResult.rejectValue("items[" + i + "].comment", "error.bad.length", "ERROR");
 				continue;
 			}
 		}
@@ -277,14 +297,14 @@ public class QSurveysController {
 
 		// redirect
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
-		return "redirect:/qsurveys/show/"+survey.getId();
+		return "redirect:/qsurveys/show/" + survey.getId();
 	}
-	
-	
+
 	@RequestMapping(value = "/make", params = { "template" }, method = RequestMethod.POST)
 	@Transactional
-	public String showMakeTemplateSurvey(@RequestParam String template, RedirectAttributes redirectAttrs, Locale locale, Model model) throws NotFoundException {
-		
+	public String showMakeTemplateSurvey(@RequestParam String template, RedirectAttributes redirectAttrs, Locale locale,
+			Model model) throws NotFoundException {
+
 		QSurvey survey = surveysService.findById(Integer.parseInt(template));
 		if (survey == null) {
 			throw new NotFoundException("Survey not found");
@@ -303,19 +323,20 @@ public class QSurveysController {
 		model.addAttribute("surveyInfo", survey);
 
 		return "qsurveys/templatesurvey";
-		
+
 	}
-	
+
 	@RequestMapping(value = "/savetemplate", params = { "template" }, method = RequestMethod.POST)
 	@Transactional
-	public String finishTemplateSurvey(@RequestParam String template, FormTemplate formTemplate, BindingResult bindingResult, Locale locale,
-			RedirectAttributes redirectAttrs, Model model) throws NotFoundException {
+	public String finishTemplateSurvey(@RequestParam String template, FormTemplate formTemplate,
+			BindingResult bindingResult, Locale locale, RedirectAttributes redirectAttrs, Model model)
+			throws NotFoundException {
 
 		QSurvey survey = surveysService.findById(Integer.parseInt(template));
 		if (survey == null) {
 			throw new NotFoundException("Survey not found");
 		}
-		  
+
 		QSurveyQuestionType type;
 		QSurveyAnswer sa;
 		QuestionItem qi;
@@ -323,15 +344,15 @@ public class QSurveysController {
 		boolean answerPresent;
 
 		for (int i = 0; i < formTemplate.items.size(); i++) {
-			answerPresent= false;
+			answerPresent = false;
 			qi = formTemplate.getItems().get(i);
 			sa = new QSurveyAnswer();
 
-			type =  questionTypesService.findById(qi.getTypeId());
+			type = questionTypesService.findById(qi.getTypeId());
 			if (type == null) {
 				throw new NotFoundException("No question type for id = " + qi.getTypeId());
 			}
-			
+
 			// save survive data
 			sa.setSurvey(survey);
 			sa.setType(type);
@@ -339,16 +360,14 @@ public class QSurveysController {
 			sa.setOrder(qi.getOrder());
 			sa.setShortQuestionText(qi.getShortText());
 			sa.setLongQuestionText(qi.getLongText());
-			if(qi.getComment().trim().length()<=100){
+			if (qi.getComment().trim().length() <= 100) {
 				sa.setComment(qi.getComment().trim());
+			} else {
+				bindingResult.rejectValue("items[" + i + "].comment", "error.bad.length", "ERROR");
 			}
-			else{
-				bindingResult.rejectValue("items[" + i + "].comment", "error.bad.length",
-						"ERROR");
-			}
-			
+
 			// save answers
-			if(type.getCode().equals("qsurveys.type.parameter")){
+			if (type.getCode().equals("qsurveys.type.parameter")) {
 				if (qi.getReferenceValue().trim().length() > 0 || qi.getCurrentValue().trim().length() > 0) {
 					if (qi.getReferenceValue().trim().length() > 0 && qi.getCurrentValue().trim().length() > 0) {
 						answerPresent = true;
@@ -356,24 +375,24 @@ public class QSurveysController {
 						sa.setValue(qi.getCurrentValue().trim());
 						sa.setBooleanValue(false);
 					} else {
-						bindingResult.rejectValue("items[" + i + "].referenceValue", "qsurveys.error.both.values", "ERROR");
-						bindingResult.rejectValue("items[" + i + "].currentValue", "qsurveys.error.both.values", "ERROR");
+						bindingResult.rejectValue("items[" + i + "].referenceValue", "qsurveys.error.both.values",
+								"ERROR");
+						bindingResult.rejectValue("items[" + i + "].currentValue", "qsurveys.error.both.values",
+								"ERROR");
 					}
 				}
-			}
-			else if(type.getCode().equals("qsurveys.type.boolean")){
-				if(qi.isBooleanValue()){
+			} else if (type.getCode().equals("qsurveys.type.boolean")) {
+				if (qi.isBooleanValue()) {
 					answerPresent = true;
 					sa.setReferenceValue("");
 					sa.setValue("");
 					sa.setBooleanValue(qi.isBooleanValue());
 				}
-			}
-			else{
+			} else {
 				throw new NotFoundException("No validator for type = " + qi.getTypeCode());
 			}
-			
-			if(answerPresent){
+
+			if (answerPresent) {
 				survey.getAnswers().add(sa);
 				answers.add(sa);
 			}
@@ -399,9 +418,8 @@ public class QSurveysController {
 
 		// redirect
 		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("action.saved", null, locale));
-		return "redirect:/qsurveys/show/"+survey.getId();
+		return "redirect:/qsurveys/show/" + survey.getId();
 	}
-	
 
 	@RequestMapping(value = "/templates")
 	public String templates(Model model) {
@@ -598,7 +616,7 @@ public class QSurveysController {
 
 		// VALIDATE USER
 		HrUserInfo hrUser = new HrUserInfo();
-		
+
 		if (!formSurveyCreate.isOperatorManual()) {
 			// USER CHOOSE
 			hrUser = hrService.findCurrentlyEmployedById(formSurveyCreate.getOperatorId(), JdbcOptimaService.DB_ADR);
@@ -610,30 +628,29 @@ public class QSurveysController {
 			// USER MANUAL
 			// id
 			size = formSurveyCreate.getManualOperatorId().length();
-			if(size > 10 || size < 1){
+			if (size > 10 || size < 1) {
 				bindingResult.rejectValue("manualOperatorId", "error.bad.length", "ERROR");
-			}
-			else{
+			} else {
 				formSurveyCreate.setManualOperatorId(formSurveyCreate.getManualOperatorId().toLowerCase());
 			}
-			
+
 			// first name
 			size = formSurveyCreate.getManualOperatorFirstName().length();
-			if(size > 45 || size < 1){
+			if (size > 45 || size < 1) {
 				bindingResult.rejectValue("manualOperatorFirstName", "error.bad.length", "ERROR");
-			}
-			else{
-				formSurveyCreate.setManualOperatorFirstName(textHelper.capitalizeFull(formSurveyCreate.getManualOperatorFirstName()));
+			} else {
+				formSurveyCreate.setManualOperatorFirstName(
+						textHelper.capitalizeFull(formSurveyCreate.getManualOperatorFirstName()));
 			}
 			// last name
 			size = formSurveyCreate.getManualOperatorLastName().length();
-			if(size > 65 || size < 1){
+			if (size > 65 || size < 1) {
 				bindingResult.rejectValue("manualOperatorLastName", "error.bad.length", "ERROR");
+			} else {
+				formSurveyCreate.setManualOperatorLastName(
+						textHelper.capitalizeFull(formSurveyCreate.getManualOperatorLastName()));
 			}
-			else{
-				formSurveyCreate.setManualOperatorLastName(textHelper.capitalizeFull(formSurveyCreate.getManualOperatorLastName()));
-			}
-			
+
 		}
 
 		// RETURN BEFORE ORDER IF NEEDED
@@ -678,6 +695,9 @@ public class QSurveysController {
 		survey.setTemplateSurveyDate(null);
 		survey.setBomSurveyDate(null);
 
+		survey.setConfirmed(false);
+		survey.setConfirmationUserName("");
+
 		survey.setComment(formSurveyCreate.getComment());
 		survey.setOrderQuantityChecked(formSurveyCreate.getQuantityChecked());
 
@@ -714,12 +734,12 @@ public class QSurveysController {
 		return "redirect:/qsurveys/show/" + survey.getId();
 
 	}
-	
+
 	@RequestMapping("/photos/{id}")
 	@Transactional
 	public String showPhotosForm(@PathVariable("id") int id, Model model, Locale locale) throws NotFoundException {
 		QSurvey survey = surveysService.findById(id);
-		if(survey == null){
+		if (survey == null) {
 			throw new NotFoundException(messageSource.getMessage("qsurveys.error.survey.not.found", null, locale));
 		}
 		model.addAttribute("survey", survey);

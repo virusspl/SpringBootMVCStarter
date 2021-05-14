@@ -287,6 +287,13 @@ public class VariousPagesController {
 			roleService.save(qualityUserRole);
 			msg += "[role: " + qualityUserRole.getName() + "], ";
 		}
+		Role qualityWorkerRole = roleService.findByName("ROLE_QSURVEYWORKER");
+		if (qualityWorkerRole == null) {
+			qualityWorkerRole = new Role();
+			qualityWorkerRole.setName("ROLE_QSURVEYWORKER");
+			roleService.save(qualityWorkerRole);
+			msg += "[role: " + qualityWorkerRole.getName() + "], ";
+		}
 
 		Role bhpManager = roleService.findByName("ROLE_BHPMANAGER");
 		if (bhpManager == null) {
