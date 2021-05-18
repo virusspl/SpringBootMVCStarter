@@ -372,6 +372,11 @@
 						class="btn btn-info btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-time"></span> <span
 						th:text="#{histock.histockacv}"></span>
+					</a> <a th:href="@{/payterm/main}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_PAYTERMANAGER')"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-time"></span> <span
+						th:text="#{payterm.payterm}"></span>
 					</a>
 					<!-- cancel -->
 					<a th:if="${CANCEL_THIS}" th:href="@{/proprog/list}"

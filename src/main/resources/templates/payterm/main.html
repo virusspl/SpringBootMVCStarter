@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script"></div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h2 th:text="|#{payterm.parameters}|" class="text-primary"></h2>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{payterm.parameters.message}"> Welcome
+					message </span>
+			</div>
+		</div>
+		<div class="row">
+			<!-- BACK TO MAIN PAGE -->
+			<a th:href="@{/}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+		<div class="underline margin-top-10"></div>
+		<!-- BHP TICKET FORM -->
+		<form th:action="@{/payterm/saveparams}" method="post"
+			th:object="${paymentTermsForm}">
+			<div class="row margin-top-10">
+				<div class="col-md-12 col-xs-12">
+					<div class="form-group">
+						<label for="clientsList"
+							th:text="|#{payterm.list.clients} (#{general.separated.semicolons})|">Description</label>
+						<input type="text" class="form-control" id="clientsList"
+							name="clientsList" th:placeholder="#{payterm.list.clients}"
+							autocomplete="off" th:field="*{clientsList}"></input>
+						<div th:errors="*{clientsList}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-md-6 col-xs-12">
+					<div class="form-group">
+						<label for="mailingList"
+							th:text="|#{payterm.list.mails} (#{general.separated.semicolons})|">Description</label>
+						<input type="text" class="form-control" id="mailingList"
+							name="mailingList" th:placeholder="#{payterm.list.mails}"
+							autocomplete="off" th:field="*{mailingList}"></input>
+						<div th:errors="*{mailingList}"
+							class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+				<div class="col-md-6 col-xs-12">
+					<div class="form-group">
+						<label for="clients" th:text="#{payterm.days}">Description</label>
+						<input type="text" class="form-control" id="days" name="days"
+							th:placeholder="#{payterm.days}" autocomplete="off"
+							th:field="*{days}"></input>
+						<div th:errors="*{days}" class="alert alert-danger margin-top-5">error</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="row margin-top-10">
+				<!-- BACK TO MAIN PAGE -->
+				<a th:href="@{/}" class="btn btn-link btn-sm"> <span
+					class="glyphicon glyphicon-menu-left"></span> <span
+					th:text="#{action.back}">back</span>
+				</a>
+				<button class="btn btn-primary btn-sm" type="submit" name="save">
+					<span class="glyphicon glyphicon-ok"></span> <span
+						th:text="#{action.save}">create</span>
+				</button>
+				<a class="btn btn-info btn-sm" id="notify"
+					th:onclick="|return confirm('#{general.unsaved.willbelost}. #{general.areyousure}')|"
+					th:href="@{/payterm/notify}"> <span
+					class="glyphicon glyphicon-envelope" style="margin-right: 10px;"></span>
+					<span th:text="#{payterm.notify}">begin</span>
+				</a>
+			</div>
+
+		</form>
+		<!-- /USER FORM -->
+	</div>
+</body>
+</html>

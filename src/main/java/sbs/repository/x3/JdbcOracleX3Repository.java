@@ -20,6 +20,7 @@ import sbs.model.x3.X3DeliverySimpleInfo;
 import sbs.model.x3.X3EnvironmentInfo;
 import sbs.model.x3.X3HistockRawEntry;
 import sbs.model.x3.X3KeyValString;
+import sbs.model.x3.X3PaymentTerm;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductEventsHistory;
 import sbs.model.x3.X3ProductMachine;
@@ -28,6 +29,7 @@ import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3PurchaseOrder;
 import sbs.model.x3.X3RouteLine;
 import sbs.model.x3.X3SaleInfo;
+import sbs.model.x3.X3SalesInvoice;
 import sbs.model.x3.X3SalesOrder;
 import sbs.model.x3.X3SalesOrderItem;
 import sbs.model.x3.X3SalesOrderLine;
@@ -150,6 +152,9 @@ public interface JdbcOracleX3Repository  {
 	public List<String> getComponentSuppliers(String component, String company);
 	public Map<String, String> findAllUsersMap(String company);
 	public Map<String, Double> getAverageCostsMap(String company);
+	public Map<String, X3PaymentTerm> getAllPaymentTerms(String company);
+	public List<X3SalesInvoice> getSalesInvoicesInPeriod(Date startDate, Date endDate, String company);
+	public Map<String, X3Client> findAllClientsMap(String company);
 	
 	
 	

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"></meta>
+<style>
+	body {
+		font-family: Calibri, "Trebuchet MS", Helvetica, sans-serif;
+	}
+	
+	table {
+		width: 100%;
+	}
+	
+	.color {
+		background: #5AC4F2;
+		color: #F3FBFE;
+		font-weight: bold;
+	}
+	
+	a {
+		color: #3AA4D2;
+	}
+	
+	td {
+		padding: 5px 10px 5px 10px;
+		border: 1px solid gray;
+	}
+	
+	.shortcell {
+		width: 13%;
+	}
+	.longcell {
+		width: 22%;
+	}
+	
+	#footer {
+		font-size: 80%;
+	}
+</style>
+</head>
+<body>
+	<table>
+		<!-- PAGE TITLE -->
+		<tr class="color">
+			<td>
+				<h1>Zbliżające się terminy płatności</h1>
+			</td>
+		</tr>
+		<tr>
+			<td><span>Poniżej znajduje się lista faktur, których data płatności mija
+			w ciągu kilku kolejnych dni (<span th:text="${days}"></span> - liczba dni ustalona w panelu konfiguracyjnym aplikacji)
+			</span></td>
+		</tr>
+	</table>
+	<!-- USERS LOOP -->
+	<table>
+		<tr>
+			<td class="color">
+			Kod klienta
+			</td>
+			<td class="color">
+			Nazwa
+			</td>
+			<td class="color">
+			Numer faktury
+			</td>
+			<td class="color">
+			Wartość
+			</td>
+			<td class="color">
+			Waluta
+			</td>
+			<td class="color">
+			Data powstania należności
+			</td>
+			<td class="color">
+			Warunki płatności
+			</td>
+		</tr>
+		<!-- TICKETS LOOP -->
+		<tr th:each="inv: ${list}">
+			<td class="shortcell"><span th:text="|${inv.client}|"></span></td>
+			<td class="longcell"><span th:text="|${inv.clientName}|"></span></td>
+			<td class="shortcell"><span th:text="|${inv.number}|"></span></td>
+			<td class="shortcell"><span th:text="|${inv.value}|"></span></td>
+			<td class="shortcell"><span th:text="|${inv.currency}|"></span></td>
+			<td class="shortcell"><span th:text="|${#dates.format(inv.paymentStartDueDate, 'dd.MM.yyyy')}|"></span></td>
+			<td class="shortcell"><span th:text="|${inv.paymentTerms}|"></span></td>
+		</tr>
+	</table>
+	<!-- FOOTER -->
+	<table>
+		<tr id="footer">
+			<td class="color"><span>Mail został wygenerowany
+					automatycznie przez aplikację webową ADR Polska, moduł
+					zbliżających się płatności [payterm]. Proszę nie odpowiadać na tę wiadomość.</span></td>
+		</tr>
+	</table>
+</body>
+</html>

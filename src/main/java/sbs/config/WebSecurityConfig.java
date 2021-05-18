@@ -334,6 +334,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"ADMIN", 
 				"HISTOCKUSER"
 				)		
+		.antMatchers(
+				"/payterm/**"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"PAYTERMANAGER"
+				)		
 		 // ** old modules to delete **
 		.antMatchers(
 				"/qualitysurveys/**")

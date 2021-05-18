@@ -28,6 +28,7 @@ import sbs.model.x3.X3DeliverySimpleInfo;
 import sbs.model.x3.X3EnvironmentInfo;
 import sbs.model.x3.X3HistockRawEntry;
 import sbs.model.x3.X3KeyValString;
+import sbs.model.x3.X3PaymentTerm;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductEventsHistory;
 import sbs.model.x3.X3ProductMachine;
@@ -36,6 +37,7 @@ import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3PurchaseOrder;
 import sbs.model.x3.X3RouteLine;
 import sbs.model.x3.X3SaleInfo;
+import sbs.model.x3.X3SalesInvoice;
 import sbs.model.x3.X3SalesOrder;
 import sbs.model.x3.X3SalesOrderItem;
 import sbs.model.x3.X3SalesOrderLine;
@@ -92,6 +94,11 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	@Cacheable(value = "x3AllClients")
 	public List<X3Client> findAllClients(String company) {
 		return jdbcOracleX3Repository.findAllClients(company);
+	}
+	
+	@Override
+	public Map<String, X3Client> findAllClientsMap(String company) {
+		return jdbcOracleX3Repository.findAllClientsMap(company);
 	}
 
 	@Override
@@ -748,6 +755,18 @@ public class JdbcOracleX3ServiceImpl implements JdbcOracleX3Service {
 	public Map<Integer, String> getX3Menu(String company, int menu, String x3language) {
 		return jdbcOracleX3Repository.getX3Menu(company, menu, x3language);
 	}
+
+	@Override
+	public Map<String, X3PaymentTerm> getAllPaymentTerms(String company) {
+		return jdbcOracleX3Repository.getAllPaymentTerms(company);
+	}
+
+	@Override
+	public List<X3SalesInvoice> getSalesInvoicesInPeriod(Date startDate, Date endDate, String company) {
+		return jdbcOracleX3Repository.getSalesInvoicesInPeriod(startDate, endDate, company);
+	}
+
+
 
 
 

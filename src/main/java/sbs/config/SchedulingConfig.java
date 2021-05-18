@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import sbs.scheduling.AverageDeliveryDaysScheduler;
 import sbs.scheduling.DocViewCacheScheduler;
 import sbs.scheduling.GarbageCollectorScheduler;
+import sbs.scheduling.PaymentTermsScheduler;
 import sbs.scheduling.StandardCostsScheduler;
 
 @Configuration
@@ -31,6 +32,11 @@ public class SchedulingConfig {
 	@Bean
 	public GarbageCollectorScheduler garbageCollectorScheduler(){
 		return new GarbageCollectorScheduler();
+	}
+	
+	@Bean
+	public PaymentTermsScheduler paymentTermsScheduler(){
+		return new PaymentTermsScheduler();
 	}
 	
 	

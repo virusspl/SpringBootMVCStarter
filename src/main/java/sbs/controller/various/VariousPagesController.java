@@ -26,6 +26,7 @@ import sbs.model.bhptickets.BhpTicketState;
 import sbs.model.downtimes.DowntimeResponseType;
 import sbs.model.downtimes.DowntimeType;
 import sbs.model.inventory.InventoryDataType;
+import sbs.model.payterm.PaymentTermsParameter;
 import sbs.model.qcheck.QCheckState;
 import sbs.model.qsurveys.QSurveyQuestionType;
 import sbs.model.shipcust.ShipCustLineState;
@@ -34,7 +35,7 @@ import sbs.model.shipments.ShipmentState;
 import sbs.model.tools.ToolsProjectState;
 import sbs.model.users.Role;
 import sbs.model.users.User;
-import sbs.scheduling.StandardCostsScheduler;
+import sbs.scheduling.PaymentTermsScheduler;
 import sbs.service.bhptickets.BhpTicketStateService;
 import sbs.service.bhptickets.BhpTicketsService;
 import sbs.service.downtimes.DowntimeResponseTypesService;
@@ -43,6 +44,7 @@ import sbs.service.geode.JdbcOracleGeodeService;
 import sbs.service.inventory.InventoryDataTypesService;
 import sbs.service.mail.MailService;
 import sbs.service.optima.JdbcOptimaService;
+import sbs.service.payterm.PaymentTermsParametersService;
 import sbs.service.qcheck.QCheckStatesService;
 import sbs.service.qsurveys.QSurveyQuestionTypesService;
 import sbs.service.redmine.RedmineService;
@@ -104,11 +106,16 @@ public class VariousPagesController {
 	@Autowired
 	MemoryService memoryService;
 	@Autowired
-	StandardCostsScheduler costsScheduler;
+	PaymentTermsParametersService paymentTermsParametersService;
+	@Autowired
+	PaymentTermsScheduler termsScheduler;
 	
 	@RequestMapping("/test")
 	public String test(Model model, Locale locale) throws InterruptedException {
 
+		//termsScheduler.schedulePaymentNotifications();
+		//termsScheduler.schedulePaymentNotifications();
+		
 		//Map<String, X3ProductMachine> mach = x3Service.findX3ProductFirstMachines("ATW");
 		//System.out.println(mach.containsKey("RZ08L006") ? mach.get("RZ08L006").getMachineCode() : "-");
 		
@@ -652,6 +659,14 @@ public class VariousPagesController {
 			msg += "[role: " + histock.getName() + "], ";
 		}
 		
+		Role payterm = roleService.findByName("ROLE_PAYTERMANAGER");
+		if (payterm == null) {
+			payterm = new Role();
+			payterm.setName("ROLE_PAYTERMANAGER");
+			roleService.save(payterm);
+			msg += "[role: " + payterm.getName() + "], ";
+		}
+		
 		// ROLE END
 
 		User admin = userService.findByUsername("Admin");
@@ -1150,6 +1165,33 @@ public class VariousPagesController {
 			msg += "[shipCustLineState: " + shipCustLineState.getOrder() + " " + shipCustLineState.getTitle() + "], ";
 		}
 		
+		PaymentTermsParameter paymentTermsParameter;
+		
+		if (paymentTermsParametersService.findByCode("pay.param.mailing.list") == null) {
+			paymentTermsParameter = new PaymentTermsParameter();
+			paymentTermsParameter.setCode("pay.param.mailing.list");
+			paymentTermsParameter.setDescription("mailing list, separate by ;");
+			paymentTermsParameter.setValue("");
+			paymentTermsParametersService.save(paymentTermsParameter);
+			msg += "[PaymentTermsParameter: " + paymentTermsParameter.getCode() + " " + paymentTermsParameter.getDescription() + "], ";
+		}
+		if (paymentTermsParametersService.findByCode("pay.param.client.list") == null) {
+			paymentTermsParameter = new PaymentTermsParameter();
+			paymentTermsParameter.setCode("pay.param.client.list");
+			paymentTermsParameter.setDescription("clients list, separate by ;");
+			paymentTermsParameter.setValue("");
+			paymentTermsParametersService.save(paymentTermsParameter);
+			msg += "[PaymentTermsParameter: " + paymentTermsParameter.getCode() + " " + paymentTermsParameter.getDescription() + "], ";
+		}
+		if (paymentTermsParametersService.findByCode("pay.param.days.before") == null) {
+			paymentTermsParameter = new PaymentTermsParameter();
+			paymentTermsParameter.setCode("pay.param.days.before");
+			paymentTermsParameter.setDescription("number of days before (string)");
+			paymentTermsParameter.setValue("-1");
+			paymentTermsParametersService.save(paymentTermsParameter);
+			msg += "[PaymentTermsParameter: " + paymentTermsParameter.getCode() + " " + paymentTermsParameter.getDescription() + "], ";
+		}
+
 		
 		InventoryDataType invDataType;
 		// i18n codes

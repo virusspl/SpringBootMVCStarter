@@ -1,12 +1,7 @@
 package sbs.scheduling;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.mail.MessagingException;
 
@@ -17,106 +12,53 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import sbs.helpers.DateHelper;
+import sbs.controller.payterm.PaymentTermsBean;
+import sbs.model.x3.X3SalesInvoice;
 import sbs.service.mail.MailService;
 
-public class RmgtScheduler {
+public class PaymentTermsScheduler {
 
+	
+	@Autowired
+	PaymentTermsBean termBean;
 	@Autowired
 	MailService mailService;
 	@Autowired
 	TemplateEngine templateEngine;
-	@Autowired
-	DateHelper dateHelper;
 
-	private ArrayList<String> urls;
-	private ArrayList<String> oldUrls;
-	private String source;
 
 	Logger logger;
 	
-	public RmgtScheduler() {
+	public PaymentTermsScheduler() {
 		// CRON format: second, minute, hour, day, month, weekday
-		logger = LoggerFactory.getLogger(RmgtScheduler.class);
-		this.urls = new ArrayList<String>();
-		this.oldUrls = new ArrayList<String>();
-		this.source = "https://www.otomoto.pl/osobowe/renault/megane/seg-city-car--seg-compact--seg-sedan/od-2016/?search%5Bfilter_float_engine_power%3Afrom%5D=200&search%5Bfilter_float_engine_power%3Ato%5D=250&search%5Bfilter_enum_damaged%5D=0&search%5Border%5D=created_at_first%3Adesc&search%5Bbrand_program_id%5D%5B0%5D=&search%5Bcountry%5D=";
+		logger = LoggerFactory.getLogger(PaymentTermsScheduler.class);
 	}
 
-	@Scheduled(cron = "0 0 * * * *")
-	public String scheduleRMGT() {
-		URL address;
+	@Scheduled(cron = "0 0 6 * * *")
+	public String schedulePaymentNotifications() {
+		
 		try {
-			address = new URL(this.source);
-			BufferedReader in = new BufferedReader(new InputStreamReader(address.openStream()));
-
-			// save current list in backup
-			makeUrlsBackupArray(urls, oldUrls);
-			// clear current list
-			urls.clear();
-			
-			String inputLine;
-			boolean newLines = false;
-			while ((inputLine = in.readLine()) != null)
-				// if header
-				if (inputLine.contains("class=\"offer-title__link\" data-ninja-extradata=")) {
-					// read next line (link)
-					if((inputLine = in.readLine()) != null) {
-						urls.add(inputLine.split("\"")[1]);
-						// if already in old list
-						if(!arrayContains(inputLine.split("\"")[1], oldUrls)) {
-							newLines = true;
-						}
-					};
-				}
-			in.close();
-
-			if (newLines) {
-				this.sendMail();
-			}
-
-		} catch (MalformedURLException e) {
-
-		} catch (IOException e) {
-
+				this.sendMail(termBean.getInvoicesList(), termBean.getMailingList(), termBean.getDaysParameter());
 		} catch (MessagingException e) {
 
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
 		}
-
+		
 		return "various/test";
 	}
 
-	private void makeUrlsBackupArray(ArrayList<String> from, ArrayList<String> to) {
-		to.clear();
-		for(String url: from) {
-			to.add(url);
-		}
-	}
-
-	private boolean arrayContains(String string, ArrayList<String> urls2) {
-		for(String url: urls2) {
-			if(string.equalsIgnoreCase(url)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private void sendMail() throws UnknownHostException, MessagingException {
-		ArrayList<String> mailTo = new ArrayList<>();
-		mailTo.add("viruss.snk@gmail.com");
-		//mailTo.add("michalak.k@atwsystem.pl");
-
+	private void sendMail(List<X3SalesInvoice> list, List<String> mailTo, int daysParameter) throws UnknownHostException, MessagingException {
+		
 		Context context = new Context();
 		context.setVariable("title", "Nowe ogłoszenia!");
 		context.setVariable("message", "Pojawiło się nowe ogłoszenie!");
-		context.setVariable("urls", this.urls);
-		context.setVariable("source", this.source);
-		context.setVariable("date", dateHelper.formatDdMmYyyyHhMmDot(new java.util.Date()));
+		context.setVariable("list", list);
+		context.setVariable("days", daysParameter);
 		
-		String body = templateEngine.process("various/rmgtTemplate", context);
+		String body = templateEngine.process("payterm/mailtemplate", context);
 		if (mailTo.size() > 0) {
-			mailService.sendEmail("notify@oto.pl", mailTo.toArray(new String[0]), new String[0], "Nowe ogłoszenie!",
+			mailService.sendEmail("webapp@atwsystem.pl", mailTo.toArray(new String[0]), new String[0], "Zbliżające się terminy płatności",
 					body);
 		}
 	}

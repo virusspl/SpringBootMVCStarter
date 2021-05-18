@@ -41,6 +41,7 @@ import sbs.model.x3.X3DeliverySimpleInfo;
 import sbs.model.x3.X3EnvironmentInfo;
 import sbs.model.x3.X3HistockRawEntry;
 import sbs.model.x3.X3KeyValString;
+import sbs.model.x3.X3PaymentTerm;
 import sbs.model.x3.X3Product;
 import sbs.model.x3.X3ProductEvent;
 import sbs.model.x3.X3ProductEventsHistory;
@@ -50,6 +51,7 @@ import sbs.model.x3.X3ProductionOrderDetails;
 import sbs.model.x3.X3PurchaseOrder;
 import sbs.model.x3.X3RouteLine;
 import sbs.model.x3.X3SaleInfo;
+import sbs.model.x3.X3SalesInvoice;
 import sbs.model.x3.X3SalesOrder;
 import sbs.model.x3.X3SalesOrderItem;
 import sbs.model.x3.X3SalesOrderLine;
@@ -207,6 +209,44 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
         	client.setCode((String)row.get("BPCNUM_0"));
         	client.setName(((String)row.get("BPRNAM_0")) + " " + ((String)row.get("BPRNAM_1")));
         	result.add(client);
+        }
+		
+		return result;
+	}
+	
+	@Override
+	public Map<String, X3Client> findAllClientsMap(String company) {
+		// ===========================================================
+		// ==== TMP JDBC DUALITY =====================================
+		if(this.x3v.equalsIgnoreCase("6")) {
+			jdbc = jdbc6;
+		}
+		else {
+			jdbc = jdbc11;
+		}
+		// ==== TMP JDBC DUALITY =====================================
+		// ===========================================================
+		
+		
+		List<Map<String,Object>> resultSet = jdbc.queryForList(
+						"SELECT " 
+						+ company + ".BPCUSTOMER.BPCNUM_0, "
+						+ company + ".BPARTNER.BPRNAM_0, "
+						+ company + ".BPARTNER.BPRNAM_1 "
+						+ "FROM " 
+						+ company + ".BPCUSTOMER INNER JOIN " + company + ".BPARTNER "
+						+ "ON "
+						+ company + ".BPCUSTOMER.BPCNUM_0 = " + company + ".BPARTNER.BPRNUM_0 ",
+                new Object[]{});
+        
+		Map<String, X3Client> result = new HashMap<>();
+		X3Client client = null;
+		
+        for(Map<String,Object> row: resultSet ){
+        	client = new X3Client();
+        	client.setCode((String)row.get("BPCNUM_0"));
+        	client.setName(((String)row.get("BPRNAM_0")) + " " + ((String)row.get("BPRNAM_1")));
+        	result.put(client.getCode(), client);
         }
 		
 		return result;
@@ -5140,7 +5180,116 @@ public class JdbcOracleX3RepositoryImpl implements JdbcOracleX3Repository {
 		return map;
 	}
 
-	
+	@Override
+	public Map<String, X3PaymentTerm> getAllPaymentTerms(String company) {
+		// ===========================================================
+				// ==== TMP JDBC DUALITY =====================================
+				if(this.x3v.equalsIgnoreCase("6")) {
+					jdbc = jdbc6;
+				}
+				else {
+					jdbc = jdbc11;
+				}
+				// ==== TMP JDBC DUALITY =====================================
+				// ===========================================================
+				
+				List<Map<String,Object>> resultSet = jdbc.queryForList( ""
+						+ "SELECT "
+						+ "TBPT.PTE_0, "
+						+ "TBPT.LANDESSHO_0, "
+						+ "TBPT.NBRMON_0, "
+						+ "TBPT.NBRDAY_0, "
+						+ "TBPT.ENDMONFLG_0 "
+						+ "FROM "
+						+ company + ".TABPAYTERM TBPT "
+						+ "ORDER BY "
+						+ "TBPT.PTE_0 ASC, TBPT.PTELIN_0 ASC "
+						,
+		                new Object[]{});
+				
+		        Map <String, X3PaymentTerm> map = new HashMap<>();
+		        X3PaymentTerm pt;
+		        boolean tmpBoolean;
+		        String[] descriptionArray;
+		        for(Map<String,Object> row: resultSet ){
+		        	tmpBoolean = ((BigDecimal)row.get("ENDMONFLG_0")).intValue() == 2 ? true : false;
+		        	descriptionArray = ((String)row.get("LANDESSHO_0")).split("~");
+		        	
+		        	pt = new X3PaymentTerm();
+		        	pt.setCode((String)row.get("PTE_0"));
+		        	pt.setDescription(descriptionArray.length>1 ? descriptionArray[1] : "-");
+		        	pt.setEndOfMonth(tmpBoolean);
+		        	pt.setMonths(((BigDecimal)row.get("NBRMON_0")).intValue());
+		        	pt.setDays(((BigDecimal)row.get("NBRDAY_0")).intValue());
+		        	map.put(pt.getCode(), pt);
+		        	
+		        	
+		        }
+				return map;
+	}
+
+	@Override
+	public List<X3SalesInvoice> getSalesInvoicesInPeriod(Date startDate, Date endDate, String company) {
+		// ===========================================================
+		// ==== TMP JDBC DUALITY =====================================
+		if(this.x3v.equalsIgnoreCase("6")) {
+			jdbc = jdbc6;
+		}
+		else {
+			jdbc = jdbc11;
+		}
+		// ==== TMP JDBC DUALITY =====================================
+		// ===========================================================
+		
+        List<Map<String,Object>> resultSet = jdbc.queryForList("" 
+        		+ "SELECT "
+        		+ "SIH.NUM_0, "
+        		+ "SIV.BPCINV_0, "
+        		+ "SIH.ACCDAT_0, "
+        		+ "SIH.STRDUDDAT_0, "
+        		+ "SIH.PTE_0, "
+        		+ "BPR.BPRNAM_0, "
+        		+ "Sum(SID.NETPRI_0*SID.QTYSTU_0) AS VAL, "
+        		+ "SIH.CUR_0 "
+        		+ "FROM "
+        		+ "(("
+        		+ company + ".SINVOICE SIH INNER JOIN " + company + ".SINVOICEV SIV "
+        		+ "ON SIH.NUM_0 = SIV.NUM_0) "
+        		+ "INNER JOIN " + company + ".SINVOICED SID "
+        		+ "ON SIH.NUM_0 = SID.NUM_0) "
+        		+ "INNER JOIN " + company + ".BPARTNER BPR "
+        		+ "ON SIV.BPCINV_0 = BPR.BPRNUM_0 "
+        		+ "GROUP BY "
+        		+ "SIH.NUM_0, "
+        		+ "SIV.BPCINV_0, "
+        		+ "SIH.ACCDAT_0, "
+        		+ "SIH.STRDUDDAT_0, "
+        		+ "SIH.PTE_0, "
+        		+ "BPR.BPRNAM_0, "
+        		+ "SIH.CUR_0 "
+          		+ "HAVING "
+        		+ "SIH.STRDUDDAT_0 >= ? AND "
+        		+ "SIH.STRDUDDAT_0 <= ? "
+        		,
+                new Object[]{startDate, endDate});
+        
+        List<X3SalesInvoice> result = new ArrayList<>();
+        X3SalesInvoice inv;
+        for(Map<String,Object> row: resultSet ){
+        	inv = new X3SalesInvoice();
+        	inv.setNumber((String)row.get("NUM_0"));
+        	inv.setClient((String)row.get("BPCINV_0"));
+        	inv.setClientName((String)row.get("BPRNAM_0"));        	
+        	inv.setIssueDate((Timestamp)row.get("ACCDAT_0"));
+        	inv.setPaymentStartDueDate((Timestamp)row.get("STRDUDDAT_0"));
+        	inv.setPaymentTerms((String)row.get("PTE_0"));
+        	inv.setValue(((BigDecimal)row.get("VAL")).doubleValue());
+        	inv.setCurrency((String)row.get("CUR_0"));
+        	result.add(inv);
+        }
+        
+		return result;
+	}
 
 
 }
