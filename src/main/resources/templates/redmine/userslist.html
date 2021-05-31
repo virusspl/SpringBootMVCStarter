@@ -20,36 +20,51 @@ tr {
 </head>
 <body>
 	<div layout:fragment="script">
+		
 		<script th:src="@{/datatables/jquery.dataTables.min.js}"
 			type="text/javascript"></script>
 		<script th:src="@{/datatables/dataTables.helper.js}"
 			type="text/javascript"></script>
+		<script th:src="@{/datatables/buttons.flash.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/buttons.html5.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/buttons.print.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/dataTables.buttons.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/datatables/jszip.min.js}" type="text/javascript"></script>
+		<script th:src="@{/datatables/pdfmake.min.js}" type="text/javascript"></script>
+		<script th:src="@{/datatables/vfs_fonts.js}" type="text/javascript"></script>
 		<script th:if="__${#locale}__ == 'pl'">
-			$('#srv').DataTable({
-				language : {
-					url : getUrl() + "polish.json",
-				},
-				order: [[ 1, 'asc' ]]
-			});		    
+			var file = "polish.json";
 		</script>
 		<script th:if="__${#locale}__ == 'en'">
-			$('#srv').DataTable({
-				language : {
-					url : getUrl() + "english.json"
-				},
-				order: [[ 1, 'asc' ]]
-			});
+			var file = "english.json";
 		</script>
 		<script th:if="__${#locale}__ == 'it'">
+			var file = "italian.json";
+		</script>
+		<script>
 			$('#srv').DataTable({
 				language : {
-					url : getUrl() + "italian.json"
+					url : getUrl() + file,
 				},
-				order: [[ 1, 'asc' ]]
+				order : [ [ 1, 'asc' ] ],
+				paging : true,
+				dom : 'Bfrtip',
+				buttons : [ {
+					extend : 'excel',
+					text : 'Excel'
+				}, {
+					extend : 'pdfHtml5',
+					orientation : 'landscape'
+				} ]
 			});
 		</script>
 
 		<script>
+		
 		function copydata(id) {
 			$(id).show();
 			$(id).focus();
@@ -138,7 +153,7 @@ tr {
 										th:text="${usr.mail}"></span></a></td>
 								<td><span th:text="${usr.admin}"></span></td>
 								<td><span class="btn btn-info btn-xs" style="margin-right: 5px;"
-									th:each="pr: ${usr.projects}" th:text="|${pr.name}|"></span></td>
+									th:each="pr: ${usr.projects}" th:text="|${pr.name}; |"></span></td>
 							</tr>
 						</tbody>
 					</table>
