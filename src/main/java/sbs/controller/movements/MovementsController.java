@@ -74,14 +74,12 @@ public class MovementsController {
 	public String view(Model model, Locale locale,
 			@CookieValue(value = "startDateMov", defaultValue = "0") String startDateLong,
 			@CookieValue(value = "endDateMov", defaultValue = "0") String endDateLong) {
-		
-		
+
 		MovementsForm movementsForm = new MovementsForm();
 		if (startDateLong.length() > 1 && endDateLong.length() > 1) {
 			movementsForm.setStartDate(new java.util.Date(Long.parseLong(startDateLong)));
 			movementsForm.setEndDate(new java.util.Date(Long.parseLong(endDateLong)));
-		}
-		else {
+		} else {
 			Calendar cal = Calendar.getInstance();
 			cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 			cal.add(Calendar.DAY_OF_MONTH, -1);
@@ -89,7 +87,7 @@ public class MovementsController {
 			cal.add(Calendar.DAY_OF_MONTH, -6);
 			movementsForm.setStartDate(new Timestamp(cal.getTimeInMillis()));
 		}
-		
+
 		model.addAttribute("movementsForm", movementsForm);
 
 		return "movements/main";
@@ -102,7 +100,7 @@ public class MovementsController {
 		if (bindingResult.hasErrors()) {
 			return "movements/main";
 		}
-		
+
 		// create a cookie
 		Cookie startDateCookie = new Cookie("startDateMov", "" + movementsForm.getStartDate().getTime());
 		Cookie endDateCookie = new Cookie("endDateMov", "" + movementsForm.getEndDate().getTime());
@@ -112,19 +110,18 @@ public class MovementsController {
 		// add cookie to response
 		response.addCookie(startDateCookie);
 		response.addCookie(endDateCookie);
-		
 
-		Map<String, Double> prices = x3Service.getCurrentStandardCostsMap("ATW");
+		// Map<String, Double> prices = x3Service.getCurrentStandardCostsMap("ATW");
 		List<X3ShipmentMovement> movements = x3Service.findAdrShipmentMovementsInPeriod(movementsForm.getStartDate(),
 				movementsForm.getEndDate());
-		List<X3SalesOrderLine> orderLines = x3Service.findAdrSalesOrderLinesBasedOnShipmentMovementsInPeriod(movementsForm.getStartDate(),
-				movementsForm.getEndDate());
+		List<X3SalesOrderLine> orderLines = x3Service.findAdrSalesOrderLinesBasedOnShipmentMovementsInPeriod(
+				movementsForm.getStartDate(), movementsForm.getEndDate());
 		Map<String, X3SalesOrderLine> orderLinesMap = new HashMap<>();
-		
-		for(X3SalesOrderLine lin: orderLines) {
-			orderLinesMap.put(lin.getOrderNumber()+";"+lin.getProductCode(), lin);
+
+		for (X3SalesOrderLine lin : orderLines) {
+			orderLinesMap.put(lin.getOrderNumber() + ";" + lin.getProductCode(), lin);
 		}
-		
+
 		int counter = 0;
 		double totalValue = 0;
 		double mechanicalValue = 0;
@@ -138,28 +135,40 @@ public class MovementsController {
 		String unassignedMachines = "";
 
 		Map<String, X3ProductMachine> machinesIndex = x3Service.findX3ProductFinalMachines("ATW");
-		
+
 		String tmpKey;
 		X3RouteLine routeInt;
-		
+
 		for (X3ShipmentMovement mvt : movements) {
-			if (prices.containsKey(mvt.getItemCode()) && !mvt.getItemCategory().equalsIgnoreCase("ACV")) {
-				mvt.setPrice(prices.get(mvt.getItemCode()));
-			} else {
-				mvt.setPrice(mvt.getEmergencyAveragePrice());
-			}
+			tmpKey = mvt.getDocument() + ";" + mvt.getItemCode();
+			mvt.setOrderDate(orderLinesMap.containsKey(tmpKey) ? orderLinesMap.get(tmpKey).getCreationDate() : null);
+			mvt.setDemandedDate(orderLinesMap.containsKey(tmpKey) ? orderLinesMap.get(tmpKey).getDemandedDate() : null);
+			mvt.setFinalClientCode(
+					orderLinesMap.containsKey(tmpKey) ? orderLinesMap.get(tmpKey).getFinalClientCode() : "");
+			mvt.setFinalClientName(
+					orderLinesMap.containsKey(tmpKey) ? orderLinesMap.get(tmpKey).getFinalClientName() : "");
+
+			/*
+			 * if (prices.containsKey(mvt.getItemCode()) &&
+			 * !mvt.getItemCategory().equalsIgnoreCase("ACV")) {
+			 * mvt.setPrice(prices.get(mvt.getItemCode())); } else {
+			 * mvt.setPrice(mvt.getEmergencyAveragePrice()); }
+			 */
+			mvt.setPrice(
+					orderLinesMap.containsKey(tmpKey) ? orderLinesMap.get(tmpKey).getUnitPrice() * orderLinesMap.get(tmpKey).getExchangeRate() : mvt.getEmergencyAveragePrice()
+					);
 			mvt.setValue(mvt.getQuantity() * mvt.getPrice());
 			if (mvt.getItemCategory().equals("ACV")) {
 				warehouseValue += mvt.getValue();
 			} else if (machinesIndex.containsKey(mvt.getItemCode())) {
-				//only for 2 machines, don't break/continue:
+				// only for 2 machines, don't break/continue:
 				if (machinesIndex.get(mvt.getItemCode()).getMachineCode().equals("KAL05")) {
 					kal05Value += mvt.getValue();
 				}
-				if(machinesIndex.get(mvt.getItemCode()).getMachineCode().equals("KAL10")){
+				if (machinesIndex.get(mvt.getItemCode()).getMachineCode().equals("KAL10")) {
 					kal10Value += mvt.getValue();
 				}
-				
+
 				switch (machinesIndex.get(mvt.getItemCode()).getMachineDepartment()) {
 				case X3ProductMachine.MECHANICAL:
 					mechanicalValue += mvt.getValue();
@@ -178,11 +187,6 @@ public class MovementsController {
 			} else {
 				otherValue += mvt.getValue();
 			}
-			tmpKey = mvt.getDocument()+";"+mvt.getItemCode();
-			mvt.setOrderDate(orderLinesMap.containsKey(tmpKey) ? orderLinesMap.get(tmpKey).getCreationDate():null);
-			mvt.setDemandedDate(orderLinesMap.containsKey(tmpKey) ? orderLinesMap.get(tmpKey).getDemandedDate():null);
-			mvt.setFinalClientCode(orderLinesMap.containsKey(tmpKey) ? orderLinesMap.get(tmpKey).getFinalClientCode():"");
-			mvt.setFinalClientName(orderLinesMap.containsKey(tmpKey) ? orderLinesMap.get(tmpKey).getFinalClientName():"");
 
 			routeInt = prodService.getLastRouteLineExcludingKAL(mvt.getItemCode(), "ATW");
 			if (routeInt != null) {
@@ -196,9 +200,8 @@ public class MovementsController {
 			totalValue += mvt.getValue();
 			counter++;
 		}
-		
-		
-		Map<String, String> gr2dict = x3Service.getVariousTableData("ATW","21",JdbcOracleX3Service.LANG_POLISH);
+
+		Map<String, String> gr2dict = x3Service.getVariousTableData("ATW", "21", JdbcOracleX3Service.LANG_POLISH);
 
 		model.addAttribute("gr2", gr2dict);
 		model.addAttribute("startDate", movementsForm.getStartDate());
@@ -228,7 +231,7 @@ public class MovementsController {
 		if (bindingResult.hasErrors()) {
 			return "movements/main";
 		}
-		
+
 		// create a cookie
 		Cookie startDateCookie = new Cookie("startDateMov", "" + movementsForm.getStartDate().getTime());
 		Cookie endDateCookie = new Cookie("endDateMov", "" + movementsForm.getEndDate().getTime());
@@ -238,7 +241,7 @@ public class MovementsController {
 		// add cookie to response
 		response.addCookie(startDateCookie);
 		response.addCookie(endDateCookie);
-		
+
 		List<X3WarehouseWeightLine> lines = x3Service.findWeightSumLine(movementsForm.getStartDate(),
 				movementsForm.getEndDate(), JdbcOracleX3Service.WEIGHT_QUERY_RECEPTION);
 		model.addAttribute("startDate", movementsForm.getStartDate());
@@ -254,7 +257,7 @@ public class MovementsController {
 		if (bindingResult.hasErrors()) {
 			return "movements/main";
 		}
-		
+
 		// create a cookie
 		Cookie startDateCookie = new Cookie("startDateMov", "" + movementsForm.getStartDate().getTime());
 		Cookie endDateCookie = new Cookie("endDateMov", "" + movementsForm.getEndDate().getTime());
@@ -264,7 +267,7 @@ public class MovementsController {
 		// add cookie to response
 		response.addCookie(startDateCookie);
 		response.addCookie(endDateCookie);
-		
+
 		List<X3WarehouseWeightLine> lines = x3Service.findWeightSumLine(movementsForm.getStartDate(),
 				movementsForm.getEndDate(), JdbcOracleX3Service.WEIGHT_QUERY_SHIPMENT);
 		model.addAttribute("startDate", movementsForm.getStartDate());
@@ -280,7 +283,7 @@ public class MovementsController {
 		if (bindingResult.hasErrors()) {
 			return "movements/main";
 		}
-		
+
 		// create a cookie
 		Cookie startDateCookie = new Cookie("startDateMov", "" + movementsForm.getStartDate().getTime());
 		Cookie endDateCookie = new Cookie("endDateMov", "" + movementsForm.getEndDate().getTime());
@@ -290,7 +293,7 @@ public class MovementsController {
 		// add cookie to response
 		response.addCookie(startDateCookie);
 		response.addCookie(endDateCookie);
-		
+
 		List<X3WarehouseWeightDetailLine> lines = x3Service.findWeightDetailLine(movementsForm.getStartDate(),
 				movementsForm.getEndDate(), JdbcOracleX3Service.WEIGHT_QUERY_RECEPTION_DETAIL);
 		model.addAttribute("startDate", movementsForm.getStartDate());
@@ -306,7 +309,7 @@ public class MovementsController {
 		if (bindingResult.hasErrors()) {
 			return "movements/main";
 		}
-		
+
 		// create a cookie
 		Cookie startDateCookie = new Cookie("startDateMov", "" + movementsForm.getStartDate().getTime());
 		Cookie endDateCookie = new Cookie("endDateMov", "" + movementsForm.getEndDate().getTime());
@@ -316,7 +319,7 @@ public class MovementsController {
 		// add cookie to response
 		response.addCookie(startDateCookie);
 		response.addCookie(endDateCookie);
-		
+
 		List<X3WarehouseWeightDetailLine> lines = x3Service.findWeightDetailLine(movementsForm.getStartDate(),
 				movementsForm.getEndDate(), JdbcOracleX3Service.WEIGHT_QUERY_SHIPMENT_DETAIL);
 		model.addAttribute("startDate", movementsForm.getStartDate());
@@ -332,7 +335,7 @@ public class MovementsController {
 		if (bindingResult.hasErrors()) {
 			return "movements/main";
 		}
-		
+
 		// create a cookie
 		Cookie startDateCookie = new Cookie("startDateMov", "" + movementsForm.getStartDate().getTime());
 		Cookie endDateCookie = new Cookie("endDateMov", "" + movementsForm.getEndDate().getTime());
@@ -342,7 +345,6 @@ public class MovementsController {
 		// add cookie to response
 		response.addCookie(startDateCookie);
 		response.addCookie(endDateCookie);
-		
 
 		List<GeodeMovement> movements = geodeService.findRcpMovementsInPeriod(movementsForm.getStartDate(),
 				movementsForm.getEndDate());
@@ -378,14 +380,14 @@ public class MovementsController {
 
 		return "movements/main";
 	}
-	
+
 	@RequestMapping(value = "/calculate", params = { "shipmovements" }, method = RequestMethod.POST)
 	public String performShipMovements(@Valid MovementsForm movementsForm, BindingResult bindingResult, Model model,
 			RedirectAttributes redirectAttrs, Locale locale, HttpServletResponse response) {
 		if (bindingResult.hasErrors()) {
 			return "movements/main";
 		}
-		
+
 		// create a cookie
 		Cookie startDateCookie = new Cookie("startDateMov", "" + movementsForm.getStartDate().getTime());
 		Cookie endDateCookie = new Cookie("endDateMov", "" + movementsForm.getEndDate().getTime());
@@ -395,20 +397,19 @@ public class MovementsController {
 		// add cookie to response
 		response.addCookie(startDateCookie);
 		response.addCookie(endDateCookie);
-		
-		
+
 		List<GeodeMovement> movements = geodeService.findShipmentMovementsInPeriod(movementsForm.getStartDate(),
 				movementsForm.getEndDate());
 		List<GeodeMovement> movementsToShow = new ArrayList<>();
 		Map<String, GeodeMovementsForUser> summary = new HashMap<>();
 		Set<String> unknownMovements = new HashSet<>();
-		
+
 		for (GeodeMovement mvt : movements) {
 			if (!summary.containsKey(mvt.getCreationUserCode())) {
 				summary.put(mvt.getCreationUserCode(),
 						new GeodeMovementsForUser(mvt.getCreationUserCode(), mvt.getCreationUserName()));
 			}
-			
+
 			if (getGeodeMovementType(mvt) == GeodeMovement.GEODE_MOVEMENT_LOAD) {
 				summary.get(mvt.getCreationUserCode()).loadCounterIncrement();
 				movementsToShow.add(mvt);
@@ -419,7 +420,7 @@ public class MovementsController {
 				unknownMovements.add(mvt.getMovementCode());
 			}
 		}
-		
+
 		model.addAttribute("startDate", movementsForm.getStartDate());
 		model.addAttribute("endDate", movementsForm.getEndDate());
 		model.addAttribute("rcpmovsummary", summary.values());
@@ -431,7 +432,7 @@ public class MovementsController {
 		 * model.addAttribute("unknownmovs",unknownMovements); }
 		 * System.out.println("UNKNOWN:" + unknownMovements);
 		 */
-		
+
 		return "movements/main";
 	}
 
@@ -457,12 +458,12 @@ public class MovementsController {
 		double otherValue = 0;
 		double totalValue = 0;
 		for (X3ShipmentStockLineWithPrice line : lines) {
-			if(!line.getCategory().equals("ACV")){
+			if (!line.getCategory().equals("ACV")) {
 				if (stdPrices.containsKey(line.getCode())) {
 					line.setAveragePrice(stdPrices.get(line.getCode()));
 				}
 			}
-			
+
 			line.setLineValue(line.getAveragePrice() * line.getQuantity() * 1.0);
 			if (line.getCategory().equals("ACV")) {
 				acvValue += line.getLineValue();
