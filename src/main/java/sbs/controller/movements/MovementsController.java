@@ -124,11 +124,12 @@ public class MovementsController {
 
 		int counter = 0;
 		double totalValue = 0;
+		double productionValue = 0;
+		double warehouseValue = 0;
 		double mechanicalValue = 0;
 		double weldingValue = 0;
 		double assemblyValue = 0;
 		double otherValue = 0;
-		double warehouseValue = 0;
 		double kal05Value = 0;
 		double kal10Value = 0;
 		LinkedHashSet<String> unassignedMachinesSet = new LinkedHashSet<>();
@@ -200,6 +201,8 @@ public class MovementsController {
 			totalValue += mvt.getValue();
 			counter++;
 		}
+		// count production value
+		productionValue = totalValue - warehouseValue;
 
 		Map<String, String> gr2dict = x3Service.getVariousTableData("ATW", "21", JdbcOracleX3Service.LANG_POLISH);
 
@@ -208,6 +211,7 @@ public class MovementsController {
 		model.addAttribute("endDate", movementsForm.getEndDate());
 		model.addAttribute("counter", counter);
 		model.addAttribute("totalValue", totalValue);
+		model.addAttribute("productionValue", productionValue);
 		model.addAttribute("mechanicalValue", mechanicalValue);
 		model.addAttribute("weldingValue", weldingValue);
 		model.addAttribute("kal05Value", kal05Value);

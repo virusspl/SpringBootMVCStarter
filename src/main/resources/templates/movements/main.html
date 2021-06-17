@@ -399,18 +399,34 @@
 						th:text="|${#dates.format(startDate, 'dd.MM.yyyy')} -  ${#dates.format(endDate, 'dd.MM.yyyy')}|"
 						class="bold">period</span>
 				</div>
-				<div class="col-xs-2">
+				<div class="col-xs-2 margin-top-5">
 					<span th:text="#{movements.value.total}">value</span>
 				</div>
-				<div class="col-xs-10">
+				<div class="col-xs-10 margin-top-5">
 					<span
 						th:text="${#numbers.formatDecimal(totalValue, 0, 'DEFAULT', 2, 'DEFAULT')}"
 						class="bold">value</span>
 				</div>
 				<div class="col-xs-2">
-					<span th:text="#{movements.value.assembly}">value</span>
+					<span th:text="|&nbsp;&nbsp;&nbsp;#{movements.value.production}|">value</span>
 				</div>
 				<div class="col-xs-10">
+					<span
+						th:text="${#numbers.formatDecimal(productionValue, 0, 'DEFAULT', 2, 'DEFAULT')}"
+						class="bold">value</span>
+				</div>
+				<div class="col-xs-2">
+					<span th:text="|&nbsp;&nbsp;&nbsp;#{movements.value.warehouse}|">value</span>
+				</div>
+				<div class="col-xs-10">
+					<span
+						th:text="${#numbers.formatDecimal(warehouseValue, 0, 'DEFAULT', 2, 'DEFAULT')}"
+						class="bold">value</span>
+				</div>				
+				<div class="col-xs-2 margin-top-5">
+					<span th:text="#{movements.value.assembly}">value</span>
+				</div>
+				<div class="col-xs-10 margin-top-5">
 					<span
 						th:text="${#numbers.formatDecimal(assemblyValue, 0, 'DEFAULT', 2, 'DEFAULT')}"
 						class="bold">value</span>
@@ -420,7 +436,7 @@
 				</div>
 				<div class="col-xs-10">
 					<span
-						th:text="|&nbsp;&nbsp;&nbsp;${#numbers.formatDecimal(kal05Value, 0, 'DEFAULT', 2, 'DEFAULT')}|"
+						th:text="|${#numbers.formatDecimal(kal05Value, 0, 'DEFAULT', 2, 'DEFAULT')}|"
 						class="bold">value</span>
 				</div>
 				<div class="col-xs-2">
@@ -428,7 +444,7 @@
 				</div>
 				<div class="col-xs-10">
 					<span
-						th:text="|&nbsp;&nbsp;&nbsp;${#numbers.formatDecimal(kal10Value, 0, 'DEFAULT', 2, 'DEFAULT')}|"
+						th:text="|${#numbers.formatDecimal(kal10Value, 0, 'DEFAULT', 2, 'DEFAULT')}|"
 						class="bold">value</span>
 				</div>
 				<div class="col-xs-2">
@@ -445,14 +461,6 @@
 				<div class="col-xs-10">
 					<span
 						th:text="${#numbers.formatDecimal(mechanicalValue, 0, 'DEFAULT', 2, 'DEFAULT')}"
-						class="bold">value</span>
-				</div>
-				<div class="col-xs-2">
-					<span th:text="#{movements.value.warehouse}">value</span>
-				</div>
-				<div class="col-xs-10">
-					<span
-						th:text="${#numbers.formatDecimal(warehouseValue, 0, 'DEFAULT', 2, 'DEFAULT')}"
 						class="bold">value</span>
 				</div>
 				<div class="col-xs-2">
