@@ -7,7 +7,7 @@
 </head>
 <body>
 	<div layout:fragment="script">
-			<!-- DATEPICKER -->
+		<!-- DATEPICKER -->
 		<script th:src="@{/datepicker/js/bootstrap-datepicker.min.js}"
 			charset="UTF-8" type="text/javascript"></script>
 		<script th:src="@{/datepicker/locales/bootstrap-datepicker.pl.min.js}"
@@ -136,20 +136,20 @@
 				<span th:utext="#{qsurveys.list.message}" class="flow-text ">
 					Welcome message </span>
 			</div>
-				<a th:href="@{/qsurveys/dispatch}" class="btn btn-link btn-sm">
-					<span class="glyphicon glyphicon-menu-left"></span> <span
-					th:text="#{action.back}">back</span>
-				</a>
+			<a th:href="@{/qsurveys/dispatch}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
 		</div>
-		
+
 		<!-- FORM -->
 		<form th:action="@{/qsurveys/makelist}" method="post"
 			th:object="${qSurveyListForm}" th:if="!${surveys}">
 			<!-- DATES RANGE -->
 			<div class="row">
-			<div class="col-xs-12">
-				<h3 th:text="#{general.date.range}" class="text-primary underline"></h3>
-			</div>
+				<div class="col-xs-12">
+					<h3 th:text="#{general.date.range}" class="text-primary underline"></h3>
+				</div>
 				<div class="col-xs-12 margin-top-10">
 					<span th:text="#{general.date.setrange}">set date range</span>
 				</div>
@@ -179,24 +179,24 @@
 			<!-- /DATES RANGE -->
 			<div class="row margin-top-5">
 				<div class="col-xs-12">
-					<button class="btn btn-primary btn-sm" type="submit" onclick="disableLong(this)"
-						name="viewlist">
+					<button class="btn btn-primary btn-sm" type="submit"
+						onclick="disableLong(this)" name="viewlist">
 						<span class="glyphicon glyphicon-search"></span> <span
 							th:text="#{action.search}">search</span>
 					</button>
 				</div>
 			</div>
 		</form>
-		
-		
+
+
 		<div class="row" th:if="${surveys}">
 			<div class="col-xs-12">
 				<h3 th:text="#{qsurveys.list}" class="text-primary underline"></h3>
 			</div>
-			<a th:href="@{/qsurveys/list}" class="btn btn-link btn-sm">
-					<span class="glyphicon glyphicon glyphicon-refresh"></span> <span
-					th:text="#{qsurveys.list.again}">back</span>
-				</a>
+			<a th:href="@{/qsurveys/list}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon glyphicon-refresh"></span> <span
+				th:text="#{qsurveys.list.again}">back</span>
+			</a>
 		</div>
 		<div class="row margin-top-20" th:if="${surveys}">
 			<div class="col-xs-12 col-xs-offset-0">
@@ -212,8 +212,9 @@
 								<th th:text="#{qsurveys.client.code}">head</th>
 								<th th:text="#{qsurveys.sales.order}">head</th>
 								<th th:text="#{qsurveys.production.order}">head</th>
-								<th th:text="#{qsurveys.login.user}">head</th>
+								<th th:text="#{qsurveys.confirmed}">head</th>
 								<th th:text="#{general.comment}">head</th>
+								<!-- <th th:text="#{qsurveys.login.user}">head</th>  -->
 							</tr>
 						</thead>
 						<tbody>
@@ -229,8 +230,11 @@
 								<td><span th:text="${survey.orderClientCode}"></span></td>
 								<td><span th:text="${survey.orderSalesNumber}"></span></td>
 								<td><span th:text="${survey.orderNumber}"></span></td>
-								<td><span th:text="${survey.user.username}"></span></td>
+								<td><span th:if="${survey.confirmed}"
+									th:text="#{general.yes}"></span> <span
+									th:if="!${survey.confirmed}" th:text="|-|"></span></td>
 								<td><span th:text="${survey.comment}"></span></td>
+								 <!-- <td><span th:text="${survey.user.username}"></span></td> -->
 							</tr>
 						</tbody>
 					</table>

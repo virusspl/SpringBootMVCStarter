@@ -58,10 +58,14 @@ function send5MinBreake() {
 	var date = new Date(new Date().getTime() + 5 * 60000);
 	var minutes = date.getMinutes();
 	var hour = date.getHours();
+	var finalMinutes = minutes;
+	if (minutes < 10){
+		finalMinutes = "0" + minutes;
+	}
 	
 	stompClient.send("/app/postmessage", {}, JSON.stringify({
 		'sender' : $("#name").val(),
-		'content' : 'Krótka przerwa techniczna - ' + hour + ':' + minutes
+		'content' : 'Krótka przerwa techniczna - ' + hour + ':' + finalMinutes
 	}));
 	document.getElementById("message").value = "";
 	document.getElementById("message").focus();
