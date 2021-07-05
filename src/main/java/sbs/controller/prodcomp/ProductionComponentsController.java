@@ -401,7 +401,7 @@ public class ProductionComponentsController {
 				}
 			} else {
 				// no file
-				redirectAttrs.addFlashAttribute("main", messageSource.getMessage("action.choose.file", null, locale));
+				redirectAttrs.addFlashAttribute("warning", messageSource.getMessage("action.choose.file", null, locale));
 				return "redirect:/prodcomp/main";
 			}
 
@@ -782,7 +782,7 @@ public class ProductionComponentsController {
 				model.addAttribute("title", messageSource.getMessage("prodcomp.shortage.list", null, locale));
 			} else {
 				// no file
-				redirectAttrs.addFlashAttribute("main", messageSource.getMessage("action.choose.file", null, locale));
+				redirectAttrs.addFlashAttribute("warning", messageSource.getMessage("action.choose.file", null, locale));
 				return "redirect:/prodcomp/main";
 			}
 			return "prodcomp/view";
