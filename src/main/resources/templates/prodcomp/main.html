@@ -88,22 +88,6 @@
 				document.getElementById('filenamePlan').textContent = this.value;
 				document.getElementById('hidedivPlan').style.display = 'block';
 			};
-			function readURL(input) {
-				if (!input.files) {
-					return;
-				}
-				if (!input.files[0]) {
-					return;
-				}
-				if (input.files[0].size > 2097000) {
-					alert("limit 2MB")
-				}
-				var reader = new FileReader();
-				reader.onload = function(e) {
-					$('#prev').attr('src', e.target.result);
-				}
-				reader.readAsDataURL(input.files[0]);
-			}
 			<!-- /FILE UPLOAD HELPER -->
 		</script>
 	</div>
