@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="layout/main">
+<head lang="pl">
+</head>
+<body>
+	<div layout:fragment="script">
+		<!-- DATEPICKER -->
+		<script th:src="@{/datepicker/js/bootstrap-datepicker.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:src="@{/datepicker/locales/bootstrap-datepicker.pl.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script
+			th:src="@{/datepicker/locales/bootstrap-datepicker.en-GB.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:src="@{/datepicker/locales/bootstrap-datepicker.it.min.js}"
+			charset="UTF-8" type="text/javascript"></script>
+		<script th:if="__${#locale}__ == 'pl'">
+			$('#date').datepicker({
+				autoclose : true,
+				language : 'pl'
+			});
+		</script>
+		<script th:if="__${#locale}__ == 'en'">
+			$('#date').datepicker({
+				autoclose : true,
+				language : 'en-GB'
+			});
+		</script>
+		<script th:if="__${#locale}__ == 'it'">
+			$('#date').datepicker({
+				autoclose : true,
+				language : 'it'
+			});
+		</script>
+		<!-- FILE UPLOAD HELPER -->
+		<script>
+			document.getElementById('file').onchange = function(evt) {
+				readURL(this);
+				document.getElementById('filename').textContent = this.value;
+				document.getElementById('hidediv').style.display = 'block';
+			};
+			function readURL(input) {
+				if (!input.files) {
+					return;
+				}
+				if (!input.files[0]) {
+					return;
+				}
+				if (input.files[0].size > 2097000) {
+					alert("limit 2MB")
+				}
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					$('#prev').attr('src', e.target.result);
+				}
+				reader.readAsDataURL(input.files[0]);
+			}
+			<!-- /FILE UPLOAD HELPER -->
+		</script>
+	</div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<h1 th:text="#{capacity.title}" class="text-primary"></h1>
+			</div>
+			<div class="col-xs-12 col-xs-offset-0 text-justify margin-top-10">
+				<span th:text="#{capacity.message}"> Welcome message </span>
+			</div>
+			<a th:href="@{'/'}" class="btn btn-link btn-sm"> <span
+				class="glyphicon glyphicon-menu-left"></span> <span
+				th:text="#{action.back}">back</span>
+			</a>
+		</div>
+
+		<!-- PLAN FORM -->
+		<form th:action="@{'/upload/capacity'}" method="post"
+			enctype="multipart/form-data">
+			<div class="row">
+				<!-- left -->
+				<div class="col-xs-12">
+					<h3 th:text="#{capacity.input}" class="text-primary margin-top-20"></h3>
+					<div class="underline margin-bottom-10"></div>
+					<span th:utext="#{capacity.input.message}"></span>
+				</div>
+				<div class="col-md-3 col-xs-6 margin-top-10">
+					<div class="form-group">
+						<!-- date -->
+						<label for="date" th:text="#{general.date}">startDate</label> <input
+							type="text" class="form-control" id="date" name="date" th:value="${date}"
+							th:placeholder="#{general.date}" autocomplete="off" />
+						<div th:if="${dateError}" class="alert alert-danger margin-top-5">
+							<span th:text="${dateError}"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<label for="file" th:text="#{general.file}"></label> <br /> <input
+						type="file" id="file" name="file" style="display: none" /> <label
+						for="file" class="btn btn-info"> <span
+						th:text="#{action.choose}"></span>
+					</label>
+					<button class="btn btn-primary" type="submit" name="upload">
+						<span th:text="#{action.upload}">upload</span>
+					</button>
+
+					<div id="hidediv" style="display: none;" class="margin-top-20">
+						<span id="filename" class="margin-top-10 text-muted">[file]</span>
+					</div>
+				</div>
+			</div>
+		</form>
+		<!-- /PLAN FORM -->
+	</div>
+</body>
+</html>

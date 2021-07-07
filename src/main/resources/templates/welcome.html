@@ -407,7 +407,8 @@
 			'ROLE_QCHECKMANAGER',
 			'ROLE_QCHECKUSER',
 			'ROLE_COMPREQMANAGER',
-			'ROLE_UTR_NORMALUSER'
+			'ROLE_UTR_NORMALUSER',
+			'ROLE_CAPACITYUSER'
 			)">
 				<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
 					<h3 class="text-info" th:text="#{department.production}">Panel
@@ -445,12 +446,20 @@
 						class="btn btn-info btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-saved"></span> <span
 						th:text="#{compreq.title}"></span>
-					</a> <a th:href="@{/utr/stats}"
+					</a> 
+					<a th:href="@{/capacity/main}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_CAPACITYUSER')"
+						class="btn btn-info btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-equalizer"></span> <span
+						th:text="#{capacity.title}">bhp tickets</span>
+					</a> 
+					<a th:href="@{/utr/stats}"
 						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_UTR_NORMALUSER')"
 						class="btn btn-info btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-stats"></span> <span
 						th:text="#{utr.stats}">bhp tickets</span>
-					</a> <a th:href="@{/utr/current}"
+					</a> 
+					<a th:href="@{/utr/current}"
 						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_UTR_NORMALUSER')"
 						class="btn btn-info btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-warning-sign"></span> <span

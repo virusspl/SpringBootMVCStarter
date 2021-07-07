@@ -189,6 +189,34 @@ public class UploadController {
 		}
 	}
 	
+	@RequestMapping(value = "/upload/capacity",  method = RequestMethod.POST)
+	public String onUploadCapacity(MultipartFile file, @RequestParam java.util.Date date, RedirectAttributes redirectAttrs,
+			Locale locale) {
+		
+		
+		// is empty
+		if (file.isEmpty()) {
+			redirectAttrs.addFlashAttribute("warning", messageSource.getMessage("action.choose.file", null, locale));
+			return "redirect:/capacity/main";
+		}
+		// copy file
+		try {
+			File convFile = File.createTempFile("capacity", ".tmp");
+			convFile.deleteOnExit();
+			//new File(file.getOriginalFilename());
+			//convFile.createNewFile();
+			FileOutputStream fos = new FileOutputStream(convFile); 
+			fos.write(file.getBytes());
+			fos.close(); 
+			redirectAttrs.addFlashAttribute("file", convFile);
+			redirectAttrs.addFlashAttribute("date", date);
+			return "redirect:/capacity/exec";
+		} catch (IOException ioex) {
+			redirectAttrs.addFlashAttribute("error", messageSource.getMessage("upload.io.exception", null, locale) + ": " + ioex.getMessage());
+			return "redirect:/capacity/main";
+		}
+	}
+	
 	@RequestMapping(value = "/upload/avatar/{id}",  method = RequestMethod.POST)
 	@Secured("ROLE_ADMIN")
 	public String onUpload(@PathVariable("id") long id, MultipartFile file, RedirectAttributes redirectAttrs,
