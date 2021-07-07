@@ -175,12 +175,20 @@
 							class="btn btn-info btn-md margin-top-5"> <span
 							class="glyphicon glyphicon-envelope"></span> &nbsp;<span
 							th:text="|Podsumuj w E-Mailu - wygeneruj maila z zamówieniem|"></span>
-						</a> <br /> <a th:href="@{/cebs/manage/arrived}" style="width: 100%;"
-							th:onclick="|return confirm('[MAIL] Dostawca u bram!? Daj znać wszystkim!')|"
+						</a> 
+						<br /> <a th:href="@{/cebs/manage/arrivedInstant}" style="width: 100%;"
+							th:onclick="|return confirm('[MAIL] Dostawca u bram!? Daj znać wszystkim od razu!')|"
 							class="btn btn-info btn-md margin-top-5"> <span
 							class="glyphicon glyphicon-flag"></span> &nbsp; <span
-							th:text="|Dostawca u bram - wezwij po odbiór (3 min)|"></span>
-						</a> <br /> <a th:href="@{/cebs/manage/finish}" style="width: 100%;"
+							th:text="|Dostawca u bram - wezwij po odbiór natychmiast!|"></span>
+						</a> 
+						<br /> <a th:href="@{/cebs/manage/arrived3min}" style="width: 100%;"
+							th:onclick="|return confirm('[MAIL] Dostawca u bram!? Daj znać wszystkim za 3 minuty!')|"
+							class="btn btn-info btn-md margin-top-5"> <span
+							class="glyphicon glyphicon-flag"></span> &nbsp; <span
+							th:text="|Dostawca u bram - wezwij po odbiór za 3 minuty!|"></span>
+						</a> 
+						<br /> <a th:href="@{/cebs/manage/finish}" style="width: 100%;"
 							class="btn btn-success btn-md margin-top-5"
 							th:onclick="|return confirm('Wszystkie dotychczasowe zamówienia zostaną skasowane, akcja zbierania zostanie zatrzymana')|">
 							<span class="glyphicon glyphicon-ok"></span>&nbsp; <span
