@@ -116,26 +116,30 @@
 						class="btn btn-danger btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-user"></span> <span
 						th:text="#{users.management}">users management</span>
-					</a> <a th:href="@{/redmine/userslist}"
-						class="btn btn-danger btn-md margin-top-5"> <span
-						class=" 	glyphicon glyphicon-eye-open"></span> <span
-						th:text="#{redmine.users.title}">users management</span>
 					</a> <a th:href="@{/users/monitor}"
 						class="btn btn-danger btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-time"></span> <span
 						th:text="#{session.monitor}">users management</span>
-					</a> <a th:href="@{/mailer/create}"
-						class="btn btn-danger btn-md margin-top-5"> <span
-						class="glyphicon glyphicon-envelope"></span> <span
-						th:text="|Mailer|">users management</span>
-					</a> <a th:href="@{/system/log}"
-						class="btn btn-danger btn-md margin-top-5"> <span
-						class="glyphicon glyphicon-list-alt"></span> <span
-						th:text="#{system.log}">users management</span>
 					</a> <a href="https://firewall.atwsystem.pl:1024/" target="_blank"
 						class="btn btn-danger btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-signal"></span> <span
 						th:text="|Firewall|">fire wall</span>
+					</a> <a href="https://cloud.sophos.com/manage/" target="_blank"
+						class="btn btn-danger btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-cloud"></span> <span
+						th:text="|Sophos Cloud|">fire wall</span>
+					</a> <a th:href="@{/system/log}"
+						class="btn btn-danger btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-list-alt"></span> <span
+						th:text="#{system.log}">users management</span>
+					</a> <a th:href="@{/redmine/userslist}"
+						class="btn btn-danger btn-md margin-top-5"> <span
+						class=" 	glyphicon glyphicon-eye-open"></span> <span
+						th:text="#{redmine.users.title}">users management</span>
+					</a> <a th:href="@{/mailer/create}"
+						class="btn btn-danger btn-md margin-top-5"> <span
+						class="glyphicon glyphicon-envelope"></span> <span
+						th:text="|Mailer|">users management</span>
 					</a>
 				</div>
 			</div>
@@ -446,20 +450,17 @@
 						class="btn btn-info btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-saved"></span> <span
 						th:text="#{compreq.title}"></span>
-					</a> 
-					<a th:href="@{/capacity/main}"
+					</a> <a th:href="@{/capacity/main}"
 						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_CAPACITYUSER')"
 						class="btn btn-info btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-equalizer"></span> <span
 						th:text="#{capacity.title}">bhp tickets</span>
-					</a> 
-					<a th:href="@{/utr/stats}"
+					</a> <a th:href="@{/utr/stats}"
 						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_UTR_NORMALUSER')"
 						class="btn btn-info btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-stats"></span> <span
-						th:text="#{utr.stats}">bhp tickets</span>
-					</a> 
-					<a th:href="@{/utr/current}"
+						th:text="#{utr.stats}"></span>
+					</a> <a th:href="@{/utr/current}"
 						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_UTR_NORMALUSER')"
 						class="btn btn-info btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-warning-sign"></span> <span

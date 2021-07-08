@@ -5,8 +5,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -16,6 +18,10 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import javax.transaction.Transactional;
+
+import java.util.Map.Entry;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -24,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import sbs.helpers.DateHelper;
+import sbs.model.capacity.CapacityItem;
+import sbs.service.capacity.CapacityService;
 import sbs.service.x3.JdbcOracleX3Service;
 
 @Controller
@@ -36,11 +44,33 @@ public class CapacityController {
 	JdbcOracleX3Service jdbcOracleX3Service;
 	@Autowired
 	DateHelper dateHelper;
+	@Autowired
+	CapacityService capacityService;
 
 	@RequestMapping("/main")
-	public String search(Model model) {
+	public String main(Model model) {
 		model.addAttribute("date", dateHelper.formatDdMmYyyyDot(new Date()));
 		return "capacity/main";
+	}
+	
+	@RequestMapping("/view")
+	public String results(Model model) {
+		
+		List<CapacityItem> items = capacityService.findAll();
+		
+		
+		Map<String, Map<Timestamp, Integer>> mainMap = new TreeMap<>();
+		
+		
+		
+		for(CapacityItem item: items) {
+			
+		}
+		
+		
+		model.addAttribute("date", dateHelper.formatDdMmYyyyDot(new Date()));
+		
+		return "capacity/view";
 	}
 
 	@RequestMapping("/exec")
@@ -114,23 +144,37 @@ public class CapacityController {
 			br.close();
 			file.delete();
 		}
-
-		// extract assembly values
+		
+		// extract values
 		Map<String, Integer> assemblyResult = getAssemblyMachinesResult(input);
-		System.out.println("Assembly");
-		System.out.println(assemblyResult);
-		// extract welding values
 		Map<String, Integer> weldingResult = getWeldingMachinesResult(input);
-		System.out.println("Welding");
-		System.out.println(weldingResult);
-		// extract mechanical values
 		Map<String, Integer> mechanicalResult = getMechanicalMachinesResult(input);
-		System.out.println("Mechanical");
-		System.out.println(mechanicalResult);
 
-		// model.addAttribute("date", date);
-		// model.addAttribute("list", input);
-		return "capacity/view";
+		// remove previous results for date (if exist)
+		capacityService.deleteItemsOnDate(date);
+
+		// save new values for date
+		this.saveResultsFromMap("Assembly", date, assemblyResult);
+		this.saveResultsFromMap("Welding", date, weldingResult);
+		this.saveResultsFromMap("Mechanical", date, mechanicalResult);
+		
+		redirectAttrs.addFlashAttribute("msg", messageSource.getMessage("general.processed", null, locale));
+		return "redirect:/capacity/main";
+	}
+
+	@Transactional
+	private void saveResultsFromMap(String department, Date date, Map<String, Integer> inputMap) {
+		
+			CapacityItem item;
+			for(Entry<String,Integer> entry: inputMap.entrySet()) {
+				item = new CapacityItem();
+				item.setDate(new Timestamp(date.getTime()));
+				item.setDepartment(department);
+				item.setMachine(entry.getKey());
+				item.setQuantity(entry.getValue());
+				this.capacityService.save(item);
+			}
+
 	}
 
 	private Map<String, Integer> getMechanicalMachinesResult(List<CapacityLine> input) {
