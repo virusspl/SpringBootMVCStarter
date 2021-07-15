@@ -80,7 +80,6 @@ public class CapacityItem {
 		return "CapacityItem [id=" + id + ", date=" + date + ", quantity=" + quantity + ", department=" + department
 				+ ", machine=" + machine + "]";
 	}
-	
-	
-	
+
+
 }

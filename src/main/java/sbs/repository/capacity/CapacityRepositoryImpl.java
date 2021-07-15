@@ -2,6 +2,7 @@ package sbs.repository.capacity;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -18,10 +19,27 @@ public class CapacityRepositoryImpl extends GenericRepositoryAdapter<CapacityIte
 
 	@Override
 	public void deleteItemsOnDate(Date date) {
-		String hql = "delete from CapacityItem where date = :dat";
+		String hql = "delete from CapacityItem c where c.date = :dat";
 		Query query = currentSession().createQuery(hql);
 		query.setTimestamp("dat", new Timestamp(date.getTime()));
 		query.executeUpdate();
+	}
+
+	@Override
+	public Timestamp getDateZero() {
+		String hql = "from CapacityItem c order by c.date asc";
+		@SuppressWarnings("unchecked")
+		List<CapacityItem> result = (List<CapacityItem>) 
+		currentSession()
+		.createQuery(hql)
+		.list();
+		
+		if(!result.isEmpty()){
+			return result.get(0).getDate();
+		}
+		else{
+			return new Timestamp(new java.util.Date().getTime());
+		}
 	}
 
 }

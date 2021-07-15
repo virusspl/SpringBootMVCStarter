@@ -341,6 +341,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"ADMIN", 
 				"PAYTERMANAGER"
 				)		
+		.antMatchers(
+				"/capacity/**"
+				)
+		.hasAnyRole(
+				"ADMIN", 
+				"CAPACITYMANAGER"
+				)		
 		 // ** old modules to delete **
 		.antMatchers(
 				"/qualitysurveys/**")

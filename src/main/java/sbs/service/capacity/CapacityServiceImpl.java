@@ -1,5 +1,6 @@
 package sbs.service.capacity;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,11 @@ public class CapacityServiceImpl extends GenericServiceAdapter<CapacityItem, Int
 	@Override
 	public void deleteItemsOnDate(Date date) {
 		capacityRepository.deleteItemsOnDate(date);
+	}
+
+	@Override
+	public Timestamp getDateZero() {
+		return capacityRepository.getDateZero();
 	}
 
 

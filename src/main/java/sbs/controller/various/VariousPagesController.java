@@ -667,6 +667,14 @@ public class VariousPagesController {
 			msg += "[role: " + payterm.getName() + "], ";
 		}
 		
+		Role capacity = roleService.findByName("ROLE_CAPACITYMANAGER");
+		if (capacity == null) {
+			capacity = new Role();
+			capacity.setName("ROLE_CAPACITYMANAGER");
+			roleService.save(capacity);
+			msg += "[role: " + capacity.getName() + "], ";
+		}
+		
 		// ROLE END
 
 		User admin = userService.findByUsername("Admin");

@@ -412,7 +412,7 @@
 			'ROLE_QCHECKUSER',
 			'ROLE_COMPREQMANAGER',
 			'ROLE_UTR_NORMALUSER',
-			'ROLE_CAPACITYUSER'
+			'ROLE_CAPACITYMANAGER'
 			)">
 				<div class="col-xs-12" style="border-bottom: 1px solid #E0E0E0;">
 					<h3 class="text-info" th:text="#{department.production}">Panel
@@ -451,7 +451,7 @@
 						class="glyphicon glyphicon-saved"></span> <span
 						th:text="#{compreq.title}"></span>
 					</a> <a th:href="@{/capacity/main}"
-						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_CAPACITYUSER')"
+						sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_CAPACITYMANAGER')"
 						class="btn btn-info btn-md margin-top-5"> <span
 						class="glyphicon glyphicon-equalizer"></span> <span
 						th:text="#{capacity.title}">bhp tickets</span>

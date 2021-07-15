@@ -54,23 +54,73 @@ public class CapacityController {
 	}
 	
 	@RequestMapping("/view")
-	public String results(Model model) {
+	public String results(Model model, Locale locale) {
 		
-		List<CapacityItem> items = capacityService.findAll();
+		// start date
+		Timestamp dateZero = capacityService.getDateZero();
+		// data to use
+		Map<String, Map<Timestamp, Integer>> inputMap = createInputMap(capacityService.findAll());
 		
+		// calendar objects to compare and assign dates
+		Calendar initial = Calendar.getInstance();
+		initial.setTime(dateZero);
+		Calendar today = Calendar.getInstance();
 		
-		Map<String, Map<Timestamp, Integer>> mainMap = new TreeMap<>();
+		// list of dates to fill
+		ArrayList<Timestamp> dates = new ArrayList<>();
+		ArrayList<String> headers = new ArrayList<>();
 		
-		
-		
-		for(CapacityItem item: items) {
+		// headers first column (machine)
+		headers.add(messageSource.getMessage("general.machine", null, locale));
+		while(initial.before(today)) {
+			// add date to list for processing
+			dates.add(new Timestamp(initial.getTimeInMillis()));
+			// headers next columns (dates)
+			headers.add(dateHelper.formatDdMmYyyyDot(initial.getTime()));
 			
+			initial.add(Calendar.DAY_OF_MONTH, 1);
 		}
 		
+		// arrays to hold result
+		ArrayList<String> line;
+		List<List<String>> lines = new ArrayList<>();
+
+		// tmp values
+		Map<Timestamp, Integer> valuesMap;
 		
-		model.addAttribute("date", dateHelper.formatDdMmYyyyDot(new Date()));
-		
+
+		//for each machine
+		for(Entry<String, Map<Timestamp,Integer>> entry: inputMap.entrySet()) {
+			// current line object to fill
+			line = new ArrayList<String>();
+			// map of values by date
+			valuesMap = entry.getValue();			
+			// first column - machine name
+			line.add(entry.getKey());
+			// columns with data by date (0 if no data)
+			for (Timestamp date: dates) {
+				line.add(valuesMap.containsKey(date) ? valuesMap.get(date)+"" : "0");
+			}
+			
+			lines.add(line);
+		}
+
+		model.addAttribute("headers", headers);
+		model.addAttribute("lines", lines);
 		return "capacity/view";
+	}
+
+	private Map<String, Map<Timestamp, Integer>> createInputMap(List<CapacityItem> items) {
+		Map<String, Map<Timestamp, Integer>> map = new TreeMap<>();
+		String key;
+		for(CapacityItem item: items) {
+			key = item.getDepartment() + "_" + item.getMachine();
+			if(!map.containsKey(key)) {
+				map.put(key, new TreeMap<>());
+			}
+			map.get(key).put(item.getDate(), item.getQuantity());
+		}
+		return map;
 	}
 
 	@RequestMapping("/exec")
@@ -215,7 +265,6 @@ public class CapacityController {
 						|| line.getMachine().startsWith("CTOC")) {
 					tmpVal += line.getQuantity();
 				}
-
 			}
 		}
 		return tmpVal;
@@ -257,16 +306,17 @@ public class CapacityController {
 		Map<String, Integer> result = new TreeMap<>();
 		this.fillMapIfSetContains(result, input, machines);
 		result.put("G-ZAW", this.getWeldingGZawResult(input));
-		result.put("K-ZEST", this.getWeldingKZestResult(input));
+		result.put("K-ZEST_KZA", this.getWeldingKZestResult(input, "KZA"));
+		result.put("K-ZEST_KZG", this.getWeldingKZestResult(input, "KZG"));
 
 		return result;
 	}
 
-	private Integer getWeldingKZestResult(List<CapacityLine> input) {
+	private Integer getWeldingKZestResult(List<CapacityLine> input, String group) {
 		int tmpVal = 0;
 		for (CapacityLine line : input) {
 			if (line.getMachine().startsWith("LMB") && line.getNextOperation() == 99999
-					&& (line.getGroup().equalsIgnoreCase("KZA") || line.getGroup().equalsIgnoreCase("KZG"))) {
+					&& line.getGroup().equalsIgnoreCase(group)) {
 				tmpVal += line.getQuantity();
 			}
 		}
@@ -290,16 +340,18 @@ public class CapacityController {
 	 */
 	private void fillMapIfSetContains(Map<String, Integer> result, List<CapacityLine> input, Set<String> machines) {
 		int tmpVal;
+		String tmpKey;
 		for (CapacityLine line : input) {
 			tmpVal = 0;
+			tmpKey = line.getMachine()+"_"+line.getGroup();
 			if (machines.contains(line.getMachine())) {
-				if (result.containsKey(line.getMachine())) {
-					tmpVal = result.get(line.getMachine());
+				if (result.containsKey(tmpKey)) {
+					tmpVal = result.get(tmpKey);
 				}
-				result.put(line.getMachine(), tmpVal + line.getQuantity());
+				result.put(tmpKey, tmpVal + line.getQuantity());
 			}
 		}
-		this.fillMapWithMissingKeysBySet(result, machines);
+		//this.fillMapWithMissingKeysBySet(result, machines);
 	}
 
 	/**
@@ -308,6 +360,7 @@ public class CapacityController {
 	 * @param result   map to be filled
 	 * @param machines set of machines
 	 */
+	@SuppressWarnings("unused")
 	private void fillMapWithMissingKeysBySet(Map<String, Integer> result, Set<String> machines) {
 		for (String key : machines) {
 			if (!result.containsKey(key)) {
